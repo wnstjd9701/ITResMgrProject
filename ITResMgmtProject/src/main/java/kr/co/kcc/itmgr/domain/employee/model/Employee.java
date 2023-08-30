@@ -10,4 +10,6 @@ public class Employee {
 	private String employeeStatusCode;
 	private Timestamp createDate;
 	private String createrId;
+	private Timestamp updateDate;
+	private String updaterId;
 }
