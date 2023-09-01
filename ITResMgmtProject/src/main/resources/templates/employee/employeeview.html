@@ -5,79 +5,40 @@
 <title>Insert title here</title>
 </head>
 <body>
- 	<table id="empTable">
- 		<tr>
+	<table id="empTable">
+		<tr>
+			<th>선택</th>
 			<th>사원ID</th>
 			<th>사원명</th>
 			<th>사원유형</th>
 			<th>사원상태</th>
 		</tr>
-		
+
 		<tr th:each="employeeList : ${employeeList}">
-				<td><input type="checkbox"></td>
-				<td th:text="${employeeList.employeeId}"></td>
-				<td th:text="${employeeList.employeeName}"></td>
-				<td th:text="${employeeList.employeeStatus}"></td>
-				<td th:text="${employeeList.employeeType}"></td>
+			<td><input type="checkbox" name="emp_chekbox"></td>
+			<td th:text="${employeeList.employeeId}"></td>
+			<td th:text="${employeeList.employeeName}"></td>
+			<td th:text="${employeeList.employeeStatus}"></td>
+			<td th:text="${employeeList.employeeType}"></td>
 		<tr>
 	</table>
-	
-	<input type="button" value="행추가" onclick="addRow()"/>
+
+	<input type="button" value="행추가" onclick="addRow()" />
 
 
-  
-<!--   <select th:field="*{employeeList}" >
-
-    <option th:each="employeeList : ${employeeList}" th:value="${employeeList.employeeStatus}" th:text="${employeeList.employeeStatus}">1</option>
-
-  </select> -->
-  
-	<select id="empTypeCode">
-		<option>선택</option>
-		<option value="EMT002">IT자원관리자</option>
-  		<option value="EMT001">시스템관리자</option>
-	</select>
-	
-		<select id="empStatusCode">
-		<option>선택</option>
-		<option value="EMS001">재직중</option>
-  		<option value="EMS002">휴직중</option>
-  		<option value="EMS003">퇴직</option>
-	</select>
-  
-  
-  <form>
-  <input type="submit" value="등록"/>
-  </form>
 
 
-<script>
-	function addRow(){
-		//table element찾기
-		var table = document.getElementById("empTable");
-		
-		//새 행 추가
-		var newRow = table.insertRow();
-		
-		//새 행에 cell추가
-		var newCell1 = newRow.insertCell(0);
-		newCell1.innerHTML = "<input type='checkbox' id='cell_0' name='cell_0'>";
-		
-		var newCell1 = newRow.insertCell(1);
-		newCell1.innerHTML = "<input type='text' id='cell_1' name='cell_1' size='10'>";
-		
-		var newCell2 = newRow.insertCell(2);
-		newCell2.innerHTML = "<input type='text' id='cell_2' name='cell_2' size='10'>";
-		
-		var newCell3 = newRow.insertCell(3);
-		newCell3.innerHTML = "<input type='text' id='cell_3' name='cell_3' size='10'>";
-		
-		var newCell4 = newRow.insertCell(4);
-		newCell4.innerHTML = "<input type='text' id='cell_4' name='cell_4' size='10'>";
-		
-		
-	}
 
-</script>
+	<input type="submit" id="i_submit" onclick="saveList()" value="저장" />
+
+
+
+
+
+
+
+	<script src="js/employee/employee.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
 </body>
 </html>

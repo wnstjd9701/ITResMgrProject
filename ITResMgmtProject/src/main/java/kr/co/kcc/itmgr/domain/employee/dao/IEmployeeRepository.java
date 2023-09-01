@@ -13,5 +13,6 @@ public interface IEmployeeRepository {
 	//사원 전체조회
 	List<Employee> selectAllEmployee();
 	
-
+	//사원등록
+	void insertEmployee(Employee employee);
 }

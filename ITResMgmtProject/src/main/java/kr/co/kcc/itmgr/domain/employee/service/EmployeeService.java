@@ -18,4 +18,9 @@ public class EmployeeService implements IEmployeeService{
 	public List<Employee> selectAllEmployee(){
 		return employeeRepository.selectAllEmployee();
 	}
+
+	@Override
+	public void insertEmployee(Employee employee) {
+		employeeRepository.insertEmployee(employee);
+	}
 }
