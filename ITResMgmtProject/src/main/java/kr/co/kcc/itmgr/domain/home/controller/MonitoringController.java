@@ -39,9 +39,10 @@ public class MonitoringController {
 //		logger.info("Level3: " + resClassLevel3);
 //		logger.info("자원정보: " + resourceInfo);
 		model.addAttribute("resourceInfo", resourceInfo);
+
 		model.addAttribute("resClassLevel2", resClassLevel2);
 		model.addAttribute("resClassLevel3", resClassLevel3);
-		
+	
 		return "index";
 	}
 	
