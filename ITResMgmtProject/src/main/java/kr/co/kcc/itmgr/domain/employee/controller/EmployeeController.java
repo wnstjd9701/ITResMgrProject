@@ -21,7 +21,7 @@ public class EmployeeController {
 	public String selectEmployee(Model model) {
 		List<Employee> employeeList = employeeService.selectAllEmployee();
 		model.addAttribute("employeeList", employeeList);
-		return "employeeview";
+		return "employee/employeeview";
 	}
 
 }

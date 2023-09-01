@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link rel="stylesheet" type="text/css" th:href="@{../css/employeeview.css}">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -15,6 +14,7 @@
 		</tr>
 		
 		<tr th:each="employeeList : ${employeeList}">
+				<td><input type="checkbox"></td>
 				<td th:text="${employeeList.employeeId}"></td>
 				<td th:text="${employeeList.employeeName}"></td>
 				<td th:text="${employeeList.employeeStatus}"></td>
@@ -61,15 +61,18 @@
 		
 		//새 행에 cell추가
 		var newCell1 = newRow.insertCell(0);
+		newCell1.innerHTML = "<input type='checkbox' id='cell_0' name='cell_0'>";
+		
+		var newCell1 = newRow.insertCell(1);
 		newCell1.innerHTML = "<input type='text' id='cell_1' name='cell_1' size='10'>";
 		
-		var newCell2 = newRow.insertCell(1);
+		var newCell2 = newRow.insertCell(2);
 		newCell2.innerHTML = "<input type='text' id='cell_2' name='cell_2' size='10'>";
 		
-		var newCell3 = newRow.insertCell(2);
+		var newCell3 = newRow.insertCell(3);
 		newCell3.innerHTML = "<input type='text' id='cell_3' name='cell_3' size='10'>";
 		
-		var newCell4 = newRow.insertCell(3);
+		var newCell4 = newRow.insertCell(4);
 		newCell4.innerHTML = "<input type='text' id='cell_4' name='cell_4' size='10'>";
 		
 		

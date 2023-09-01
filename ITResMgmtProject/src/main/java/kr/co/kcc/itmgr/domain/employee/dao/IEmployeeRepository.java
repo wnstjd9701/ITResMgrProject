@@ -12,5 +12,6 @@ import kr.co.kcc.itmgr.domain.employee.model.Employee;
 public interface IEmployeeRepository {
 	//사원 전체조회
 	List<Employee> selectAllEmployee();
+	
 
 }
