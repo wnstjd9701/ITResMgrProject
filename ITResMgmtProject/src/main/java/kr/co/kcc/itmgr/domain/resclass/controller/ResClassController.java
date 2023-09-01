@@ -21,6 +21,6 @@ public class ResClassController {
 	public String selectAllResClass(Model model) {
 		List<ResClass> resClassList = IResClassService.selectAllResClass();
 		model.addAttribute("resClassList", resClassList);
-		return "resclass/resclass";
+		return "itres/resclass";
 	}
 }
