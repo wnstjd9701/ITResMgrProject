@@ -32,7 +32,7 @@ public class MonitoringController {
 		
 		logger.info("자원정보: " + resourceInfo);
 		model.addAttribute("resourceInfo", resourceInfo);
-		
+		//
 		return "index";
 	}
 	
