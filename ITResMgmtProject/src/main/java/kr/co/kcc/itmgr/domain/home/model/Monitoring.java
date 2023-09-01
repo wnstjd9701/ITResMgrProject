@@ -13,14 +13,15 @@ public class Monitoring {
 	private String mgmtId; // 관리자 ID
 	private String resStatusCode; // 자원 상태 코드 (사용중 ..)
 	private String introductionDate; // 도입일자 
-	private String resUseYn; // 자원 사용여부
-	private String monitoringYn; // 모니터링 여부
+	private char resUseYn; // 자원 사용여부
+	private char monitoringYn; // 모니터링 여부
 	
 	// 자원 분류
 	private int level;
 	private String resClassId; // 자원 분류 아이디
+	private String resClassName; // 자원 분류 이름
 	private String resClassFullName; // 자원분류 전체 이름
-	private String useYn; // 자원분류 사용여부
+	private char useYn; // 자원분류 사용여부
 	
 	// 설치 장소
 	private int installPlaceId; // 설치장소 번호
@@ -35,5 +36,9 @@ public class Monitoring {
 	
 	// IP
 	private String ip; // IP 번호
-	private String ip_desc; // IP 설명
+	private String ipDesc; // IP 설명
+	
+	// 검색을 위한 칼럼
+	private String midResClass;
+	private String bottomResClass;
 }
