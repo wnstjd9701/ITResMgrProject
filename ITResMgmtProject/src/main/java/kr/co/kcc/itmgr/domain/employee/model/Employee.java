@@ -2,6 +2,16 @@ package kr.co.kcc.itmgr.domain.employee.model;
 
 import java.sql.Timestamp;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Employee {
 	private String employeeId;
 	private String employeePwd;
@@ -12,4 +22,7 @@ public class Employee {
 	private String createrId;
 	private Timestamp updateDate;
 	private String updaterId;
+	
+	private String employeeType;
+	private String employeeStatus;
 }
