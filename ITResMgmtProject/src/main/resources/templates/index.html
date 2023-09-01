@@ -1,10 +1,74 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+	<div class="container">
+		<div>
+			<h2>MenuBar</h2>
+		</div>
+		<div>
+			<form action="/" method="get">
+			<span>중 분 류</span>
+			<select name="fruit">
+				<option value="바나나">바나나</option>
+				<option value="사과">사과</option>
+				<option value="파인애플" selected="selected">파인애플</option>
+			</select>
+			<span>소 분 류</span>
+			<select name="fruit">
+				<option value="바나나">바나나</option>
+				<option value="사과">사과</option>
+				<option value="파인애플" selected="selected">파인애플</option>
+			</select>
+			<span>사용 여부</span>
+			<select name="fruit">
+				<option value="바나나">바나나</option>
+				<option value="사과">사과</option>
+				<option value="파인애플" selected="selected">파인애플</option>
+			</select>
+			
+			<input type="submit" value="검색">
+			</form>
+			
+			<form action="/" method="get">
+				<input type="text" name="search" placeholder="자원명을 검색하세요.">
+				<input type="submit" value="검색">
+			</form>
+		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>상태</th>
+					<th>호스트</th>
+					<th>자원명</th>
+					<th>설치 장소명</th>
+					<th>설치 주소</th>
+					<th>도입일자</th>
+					<th>담당자</th>
+				</tr>
+			</thead>
+			<tbody th:each="resourceInfo:${resourceInfo}">
+				<tr>
+					<td>상태</td>
+					<td th:text="${resourceInfo.ip}"></td>
+					<td th:text="${resourceInfo.resName}"></td>
+					<td th:text="${resourceInfo.installPlaceName}"></td>
+					<td th:text="${resourceInfo.installPlaceFullAddress}"></td>
+					<td th:text="${resourceInfo.introductionDate}"></td>
+					<td th:text="${resourceInfo.mgmtId}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 </body>
 </html>
