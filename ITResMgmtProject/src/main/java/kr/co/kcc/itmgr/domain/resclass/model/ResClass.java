@@ -9,7 +9,8 @@ public class ResClass {
 	private String resClassId;
 	private String upperResClassId;
 	private String resClassName;
-	private String useYn;
+
+	private char useYN;
 	private Timestamp createDate;
 	private String createrId;
 	private Timestamp updateDate;
