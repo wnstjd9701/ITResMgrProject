@@ -1,5 +1,28 @@
 package kr.co.kcc.itmgr.domain.employee.model;
 
-public class Employee {
+import java.sql.Timestamp;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class Employee {
+	private String employeeId;
+	private String employeePwd;
+	private String employeeName;
+	private String employeeTypeCode;
+	private String employeeStatusCode;
+	private Timestamp createDate;
+	private String createrId;
+	private Timestamp updateDate;
+	private String updaterId;
+	
+	private String employeeType;
+	private String employeeStatus;
 }
