@@ -3,11 +3,8 @@ package kr.co.kcc.itmgr.domain.employee.model;
 import java.sql.Timestamp;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Data
 public class Employee {
@@ -20,6 +17,7 @@ public class Employee {
 	private String createrId;
 	private Timestamp updateDate;
 	private String updaterId;
+	private char useYN;
 	
 	private String employeeType;
 	private String employeeStatus;
