@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="/nav"></th:block>
 <title>Bootstrap Example</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,33 +14,28 @@
 <body>
 	<div class="container">
 		<div>
-			<h2>MenuBar</h2>
-		</div>
-		<div>
 			<span>중 분 류</span>
 			<!-- Level 2 -->
-			<select id="resClassLevel2" name="resClassLevel2">
-				<option value="all" th:text="전체" th:data-all="all"></option>
-				<option th:each="resClassLevel2:${resClassLevel2}"
-					th:value="${resClassLevel2.resClassId}"
-					th:text="${resClassLevel2.resClassName}"></option>
-			</select> <span>소 분 류</span> <select disabled id="resClassLevel3"
-				name="resClassLevel3">
-				<option value="all" th:text="전체" th:data-all="all"></option>
-				<option th:each="resClassLevel3:${resClassLevel3}"
-					th:value="${resClassLevel3.resClassId}"
-					th:data-upper-res-class-id="${resClassLevel3.upperResClassId}"
-					th:text="${resClassLevel3.resClassName}"></option>
-			</select> <span>사용 여부</span> <label> <input type="radio"
-				name="monitoringYn" value="Y" /> 전체
-			</label> <label> <input type="radio" name="monitoringYn" value="A" />
-				미사용 포함
-			</label> <input type="button" id="searchBtn" value="검색">
-
-			<form action="/search" method="get">
-				<input type="text" name="search" placeholder="자원명을 검색하세요.">
-				<input type="submit" value="검색">
-			</form>
+				<select id="resClassLevel2" name="resClassLevel2">
+					<option value="all" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel2:${resClassLevel2}" th:value="${resClassLevel2.resClassId}" th:text="${resClassLevel2.resClassName}"></option>
+				</select> 
+			<span>소 분 류</span> 
+				<select disabled id="resClassLevel3" name="resClassLevel3">
+					<option value="all" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel3:${resClassLevel3}" th:value="${resClassLevel3.resClassId}" th:data-upper-res-class-id="${resClassLevel3.upperResClassId}" th:text="${resClassLevel3.resClassName}"></option>
+				</select> 
+			<span>사용 여부</span> 
+				<label> 
+					<input type="radio" name="monitoringYn" value="Y" checked="checked" /> 전체
+				</label> 
+				<label> 
+					<input type="radio" name="monitoringYn" value="A" /> 미사용 포함
+				</label> 
+			<input type="text" name="resName" placeholder="자원명을 검색하세요.">
+			<input type="button" id="searchBtn" value="검색">
+			
+			
 		</div>
 		<table class="table table-striped">
 			<thead>
@@ -111,12 +107,14 @@ $(document).ready(function(){
         // 선택된 중분류와 소분류 값을 가져옴
         var midResClass = $("#resClassLevel2").val();
         var bottomResClass = $("#resClassLevel3").val();
-
+		var resName = $("input[name='resName']").val();
         // 선택된 라디오 버튼 값 가져오기 (사용 여부)
         var monitoringYn = $("input[name='monitoringYn']:checked").val();
+        
 		console.log(midResClass);
 		console.log(bottomResClass);
 		console.log(monitoringYn);
+		console.log(resName);
 		
         // Ajax 요청을 보냄
         $.ajax({
@@ -125,7 +123,8 @@ $(document).ready(function(){
             data: {
             	midResClass: midResClass,
             	bottomResClass: bottomResClass,
-                monitoringYn: monitoringYn
+                monitoringYn: monitoringYn,
+                resName: resName
             },
             success: function(data) {
                 // 성공적으로 요청이 완료되면 이곳에서 처리
