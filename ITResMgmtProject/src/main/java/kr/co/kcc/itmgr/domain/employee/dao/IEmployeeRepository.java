@@ -15,4 +15,8 @@ public interface IEmployeeRepository {
 	
 	//사원등록
 	void insertEmployee(Employee employee);
+	
+	//사원삭제(사용여부:N)
+	void updateEmployeeByUseYN(String employeeId); 
+
 }

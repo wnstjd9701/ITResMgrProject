@@ -2,6 +2,7 @@ package kr.co.kcc.itmgr.domain.employee.service;
 
 import java.util.List;
 
+
 import org.springframework.stereotype.Service;
 
 import kr.co.kcc.itmgr.domain.employee.dao.IEmployeeRepository;
@@ -23,4 +24,10 @@ public class EmployeeService implements IEmployeeService{
 	public void insertEmployee(Employee employee) {
 		employeeRepository.insertEmployee(employee);
 	}
+
+	@Override
+	public void updateEmployeeByUseYN(String employeeId) {
+		employeeRepository.updateEmployeeByUseYN(employeeId);		
+	}
+	
 }

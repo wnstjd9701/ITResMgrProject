@@ -7,7 +7,10 @@ import kr.co.kcc.itmgr.domain.employee.model.Employee;
 public interface IEmployeeService {
 	//사원 전체조회
 	List<Employee> selectAllEmployee();
-	
+
 	//사원등록
-		void insertEmployee(Employee employee);
+	void insertEmployee(Employee employee);
+
+	//사원삭제(사용여부:N)
+	void updateEmployeeByUseYN(String employeeId); 
 }

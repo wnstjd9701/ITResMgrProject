@@ -13,6 +13,7 @@
 				FROM commoncodedetail c 
 				WHERE c.detail_code = e.employee_status_code) AS employeeStatus
 	FROM employeeinfo e
+	WHERE use_yn = 'Y'
 	ORDER BY employeeName
 	
 ]]>
@@ -26,6 +27,18 @@
 	]]>
 </insert>
 
+
+
+<update id="updateEmployeeByUseYN" parameterType="String">
+	<![CDATA[
+		UPDATE employeeinfo
+		SET use_yn = 'N'
+		WHERE employee_id=#{employeeId}
+	]]>
+</update>
+
+ 
+ 
 
 
 
