@@ -20,7 +20,7 @@ public class Monitoring {
 	private int level;
 	private String resClassId; // 자원 분류 아이디
 	private String resClassName; // 자원 분류 이름
-	private String resClassFullName; // 자원분류 전체 이름
+	private String resClassPath; // 자원분류 경로
 	private char useYn; // 자원분류 사용여부
 	
 	// 설치 장소

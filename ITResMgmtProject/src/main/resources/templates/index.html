@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="/nav"></th:block>
+<th:block th:replace="~{/nav}"></th:block>
 <title>Bootstrap Example</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,12 +17,12 @@
 			<span>중 분 류</span>
 			<!-- Level 2 -->
 				<select id="resClassLevel2" name="resClassLevel2">
-					<option value="all" th:text="전체" th:data-all="all"></option>
+					<option value="A" th:text="전체" th:data-all="all"></option>
 					<option th:each="resClassLevel2:${resClassLevel2}" th:value="${resClassLevel2.resClassId}" th:text="${resClassLevel2.resClassName}"></option>
 				</select> 
 			<span>소 분 류</span> 
 				<select disabled id="resClassLevel3" name="resClassLevel3">
-					<option value="all" th:text="전체" th:data-all="all"></option>
+					<option value="A" th:text="전체" th:data-all="all"></option>
 					<option th:each="resClassLevel3:${resClassLevel3}" th:value="${resClassLevel3.resClassId}" th:data-upper-res-class-id="${resClassLevel3.upperResClassId}" th:text="${resClassLevel3.resClassName}"></option>
 				</select> 
 			<span>사용 여부</span> 
@@ -53,8 +53,8 @@
 			<tbody th:each="resourceInfo:${resourceInfo}">
 				<tr>
 					<td>상태</td>
-					<td th:text="${resourceInfo.ip}"></td>
-					<td th:text="${resourceInfo.resClassFullName}"></td>
+					<td id="ip" th:text="${resourceInfo.ip}"></td>
+					<td th:text="${resourceInfo.resClassPath}"></td>
 					<td th:text="${resourceInfo.resName}"></td>
 					<td th:text="${resourceInfo.installPlaceName}"></td>
 					<td th:text="${resourceInfo.installPlaceFullAddress}"></td>
@@ -91,7 +91,7 @@ $(document).ready(function(){
         
         resClassLevel3.find("option[value='all']").text('전체');
      	// 중분류 선택 후 소분류 초기화 시 선택된 값 적용
-        resClassLevel3.val('all');
+        resClassLevel3.val('A');
      	
     	// 중분류 선택란의 '전체' 옵션을 선택 가능하도록 처리
         $('#resClassLevel2 option[value="all"]').prop('disabled', false);
@@ -127,16 +127,21 @@ $(document).ready(function(){
                 resName: resName
             },
             success: function(data) {
-                // 성공적으로 요청이 완료되면 이곳에서 처리
+            	if(data.length === 0){
+                	alert('검색된 결과가 없습니다.');
+                	return;
+                }
+            	// 성공적으로 요청이 완료되면 이곳에서 처리
                 alert('성공');
                 console.log('서버 응답:', data);
-                console.log(data[0]);
-                // 이후에 필요한 처리를 추가하십시오.
+                console.log(data.length);
+                
+                console.log(data[0].ip);
+                $("#ip").text(data[0].ip);
             },
             error: function(error) {
                 // 요청이 실패한 경우 처리
                 console.log('에러:', error);
-                // 에러 처리를 추가하십시오.
             }
         });
     });
