@@ -11,9 +11,11 @@
 			    r.introduction_date                                 AS "introductionDate",
 			    r.use_yn                                            AS "resUseYn",
 			    rc.res_class_id                                     AS "resClassId",
+			    SUBSTR(rcl.path,5)                                  AS "resClassFullName",
 			    i.install_place_sn                                  AS "installPlaceSn",
 			    i.install_place_name                                AS "installPlaceName",
-			    concat(i.install_place_address, concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
+			    concat(i.install_place_address,
+			           concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
 			    ip.ip                                               AS "ip",
 			    ip.ip_desc                                          AS "ipDesc"
 			FROM
@@ -22,6 +24,46 @@
 			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
 			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
 			    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
+			    LEFT JOIN (
+			        SELECT
+			            level                                       AS "level",
+			            res_class_name,
+			            sys_connect_by_path(res_class_name, ' -> ') AS "PATH"
+			        FROM
+			            resclass
+			        WHERE
+			            res_class_name = (
+			                SELECT
+			                    rc.res_class_name
+			                FROM
+			                    resinfo  r
+			                    LEFT JOIN resclass rc ON r.res_class_id = rc.res_class_id
+			            )
+			        START WITH
+			            res_class_id = 'HW_000000'
+			        CONNECT BY
+			            PRIOR res_class_id = upper_res_class_id
+			    )            rcl ON rc.res_class_name = rcl.res_class_name
+			WHERE
+			    r.monitoring_yn = 'Y'
+		]]>
+	</select>
+	
+	<select id="getResClassInformationByLevel" parameterType="int">
+		<![CDATA[
+			SELECT
+			    level,
+			    res_class_id as "resClassId",
+			    upper_res_class_id as "upperResClassId",
+			    res_class_name as "resClassName"
+			FROM
+			    resclass 
+			WHERE
+			    level = #{level} AND res_class_id LIKE 'HW%'
+			START WITH
+			    upper_res_class_id IS NULL
+			CONNECT BY
+			    PRIOR res_class_id = upper_res_class_id
 		]]>
 	</select>
 </mapper>
