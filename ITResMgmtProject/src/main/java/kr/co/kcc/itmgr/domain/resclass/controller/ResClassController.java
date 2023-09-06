@@ -8,51 +8,53 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
 public class ResClassController {
-	
+
 	private final IResClassService IResClassService;
-	
-	@RequestMapping(value="/resclass", method=RequestMethod.GET)
+
+
+	@GetMapping("/resclass")
 	public String selectAllResClass(Model model) {
-//		List<Map<String, String>> resClass = IResClassService.selectAllResClass();
-//		for(Map<String,String> resClassName : resClass) {
-//			String[] levels = resClassName.get("resClassName2").split(",");
-//
-//		}
-//		model.addAttribute("resClass", resClass);
-//		System.out.println(resClass);
-//		return "itres/resclass";
-		
-	    List<Map<String, String>> resClassList = IResClassService.selectAllResClass();
 
-	    Map<String, List<String>> resClassMap = new LinkedHashMap<String, List<String>>();
-	    List<String> levels = new ArrayList<>();
-	    for (Map<String, String> resClass : resClassList) {
-	    	String resClassName = resClass.get("resClassName");
-	        String resClassName2 = resClass.get("resClassName2");
+		Map<String, Map<String, List<String>>> resClassMap = new LinkedHashMap<>();
 
-	        levels.add(resClass.get("lv"));
-	        // ','로 분리된 값을 추출하여 저장
-	        
-	        String[] parts = resClassName2.split(",");
-//	        for(int i=0; i< parts.length; i++) {
-//	        	System.out.println(parts[i]);
-//	        }
-	        resClassMap.put(resClassName, Arrays.asList(parts));
-	    }
+		List<ResClass> resClassList = IResClassService.selectAllResClass();
+		for(ResClass r : resClassList) {
+			if(r.getUpperResClassId()==null) {
+				String[] resClassName2s = r.getResClassName2().split(",");
+				Map<String, List<String>> tempMap = new LinkedHashMap<String, List<String>>();
+				for(String resClassName2 : resClassName2s) {
+					tempMap.put(resClassName2, new ArrayList<>());
+				}
+				resClassMap.put(r.getResClassName(), tempMap);
+			}
+		}
 
-	    model.addAttribute("resClassMap", resClassMap);
-	    model.addAttribute("levels", levels);
+		for(ResClass r : resClassList) {
 
-	    return "itres/resclass";
-
+			if( r.getUpperResClassId()!=null){
+				if(r.getUpperResClassId().equals("HW_000000")) {
+					Map<String, List<String>> tempMap2 = resClassMap.get("하드웨어");
+					List<String> temp2 = tempMap2.get(r.getResClassName());
+					temp2 = Arrays.asList(r.getResClassName2().split(","));
+					tempMap2.put(r.getResClassName(), temp2);
+				}else if(r.getUpperResClassId().equals("SW_000000")) {
+					Map<String, List<String>> tempMap3 = resClassMap.get("소프트웨어");
+					List<String> temp3 = tempMap3.get(r.getResClassName());
+					temp3 = Arrays.asList(r.getResClassName2().split(","));
+					tempMap3.put(r.getResClassName(), temp3);												
+				}
+			}
+		}
+		model.addAttribute("resClassMap", resClassMap);
+		return "itres/resclass"; 
 	}
 }

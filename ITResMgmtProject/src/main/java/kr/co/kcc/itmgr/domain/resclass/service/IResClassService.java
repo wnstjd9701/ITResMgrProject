@@ -7,5 +7,5 @@ import java.util.Map;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 
 public interface IResClassService {
-	List<Map<String, String>> selectAllResClass();
+	List<ResClass> selectAllResClass();
 }

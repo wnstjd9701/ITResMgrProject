@@ -16,9 +16,11 @@ public class ResClassService implements IResClassService {
 	private final IResClassRepository IResClassRepository;
 
 	@Override
-	public List<Map<String, String>> selectAllResClass() {
+	public List<ResClass> selectAllResClass() {
 		return IResClassRepository.selectAllResClass();
 	}
+
+
 
 
 	
