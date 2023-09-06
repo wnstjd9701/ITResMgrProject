@@ -9,8 +9,8 @@ public interface IEmployeeService {
 	List<Employee> selectAllEmployee();
 
 	//사원등록
-	void insertEmployee(Employee employee);
+	void insertEmployee(List<Employee> employee);
 
 	//사원삭제(사용여부:N)
-	void updateEmployeeByUseYN(String employeeId); 
+	void deleteEmployeeByUseYN(String employeeId); 
 }

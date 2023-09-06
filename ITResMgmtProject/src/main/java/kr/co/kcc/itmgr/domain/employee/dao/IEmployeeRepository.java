@@ -3,6 +3,7 @@ package kr.co.kcc.itmgr.domain.employee.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import kr.co.kcc.itmgr.domain.employee.model.Employee;
@@ -14,9 +15,11 @@ public interface IEmployeeRepository {
 	List<Employee> selectAllEmployee();
 	
 	//사원등록
-	void insertEmployee(Employee employee);
+	void insertEmployee(@Param("employee")List<Employee> employee);
+	
+	
 	
 	//사원삭제(사용여부:N)
-	void updateEmployeeByUseYN(String employeeId); 
+	void deleteEmployeeByUseYN(String employeeId); 
 
 }

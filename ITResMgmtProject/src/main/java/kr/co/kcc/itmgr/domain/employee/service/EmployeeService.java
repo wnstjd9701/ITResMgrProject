@@ -21,13 +21,13 @@ public class EmployeeService implements IEmployeeService{
 	}
 
 	@Override
-	public void insertEmployee(Employee employee) {
+	public void insertEmployee(List<Employee> employee) {
 		employeeRepository.insertEmployee(employee);
 	}
 
 	@Override
-	public void updateEmployeeByUseYN(String employeeId) {
-		employeeRepository.updateEmployeeByUseYN(employeeId);		
+	public void deleteEmployeeByUseYN(String employeeId) {
+		employeeRepository.deleteEmployeeByUseYN(employeeId);		
 	}
 	
 }

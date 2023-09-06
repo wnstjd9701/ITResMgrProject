@@ -3,33 +3,41 @@
 <mapper namespace="kr.co.kcc.itmgr.domain.employee.dao.IEmployeeRepository">
 
 <select id="selectAllEmployee" resultType = "kr.co.kcc.itmgr.domain.employee.model.Employee">
-<![CDATA[
-	SELECT	e.employee_id AS employeeId, 
-			e.employee_name AS employeeName,
-			(SELECT c.detail_code_name
-				FROM commoncodedetail c 
-				WHERE c.detail_code = e.employee_type_code) AS employeeType,
-			(SELECT c.detail_code_name
-				FROM commoncodedetail c 
-				WHERE c.detail_code = e.employee_status_code) AS employeeStatus
-	FROM employeeinfo e
-	WHERE use_yn = 'Y'
-	ORDER BY employeeName
+	<![CDATA[
+		SELECT	e.employee_id AS employeeId, 
+				e.employee_name AS employeeName,
+				(SELECT c.detail_code_name
+					FROM commoncodedetail c 
+					WHERE c.detail_code = e.employee_type_code) AS employeeType,
+				(SELECT c.detail_code_name
+					FROM commoncodedetail c 
+					WHERE c.detail_code = e.employee_status_code) AS employeeStatus
+		FROM employeeinfo e
+		WHERE use_yn = 'Y'
+		ORDER BY employeeName
 	
 ]]>
 </select>
 
 <insert id="insertEmployee" parameterType ="kr.co.kcc.itmgr.domain.employee.model.Employee" >
-	<![CDATA[
 		INSERT INTO employeeinfo
 			(employee_id, employee_name, employee_status_code, employee_type_code, create_date, creater_id, employee_pwd, use_yn) 
-		VALUES (#{employeeId}, #{employeeName}, #{employeeStatusCode}, #{employeeTypeCode}, SYSDATE, '임시생성자ID', '임시비밀번호', 'Y')
-	]]>
+		VALUES 
+			<foreach collection="employee" item="employee" separator="," open="(" close=")">
+				#{employee.employeeId}, 
+				#{employee.employeeName}, 
+				#{employee.employeeStatusCode}, 
+				#{employee.employeeTypeCode}, 
+				SYSDATE, 
+				'임시생성자ID', 
+				'임시비밀번호', 
+				'Y'
+			</foreach>
 </insert>
 
 
 
-<update id="updateEmployeeByUseYN" parameterType="String">
+<update id="deleteEmployeeByUseYN" parameterType="String">
 	<![CDATA[
 		UPDATE employeeinfo
 		SET use_yn = 'N'
