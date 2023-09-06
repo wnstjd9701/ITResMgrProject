@@ -34,10 +34,8 @@
 				</label> 
 			<input type="text" name="resName" placeholder="자원명을 검색하세요.">
 			<input type="button" id="searchBtn" value="검색">
-			
-			
 		</div>
-		<table class="table table-striped">
+		<table id="resInfoTable" class="table table-striped">
 			<thead>
 				<tr>
 					<th>상태</th>
@@ -50,8 +48,8 @@
 					<th>자원 관리 ID</th>
 				</tr>
 			</thead>
-			<tbody th:each="resourceInfo:${resourceInfo}">
-				<tr>
+			<tbody>
+				<tr th:each="resourceInfo:${resourceInfo}">
 					<td>상태</td>
 					<td id="ip" th:text="${resourceInfo.ip}"></td>
 					<td th:text="${resourceInfo.resClassPath}"></td>
@@ -123,21 +121,37 @@ $(document).ready(function(){
             data: {
             	midResClass: midResClass,
             	bottomResClass: bottomResClass,
-                monitoringYn: monitoringYn,
+            	monitoringYn: monitoringYn,
                 resName: resName
             },
-            success: function(data) {
-            	if(data.length === 0){
+            success: function(response) {
+                $('#resInfoTable > tbody tr').remove();
+            	if(response.length === 0){
                 	alert('검색된 결과가 없습니다.');
+                	addTableRow = "<tr>" + 
+               	 		"<td colspan='8' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+               	 	$('#resInfoTable > tbody').append(addTableRow);
                 	return;
                 }
             	// 성공적으로 요청이 완료되면 이곳에서 처리
+            	console.log(response);
                 alert('성공');
-                console.log('서버 응답:', data);
-                console.log(data.length);
-                
-                console.log(data[0].ip);
-                $("#ip").text(data[0].ip);
+                for(var i=0; i<response.length; i++){
+                	// table 행 추가
+                	addTableRow = "<tr>" + 
+                	 "<td>" + "상태" + "</td>" +
+					 "<td>" + response[i].ip + "</td>" +
+					 "<td>" + response[i].resClassPath + "</td>" +
+					 "<td>" + response[i].resName+ "</td>" +
+					 "<td>" + response[i].installPlaceName + "</td>" +
+					 "<td>" + response[i].installPlaceFullAddress + "</td>" +
+					 "<td>" + response[i].introductionDate + "</td>" +
+					 "<td>" + response[i].mgmtId + "</td>" +
+					 "</tr>";
+
+                	 $('#resInfoTable > tbody').append(addTableRow);
+                }
+                return ;
             },
             error: function(error) {
                 // 요청이 실패한 경우 처리

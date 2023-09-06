@@ -52,8 +52,9 @@ public class MonitoringController {
 	@PostMapping("/search")
 	@ResponseBody
 	public List<Monitoring> getResourceInformationByCategory(Model model, SearchCondition searchCondition) {
+		logger.info("searchCondition: " + searchCondition);
 		List<Monitoring> searchResult = monitoringService.selectResInformationBySearchCondition(searchCondition);
-		
+		logger.info("SearchResult: " + searchResult);
 		return searchResult;
 	}
 }

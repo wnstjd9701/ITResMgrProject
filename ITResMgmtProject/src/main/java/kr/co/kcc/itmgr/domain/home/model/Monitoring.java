@@ -13,18 +13,18 @@ public class Monitoring {
 	private String mgmtId; // 관리자 ID
 	private String resStatusCode; // 자원 상태 코드 (사용중 ..)
 	private String introductionDate; // 도입일자 
-	private char resUseYn; // 자원 사용여부
-	private char monitoringYn; // 모니터링 여부
+	private String resUseYn; // 자원 사용여부
+	private String monitoringYn; // 모니터링 여부
 	
 	// 자원 분류
 	private int level;
 	private String resClassId; // 자원 분류 아이디
 	private String resClassName; // 자원 분류 이름
 	private String resClassPath; // 자원분류 경로
-	private char useYn; // 자원분류 사용여부
+	private String useYn; // 자원분류 사용여부
 	
 	// 설치 장소
-	private int installPlaceId; // 설치장소 번호
+	private int installPlaceSn; // 설치장소 번호
 	private String installPlaceName; // 설치장소명
 	private String installPlaceFullAddress; // 설치장소 주소 + 설치장소 상세 주소
 	private String installPlaceAddress; // 설치장소 주소
