@@ -9,9 +9,12 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;
+import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -21,7 +24,7 @@ public class ResClassController {
 	private final IResClassService IResClassService;
 
 
-	@GetMapping("/resclass")
+	@RequestMapping(value="/resclass" , method=RequestMethod.GET)
 	public String selectAllResClass(Model model) {
 
 		Map<String, Map<String, List<String>>> resClassMap = new LinkedHashMap<>();
@@ -53,8 +56,15 @@ public class ResClassController {
 					tempMap3.put(r.getResClassName(), temp3);												
 				}
 			}
+
 		}
+
 		model.addAttribute("resClassMap", resClassMap);
 		return "itres/resclass"; 
+	}
+	
+	@RequestMapping(value="/resclass")
+	public String numberOfResByResClass() {
+		return "itres/resclass";
 	}
 }

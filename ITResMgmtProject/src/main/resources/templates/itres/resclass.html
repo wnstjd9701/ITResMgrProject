@@ -6,79 +6,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-	
-<style>
-.tree, .tree ul {
-    margin:0;
-    padding:0;
-    list-style:none
-}
-.tree ul {
-    margin-left:1em;
-    position:relative
-}
-.tree ul ul {
-    margin-left:.5em
-}
-.tree ul:before {
-    content:"";
-    display:block;
-    width:0;
-    position:absolute;
-    top:0;
-    bottom:0;
-    left:0;
-    border-left:1px solid
-}
-.tree li {
-    margin:0;
-    padding:0 1em;
-    line-height:2em;
-    color:#369;
-    font-weight:700;
-    position:relative
-}
-.tree ul li:before {
-    content:"";
-    display:block;
-    width:10px;
-    height:0;
-    border-top:1px solid;
-    margin-top:-1px;
-    position:absolute;
-    top:1em;
-    left:0
-}
-.tree ul li:last-child:before {
-    background:#fff;
-    height:auto;
-    top:1em;
-    bottom:0
-}
-.indicator {
-    margin-right:5px;
-}
-.tree li a {
-    text-decoration: none;
-    color:#369;
-}
-.tree li button, .tree li button:active, .tree li button:focus {
-    text-decoration: none;
-    color:#369;
-    border:none;
-    background:transparent;
-    margin:0px 0px 0px 0px;
-    padding:0px 0px 0px 0px;
-    outline: 0;
-}
-    </style>
+<link th:href="@{/css/itres/menutree.css}" rel="stylesheet" />
 </head>
 <body>
 <div  style="margin: 30px 0 0 30px;">
     <div class="row">
         <div class="col-md-4">
 
-            <ul th:each="res:${resClassMap}" class="tree">
+            <ul th:each="res:${resClassMap}"class="tree">
                 <li>[[${res.key}]]
             </li>
                 <ul>
@@ -89,68 +24,14 @@
                     </li>
                 </ul>
             </ul>
+
         </div>
     </div>
 </div>
+<ul th:each="num:${num}">
+<li th:text=${num}></li>
+</ul> 
 
-<script>
-$.fn.extend({
-    treed: function (o) {
-        var openedClass = 'glyphicon-minus-sign';
-        var closedClass = 'glyphicon-plus-sign';
-
-        if (typeof o != 'undefined') {
-            if (typeof o.openedClass != 'undefined') {
-                openedClass = o.openedClass;
-            }
-            if (typeof o.closedClass != 'undefined') {
-                closedClass = o.closedClass;
-            }
-        };
-
-        // 각 반복문의 ul 요소를 초기화
-        $(this).addClass("tree");
-        $(this).find('li').has("ul").each(function () {
-            var branch = $(this);
-            var icon = branch.children('i:first');
-            
-            // 초기 상태를 닫힌 상태로 설정
-            icon.addClass(closedClass);
-
-            branch.on('click', function (e) {
-                if (this == e.target) {
-                    icon.toggleClass(openedClass + " " + closedClass);
-                    branch.children().children().toggle();
-                }
-            });
-            branch.children().children().toggle();
-        });
-
-        // 클릭 이벤트 처리
-        $(this).find('.branch .indicator').each(function () {
-            $(this).on('click', function () {
-                $(this).closest('li').click();
-            });
-        });
-
-        $(this).find('.branch>a').each(function () {
-            $(this).on('click', function (e) {
-                $(this).closest('li').click();
-                e.preventDefault();
-            });
-        });
-
-        $(this).find('.branch>button').each(function () {
-            $(this).on('click', function (e) {
-                $(this).closest('li').click();
-                e.preventDefault();
-            });
-        });
-    }
-});
-
-// 각 반복문의 ul 요소에 대해 초기화
-$('.tree').treed();
-</script>
+<script type="text/javascript" th:src="@{/js/itres/menutree.js}"></script>
 </body>
 </html>
