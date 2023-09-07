@@ -22,6 +22,7 @@
 
 
 	<table id="empTable">
+		<thead>
 		<tr>
 			<th>선택</th>
 			<th>사원ID</th>
@@ -29,7 +30,9 @@
 			<th>사원유형</th>
 			<th>사원상태</th>
 		</tr>
-
+		</thead>
+		
+		<tbody>
 		<tr th:each="employeeList : ${employeeList}">
 			<td><input type="checkbox" name="emp_chekbox"></td>
 			<td th:text="${employeeList.employeeId}" id="employeeId"></td>
@@ -37,6 +40,7 @@
 			<td th:text="${employeeList.employeeStatus}"></td>
 			<td th:text="${employeeList.employeeType}"></td>
 		<tr>
+		</tbody>
 	</table>
 
 	<input type="button" value="행추가" onclick="addRow()" />

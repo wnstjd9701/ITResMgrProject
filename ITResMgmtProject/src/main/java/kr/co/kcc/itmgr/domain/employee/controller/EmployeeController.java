@@ -1,5 +1,7 @@
 package kr.co.kcc.itmgr.domain.employee.controller;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -28,27 +30,64 @@ public class EmployeeController {
 		return "employee/employeeview";
 	}
 
+//	@RequestMapping(value = "/employeeview", method = RequestMethod.POST)
+//	@ResponseBody
+//	public List<Employee> saveAll(@RequestBody List<Employee> employee, 
+//			@RequestParam(value = "employeeIdArray[]", required=false) List<String> employeeIdArray) {
+//
+//		List<Employee> employeeList = new ArrayList<>();
+//
+//		try {
+//			logger.info("employee: " + employee);
+//			logger.info("size: " + employee.size());
+//			if(employee.size() > 0 ) {
+//				employeeService.insertEmployee(employee);
+//			}
+//
+//			if(employeeIdArray != null) {
+//				System.out.println("employeeIdArray : " + employeeIdArray) ;
+//				logger.info("employeeIdArray: " + employeeIdArray);
+//				for (String employeeId : employeeIdArray) {
+//					employeeService.deleteEmployeeByUseYN(employeeId);
+//				} 
+//			}
+//			employeeList = employeeService.selectAllEmployee();
+//		} catch (Exception e) {
+//			e.printStackTrace(); 
+//		}
+//		return employeeList;
+//	}
+	
 	@RequestMapping(value = "/employeeview", method = RequestMethod.POST)
 	@ResponseBody
 	public List<Employee> saveAll(@RequestBody List<Employee> employee, 
 			@RequestParam(value = "employeeIdArray[]", required=false) List<String> employeeIdArray) {
-		
-			List<Employee> employeeList;
+
+		List<Employee> employeeList = new ArrayList<>();
+
+		try {
 			logger.info("employee: " + employee);
 			logger.info("size: " + employee.size());
 			if(employee.size() > 0 ) {
 				employeeService.insertEmployee(employee);
 			}
-			employeeList = employeeService.selectAllEmployee();
+
 			if(employeeIdArray != null) {
 				System.out.println("employeeIdArray : " + employeeIdArray) ;
 				logger.info("employeeIdArray: " + employeeIdArray);
 				for (String employeeId : employeeIdArray) {
 					employeeService.deleteEmployeeByUseYN(employeeId);
 				} 
-			} 
-			return employeeList;
+			}
+			employeeList = employeeService.selectAllEmployee();
+		} catch (Exception e) {
+			e.printStackTrace(); 
+		}
+		return employeeList;
 	}
+
+
+
 }
 
 

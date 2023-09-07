@@ -19,22 +19,21 @@
 ]]>
 </select>
 
-<insert id="insertEmployee" parameterType ="kr.co.kcc.itmgr.domain.employee.model.Employee" >
-		INSERT INTO employeeinfo
+<insert id="insertEmployee" parameterType="kr.co.kcc.itmgr.domain.employee.model.Employee">
+		<foreach collection="list" item="employee" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+		INTO employeeinfo
 			(employee_id, employee_name, employee_status_code, employee_type_code, create_date, creater_id, employee_pwd, use_yn) 
 		VALUES 
-			<foreach collection="employee" item="employee" separator="," open="(" close=")">
-				#{employee.employeeId}, 
-				#{employee.employeeName}, 
-				#{employee.employeeStatusCode}, 
-				#{employee.employeeTypeCode}, 
-				SYSDATE, 
-				'임시생성자ID', 
-				'임시비밀번호', 
-				'Y'
-			</foreach>
+				(#{employee.employeeId},
+				#{employee.employeeName},
+				#{employee.employeeStatusCode},
+				#{employee.employeeTypeCode},
+				SYSDATE,
+				'임시생성자ID',
+				'임시비밀번호',
+				'Y')
+		</foreach>
 </insert>
-
 
 
 <update id="deleteEmployeeByUseYN" parameterType="String">

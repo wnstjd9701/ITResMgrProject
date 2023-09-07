@@ -15,7 +15,7 @@ public interface IEmployeeRepository {
 	List<Employee> selectAllEmployee();
 	
 	//사원등록
-	void insertEmployee(@Param("employee")List<Employee> employee);
+	void insertEmployee(List<Employee> employee);
 	
 	
 	

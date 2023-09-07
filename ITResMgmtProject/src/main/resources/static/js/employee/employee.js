@@ -1,33 +1,35 @@
 var rowCount = 0;
+
+
 //행추가 버튼
 function addRow() {
 	var table = document.getElementById("empTable");
 	var newRow = table.insertRow();
 	newRow.setAttribute("data-row-id", rowCount);
-	
+
 	var newCell0 = newRow.insertCell(0);
 	newCell0.innerHTML = "<input type='checkbox'>";
-	
+
 	var newCell1 = newRow.insertCell(1);
 	newCell1.innerHTML = "<input type='text' id='empId" + rowCount + "' size='10'>";
-	
+
 	var newCell2 = newRow.insertCell(2);
 	newCell2.innerHTML = "<input type='text' id='empName" + rowCount + "' size='10'>";
-	
+
 	var newCell3 = newRow.insertCell(3);
 	newCell3.innerHTML = "<select id='empStatusCode" + rowCount + "'>"
-						+ "<option value=''>선택</option>"
-						+ "<option value='EMS001'>재직중</option>"
-						+ "<option value='EMS002'>휴직중</option>"
-						+ "<option value='EMS003'>퇴직</option>"
-						+ "</select>";
-						
+		+ "<option value=''>선택</option>"
+		+ "<option value='EMS001'>재직중</option>"
+		+ "<option value='EMS002'>휴직중</option>"
+		+ "<option value='EMS003'>퇴직</option>"
+		+ "</select>";
+
 	var newCell4 = newRow.insertCell(4);
 	newCell4.innerHTML = "<select id='empTypeCode" + rowCount + "'>"
-						+ "<option value=''>선택</option>"
-						+ "<option value='EMT002'>IT자원관리자</option>"
-						+ "<option value='EMT001'>시스템관리자</option>"
-						+ "</select>";
+		+ "<option value=''>선택</option>"
+		+ "<option value='EMT002'>IT자원관리자</option>"
+		+ "<option value='EMT001'>시스템관리자</option>"
+		+ "</select>";
 	rowCount++;
 }
 // 행삭제 버튼
@@ -45,12 +47,15 @@ function hideRow() {
 				var employeeIdCell = row.querySelector("#employeeId");
 				var employeeIdValue = employeeIdCell.textContent;
 				employeeIdArray.push(employeeIdValue);
-				console.log("employeeId 값: " + employeeIdValue);
+				//console.log("employeeId 값: " + employeeIdValue);
+				console.log("employeeId 값: " + employeeIdArray);
 			}
 		}
 	}
 	return employeeIdArray;
 }
+
+
 //행 저장
 function saveList() {
 	var employeeIdArray = hideRow();
@@ -65,23 +70,48 @@ function saveList() {
 
 		employee.push(emp);
 	}
+	
+	console.log("employee", employee)
+	
+	var requestData = {
+    employeeIdArray: employeeIdArray,
+    employeeData: employee
+};
 
-	console.log(employee);
+console.log("requestData", requestData)
+	
+
 	$.ajax({
 		url: '/employeeview',
 		type: 'POST',
 		dataType: 'json',
 		contentType: 'application/json',
-		data: JSON.stringify(employee), 
+		data: JSON.stringify(employee),
 		success: function(response) {
-			for(var i=0; i<response.length; i++){
-				console.log(response[i].employeeId);
-				addRow = 
+			rowCount = 0;
+
+			$('#empTable > tbody').empty();
+
+			for (var i = 0; i < response.length; i++) {
+				// table 행 추가
+				var addTableRow = "<tr>" +
+					"<td><input type='checkbox' name='emp_chekbox'></td>" +
+					"<td>" + response[i].employeeId + "</td>" +
+					"<td>" + response[i].employeeName + "</td>" +
+					"<td>" + response[i].employeeStatus + "</td>" +
+					"<td>" + response[i].employeeType + "</td>" +
+					"</tr>";
+
+				$('#empTable > tbody').append(addTableRow);
 			}
-			//window.location.href = '/employeeview';
+			return;
+
+
 		},
 		error: function(request, error) {
 			//alert("메시지:" + request.responseText + "\n" + "에러:" + error);
 		}
 	});
+
+
 }
