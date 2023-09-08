@@ -2,9 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.kcc.itmgr.domain.resclass.dao.IResClassRepository">
 
+
+
 	<select id="selectAllResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
 		<![CDATA[
-			SELECT c.res_class_name "resClassName", 
+			SELECT c.res_class_name "resClassName",
 			       listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
 			       c.upper_res_class_id	"upperResClassId"
 			FROM (
@@ -21,7 +23,7 @@
 		]]>
 	</select>
 	
-	<select id="numberOfResByResClass" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+	<select id="numberOfResByResClass" resultType="map">
 		<![CDATA[
 		    SELECT rc.res_class_name "resClassName" , COUNT(*) AS "mappingNumberOfRes"
             FROM RESINFO r
