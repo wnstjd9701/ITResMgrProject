@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/nav}"></th:block>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<div id="commonCode">
+			<div class="container">
+				<h2>Striped Rows</h2>
+				<p>The .table-striped class adds zebra-stripes to a table:</p>
+				<span>사용 여부</span> <select>
+					<option>Y</option>
+					<option>N</option>
+				</select> <span>코드 그룹명 및 ID</span> <input type="text" placeholder="입력">
+				<input type="button" value="검색">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>코드 그룹 ID</th>
+							<th>코드 그룹명</th>
+							<th>사용 여부</th>
+							<th>상태</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="commonCode, i : ${commonCode}">
+							<td th:text="${i.count}"></td>
+							<td th:text="${commonCode.codeGroupId}"></td>
+							<td><input type="text" th:value="${commonCode.codeGroupName}"></td>
+							<td>
+							    <label> 
+							        <input type="checkbox" name="monitoringYn" th:value="Y" checked="checked" /> 전체
+							    </label> 
+							    <label> 
+							        <input type="checkbox" name="monitoringYn" th:value="A" /> 미사용 포함
+							    </label> 
+							</td>
+							<td>변경</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="commonCodeDetail">
+				<div></div>
+				<div class="container">
+					<h2>Striped Rows</h2>
+					<p>The .table-striped class adds zebra-stripes to a table:</p>
+					<span>사용 여부</span> <select>
+						<option>Y</option>
+						<option>N</option>
+					</select> <span>코드 그룹명 및 ID</span> <input type="text" placeholder="입력">
+					<input type="button" value="검색">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Firstname</th>
+								<th>Lastname</th>
+								<th>Email</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>John</td>
+								<td>Doe</td>
+								<td>john@example.com</td>
+							</tr>
+							<tr>
+								<td>Mary</td>
+								<td>Moe</td>
+								<td>mary@example.com</td>
+							</tr>
+							<tr>
+								<td>July</td>
+								<td>Dooley</td>
+								<td>july@example.com</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		    <div class="container mt-5">
+        <h1>Code Management</h1>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="codeGroupId">코드 그룹 ID:</label>
+                <input type="text" id="codeGroupId" class="form-control">
+            </div>
+            <div class="col">
+                <label for="codeGroupName">코드 그룹명:</label>
+                <input type="text" id="codeGroupName" class="form-control">
+            </div>
+            <div class="col">
+                <label for="isActive">사용 여부:</label>
+                <select id="isActive" class="form-select">
+                    <option value="">전체</option>
+                    <option value="true">활성</option>
+                    <option value="false">비활성</option>
+                </select>
+            </div>
+            <div class="col">
+                <button class="btn btn-primary" onclick="searchCodes()">검색</button>
+            </div>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>코드 그룹 ID</th>
+                    <th>코드 그룹명</th>
+                    <th>사용 여부</th>
+                </tr>
+            </thead>
+            <tbody id="codeTableBody">
+                <!-- 검색 결과가 여기에 동적으로 로드됩니다. -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script th:src="@{/webjars/bootstrap/5.6.0/js/bootstrap.min.js}"></script>
+    
+</body>
+</body>
+</html>
