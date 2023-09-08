@@ -19,6 +19,12 @@ public class EmployeeService implements IEmployeeService{
 	public List<Employee> selectAllEmployee(){
 		return employeeRepository.selectAllEmployee();
 	}
+	
+	@Override
+	public List<Employee> selectSearchEmployee() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public void insertEmployee(List<Employee> employee) {
@@ -29,5 +35,7 @@ public class EmployeeService implements IEmployeeService{
 	public void deleteEmployeeByUseYN(String employeeId) {
 		employeeRepository.deleteEmployeeByUseYN(employeeId);		
 	}
+
+
 	
 }

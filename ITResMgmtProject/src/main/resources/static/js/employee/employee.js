@@ -36,22 +36,34 @@ function addRow() {
 function hideRow() {
 	var table = document.getElementById("empTable");
 	var rows = table.getElementsByTagName('tr');
+
+
 	var employeeIdArray = [];
+	//var employeeIdArray = new Array();
+
 	for (var i = 1; i < rows.length; i++) {
+		var empIdArr = new Object();
 		var row = rows[i];
 		var checkboxes = row.querySelectorAll('[name="emp_chekbox"]');
+
 		if (checkboxes.length > 0) {
 			var checkbox = checkboxes[0];
 			if (checkbox.checked) {
 				row.style.display = 'none';
 				var employeeIdCell = row.querySelector("#employeeId");
-				var employeeIdValue = employeeIdCell.textContent;
-				employeeIdArray.push(employeeIdValue);
+				console.log(employeeIdCell)
+				//var employeeIdValue = employeeIdCell.textContent;
+				empIdArr = employeeIdCell.textContent;
+
+				employeeIdArray.push(empIdArr);
+				//employeeIdArray.push(employeeIdValue);
 				//console.log("employeeId 값: " + employeeIdValue);
-				console.log("employeeId 값: " + employeeIdArray);
 			}
+			console.log("employeeIdArray : " + employeeIdArray);
 		}
 	}
+	
+	
 	return employeeIdArray;
 }
 
@@ -60,6 +72,7 @@ function hideRow() {
 function saveList() {
 	var employeeIdArray = hideRow();
 	var employee = new Array();
+
 
 	for (var i = 0; i < rowCount; i++) {
 		var emp = new Object();
@@ -70,16 +83,14 @@ function saveList() {
 
 		employee.push(emp);
 	}
-	
-	console.log("employee", employee)
-	
-	var requestData = {
-    employeeIdArray: employeeIdArray,
-    employeeData: employee
-};
 
-console.log("requestData", requestData)
-	
+	var temp = new Object();
+
+	temp.employeeIdArray = employeeIdArray;
+	employee.push(temp);
+
+
+	console.log("employee", employee)
 
 	$.ajax({
 		url: '/employeeview',
@@ -88,6 +99,9 @@ console.log("requestData", requestData)
 		contentType: 'application/json',
 		data: JSON.stringify(employee),
 		success: function(response) {
+			//alert("성공	");
+
+			console.log("response", response)
 			rowCount = 0;
 
 			$('#empTable > tbody').empty();
@@ -104,12 +118,14 @@ console.log("requestData", requestData)
 
 				$('#empTable > tbody').append(addTableRow);
 			}
+			console.log(" 결과 employee", employee)
+
 			return;
 
 
 		},
 		error: function(request, error) {
-			//alert("메시지:" + request.responseText + "\n" + "에러:" + error);
+			alert("메시지:" + request.responseText + "\n" + "에러:" + error);
 		}
 	});
 

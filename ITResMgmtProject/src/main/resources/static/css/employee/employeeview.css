@@ -1,0 +1,31 @@
+@charset "UTF-8";
+
+#empStatus {
+	display: flex;
+	align-items: center;
+}
+
+#p1 {
+	margin-right: 10px;
+	font-size: 12px;
+}
+
+#empType {
+	display: flex;
+	align-items: center;
+}
+
+#p2 {
+	margin-right: 10px;
+	font-size: 12px;
+}
+
+#empText {
+	display: flex;
+	align-items: center;
+}
+
+#p3 {
+	margin-right: 10px;
+	font-size: 12px;
+}

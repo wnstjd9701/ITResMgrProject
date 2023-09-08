@@ -19,6 +19,7 @@ public class Employee {
 	private String updaterId;
 	private char useYN;
 	
+	private String[] employeeIdArray;
 	private String employeeType;
 	private String employeeStatus;
 }
