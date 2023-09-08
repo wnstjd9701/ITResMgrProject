@@ -32,6 +32,23 @@
 		]]>
 	</select>
 	
+	<select id="selectResClass" parameterType="int">
+		<![CDATA[
+            SELECT
+			    level,
+			    res_class_id as "resClassId",
+			    upper_res_class_id as "upperResClassId",
+			    res_class_name as "resClassName"
+			FROM
+			    resclass 
+			WHERE
+			    level = #{level}
+			START WITH
+			    upper_res_class_id IS NULL
+			CONNECT BY
+			    PRIOR res_class_id = upper_res_class_id
+		]]>
+	</select>
 
 	
 

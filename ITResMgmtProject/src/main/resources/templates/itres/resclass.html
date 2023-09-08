@@ -8,14 +8,35 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<style>
+
+</style>
 </head>
 <body>
-<div class="container" style="margin-top:70px;">
-    <div class="row">
-        <div class="col-md-6">
+		<div class="container" style="margin-top:70px;">
+			<span>대 분 류</span>
+			<select>
+				<option th:each="res1:${selectResClass1}">[[${res1.resClassName}]]</option>
+			</select>
+			<span>중 분 류</span>
+			<select>
+				<option th:each="res2:${selectResClass2}">[[${res2.resClassName}]]</option>
+			</select>
+			<span>소 분 류</span>
+			<select>
+				<option th:each="res3:${selectResClass3}">[[${res3.resClassName}]]</option>
+			</select>
+			</select> <span>사용 여부</span> 
+			<label> <input type="radio"name="monitoringYn" value="Y" /> 전체 </label> 
+			<label> <input type="radio" name="monitoringYn" value="A" /> 미사용 포함 </label>
+			<input type="text" placeholder="자원분류명을 입력하세요."/>
+		</div>
+<div class="container" style="margin-top:70px; display:flex; clear:both;">
+    <div class="flex-item" style="width: 1200px;">
+        <div class="col-md-12">
 
-            <ul th:each="res:${resClassMap}" class="tree2">
-                <li>[[${res.key}]]
+            <ul th:each="res:${resClassMap}" class="tree2">[[${res.key}]]
+                <li>
             </li>
                 <ul>
                     <li th:each="rv:${res.value}">[[${rv.key}]](<span class="result"/>)
@@ -27,6 +48,84 @@
             </ul>
         </div>
     </div>
+			<div class="flex-item" style="width:1200px;">
+			
+				<div class="row">
+					<div class="col-md-16">
+						<table class="table table-hover">
+						 <tbody>
+							    <tr>
+							      <th scope="row">대 분 류
+							      	<td>
+							      		<select>
+						                    <option th:each="res1 : ${selectResClass1}">
+						                    	<span>[[${res1.resClassName}]]</span>
+						                    </option>
+										</select>
+							      	</td>
+							      </th>
+							    </tr>
+							    <tr>
+							      <th scope="row">중 분 류
+							      	<td>
+							      		<select>
+						                    <option th:each="res2:${selectResClass2}">
+						                    	<span>[[${res2.resClassName}]]</span>
+						                    </option>
+										</select>
+							      	</td>
+							      </th>
+							    </tr>
+							    <tr>
+							      <th scope="row">소 분 류
+							      	<td>
+							      		<select>
+						                    <option th:each="res3:${selectResClass3}">
+						                    	<span>[[${res3.resClassName}]]</span>
+						                    </option>
+										</select>
+							      	</td>
+							      </th>
+							    </tr>
+							    <tr>
+							      <th scope="row">사용여부
+							      	<td>
+										<input type="radio" name="useYn" value="y" checked>Y
+										<input type="radio" name="useYn" value="n">N
+							      	</td>
+							      </th>
+							    </tr>
+							    <tr>
+							      <th scope="row">분류명
+							      	<td>
+							      		<input></input>
+							      	</td>
+							      </th>
+							    </tr>
+						    </tbody>
+						</table>
+						<div>➕부 가 정 보</div>
+						<br>
+						<div class="addInfoTable">
+							<table>
+								<thead class="addInfoTableHead">
+									<th></th>
+									<th>일련번호</th>
+									<th>부가항목명</th>
+									<th>사용여부</th>
+								</thead>
+								<tbody>
+									<td><input type="checkbox"/></td>
+									<td>dd</td>
+									<td>dd</td>
+									<td>dd</td>
+								</tbody>
+								
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
 </div>
 
 

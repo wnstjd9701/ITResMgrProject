@@ -3,13 +3,16 @@
     padding:0;
     list-style:none;
     margin-left:10px;
+    font-weight:700;
 }
 .tree ul {
     margin-left:1em;
-    position:relative
+    position:relative;
+    font-weight:700;
 }
 .tree ul ul {
     margin-left:.5em
+    
 }
 .tree ul:before {
     content:"";
@@ -25,8 +28,8 @@
     margin:0;
     padding:0 1em;
     line-height:2em;
-    color:#369;
-    font-weight:700;
+    color: #2E2E2E;
+    font-weight:400;
     position:relative
 }
 .tree ul li:before {
@@ -51,14 +54,39 @@
 }
 .tree li a {
     text-decoration: none;
-    color:#369;
+    color: #2E2E2E;
 }
 .tree li button, .tree li button:active, .tree li button:focus {
     text-decoration: none;
-    color:#369;
+    color: #2E2E2E;
     border:none;
     background:transparent;
     margin:0px 0px 0px 0px;
     padding:0px 0px 0px 0px;
     outline: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th{
+	text-align: center; /* 텍스트 가운데 정렬 스타일 */
+
+    padding: 10px; /* 셀 안의 여백 설정 */
+}
+td {
+    text-align: center; /* 텍스트 가운데 정렬 스타일 */
+
+    padding: 10px; /* 셀 안의 여백 설정 */
+}
+.addInfoTable{
+     border: 1px solid #ccc; /* 테두리 스타일 설정 */
+     margin: 0 auto; /* 가운데 정렬 */
+}
+thead th {
+	 text-align: center;
+     border-bottom: 1px solid; /* <thead>의 <th> 요소에 아랫선 추가 */
+     padding: 10px;
 }
