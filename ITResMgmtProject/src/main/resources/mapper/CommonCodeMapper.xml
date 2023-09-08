@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.kcc.itmgr.domain.commoncode.dao.ICommonCodeRepository">
-	<select id="selectAllCommonCode">
+	<select id="selectAllCommonCode" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCode">
 		SELECT
-		   code_group_id   AS "codeGroupId",
-		   code_group_name AS "codeGroupName",
-		   use_yn          AS "useYn"
+		    c.code_group_id        AS "codeGroupId",
+		    c.code_group_name      AS "codeGroupName",
+		    c.use_yn               AS "useYn",
+		    COUNT(c.code_group_id) AS "codeDetailCount"
+		FROM commoncodedetail cd
+		LEFT JOIN commoncode c on cd.code_group_id = c.code_group_id
+		GROUP BY c.code_group_id, c.code_group_name, c.use_yn
+	</select>
+	
+	<select id="selectAllCommonCodeDetail" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
+		SELECT
+		    detail_code      AS "detailCode",
+		    detail_code_name AS "detailCodeName",
+		    code_group_id    AS "codeGroupId",
+		    use_yn           AS "useYn"
 		FROM
-		   commoncode
+		    commoncodedetail
+	</select>
+	
+	<select id="checkIfCodeGroupIdExists" parameterType="String" resultType="int">
+		SELECT
+		    COUNT(*)
+		FROM
+		    dual
+		WHERE
+		    EXISTS (
+		        SELECT
+		            1
+		        FROM
+		            commoncode
+		        WHERE
+		            code_group_id = #{codeGroupId}
+		    )
 	</select>
 </mapper>

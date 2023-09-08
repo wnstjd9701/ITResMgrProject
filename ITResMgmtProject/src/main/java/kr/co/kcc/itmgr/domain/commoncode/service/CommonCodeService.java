@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.kcc.itmgr.domain.commoncode.dao.ICommonCodeRepository;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCode;
+import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -14,9 +15,22 @@ public class CommonCodeService implements ICommonCodeService{
 
 	private final ICommonCodeRepository commonCodeRepository;
 	
+	// 모든 공통 코드 가져오기
 	@Override
 	public List<CommonCode> selectAllCommonCode() {
 		return commonCodeRepository.selectAllCommonCode();
+	}
+
+	// 모든 상세 코드 가져오기
+	@Override
+	public List<CommonCodeDetail> selectAllCommonCodeDetail() {
+		return commonCodeRepository.selectAllCommonCodeDetail();
+	}
+
+	// 코드 그룹 존재하는지 확인
+	@Override
+	public int checkIfCodeGroupIdExists(String codeGroupId) {
+		return commonCodeRepository.checkIfCodeGroupIdExists(codeGroupId);
 	}
 
 }

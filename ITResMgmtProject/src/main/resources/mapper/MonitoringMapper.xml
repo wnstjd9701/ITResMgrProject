@@ -42,7 +42,7 @@
 			            PRIOR res_class_id = upper_res_class_id
 			    ) rc ON r.res_class_id = rc.res_class_id
 			WHERE
-			    r.monitoring_yn = 'Y'
+			    r.monitoring_yn = 'Y' AND r.use_yn = 'Y'
 		]]>
 	</select>
 	
@@ -111,7 +111,7 @@
 			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
 			    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
 			WHERE
-			    1 = 1
+			    r.use_yn = 'Y'
 			        <if test='monitoringYn.equals("Y")'>
 			            and r.monitoring_yn = #{monitoringYn}
 			        </if>

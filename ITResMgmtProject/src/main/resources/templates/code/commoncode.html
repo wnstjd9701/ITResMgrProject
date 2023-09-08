@@ -10,127 +10,179 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+/* 스크롤 가능한 영역의 스타일 */
+.table-container {
+	max-height: 20em; /* 원하는 높이로 조절 */
+	overflow-y: auto; /* 세로 스크롤 표시 */
+}
+</style>
 </head>
 <body>
 	<div id="wrapper">
 		<div id="commonCode">
 			<div class="container">
-				<h2>Striped Rows</h2>
-				<p>The .table-striped class adds zebra-stripes to a table:</p>
+				<h2>공통 코드</h2>
+				<p>* 공통 코드 관리</p>
 				<span>사용 여부</span> <select>
 					<option>Y</option>
 					<option>N</option>
 				</select> <span>코드 그룹명 및 ID</span> <input type="text" placeholder="입력">
 				<input type="button" value="검색">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>번호</th>
-							<th>코드 그룹 ID</th>
-							<th>코드 그룹명</th>
-							<th>사용 여부</th>
-							<th>상태</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="commonCode, i : ${commonCode}">
-							<td th:text="${i.count}"></td>
-							<td th:text="${commonCode.codeGroupId}"></td>
-							<td><input type="text" th:value="${commonCode.codeGroupName}"></td>
-							<td>
-							    <label> 
-							        <input type="checkbox" name="monitoringYn" th:value="Y" checked="checked" /> 전체
-							    </label> 
-							    <label> 
-							        <input type="checkbox" name="monitoringYn" th:value="A" /> 미사용 포함
-							    </label> 
-							</td>
-							<td>변경</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div id="commonCodeDetail">
-				<div></div>
-				<div class="container">
-					<h2>Striped Rows</h2>
-					<p>The .table-striped class adds zebra-stripes to a table:</p>
-					<span>사용 여부</span> <select>
-						<option>Y</option>
-						<option>N</option>
-					</select> <span>코드 그룹명 및 ID</span> <input type="text" placeholder="입력">
-					<input type="button" value="검색">
-					<table class="table table-striped">
+				<div>
+					<input id="commonCodeAddRowBtn" type="button" value="행추가">
+					<input id="commonCodeDeleteRowBtn" type="button" value="행삭제">
+					<input id="saveBtn" type="button" value="저장">
+				</div>
+				<div class="table-container">
+					<table class="table table-striped commoncode-table">
 						<thead>
 							<tr>
-								<th>Firstname</th>
-								<th>Lastname</th>
-								<th>Email</th>
+								<th>상태</th>
+								<th>코드 그룹 ID</th>
+								<th>코드 그룹명</th>
+								<th>상세 코드 개수</th>
+								<th>사용 여부</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>John</td>
-								<td>Doe</td>
-								<td>john@example.com</td>
-							</tr>
-							<tr>
-								<td>Mary</td>
-								<td>Moe</td>
-								<td>mary@example.com</td>
-							</tr>
-							<tr>
-								<td>July</td>
-								<td>Dooley</td>
-								<td>july@example.com</td>
+							<tr th:each="commonCode, i : ${commonCode}">
+								<td th:text="${commonCode.flag}"></td>
+								<td id="commonCode-group-id" th:text="${commonCode.codeGroupId}"></td>
+								<td><input type="text"
+									th:value="${commonCode.codeGroupName}"></td>
+								<td th:text="${commonCode.codeDetailCount}"></td>
+								<td><select>
+										<option>Y</option>
+										<option>N</option>
+								</select></td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
-		    <div class="container mt-5">
-        <h1>Code Management</h1>
+			<div id="commonCodeDetail">
+				<div></div>
+				<div class="container">
+					<h2>상세 코드</h2>
+					<p>
+						🎨 상세 코드 관리 <sp
+					an>사용 여부</span> <select>
+							<option>Y</option>
+							<option>N</option>
+						</select> <span>코드 그룹명 및 ID</span> <input type="text" placeholder="입력">
+						<input type="button" value="검색">
+					<div class="table-container">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>상태</th>
+									<th>선택</th>
+									<th>상세 코드</th>
+									<th>상세 코드 명</th>
+									<th>사용 여부</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
+									<td th:text="${commonCodeDetail.flag}"></td>
+									<td><input type="checkbox"></td>
+									<td th:text="${commonCodeDetail.detailCode}"></td>
+									<td th:text="${commonCodeDetail.detailCodeName}"></td>
+									<td th:text="${commonCodeDetail.useYn}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-        <div class="row mb-3">
-            <div class="col">
-                <label for="codeGroupId">코드 그룹 ID:</label>
-                <input type="text" id="codeGroupId" class="form-control">
-            </div>
-            <div class="col">
-                <label for="codeGroupName">코드 그룹명:</label>
-                <input type="text" id="codeGroupName" class="form-control">
-            </div>
-            <div class="col">
-                <label for="isActive">사용 여부:</label>
-                <select id="isActive" class="form-select">
-                    <option value="">전체</option>
-                    <option value="true">활성</option>
-                    <option value="false">비활성</option>
-                </select>
-            </div>
-            <div class="col">
-                <button class="btn btn-primary" onclick="searchCodes()">검색</button>
-            </div>
-        </div>
+	<script th:inline="javascript">
+		$(document)
+				.ready(
+						function() {
+							var commonCode = `[[${commonCode}]]`;
+							var commonCodeDetail = `[[${commonCodeDetail}]]`;
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>코드 그룹 ID</th>
-                    <th>코드 그룹명</th>
-                    <th>사용 여부</th>
-                </tr>
-            </thead>
-            <tbody id="codeTableBody">
-                <!-- 검색 결과가 여기에 동적으로 로드됩니다. -->
-            </tbody>
-        </table>
-    </div>
+							var commonCodeList = JSON.parse(commonCode); // Object Type
+							var commonCodeDetail = JSON.parse(commonCodeDetail);
+							console.log(commonCodeList[0]);
 
-    <!-- Bootstrap JavaScript -->
-    <script th:src="@{/webjars/bootstrap/5.6.0/js/bootstrap.min.js}"></script>
-    
+							// 공통 코드 행추가 버튼
+							$("#commonCodeAddRowBtn")
+									.click(
+											function() {
+												// 새로운 행 생성
+												var newRow = $("<tr>");
+												var cell1 = $("<td>").text("C");
+												var cell2 = $("<td>").append(
+														"<input type='text'>");
+												var cell3 = $("<td>").append(
+														"<input type='text'>");
+												var cell4 = $("<td>").text("-");
+												var cell5 = $("<td>")
+														.append(
+																"<select><option>Y</option><option>N</option></select>");
+												newRow.append(cell1);
+												newRow.append(cell2);
+												newRow.append(cell3);
+												newRow.append(cell4);
+												newRow.append(cell5);
+
+												// 테이블에 새로운 행 추가
+												$(".commoncode-table tbody")
+														.append(newRow);
+
+												// 행 추가 시 스크롤 맨 아래
+												var tableContainer = $(".table-container");
+												tableContainer
+														.scrollTop(tableContainer[0].scrollHeight);
+											});
+
+							// 공통 코드 행삭제 버튼
+							$("#commonCodeDeleteRowBtn")
+									.click(
+											function() {
+												var commonCodeTable = $(".commoncode-table tbody");
+												var lastRow = commonCodeTable
+														.find("tr:last");
+												const codeGroupId = lastRow
+														.find(
+																"#commonCode-group-id")
+														.text();
+												console.log(codeGroupId);
+
+												$
+														.ajax({
+															type : "GET",
+															url : "/checkcodegroup?codeGroupId="
+																	+ codeGroupId,
+															success : function(
+																	response) {
+																console
+																		.log(response);
+																if (response > 0) {
+																	alert("이 코드 그룹은 DB에 존재합니다. 삭제할 수 없습니다.");
+																	return;
+																} else {
+																	// 코드 그룹이 DB에 존재하지 않으면 해당 행을 삭제합니다.
+																	lastRow
+																			.remove();
+																}
+															},
+															error : function(
+																	xhr,
+																	status,
+																	error) {
+																alert("에러 발생:",
+																		error);
+															}
+														});
+											});
+						});
+	</script>
 </body>
 </body>
 </html>

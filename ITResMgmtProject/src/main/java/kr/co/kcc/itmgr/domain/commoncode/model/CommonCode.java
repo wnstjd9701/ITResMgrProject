@@ -14,4 +14,9 @@ public class CommonCode {
 	private String createrId;
 	private Timestamp updateDate;
 	private String updaterId;
+	
+	private int codeDetailCount;
+	
+	// Flag - Create / Update / Delete인지 확인하는 변수
+	private String flag;
 }
