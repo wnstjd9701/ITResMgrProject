@@ -1,6 +1,7 @@
 package kr.co.kcc.itmgr.domain.resclass.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -13,11 +14,16 @@ import lombok.RequiredArgsConstructor;
 public class ResClassService implements IResClassService {
 	
 	private final IResClassRepository IResClassRepository;
-	
+
 	@Override
 	public List<ResClass> selectAllResClass() {
 		return IResClassRepository.selectAllResClass();
 	}
+
+
+
+
+	
 
 
 }
