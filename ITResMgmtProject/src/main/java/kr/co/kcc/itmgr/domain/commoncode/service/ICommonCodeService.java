@@ -10,4 +10,9 @@ public interface ICommonCodeService {
 	List<CommonCodeDetail> selectAllCommonCodeDetail(); // 모든 상세 코드 가져오기
 	
 	int checkIfCodeGroupIdExists(String codeGroupId); // 코드 그룹 존재하는지 확인
+	
+	List<CommonCode> selectCommonCodeBySearch(String useYn, String keyword); // 공통 코드 검색
+	List<CommonCodeDetail> selectCommonCodeDetailBySearch(String useYn, String keyword); // 상세 코드 검색
+	
+	List<CommonCodeDetail> selectCommonCodeDetailByCodeGroupId(String codeGroupId); // 공통 코드 그룹 ID로 상세 코드 가져오기
 }

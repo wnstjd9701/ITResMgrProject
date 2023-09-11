@@ -33,4 +33,22 @@ public class CommonCodeService implements ICommonCodeService{
 		return commonCodeRepository.checkIfCodeGroupIdExists(codeGroupId);
 	}
 
+	// 공통 코드 검색 
+	@Override
+	public List<CommonCode> selectCommonCodeBySearch(String useYn, String keyword) {
+		return commonCodeRepository.selectCommonCodeBySearch(useYn, keyword);
+	}
+	
+	// 상세 코드 검색
+	@Override
+	public List<CommonCodeDetail> selectCommonCodeDetailBySearch(String useYn, String keyword) {
+		return commonCodeRepository.selectCommonCodeDetailBySearch(useYn, keyword);
+	}
+	
+	// 공통 코드 그룹 ID로 상세 코드 가져오기
+	@Override
+	public List<CommonCodeDetail> selectCommonCodeDetailByCodeGroupId(String codeGroupId) {
+		return commonCodeRepository.selectCommonCodeDetailByCodeGroupId(codeGroupId);
+	}
+
 }
