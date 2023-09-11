@@ -25,10 +25,12 @@
 	
 	<select id="numberOfResByResClass" resultType="map">
 		<![CDATA[
-		    SELECT rc.res_class_name "resClassName" , COUNT(*) AS "mappingNumberOfRes"
+		    SELECT rc.upper_res_class_id	"upperResClassId",
+		    rc.res_class_name "resClassName" , 
+		    COUNT(*) AS "mappingNumberOfRes" 
             FROM RESINFO r
             JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
-            GROUP BY rc.res_class_name
+            GROUP BY rc.res_class_name, rc.upper_res_class_id
 		]]>
 	</select>
 	
@@ -47,6 +49,17 @@
 			    upper_res_class_id IS NULL
 			CONNECT BY
 			    PRIOR res_class_id = upper_res_class_id
+		]]>
+	</select>
+	
+	<select id="selectResClassNameByUpperResClass" parameterType="String">
+		<![CDATA[
+			SELECT 
+				res_class_name	"resClassName"
+			FROM
+				resclass
+			WHERE 
+				upper_res_class_id = #{upperResClassId}
 		]]>
 	</select>
 

@@ -31,6 +31,11 @@ public class ResClassService implements IResClassService {
 		return IResClassRepository.selectResClass(level);
 	}
 
+	@Override
+	public List<ResClass> selectResClassNameByUpperResClass(String upperResClassId) {
+		return IResClassRepository.selectResClassNameByUpperResClass(upperResClassId);
+	}
+
 
 
 

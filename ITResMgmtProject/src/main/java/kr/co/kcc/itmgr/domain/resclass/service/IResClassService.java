@@ -10,4 +10,5 @@ public interface IResClassService {
 	List<ResClass> selectAllResClass();
 	List<Map<Object, Object>> numberOfResByResClass();
 	List<ResClass> selectResClass(int level);
+	List<ResClass> selectResClassNameByUpperResClass(String upperResClassId);
 }
