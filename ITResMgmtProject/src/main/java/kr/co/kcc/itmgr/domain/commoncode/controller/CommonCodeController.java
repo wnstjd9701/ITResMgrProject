@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -33,19 +34,8 @@ public class CommonCodeController {
 	 */
 	@GetMapping("/commoncode")
 	public String commonCode(Model model) {
-		List<CommonCode> commonCode = commonCodeService.selectAllCommonCode().stream()
-				.map(c -> {
-					c.setFlag("E");
-					return c;
-				})
-				.collect(Collectors.toList());;
-		List<CommonCodeDetail> commonCodeDetail = commonCodeService.selectAllCommonCodeDetail().stream()
-				.map(c -> {
-					c.setFlag("E");
-					return c;
-				})
-				.collect(Collectors.toList());
-		logger.info("result" + commonCodeDetail);
+		List<CommonCode> commonCode = commonCodeService.selectAllCommonCode();
+		List<CommonCodeDetail> commonCodeDetail = commonCodeService.selectAllCommonCodeDetail();
 		
 		model.addAttribute("commonCode", commonCode);
 		model.addAttribute("commonCodeDetail", commonCodeDetail);
@@ -70,49 +60,53 @@ public class CommonCodeController {
 	@GetMapping("/search/commoncode")
 	@ResponseBody
 	public List<CommonCode> searchCommonCode(@RequestParam("useYn") String useYn, @RequestParam("keyword") String keyword) {
-		List<CommonCode> commonCode = commonCodeService.selectCommonCodeBySearch(useYn, keyword).stream()
-				.map(c -> { 
-					c.setFlag("E"); 
-					return c;
-				})
-				.collect(Collectors.toList());
+		List<CommonCode> commonCode = commonCodeService.selectCommonCodeBySearch(useYn, keyword);
 		logger.info("commonCode: " + commonCode);
 		return commonCode;
 	}
 	
 	/*
 	 * API No6. 저장 버튼 클릭 시
-	 * Info : 저장 버튼 클릭 시 모든 
+	 * Info : 저장 버튼 클릭 시 C/U/D
 	 */
 	@PostMapping("/commoncode")
 	@ResponseBody
-	public Map<String, Object> commonCodeSave(){
+	public Map<String, Object> commonCodeSave(@RequestBody List<CommonCode> commonCodeList){
 		/*
 		 *  Flag에 따른 저장 로직
 		 *  C - Insert / U - Update / D - Delete (사용 여부 N으로 바꿔주기)
 		 */
+		Map<String, List<CommonCode>> groupedCommonCode = commonCodeList.stream()
+			    .collect(Collectors.groupingBy(CommonCode::getFlag)); // Flag가 Key값이 됨
 		
+		if (groupedCommonCode.containsKey("C")) {
+			List<CommonCode> insertList = groupedCommonCode.get("C");
+	    	logger.info("insertList: " + insertList);
+	    	
+	    	//int insertResult = insertList.forEach(commonCode -> commonCodeService.insertCommonCode(commonCode));
+	    	int insertResult = commonCodeService.insertCommonCode(insertList);
+	    	logger.info("insertResult: " + insertResult);
+		}
+		
+		else if (groupedCommonCode.containsKey("U") || groupedCommonCode.containsKey("D")) {
+			List<CommonCode> updateList = groupedCommonCode.get("U");
+	    	logger.info("updateList: " + updateList);
+
+	    	int updateRow = 0;
+	    	for(CommonCode commonCode : updateList) {
+	    		updateRow += commonCodeService.updateCommonCode(commonCode);
+	    	}
+	    	logger.info("updateRow: " + updateRow);
+		}
 		
 		// 저장 후 다시 값들을 받아와서 return 
 		Map<String, Object> commonCodeMap = new HashMap<String, Object>();
 		
-		List<CommonCode> commonCodeResult = commonCodeService.selectAllCommonCode().stream()
-				.map(c -> {
-					c.setFlag("E");
-					return c;
-				})
-				.collect(Collectors.toList());;
-				
-		List<CommonCodeDetail> commonCodeDetailResult = commonCodeService.selectAllCommonCodeDetail().stream()
-				.map(c -> {
-					c.setFlag("E");
-					return c;
-				})
-				.collect(Collectors.toList());;
+		List<CommonCode> commonCodeResult = commonCodeService.selectAllCommonCode();
+		List<CommonCodeDetail> commonCodeDetailResult = commonCodeService.selectAllCommonCodeDetail();
 		
 		commonCodeMap.put("commonCode", commonCodeResult);
 		commonCodeMap.put("commonCodeDetail", commonCodeDetailResult);
-		logger.info("commonCodeMap: " + commonCodeMap);
 		return commonCodeMap;
 	}
 	
@@ -120,15 +114,10 @@ public class CommonCodeController {
 	 * API No7. 공통 코드에 대한 상세 코드 가져오기
 	 * Info : 공통 코드 클릭 시 상세 코드 정보 가져오기
 	 */
-	@GetMapping("commoncodedetail")
+	@GetMapping("/commoncodedetail")
 	@ResponseBody 
     public List<CommonCodeDetail> selectCommonCodeDetail(@RequestParam("codeGroupId") String codeGroupId){
-		List<CommonCodeDetail> commonCodeDetail = commonCodeService.selectCommonCodeDetailByCodeGroupId(codeGroupId).stream()
-				.map(c -> {
-					c.setFlag("E");
-					return c;
-				})
-				.collect(Collectors.toList());
+		List<CommonCodeDetail> commonCodeDetail = commonCodeService.selectCommonCodeDetailByCodeGroupId(codeGroupId);
 		logger.info("commonCodeDetail: " + commonCodeDetail);
 		return commonCodeDetail;
 	}
@@ -140,12 +129,7 @@ public class CommonCodeController {
 	@GetMapping("/search/commoncodedetail")
 	@ResponseBody
 	public List<CommonCodeDetail> searchCommonCodeDetail(@RequestParam("useYn") String useYn, @RequestParam("keyword") String keyword){
-		List<CommonCodeDetail> commonCodeDetail = commonCodeService.selectCommonCodeDetailBySearch(useYn, keyword).stream()
-				.map(c -> {
-					c.setFlag("E");
-					return c;
-				})
-				.collect(Collectors.toList());
+		List<CommonCodeDetail> commonCodeDetail = commonCodeService.selectCommonCodeDetailBySearch(useYn, keyword);
 		logger.info("commonCodeDetail: " + commonCodeDetail);
 		return commonCodeDetail;
 	}

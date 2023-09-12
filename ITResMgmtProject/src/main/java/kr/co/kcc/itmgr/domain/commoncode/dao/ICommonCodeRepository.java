@@ -20,4 +20,7 @@ public interface ICommonCodeRepository {
 	List<CommonCodeDetail> selectCommonCodeDetailBySearch(String useYn, String keyword); // 상세 코드 검색
 	
 	List<CommonCodeDetail> selectCommonCodeDetailByCodeGroupId(String codeGroupId); // 공통 코드 그룹 ID로 상세 코드 가져오기
+	
+	int insertCommonCode(List<CommonCode> commonCode); // 공통 코드 생성
+	int updateCommonCode(CommonCode commonCode); // 공통 코드 업데이트
 }

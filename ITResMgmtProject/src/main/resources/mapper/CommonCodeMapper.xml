@@ -6,10 +6,16 @@
 		    c.code_group_id        AS "codeGroupId",
 		    c.code_group_name      AS "codeGroupName",
 		    c.use_yn               AS "useYn",
-		    COUNT(c.code_group_id) AS "codeDetailCount"
-		FROM commoncodedetail cd
-		LEFT JOIN commoncode c on cd.code_group_id = c.code_group_id
-		GROUP BY c.code_group_id, c.code_group_name, c.use_yn
+		    COUNT(cd.code_group_id) AS "codeDetailCount"
+		FROM
+		    commoncode       c
+		    LEFT JOIN commoncodedetail cd ON c.code_group_id = cd.code_group_id
+		GROUP BY
+		    c.code_group_id,
+		    c.code_group_name,
+		    c.use_yn
+		ORDER BY
+		    c.code_group_name
 	</select>
 	
 	<select id="selectAllCommonCodeDetail" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
@@ -43,7 +49,7 @@
 		    c.code_group_id        AS "codeGroupId",
 		    c.code_group_name      AS "codeGroupName",
 		    c.use_yn               AS "useYn",
-		    COUNT(c.code_group_id) AS "codeDetailCount"
+		    COUNT(cd.code_group_id) AS "codeDetailCount"
 		FROM
 		    commoncode c
 		LEFT JOIN commoncodedetail cd ON c.code_group_id = cd.code_group_id
@@ -56,6 +62,7 @@
 				and c.use_yn = #{useYn}
 			</if>
 		GROUP BY c.code_group_id, c.code_group_name, c.use_yn
+		ORDER BY c.code_group_id
 	</select>
 	
 	<select id="selectCommonCodeDetailBySearch" parameterType="String" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
@@ -86,4 +93,33 @@
 		    commoncodedetail
         WHERE code_group_id = #{codeGroupId}
 	</select>
+	
+	<insert id="insertCommonCode" parameterType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCode">
+		INSERT INTO commoncode(
+			code_group_id,
+			code_group_name,
+			use_yn,
+			create_date,
+			creater_id
+		)
+		<foreach collection="list" item="commonCode" separator="UNION ALL">
+			SELECT #{commonCode.codeGroupId},
+				#{commonCode.codeGroupName},
+				#{commonCode.useYn},
+				SYSDATE,
+				'WNSTJD'
+			FROM
+				DUAL
+		</foreach>
+	</insert>
+	
+	<update id="updateCommonCode" parameterType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCode">
+		UPDATE commoncode
+		SET
+		    code_group_name = #{codeGroupName},
+		    use_yn = #{useYn}
+		WHERE
+		    code_group_id = #{codeGroupId}
+	</update>
+	
 </mapper>
