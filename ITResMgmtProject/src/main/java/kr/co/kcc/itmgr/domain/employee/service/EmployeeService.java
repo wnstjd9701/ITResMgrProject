@@ -14,17 +14,12 @@ import lombok.RequiredArgsConstructor;
 public class EmployeeService implements IEmployeeService{
 
 	private final IEmployeeRepository employeeRepository;
-	
+
 	@Override
 	public List<Employee> selectAllEmployee(){
 		return employeeRepository.selectAllEmployee();
 	}
-	
-	@Override
-	public List<Employee> selectSearchEmployee() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public void insertEmployee(List<Employee> employee) {
@@ -37,5 +32,9 @@ public class EmployeeService implements IEmployeeService{
 	}
 
 
-	
+	@Override
+	public void selectSearchEmployee(String employeeTypeCode) {
+		employeeRepository.selectSearchEmployee(employeeTypeCode);
+	}
+
 }
