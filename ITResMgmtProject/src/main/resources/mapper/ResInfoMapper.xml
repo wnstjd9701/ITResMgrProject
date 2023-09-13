@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository">
+
+	<select id="selectAllResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT
+			    urc_name.res_class_name	"topUpperResClassName",
+			    urc.res_class_name	"upperResClassName",
+			    rc.res_class_name	"resClassName",
+			    r.res_name	"resName",
+			    i.install_place_name	"installPlaceName",
+			    r.manufacture_company_name	"manufactureCompanyName",
+			    r.mgmt_id	"mgmtId",
+			    r.monitoring_yn	"monitoringYn"
+			FROM resinfo r
+			LEFT OUTER JOIN installplace i
+			    ON i.install_place_sn = r.install_place_sn
+			LEFT OUTER JOIN resclass rc
+			    ON rc.res_class_id = r.res_class_id
+			LEFT OUTER JOIN resclass urc
+			    ON urc.res_class_id = rc.upper_res_class_id
+			LEFT OUTER JOIN resclass urc_name
+			    ON urc_name.res_class_id = urc.upper_res_class_id
+		]]>
+	</select>
+	
+	<select id="searchResInfoByResClass" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT
+			    LEVEL	"level",
+			    res_class_id	"resClassId",
+			    res_class_name	"resClassName",
+			    upper_res_class_id	"upperResClassId"
+			FROM resclass
+			START WITH upper_res_class_id IS NULL
+			CONNECT BY PRIOR res_class_id = upper_res_class_id
+			ORDER SIBLINGS BY res_class_id
+		]]>
+		
+	</select>
+	
+	<select id="searchResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+			    SELECT
+			        urc_name.res_class_name "topUpperResClassName",
+			        urc.res_class_name "upperResClassName",
+			        rc.res_class_name "resClassName",
+			        r.res_name "resName",
+			        i.install_place_name "installPlaceName",
+			        r.manufacture_company_name "manufactureCompanyName",
+			        r.mgmt_id "mgmtId",
+			        r.monitoring_yn "monitoringYn"
+			    FROM RESINFO r
+			    LEFT OUTER JOIN INSTALLPLACE i
+			        ON i.install_place_sn = r.install_place_sn
+			    LEFT OUTER JOIN RESCLASS rc
+			        ON rc.res_class_id = r.res_class_id
+			    LEFT OUTER JOIN RESCLASS urc
+			        ON urc.res_class_id = rc.upper_res_class_id
+			    LEFT OUTER JOIN RESCLASS urc_name
+			        ON urc_name.res_class_id = urc.upper_res_class_id
+			  		<where>
+				    <if test='topUpperResClassName != null &amp;&amp; !topUpperResClassName.equals("") '>
+				        AND urc_name.res_class_name = #{topUpperResClassName} 
+				    </if>
+				    <if test='upperResClassName != null &amp;&amp; !upperResClassName.equals("") '>
+				        AND urc.res_class_name = #{upperResClassName}
+				    </if>
+				    <if test='resClassName != null &amp;&amp; !resClassName.equals("") '>
+				        AND rc.res_class_name = #{resClassName}
+				    </if>
+				    <if test='resName != null &amp;&amp; !resName.equals("") '>
+				        AND r.res_name LIKE '%'|| #{resName} ||'%'
+				    </if>
+				    <if test='installPlaceName != null &amp;&amp; !installPlaceName.equals("") '>
+				        AND i.install_place_name LIKE '%'|| #{installPlaceName} ||'%'
+				    </if>
+				    <if test='manufactureCompanyName != null &amp;&amp; !manufactureCompanyName.equals("") '>
+				        AND r.manufacture_company_name LIKE '%'|| #{manufactureCompanyName} ||'%'
+				    </if>
+				    <if test='mgmtId != null &amp;&amp; !mgmtId.equals("") '>
+				        AND r.mgmt_id LIKE '%'|| #{mgmtId} ||'%'
+				    </if>    
+				    <if test='monitoringYn.equals("Y")'>
+				        AND r.monitoring_yn = #{monitoringYn}
+				    </if>
+			  		</where>
+			  
+	</select>
+	
+	
+	
+</mapper>

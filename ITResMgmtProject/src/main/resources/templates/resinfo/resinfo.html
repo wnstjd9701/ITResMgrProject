@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="/nav"></th:block>
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container" style="margin-top:50px; margin-left:270px; max-width:85%;">
+	
+		<button id="search_btn" type="button" class="btn btn-primary" style="float:right; margin-left:10px; background-color:navy; border:navy;">조회</button>
+		<button type="button" class="btn btn-primary" style="float:right;  background-color:navy; border:navy;">신규</button>	
+		<span>대 분 류</span>
+		<select id="topUpperResClassName" name="topUpperResClassName">
+		    <!-- "전체" 옵션 추가 -->
+		    <option value=""></option>
+		    <!-- 다른 대분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+		    <option th:each="search:${search}" th:if="${search.level}==1" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+		</select>
+		<span>중 분 류</span>
+		<select id="upperResClassName" name="upperResClassName">
+		    <!-- 중분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+		    <option value="" ></option>
+		    <option th:each="search:${search}" th:if="${search.level}==2" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+		</select>
+		<span>소 분 류</span>
+		<select id="resClassName" name="resClassName">
+		    <!-- 소분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+		    <option value="" ></option>
+		    <option th:each="search:${search}" th:if="${search.level}==3" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+		</select>
+		<span>자원명</span>
+			<input type="text" name="resName"></input>
+		<span>설치장소</span>
+			<input type="text" name="installPlaceName"></input>
+		<br>
+		<span>제조회사명</span>
+			<input type="text" name="manufactureCompanyName"></input>
+		<span>관리ID</span>
+			<input type="text" name="mgmtId"></input>
+		<span>모니터링 여부</span> 
+			<label> <input type="radio" name="monitoringYn" value="Y" checked="checked"/> 모니터링 자원 </label>		
+			<label> <input type="radio"name="monitoringYn" value="A" /> 전체 </label> 
+	</div>
+
+	<div class="container" style="margin-left:250px; max-width:86%;">
+	<span>
+		<table class="table table-striped">
+			<thead style="text-align: center;">
+				<tr>
+					<th>대분류</th>
+					<th>중분류</th>
+					<th>소분류</th>
+					<th>자원명</th>
+					<th>설치장소명</th>
+					<th>제조회사명</th>
+					<th>관리ID</th>
+					<th>모니터링여부</th>
+				</tr>
+			</thead>
+			<tbody style="text-align: center;" id="resInfoTable">
+				<tr th:each="resinfo:${selectAllResInfo}">
+					<td th:text="${resinfo.topUpperResClassName}"></td>
+					<td th:text="${resinfo.upperResClassName}"></td>
+					<td th:text="${resinfo.ResClassName}"></td>
+					<td th:text="${resinfo.resName}"></td>
+					<td th:text="${resinfo.installPlaceName}"></td>
+					<td th:text="${resinfo.manufactureCompanyName}"></td>
+					<td th:text="${resinfo.mgmtId}"></td>
+					<td th:text="${resinfo.monitoringYn}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</span>
+	</div>
+
+<script>
+$(document).ready(function () {
+    // 대분류 선택 시
+    $('#topUpperResClassName').change(function () {
+        var selectedMainCategoryId = $(this).val();
+
+        // 중분류와 소분류 select 요소의 옵션 초기화
+        $('#upperResClassName, #resClassName').find('option').show();
+
+        if (selectedMainCategoryId !== '') {
+            // "전체"가 아닌 경우 중분류와 소분류 select 요소 필터링
+            $('#upperResClassName option').each(function () {
+                var upperResClassId = $(this).data('upper-res-class-id');
+                if (upperResClassId !== selectedMainCategoryId) {
+                    $(this).hide();
+                }
+            });
+        }
+
+        // 소분류 select 요소 초기화
+        $('#upperResClassName, #resClassName').val('');
+    });
+
+    // 중분류 선택 시
+    $('#upperResClassName').change(function () {
+        var selectedMiddleCategoryId = $(this).val();
+
+        // 소분류 select 요소 필터링
+        $('#resClassName option').each(function () {
+            var upperResClassId = $(this).data('upper-res-class-id');
+            if (upperResClassId !== selectedMiddleCategoryId) {
+                $(this).hide();
+            }
+        });
+
+        // 소분류 select 요소 초기화
+        $('#resClassName').val('');
+    });
+});
+
+
+$(document).ready(function () {
+    // "조회" 버튼 클릭 시
+    $('#search_btn').on('click', function() {
+        // 대/중/소분류 값을 가져옴
+        var topUpperResClassName = $("#topUpperResClassName option:selected").text();
+        var upperResClassName = $("#upperResClassName option:selected").text();
+        var resClassName = $("#resClassName option:selected").text();
+        var resName = $("input[name='resName']").val();
+        var installPlaceName = $("input[name='installPlaceName']").val();
+        var manufactureCompanyName = $("input[name='manufactureCompanyName']").val();
+        var mgmtId = $("input[name='mgmtId']").val();
+        // 선택된 라디오 버튼 값 가져오기 (사용 여부)
+        var monitoringYn = $("input[name='monitoringYn']:checked").val();
+        
+        console.log(resName)
+        //Ajax 요청을 보냄
+        $.ajax({
+            type: 'GET', // 또는 'GET', 요청 방식 선택
+            url: '/resinfo/search', // Controller의 URL
+            data: {
+                "topUpperResClassName" : topUpperResClassName,
+                "upperResClassName" : upperResClassName,
+                "resClassName" : resClassName,
+                "resName" : resName,
+                "installPlaceName" : installPlaceName,
+                "manufactureCompanyName" : manufactureCompanyName,
+                "mgmtId" : mgmtId,
+                "monitoringYn" : monitoringYn
+            },
+            success: function(response) {
+                console.log(response.length)
+                $('tbody#resInfoTable > tr').remove();
+                if (response.length === 0) {
+                    alert('검색된 결과가 없습니다.');
+                    addTableRow = "<tr>" + "<td colspan='8' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+                    $('tbody#resInfoTable').append(addTableRow);
+                    return;
+                }
+                console.log(response.length)
+                // 성공적으로 요청이 완료되면 이곳에서 처리
+                for (var i = 0; i < response.length; i++) {
+                    // table 행 추가
+                    addTableRow = "<tr>" +
+                        "<td>" + response[i].topUpperResClassName + "</td>" +
+                        "<td>" + response[i].upperResClassName + "</td>" +
+                        "<td>" + response[i].resClassName + "</td>" +
+                        "<td>" + response[i].resName + "</td>" +
+                        "<td>" + response[i].installPlaceName + "</td>" +
+                        "<td>" + response[i].manufactureCompanyName + "</td>" +
+                        "<td>" + response[i].mgmtId + "</td>" +
+                        "<td>" + response[i].monitoringYn + "</td>" +
+                        "</tr>";
+
+                    $('tbody#resInfoTable').append(addTableRow);
+                }
+            },
+            error: function(error) {
+                // 요청이 실패한 경우 처리
+                console.log('에러:', error);
+            }
+        });
+    });
+});
+  
+</script>
+</body>
+</html>
