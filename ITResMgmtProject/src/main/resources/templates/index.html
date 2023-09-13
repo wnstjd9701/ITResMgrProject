@@ -128,8 +128,8 @@ $(document).ready(function(){
                 $('#resInfoTable > tbody tr').remove();
             	if(response.length === 0){
                 	alert('검색된 결과가 없습니다.');
-                	addTableRow = "<tr>" + 
-               	 		"<td colspan='8' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+                	addTableRow = "<tr>" + "<td colspan='8' style='text-align:center; font-weight: bold;'>" 
+                		+ "검색된 결과가 없습니다." + "</td>" + "</tr>";
                	 	$('#resInfoTable > tbody').append(addTableRow);
                 	return;
                 }

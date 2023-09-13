@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/nav}"></th:block>
+<!-- <th:block th:replace="~{/nav}"></th:block> -->
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -10,127 +10,493 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+/* 스크롤 가능한 영역의 스타일 */
+		.container{
+			overflow-x: auto;
+		}
+        .table-container {
+            max-height: 20em; /* 원하는 높이로 조절 */
+            overflow-y: auto; /* 세로 스크롤 표시 */
+        }
+
+        /* 고정된 테이블 헤더 스타일 */
+        .fixed-header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1;
+        }
+		.code-group-id-text:hover {
+		    cursor: pointer;
+		}
+</style>
 </head>
 <body>
 	<div id="wrapper">
 		<div id="commonCode">
 			<div class="container">
-				<h2>Striped Rows</h2>
-				<p>The .table-striped class adds zebra-stripes to a table:</p>
-				<span>사용 여부</span> <select>
-					<option>Y</option>
-					<option>N</option>
-				</select> <span>코드 그룹명 및 ID</span> <input type="text" placeholder="입력">
-				<input type="button" value="검색">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>번호</th>
-							<th>코드 그룹 ID</th>
-							<th>코드 그룹명</th>
-							<th>사용 여부</th>
-							<th>상태</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="commonCode, i : ${commonCode}">
-							<td th:text="${i.count}"></td>
-							<td th:text="${commonCode.codeGroupId}"></td>
-							<td><input type="text" th:value="${commonCode.codeGroupName}"></td>
-							<td>
-							    <label> 
-							        <input type="checkbox" name="monitoringYn" th:value="Y" checked="checked" /> 전체
-							    </label> 
-							    <label> 
-							        <input type="checkbox" name="monitoringYn" th:value="A" /> 미사용 포함
-							    </label> 
-							</td>
-							<td>변경</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div id="commonCodeDetail">
-				<div></div>
-				<div class="container">
-					<h2>Striped Rows</h2>
-					<p>The .table-striped class adds zebra-stripes to a table:</p>
-					<span>사용 여부</span> <select>
-						<option>Y</option>
-						<option>N</option>
-					</select> <span>코드 그룹명 및 ID</span> <input type="text" placeholder="입력">
-					<input type="button" value="검색">
-					<table class="table table-striped">
-						<thead>
+				<div>
+					🟢 기존 코드
+					🟡 수정 
+					🔵 생성
+					🔴 삭제
+				</div>
+				<h2>공통 코드</h2>
+				<p>* 공통 코드 관리</p>
+				<span>사용 여부</span> 
+					<select id="commonCodeUseYn">
+						<option value="A">전체</option>
+						<option value="Y">Y</option>
+						<option value="N">N</option>
+					</select> 
+				<span>코드 그룹명 및 ID</span> <input name="commonCodeKeyword" type="text" placeholder="공통 코드 및 그룹 ID 입력">
+				<input id="searchCommonCodeBtn" type="button" value="검색">
+				<div>
+					<input id="commonCodeAddRowBtn" type="button" value="행추가">
+					<input id="commonCodeDeleteRowBtn" type="button" value="행삭제">
+					<input id="commonCodeSaveBtn" type="button" value="저장">
+				</div>
+				<div class="table-container commoncode-table-container">
+					<table class="table table-striped commoncode-table">
+						<thead class="fixed-header">
 							<tr>
-								<th>Firstname</th>
-								<th>Lastname</th>
-								<th>Email</th>
+								<th>상태</th>
+								<th>코드 그룹 ID</th>
+								<th>코드 그룹명</th>
+								<th>상세 코드 개수</th>
+								<th>사용 여부</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>John</td>
-								<td>Doe</td>
-								<td>john@example.com</td>
-							</tr>
-							<tr>
-								<td>Mary</td>
-								<td>Moe</td>
-								<td>mary@example.com</td>
-							</tr>
-							<tr>
-								<td>July</td>
-								<td>Dooley</td>
-								<td>july@example.com</td>
+						<tbody id="commonCode-table-body">
+							<tr th:each="commonCode, i : ${commonCode}">
+								<td th:text="${commonCode.flag}"></td>
+								<td id="commonCode-group-id" class="code-group-id-text" th:text="${commonCode.codeGroupId}" th:data-code-group-id="${commonCode.codeGroupId}"></td>
+								<td><input id="commonCode-group-name" class="code-group-name" name="codeGroupName" type="text" th:value="${commonCode.codeGroupName}"></td>
+								<td th:text="${commonCode.codeDetailCount}"></td>
+								<td>
+							    <select>
+							        <option th:value="Y" th:text="Y" th:selected="${commonCode.useYn == 'Y'}"></option>
+							        <option th:value="N" th:text="N" th:selected="${commonCode.useYn == 'N'}"></option>
+							    </select>
+								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
-		    <div class="container mt-5">
-        <h1>Code Management</h1>
+			<div id="commonCodeDetail">
+				<div></div>
+				<div class="container">
+					<h2>상세 코드</h2>
+					<p>* 상세 코드 관리</p>
+					<span>사용 여부</span> 
+						<select id="commonCodeDetailUseYn">
+							<option value="A" selected>전체</option>
+							<option value="Y">Y</option>
+							<option value="N">N</option>
+						</select> 
+					<span>코드 그룹명 및 ID</span> <input name="commonCodeDetailKeyword" type="text" placeholder="상세 코드 및 코드명 입력">
+					<input id="searchCommonCodeDetailBtn" type="button" value="검색">
+					<div>
+						<input id="commonCodeDetailAddRowBtn" type="button" value="행추가">
+						<input id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제">
+						<input id="commonCodeDetailSaveBtn" type="button" value="저장">
+					</div>
+					<div class="table-container commoncodedetail-table-container">
+						<table class="table table-striped commoncodedetail-table">
+							<thead class="fixed-header">
+								<tr>
+									<th>상태</th>
+									<th>선택</th>
+									<th>상세 코드</th>
+									<th>상세 코드명</th>
+									<th>사용 여부</th>
+								</tr>
+							</thead>
+							<tbody id="commonCodeDetail-table-body">
+								<tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
+									<td th:text="${commonCodeDetail.flag}"></td>
+									<td><input class="detailCheck" type="checkbox" name="detailCheck"></td>
+									<td><input type="text" name="detailCode" th:value="${commonCodeDetail.detailCode}"></td>
+									<td><input type="text" name="detailCodeName" th:value="${commonCodeDetail.detailCodeName}"></td>
+									<td>
+									<select>
+										<option th:value="${commonCodeDetail.useYn}" th:text="${commonCodeDetail.useYn}"></option>
+										<option value="N">N</option>
+									</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-        <div class="row mb-3">
-            <div class="col">
-                <label for="codeGroupId">코드 그룹 ID:</label>
-                <input type="text" id="codeGroupId" class="form-control">
-            </div>
-            <div class="col">
-                <label for="codeGroupName">코드 그룹명:</label>
-                <input type="text" id="codeGroupName" class="form-control">
-            </div>
-            <div class="col">
-                <label for="isActive">사용 여부:</label>
-                <select id="isActive" class="form-select">
-                    <option value="">전체</option>
-                    <option value="true">활성</option>
-                    <option value="false">비활성</option>
-                </select>
-            </div>
-            <div class="col">
-                <button class="btn btn-primary" onclick="searchCodes()">검색</button>
-            </div>
-        </div>
+	<script th:inline="javascript">
+		
+		$(document)
+				.ready(
+						function() {
+							var commonCode = `[[${commonCode}]]`;
+							var commonCodeDetail = `[[${commonCodeDetail}]]`;
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>코드 그룹 ID</th>
-                    <th>코드 그룹명</th>
-                    <th>사용 여부</th>
-                </tr>
-            </thead>
-            <tbody id="codeTableBody">
-                <!-- 검색 결과가 여기에 동적으로 로드됩니다. -->
-            </tbody>
-        </table>
-    </div>
+							var commonCodeList = JSON.parse(commonCode); // Object Type
+							var commonCodeDetail = JSON.parse(commonCodeDetail);
+							//console.log(commonCodeList[0]);
 
-    <!-- Bootstrap JavaScript -->
-    <script th:src="@{/webjars/bootstrap/5.6.0/js/bootstrap.min.js}"></script>
-    
-</body>
+							// 공통 코드 행추가 버튼
+							$("#commonCodeAddRowBtn").click(() => {
+								// 새로운 행 생성
+								var newRow = $("<tr>");
+								var status = $("<td>").text("C");
+								var codeGroupId = $("<td>").addClass("codeGroupId code-group-id").append("<input type='text'>");
+								var codeGroupId = $("<td>").append($("<input>").attr({
+									type: "text",
+									name: "codeGroupId",
+									class: "codeGroupId code-group-id"
+								}));
+								var codeGroupName = $("<td>").append($("<input>").attr({
+										type: "text",
+										name: "codeGroupName",
+										class: "codeGroupName code-group-name"
+								}));
+								var codeDetailCount = $("<td>").text("-");
+								var useYn = $("<td>").append("<select><option>Y</option><option>N</option></select>");
+								
+								newRow.append(status);
+								newRow.append(codeGroupId);
+								newRow.append(codeGroupName);
+								newRow.append(codeDetailCount);
+								newRow.append(useYn);
+
+								// 테이블에 새로운 행 추가
+								$(".commoncode-table tbody").append(newRow);
+
+								// 행 추가 시 스크롤 맨 아래
+								var tableContainer = $(".commoncode-table-container");
+								tableContainer.scrollTop(tableContainer[0].scrollHeight);
+							});
+
+							// 공통 코드 행삭제 버튼
+							$("#commonCodeDeleteRowBtn").click(() => {
+								var commonCodeTable = $(".commoncode-table tbody");
+								var lastRow = commonCodeTable.find("tr:last");
+								const codeGroupId = lastRow.find("#commonCode-group-id").text();
+								console.log(codeGroupId);
+
+								$.ajax({
+									method : "GET",
+									url : "/checkcodegroup?codeGroupId=" + codeGroupId,
+									success : function(response) {
+										if (response > 0) {
+											alert("이 코드 그룹은 DB에 존재합니다. 삭제할 수 없습니다.");
+											return;
+										} else {
+											// 코드 그룹이 DB에 존재하지 않으면 해당 행을 삭제합니다.
+											lastRow.remove();
+											
+											// 바로 등록하고 삭제할 경우
+											// 매핑된 것이 없을 때 삭제할 경우
+										}
+									},
+									error : function(xhr,status,error) {
+										alert("에러 발생:", error);
+									}
+								});
+							});
+							
+							// 공통 코드 행 내의 입력 필드에 대한 change 이벤트 처리
+							$(".commoncode-table-container").on("change", "input[type='text'], select", function(){
+							    var changedRow = $(this).closest("tr"); // 변경된 입력 필드를 포함하는 행 가져오기
+							    var flag = changedRow.find("td:first").text();
+								if(flag === "C"){
+									return;
+								}
+							    // 변경 상태를 표시 (예: C = Created, U = Updated)
+							    changedRow.find("td:first").text("U");
+							});
+							
+							// 공통 코드 검색 
+							$("#searchCommonCodeBtn").click(() => {
+								var useYn = $("#commonCodeUseYn option:selected").val();
+								var keyword = $("input[name='commonCodeKeyword']").val();
+								$.ajax({
+									method: "GET",
+									url : "/search/commoncode",
+									data : {
+										useYn: useYn,
+										keyword: keyword
+									},
+									success : function(response) {
+										updateCommonCode(response);
+									},
+									error : function(xhr,status,error) {
+										alert("에러 발생:", error);
+									}
+								});
+							});
+							
+							// 공통 코드 테이블 업데이트 함수
+							function updateCommonCode(response){
+								const commonCodeTable = $("#commonCode-table-body tr");
+								commonCodeTable.remove();
+								
+								if(response.length < 1){
+									const result = "<tr>" + "<td colspan='5' style='text-align:center; font-weight: bold;'>" 
+			                		+ "검색된 결과가 없습니다." + "</td>" + "</tr>";
+									$("#commonCode-table-body").append(result);
+									return;
+								}
+								
+								for(var i=0; i<response.length; i++){
+									var newRow = $("<tr>");
+									var status = $("<td>").addClass("flag").text(response[i].flag);
+									var codeGroupId = $("<td>").addClass("codeGroupId code-group-id-text").text(response[i].codeGroupId);
+									var codeGroupName = $("<td>").append($("<input>").attr({
+										type: "text",
+										name: "codeGroupName",
+										value: response[i].codeGroupName,
+										class: "codeGroupName code-group-name"
+									}));
+									var codeDetailCount = $("<td>").addClass("codeDetailCount").text(response[i].codeDetailCount);
+
+									var selectElement = $("<select><option>Y</option><option>N</option></select>");
+									selectElement.val(response[i].useYn);
+									var useYn = $("<td>").append(selectElement);
+									
+									newRow.append(status);
+									newRow.append(codeGroupId);
+									newRow.append(codeGroupName);
+									newRow.append(codeDetailCount);
+									newRow.append(useYn);
+
+									$(".commoncode-table tbody").append(newRow);
+								}
+							}
+							
+							// 이벤트 위임
+							$(".commoncode-table-container").on("click", ".code-group-id-text", function() {
+							    var codeGroupId = $(this).text();
+							    console.log(codeGroupId);
+							    $.ajax({
+							    	method: "GET",
+							    	url : "/commoncodedetail",
+							    	data : {
+							    		codeGroupId : codeGroupId
+							    	},
+							    	success : function(response){
+							    		updateCommonCodeDetail(response);
+							    	},
+							    	error : function(xhr, status, error){
+							    		alert("에러 발생:", error);
+							    	}
+							    })
+							});
+							
+							// 공통 코드 저장 버튼
+							$("#commonCodeSaveBtn").click(() => {
+								var commonCodeList = [];
+								
+								$("#commonCode-table-body tr").each(function(){
+									var flag = $(this).find("td:first").text();
+									var codeGroupId;
+									var codeGroupName;
+									console.log(flag);
+									if (flag === 'C') {
+									    codeGroupId = $(this).find("input[name='codeGroupId']").val();
+									    codeGroupName = $(this).find("input[name='codeGroupName']").val();
+									}else if(flag === 'U' || flag === 'D'){
+									    codeGroupId = $(this).find("td:eq(1)").text(); // 혹은 다른 선택자를 사용
+									    codeGroupName = $(this).find("input[name='codeGroupName']").val(); // 혹은 다른 선택자를 사용
+									}else{ // flag === 'E'
+										return 
+									}
+										var useYn = $(this).find("select option:selected").val();
+										console.log(codeGroupName);
+										var commonCode = {
+												flag: flag,
+												codeGroupId: codeGroupId,
+												codeGroupName: codeGroupName,
+												useYn: useYn
+										};
+										commonCodeList.push(commonCode);
+									});
+
+								if(commonCodeList.length < 1){
+									alert("저장할 내용이 없습니다.");
+									return ;
+								}
+								
+								$.ajax({
+									method: "POST",
+									url : "/commoncode",
+									data: JSON.stringify(commonCodeList),
+									contentType: "application/json",
+									success : function(response){
+										updateCommonCode(response.commonCode);
+										alert("성공");
+									},
+									error : function(xhr,status,error) {
+										alert("에러 발생:", error);
+									}
+								});
+								
+							});
+							
+							// 상세 코드 행 추가 버튼
+							$("#commonCodeDetailAddRowBtn").click(() => {
+								// 새로운 행 생성
+								var newRow = $("<tr>");
+								var status = $("<td>").text("C");
+								var select = $("<td>").append($("<input>").attr({
+									type : "checkbox",
+									name : "detailCheck",
+									class : "detailCheck"
+								}));
+								var detailCode = $("<td>").append($("<input>").attr({
+									type : "text",
+									name : "detailCode",
+									class : "detailCode"
+								}));
+								var detailCodeName = $("<td>").append($("<input>").attr({
+									type : "text",
+									name : "detailCodeName",
+									class : "detailCodeName"
+								}));
+								var useYn = $("<td>").append("<select><option>Y</option><option>N</option></select>");
+								
+								newRow.append(status);
+								newRow.append(select);
+								newRow.append(detailCode);
+								newRow.append(detailCodeName);
+								newRow.append(useYn);
+								
+								$(".commoncodedetail-table tbody").append(newRow);
+								
+								var tableContainer = $(".commoncodedetail-table-container");
+								tableContainer.scrollTop(tableContainer[0].scrollHeight);
+							})
+
+							// 상세 코드 행 삭제 버튼
+							$("#commonCodeDetailDeleteRowBtn").click(() => {
+								var commonCodeTable = $(".commoncodedetail-table");
+								var selectedRows = $("input[name='detailCheck']:checked").closest("tr"); // 선택된 체크박스의 부모 행을 가져옵니다.
+								console.log(selectedRows);
+
+							    if (selectedRows.length === 0) {
+							        alert("삭제할 행을 선택하세요.");
+							        return;
+							    }
+
+							    // 선택된 각 행에 대해 처리
+							    selectedRows.each(function() {
+							        var selectedRow = $(this);
+							        
+							        // 선택된 행을 두번 누를 경우 checked되 있는 상태이기 때문에 선택한 행이 삭제되었다고 뜨는 것을 막기 위해
+							        selectedRow.find("input[name='detailCheck']").prop("checked", false);
+
+							        var flag = selectedRow.find("td:first").text();
+							        if (flag === "C") {
+							            // Create는 반영하지 않으면 되므로 그냥 행 삭제
+							            selectedRow.remove();
+							        } else {
+							            // 행의 flag를 "D"로 변경
+							            selectedRow.find("td:first").text("D");
+							            selectedRow.find("input[type='text']").prop("disabled", true);
+							            selectedRow.find("select").prop("disabled", true);
+							            selectedRow.find("input[type='checkbox']").prop("disabled", true);
+							        }
+							    });
+							    alert("선택된 행이 삭제되었습니다.");
+							    return;
+							})
+							
+							// 상세 코드 행 내의 입력 필드에 대한 change 이벤트 처리
+							$(".commoncodedetail-table-container").on("change", "input[type='text'], select", function(){
+							    var changedRow = $(this).closest("tr"); // 변경된 입력 필드를 포함하는 행 가져오기
+							    var flag = changedRow.find("td:first").text();
+								if(flag === "C"){
+									return;
+								}
+							    // 변경 상태를 표시 (예: C = Created, U = Updated)
+							    changedRow.find("td:first").text("U");
+							});
+							
+							// 상세 코드 검색
+							$("#searchCommonCodeDetailBtn").click(() => {
+								var useYn = $("#commonCodeDetailUseYn option:selected").val();
+								var keyword = $("input[name='commonCodeDetailKeyword']").val();
+								console.log(useYn);
+								$.ajax({
+									method: "GET",
+									url : "/search/commoncodedetail",
+									data : {
+										useYn: useYn,
+										keyword: keyword
+									},
+									success : function(response) {
+										for(var i=0; i< response.length; i++){
+											response[i].fla
+										}
+										updateCommonCodeDetail(response);
+									},
+									error : function(xhr,status,error) {
+										alert("에러 발생:", error);
+									}
+								});
+							});
+							
+							// 상세 코드 테이블 업데이트 함수
+							function updateCommonCodeDetail(response){
+								const commonCodeDetailTable = $("#commonCodeDetail-table-body tr");
+								commonCodeDetailTable.remove();
+								
+								if(response.length < 1){
+									const result = "<tr>" + "<td colspan='5' style='text-align:center; font-weight: bold;'>" 
+			                		+ "검색된 결과가 없습니다." + "</td>" + "</tr>";
+									$("#commonCodeDetail-table-body").append(result);
+									return;
+								}
+								
+								for (var i = 0; i < response.length; i++) {
+									var newRow = $("<tr>");
+									var status = $("<td>").text(response[i].flag);
+									var select = $("<td>").append($("<input>").attr({
+									    type: "checkbox",
+									    name: "detailCheck",
+									    class: "detailCheck"
+									  }));
+									var detailCode = $("<td>").append($("<input>").attr({
+										type: "text",
+										name: "detailCode",
+										value: response[i].detailCode,
+										class: "detailCode"
+									}));
+									var detailCodeName = $("<td>").append($("<input>").attr({
+										type: "text",
+										name: "detailCodeName",
+										value: response[i].detailCodeName,
+										class: "detailCodeName"
+									}));
+									var useYn = $("<td>").append("<select><option>Y</option><option>N</option></select>");
+									
+									newRow.append(status);
+									newRow.append(select);
+									newRow.append(detailCode);
+									newRow.append(detailCodeName);
+									newRow.append(useYn);
+									$(".commoncodedetail-table tbody").append(newRow);
+								}
+							}
+				});
+	</script>
+<!--  
+	초록색 원 🟢
+	빨간색 원 🔴
+	노란색 원 🟡
+-->
 </body>
 </html>
