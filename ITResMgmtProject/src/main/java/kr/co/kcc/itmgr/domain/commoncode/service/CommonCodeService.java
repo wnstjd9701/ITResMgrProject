@@ -80,9 +80,21 @@ public class CommonCodeService implements ICommonCodeService{
 		return commonCodeRepository.insertCommonCode(commonCode);
 	}
 
-	// 공통 코드 업데이트
+	// 공통 코드 수정 / 삭제
 	@Override
 	public int updateCommonCode(CommonCode commonCode) {
 		return commonCodeRepository.updateCommonCode(commonCode);
+	}
+
+	// 상세 코드 생성
+	@Override
+	public int insertCommonCodeDetail(List<CommonCodeDetail> commonCodeDetail) {
+		return commonCodeRepository.insertCommonCodeDetail(commonCodeDetail);
+	}
+
+	// 상세 코드 수정 / 삭제
+	@Override
+	public int updateCommonCodeDetail(CommonCodeDetail commonCodeDetail) {
+		return commonCodeRepository.updateCommonCodeDetail(commonCodeDetail);
 	}
 }

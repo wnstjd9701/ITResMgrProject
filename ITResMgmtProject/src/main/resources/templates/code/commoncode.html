@@ -109,6 +109,7 @@
 								<tr>
 									<th>상태</th>
 									<th>선택</th>
+									<th>코드 그룹 ID</th>
 									<th>상세 코드</th>
 									<th>상세 코드명</th>
 									<th>사용 여부</th>
@@ -118,6 +119,7 @@
 								<tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
 									<td th:text="${commonCodeDetail.flag}"></td>
 									<td><input class="detailCheck" type="checkbox" name="detailCheck"></td>
+									<td class="detailCodeGroupId" th:text="${commonCodeDetail.codeGroupId}"></td>
 									<td><input type="text" name="detailCode" th:value="${commonCodeDetail.detailCode}"></td>
 									<td><input type="text" name="detailCodeName" th:value="${commonCodeDetail.detailCodeName}"></td>
 									<td>
@@ -197,9 +199,6 @@
 										} else {
 											// 코드 그룹이 DB에 존재하지 않으면 해당 행을 삭제합니다.
 											lastRow.remove();
-											
-											// 바로 등록하고 삭제할 경우
-											// 매핑된 것이 없을 때 삭제할 경우
 										}
 									},
 									error : function(xhr,status,error) {
@@ -208,15 +207,20 @@
 								});
 							});
 							
-							// 공통 코드 행 내의 입력 필드에 대한 change 이벤트 처리
-							$(".commoncode-table-container").on("change", "input[type='text'], select", function(){
-							    var changedRow = $(this).closest("tr"); // 변경된 입력 필드를 포함하는 행 가져오기
-							    var flag = changedRow.find("td:first").text();
+							// Flag 변경하는 함수
+							function updateFlag(tableRow){
+								var changedRow = $(tableRow).closest("tr"); // 변경된 입력 필드를 포함하는 행 가져오기
+								var flag = changedRow.find("td:first").text();
 								if(flag === "C"){
 									return;
 								}
-							    // 변경 상태를 표시 (예: C = Created, U = Updated)
-							    changedRow.find("td:first").text("U");
+								// 변경 상태를 표시 (예: C = Created, U = Updated)
+								changedRow.find("td:first").text("U");
+							}
+							
+							// 공통 코드 행 내의 입력 필드에 대한 change 이벤트 처리
+							$(".commoncode-table-container").on("change", "input[type='text'], select", function(){
+								updateFlag(this);
 							});
 							
 							// 공통 코드 검색 
@@ -231,6 +235,7 @@
 										keyword: keyword
 									},
 									success : function(response) {
+										$("input[name='commonCodeKeyword']").val("");
 										updateCommonCode(response);
 									},
 									error : function(xhr,status,error) {
@@ -356,6 +361,11 @@
 									name : "detailCheck",
 									class : "detailCheck"
 								}));
+								var detailCodeGroupId = $("<td>").append($("<input>").attr({
+									type : "text",
+									name : "detailCodeGroupId",
+									class : "detailCodeGroupId"
+								}));
 								var detailCode = $("<td>").append($("<input>").attr({
 									type : "text",
 									name : "detailCode",
@@ -370,6 +380,7 @@
 								
 								newRow.append(status);
 								newRow.append(select);
+								newRow.append(detailCodeGroupId);
 								newRow.append(detailCode);
 								newRow.append(detailCodeName);
 								newRow.append(useYn);
@@ -416,13 +427,7 @@
 							
 							// 상세 코드 행 내의 입력 필드에 대한 change 이벤트 처리
 							$(".commoncodedetail-table-container").on("change", "input[type='text'], select", function(){
-							    var changedRow = $(this).closest("tr"); // 변경된 입력 필드를 포함하는 행 가져오기
-							    var flag = changedRow.find("td:first").text();
-								if(flag === "C"){
-									return;
-								}
-							    // 변경 상태를 표시 (예: C = Created, U = Updated)
-							    changedRow.find("td:first").text("U");
+								updateFlag(this);
 							});
 							
 							// 상세 코드 검색
@@ -438,15 +443,65 @@
 										keyword: keyword
 									},
 									success : function(response) {
-										for(var i=0; i< response.length; i++){
-											response[i].fla
-										}
+										$("input[name='commonCodeDetailKeyword']").val("");
 										updateCommonCodeDetail(response);
 									},
 									error : function(xhr,status,error) {
 										alert("에러 발생:", error);
 									}
 								});
+							});
+							
+							// 상세 코드 저장 버튼
+							$("#commonCodeDetailSaveBtn").click(() => {
+								var commonCodeDetailList = [];
+								
+								$("#commonCodeDetail-table-body tr").each(function(){
+									var flag = $(this).find("td:first").text();
+									var detailCodeGroupId;
+									if(flag == 'U' || flag == 'D'){
+										detailCodeGroupId = $(this).find("td:eq(2)").text();
+									}else if(flag == 'C'){
+										detailCodeGroupId = $(this).find("input[name='detailCodeGroupId']").val();
+									}
+									// detailCodeGroupId 가 존재 해야 다음으로 넘어갈 수 있음
+									var detailCode = $(this).find("input[name='detailCode']").val();
+									var detailCodeName = $(this).find("input[name='detailCodeName']").val();
+									var useYn = $(this).find("select option:selected").val();
+
+									var commonCodeDetail = {
+											flag: flag,
+											codeGroupId: detailCodeGroupId,
+											detailCode: detailCode,
+											detailCodeName: detailCodeName,
+											useYn: useYn
+									}
+									if(flag !== 'E'){
+									 	commonCodeDetailList.push(commonCodeDetail);
+									}
+								});
+								
+								if(commonCodeDetailList.length < 1){
+									alert("저장할 내용이 없습니다.");
+									return ;
+								}
+								
+								console.log(commonCodeDetailList);
+								/* $.ajax({
+									method: "POST",
+									url: "/commoncodedetail"
+									data: JSON.stringify(commonCodeDetailList),
+									contentType: "application/json",
+									success : function(response){
+										updateCommonCode(response.commonCode);
+										updateCommonCodeDetail(response.commonCodeDetail);
+										alert("성공");
+									},
+									error : function(xhr,status,error) {
+										alert("에러 발생:", error);
+									}
+								}); */
+							
 							});
 							
 							// 상세 코드 테이블 업데이트 함수
@@ -469,6 +524,10 @@
 									    name: "detailCheck",
 									    class: "detailCheck"
 									  }));
+									var detailCodeGroupId = $("<td>").text(response[i].codeGroupId).attr({
+										name: "detailCodeGroupId",
+										class: "detailCodeGroupId detail-code-group-id"
+									});
 									var detailCode = $("<td>").append($("<input>").attr({
 										type: "text",
 										name: "detailCode",
@@ -485,6 +544,7 @@
 									
 									newRow.append(status);
 									newRow.append(select);
+									newRow.append(detailCodeGroupId);
 									newRow.append(detailCode);
 									newRow.append(detailCodeName);
 									newRow.append(useYn);

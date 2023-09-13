@@ -18,6 +18,11 @@ public interface ICommonCodeService {
 	
 	List<CommonCodeDetail> selectCommonCodeDetailByCodeGroupId(String codeGroupId); // 공통 코드 그룹 ID로 상세 코드 가져오기
 	
+	// 공통 코드 저장
 	int insertCommonCode(List<CommonCode> commonCode); // 공통 코드 생성
-	int updateCommonCode(CommonCode commonCode); // 공통 코드 업데이트
+	int updateCommonCode(CommonCode commonCode); // 공통 코드 수정
+	
+	// 상세 코드 저장
+	int insertCommonCodeDetail(List<CommonCodeDetail> commonCodeDetail); // 상세 코드 생성
+	int updateCommonCodeDetail(CommonCodeDetail commonCodeDetail); // 상세 코드 수정
 }
