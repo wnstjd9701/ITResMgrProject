@@ -13,7 +13,7 @@ public class ResInfo {
 	private String resSn;
 	private String mgmtId;
 	private String resStatusCode;
-	private String menufactureCompanyName;
+	private String manufactureCompanyName;
 	private String modelName;
 	private String mgmtDeptName;
 	private String managerName;
@@ -35,4 +35,10 @@ public class ResInfo {
 	//추가컬럼
 	private String resClassName;
 	private int mappingNumberOfRes;
+	
+	private String topUpperResClassName;
+	private String upperResClassName;
+	private String installPlaceName;
+	private int level;
+	private String upperResClassId;
 }

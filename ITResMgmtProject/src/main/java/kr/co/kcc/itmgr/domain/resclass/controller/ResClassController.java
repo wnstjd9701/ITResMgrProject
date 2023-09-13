@@ -75,6 +75,12 @@ public class ResClassController {
 
 
 		model.addAttribute("numOfRes", numOfRes);
+		List<ResClass> selectResClass1 = IResClassService.selectResClass(1);
+		List<ResClass> selectResClass2 = IResClassService.selectResClass(2);
+		List<ResClass> selectResClass3 = IResClassService.selectResClass(3);
+		model.addAttribute("selectResClass1", selectResClass1);
+		model.addAttribute("selectResClass2", selectResClass2);
+		model.addAttribute("selectResClass3", selectResClass3);
 		return "itres/resclass"; 
 	}
 	
