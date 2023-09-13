@@ -26,6 +26,7 @@
 		    use_yn           AS "useYn"
 		FROM
 		    commoncodedetail
+		ORDER BY detail_code
 	</select>
 	
 	<select id="checkIfCodeGroupIdExists" parameterType="String" resultType="int">
@@ -120,6 +121,37 @@
 		    use_yn = #{useYn}
 		WHERE
 		    code_group_id = #{codeGroupId}
+	</update>
+	
+	<insert id="insertCommonCodeDetail" parameterType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
+		INSERT INTO commoncodedetail(
+			detail_code,
+			detail_code_name,
+			code_group_id,
+			use_yn,
+			create_date,
+			creater_id
+		)
+		<foreach collection="list" item="commonCodeDetail" separator="UNION ALL">
+			SELECT #{commonCodeDetail.detailCode},
+				#{commonCodeDetail.detailCodeName},
+				#{commonCodeDetail.codeGroupId},
+				#{commonCodeDetail.useYn},
+				SYSDATE,
+				'WNSTJD'
+			FROM
+				DUAL	
+		</foreach>
+	</insert>
+	
+	<update id="updateCommonCodeDetail" parameterType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
+		UPDATE commoncodedetail
+		SET
+			detail_code = #{detailCode},
+			detail_code_name = #{detailCodeName},
+			use_yn = #{useYn}
+		WHERE
+			detail_code = #{detailCode}
 	</update>
 	
 </mapper>
