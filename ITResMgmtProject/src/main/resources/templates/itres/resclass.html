@@ -2,42 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="/nav"></th:block>
 <head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="utf-8">
 <link th:href="@{/css/itres/menutree.css}" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
-<style>
 
+<style>
+table th{
+	width:200px;
+}
 </style>
 </head>
 <body>
 
-<div class="container" style="margin:60px 0 0 270px; width:1300px;">
-	<span>대 분 류</span>
-	<select>
-		<option th:each="res:${resClassMap}">[[${res.key}]]</option>
-	</select>
-	<span>중 분 류</span>
-	<select>
-		<span th:each="res:${resClassMap}">
-		<option th:each="rv:${res.value}">[[${rv.key}]]</option>
-		</span>
-	</select>
-	<span>소 분 류</span>
-	<select>
-		<span th:each="res:${resClassMap}">
-		<span th:each="rv:${res.value}">
-		<option th:each="name:${rv.value}">[[${name}]]</option>		
-		</span>
-		</span>
-	</select>
-	</select> <span>사용 여부</span> 
-	<label> <input type="radio"name="monitoringYn" value="Y" /> 전체 </label> 
-	<label> <input type="radio" name="monitoringYn" value="A" /> 미사용 포함 </label>
-	<input type="text" placeholder="자원분류명을 입력하세요."/>
-	<button type="button" class="btn btn-primary" style="float:right; margin-left: 10px; background-color:navy;">조회</button>
+<div class="container" style="margin:50px 0 50px 270px; width:1150px;">
 	<button type="button" class="btn btn-primary" style="float:right;margin-left: 10px; background-color:navy;">저장</button>
 	<button type="button" class="btn btn-primary" style="float:right; background-color:navy;">신규</button>
 </div>
@@ -51,7 +30,7 @@
                 <ul>
                     <li th:each="rv:${res.value}">[[${rv.key}]](<span id="resultNumOfRes"></span>)
                         <ul>
-                            <li th:each="name:${rv.value}"><a href="#">[[${name}]]</a> (<span id="number" th:text="${numOfRes.get('__${name}__')}"/>)</li>
+                            <li th:each="name:${rv.value}" th:value="${name}"><a href="#" class="resClassDetail">[[${name}]]</a>(<span id="number" th:text="${numOfRes.get('__${name}__')}"/>)</li>
                         </ul>
                     </li>
                 </ul>
@@ -62,53 +41,35 @@
 			
 				<div class="row">
 					<div class="col-md-16">
-						<table class="table table-hover">
+						<table id="resClassDetailTable" class="table table-hover">
 						 <tbody>
 							    <tr>
 							      <th scope="row">대 분 류
-							      	<td>
-							      		<select>
-						                    <option th:each="res1 : ${selectResClass1}">
-						                    	<span>[[${res1.resClassName}]]</span>
-						                    </option>
-										</select>
+							      	<td id="topUpperResClassNameCell">
 							      	</td>
 							      </th>
 							    </tr>
 							    <tr>
 							      <th scope="row">중 분 류
-							      	<td>
-							      		<select>
-						                    <option th:each="res2:${selectResClass2}">
-						                    	<span>[[${res2.resClassName}]]</span>
-						                    </option>
-										</select>
+							      	<td id="upperResClassNameCell">
 							      	</td>
 							      </th>
 							    </tr>
 							    <tr>
 							      <th scope="row">소 분 류
-							      	<td>
-							      		<select>
-						                    <option th:each="res3:${selectResClass3}">
-						                    	<span>[[${res3.resClassName}]]</span>
-						                    </option>
-										</select>
+							      	<td id="resClassNameCell">
 							      	</td>
 							      </th>
 							    </tr>
 							    <tr>
 							      <th scope="row">사용여부
-							      	<td>
-										<input type="radio" name="useYn" value="y" checked>Y
-										<input type="radio" name="useYn" value="n">N
+							      	<td id="useYNCell">
 							      	</td>
 							      </th>
 							    </tr>
 							    <tr>
 							      <th scope="row">분류명
-							      	<td>
-							      		<input></input>
+							      	<td id="resClassName2Cell">
 							      	</td>
 							      </th>
 							    </tr>
@@ -138,38 +99,39 @@
 			</div>
 </div>
 
-
-
-</body>
 <script th:inline="javascript">
-	var resClass = `[[${resClassMap}]]`;
-	var paraResClass = JSON.parse(resClass);
+$(document).ready(function() {
+    // 클래스 "resClassDetail"를 가진 <a> 태그를 클릭할 때 실행되는 함수
+    $(".resClassDetail").click(function(event) {
+        event.preventDefault(); // 기본 링크 동작 방지
 
-	
-	var numOfRes = `[[${numOfRes}]]`;
-	var numOfRes2 = `[[${numOfRes2}]]`;
-	
-	var parsedRes = JSON.parse(numOfRes);
-	var parsedRes2 = JSON.parse(numOfRes2);
-	
-	var numberOfRes = 0;
-	
-
-	for (const key in parsedRes) {
-		  if (parsedRes.hasOwnProperty(key)) {// 객체 자체의 속성인 경우에만 실행
-			numberOfRes = numberOfRes + parsedRes[key];
-		  }
-		}
-	
-	for (const key in parsedRes2) {
-			var numberKey = key;
-		}
-
-    var resultNumOfRes = document.getElementById("resultNumOfRes");
-/*     resultNumOfRess.innerHTML = numberOfRes2  */
-	console.log(resultNumOfRes);
-	
+        // 클릭한 <a> 태그의 텍스트 (부가항목명) 가져오기
+        var resClassName = $(this).text();
+        
+        // AJAX GET 요청 보내기
+        $.ajax({
+            type: "GET",
+            url: "/resclassdetail", // API 엔드포인트 URL을 여기에 입력하세요
+            data: { "resClassName": resClassName },
+            success: function(response) {
+                // JSON 응답을 JavaScript 객체로 파싱
+                // 응답 객체에서 필요한 데이터 추출
+                var data = response[0]; // 배열의 첫 번째 항목 사용
+                // 데이터를 HTML 테이블 셀에 표시
+                $("#topUpperResClassNameCell").text(data.topUpperResClassName);
+                $("#upperResClassNameCell").text(data.upperResClassName);
+                $("#resClassNameCell").text(data.resClassName);
+                $("#useYNCell").text(data.useYn);
+                $("#resClassName2Cell").text(data.resClassName);
+            },
+            error: function(error) {
+                // 오류 발생 시 실행되는 코드
+                console.error("에러 발생: " + error);
+            }
+        });
+    });
+});
 </script>
 <script type="text/javascript" th:src="@{/js/itres/menutree.js}"></script>
-
+</body>
 </html>

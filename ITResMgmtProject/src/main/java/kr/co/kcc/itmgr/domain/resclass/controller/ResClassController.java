@@ -11,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;
@@ -24,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ResClassController {
 
 	static final Logger logger = LoggerFactory.getLogger(ResClassController.class);
-	private final IResClassService IResClassService;
+	private final IResClassService resClassService;
 
 
 	@RequestMapping(value="/resclass" , method=RequestMethod.GET)
@@ -33,7 +35,7 @@ public class ResClassController {
 		Map<String, Map<String, List<String>>> resClassMap = new LinkedHashMap<>();
 
 
-		List<ResClass> resClassList = IResClassService.selectAllResClass();
+		List<ResClass> resClassList = resClassService.selectAllResClass();
 
 		
 		for(ResClass r : resClassList) {
@@ -68,7 +70,7 @@ public class ResClassController {
 		model.addAttribute("resClassMap", resClassMap);
 		
 	
-		List<Map<Object, Object>> numberOfRes = IResClassService.numberOfResByResClass();
+		List<Map<Object, Object>> numberOfRes = resClassService.numberOfResByResClass();
 		Map<Object, Object> numOfRes = new HashMap<>();
 		Map<Object, Object> numOfRes2 = new HashMap<>();
 
@@ -87,26 +89,18 @@ public class ResClassController {
 		  
 		model.addAttribute("numOfRes", numOfRes);
 	  	model.addAttribute("numOfRes2", numOfRes2);
-	  	
-		
-		List<ResClass> selectResClass1 = IResClassService.selectResClass(1);
-		List<ResClass> selectResClass2 = IResClassService.selectResClass(2);
-		List<ResClass> selectResClass3 = IResClassService.selectResClass(3);
-		
-		model.addAttribute("selectResClass1", selectResClass1);
-		model.addAttribute("selectResClass2", selectResClass2);
-		model.addAttribute("selectResClass3", selectResClass3);
 		
 		return "itres/resclass"; 
 	}
 	
-	@RequestMapping(value="/aa", method=RequestMethod.GET)
-	public String getUpperResClassId(Model model,@PathVariable String upperResClassId,ResClass resClass) {
-		
-		List<ResClass> resClassByUpperClass = IResClassService.selectResClassNameByUpperResClass(upperResClassId);	
-		model.addAttribute("resClass", resClassByUpperClass);
-		return "/itres/aa";
+	@GetMapping("/resclassdetail")
+	@ResponseBody
+	public List<ResClass> selectResClassByResClassName(@RequestParam("resClassName")String resClassName){
+		List<ResClass> selectResClassByResClassName = resClassService.selectResClassByResClassName(resClassName);
+		logger.info("RESULT" + selectResClassByResClassName);
+		return selectResClassByResClassName;
 	}
 	
+
 
 }
