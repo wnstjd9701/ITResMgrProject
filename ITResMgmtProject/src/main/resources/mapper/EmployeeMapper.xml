@@ -3,7 +3,7 @@
 <mapper namespace="kr.co.kcc.itmgr.domain.employee.dao.IEmployeeRepository">
 
 <select id="selectAllEmployee" resultType = "kr.co.kcc.itmgr.domain.employee.model.Employee">
-<![CDATA[
+
 	SELECT	e.employee_id AS employeeId, 
 			e.employee_name AS employeeName,
 			(SELECT c.detail_code_name
@@ -13,7 +13,7 @@
 				FROM commoncodedetail c 
 				WHERE c.detail_code = e.employee_status_code) AS employeeStatus
 	FROM employeeinfo e
-]]>
+
 </select>
 
 

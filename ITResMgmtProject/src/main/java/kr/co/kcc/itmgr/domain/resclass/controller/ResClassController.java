@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
-import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;
+import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;	
 import lombok.RequiredArgsConstructor;
 
 @Controller

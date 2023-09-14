@@ -18,7 +18,7 @@ table th{
 
 <div class="container" style="margin:50px 0 50px 270px; width:1150px;">
 	<button type="button" class="btn btn-primary" style="float:right;margin-left: 10px; background-color:navy;">저장</button>
-	<button type="button" class="btn btn-primary" style="float:right; background-color:navy;">신규</button>
+	<button type="button" id="newResClass" class="btn btn-primary" style="float:right; background-color:navy;" >신규</button>
 </div>
 <div class="container" style="margin-top:70px; display:flex; clear:both;">
     <div class="flex-item" style="width: 1200px;">
@@ -129,6 +129,27 @@ $(document).ready(function() {
                 console.error("에러 발생: " + error);
             }
         });
+    });
+});
+
+$(document).ready(function() {
+    // "신규" 버튼을 클릭할 때 실행되는 함수
+    $("#newResClass").click(function(event) {
+        // 선택한 <td> 요소
+        var topUpperResClassName = $("#topUpperResClassNameCell");
+        var upperResClassName = $("#upperResClassNameCell");
+        var resClassName = $("#resClassNameCell");
+        var resClassName2 = $("#resClassName2Cell");
+        
+        // 새로운 입력란(input)을 생성하고 <td> 내부에 추가
+        var inputElement = $('<input type="text" class="form-control" placeholder="">');
+        var inputElement2 = $('<input type="text" class="form-control" placeholder="">');
+        var inputElement3 = $('<input type="text" class="form-control" placeholder="">');
+        var inputElement4 = $('<input type="text" class="form-control" placeholder="">');
+        topUpperResClassName.html(inputElement);
+        upperResClassName.html(inputElement2);
+        resClassName.html(inputElement3);
+        resClassName2.html(inputElement4);
     });
 });
 </script>
