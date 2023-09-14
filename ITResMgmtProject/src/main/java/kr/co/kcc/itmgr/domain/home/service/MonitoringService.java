@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.kcc.itmgr.domain.home.dao.IMonitoringRepository;
 import kr.co.kcc.itmgr.domain.home.model.Monitoring;
+import kr.co.kcc.itmgr.domain.home.model.SearchCondition;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import lombok.RequiredArgsConstructor;
 
@@ -18,14 +19,20 @@ public class MonitoringService implements IMoniteringService{
 	
 	// 모니터링 모든 자원 정보 가져오기
 	@Override
-	public List<Monitoring> getAllResourceInformation() {
-		return monitoringRepository.getAllResourceInformation();
+	public List<Monitoring> selectAllResourceInformation() {
+		return monitoringRepository.selectAllResourceInformation();
 	}
 
 	// 하드웨어 레벨 별로 자원분류 가져오기
 	@Override
-	public List<ResClass> getResClassInformationByLevel(int level) {
-		return monitoringRepository.getResClassInformationByLevel(level);
+	public List<ResClass> selectResClassInformationByLevel(int level) {
+		return monitoringRepository.selectResClassInformationByLevel(level);
+	}
+
+	// 자원 검색 결과 가져오기
+	@Override
+	public List<Monitoring> selectResInformationBySearchCondition(SearchCondition searchCondition) {
+		return monitoringRepository.selectResourceInformationBySearchCondition(searchCondition);
 	}
 
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<select name="empStatusCode1">
+		<option value=''>전체</option>
+		<option value='EMS001'>재직중</option>
+		<option value='EMS002'>휴직중</option>
+		<option value='EMS003'>퇴직</option>
+	</select>
+	<select name='empStatusCode2'>
+		<option value=''>전체</option>
+		<option value='EMS001'>재직중</option>
+		<option value='EMS002'>휴직중</option>
+		<option value='EMS003'>퇴직</option>
+	</select>
+	<table id="empTable">
+		<tr>
+			<th>선택</th>
+			<th>사원ID</th>
+			<th>사원명</th>
+			<th>사원유형</th>
+			<th>사원상태</th>
+		</tr>
+		<tr th:each="employeeList : ${employeeList}">
+			<td><input type="checkbox" name="emp_chekbox"></td>
+			<td th:text="${employeeList.employeeId}" id="employeeId"></td>
+			<td th:text="${employeeList.employeeName}"></td>
+			<td th:text="${employeeList.employeeStatus}"></td>
+			<td th:text="${employeeList.employeeType}"></td>
+		<tr>
+	</table>
+	<input type="button" value="행추가" onclick="addRow()" />
+	<input type="button" value="행삭제" onclick="hideRow()" />
+	<input type="submit" id="i_submit" onclick="saveList()" value="저장" />
+	<script src="js/employee/employee.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+</body>
+</html>
