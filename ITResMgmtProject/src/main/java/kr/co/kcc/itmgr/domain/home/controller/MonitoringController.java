@@ -8,12 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.home.model.Monitoring;
+import kr.co.kcc.itmgr.domain.home.model.SearchCondition;
 import kr.co.kcc.itmgr.domain.home.service.IMoniteringService;
-import kr.co.kcc.itmgr.domain.home.service.MonitoringService;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import lombok.RequiredArgsConstructor;
 
@@ -31,9 +30,9 @@ public class MonitoringController {
 	 */
 	@GetMapping("/")
 	public String getAllResourceInformation(Model model) {
-		List<Monitoring> resourceInfo = monitoringService.getAllResourceInformation();
-		List<ResClass> resClassLevel2 = monitoringService.getResClassInformationByLevel(2);
-		List<ResClass> resClassLevel3 = monitoringService.getResClassInformationByLevel(3);
+		List<Monitoring> resourceInfo = monitoringService.selectAllResourceInformation();
+		List<ResClass> resClassLevel2 = monitoringService.selectResClassInformationByLevel(2);
+		List<ResClass> resClassLevel3 = monitoringService.selectResClassInformationByLevel(3);
 		
 //		logger.info("Level2: " + resClassLevel2);
 //		logger.info("Level3: " + resClassLevel3);
@@ -43,7 +42,7 @@ public class MonitoringController {
 		model.addAttribute("resClassLevel2", resClassLevel2);
 		model.addAttribute("resClassLevel3", resClassLevel3);
 	
-		return "index";
+		return "/index"; 
 	}
 	
 	/* 
@@ -52,17 +51,10 @@ public class MonitoringController {
 	 */
 	@PostMapping("/search")
 	@ResponseBody
-	public List<Monitoring> getResourceInformationByCategory(Model model, Monitoring searchInfo) {
-		String midResClass = searchInfo.getMidResClass();
-		String bottomResClass = searchInfo.getBottomResClass();
-		char monitoringYn = searchInfo.getMonitoringYn();
-		if(midResClass.equals("all")) {
-			
-		}
-		String resName = searchInfo.getResName();
-		logger.info("Search: " + searchInfo);
-//		List<Monitoring> searchResult = MonitoringService.getResInformationBySearchCondition(midResClass, bottomResClass, );
-		List<Monitoring> resourceInfo = monitoringService.getAllResourceInformation();
-		return resourceInfo;
+	public List<Monitoring> getResourceInformationByCategory(Model model, SearchCondition searchCondition) {
+		logger.info("searchCondition: " + searchCondition);
+		List<Monitoring> searchResult = monitoringService.selectResInformationBySearchCondition(searchCondition);
+		logger.info("SearchResult: " + searchResult);
+		return searchResult;
 	}
 }

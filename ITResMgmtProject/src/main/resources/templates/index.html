@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="/nav"></th:block>
+<th:block th:replace="~{/nav}"></th:block>
+<title>Bootstrap Example</title>
+
 <meta charset="utf-8">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -12,35 +14,28 @@
 <body>
 	<div class="container">
 		<div>
-			<h2>MenuBar</h2>
-		</div>
-		<div>
 			<span>중 분 류</span>
 			<!-- Level 2 -->
-			<select id="resClassLevel2" name="resClassLevel2">
-				<option value="all" th:text="전체" th:data-all="all"></option>
-				<option th:each="resClassLevel2:${resClassLevel2}"
-					th:value="${resClassLevel2.resClassId}"
-					th:text="${resClassLevel2.resClassName}"></option>
-			</select> <span>소 분 류</span> <select disabled id="resClassLevel3"
-				name="resClassLevel3">
-				<option value="all" th:text="전체" th:data-all="all"></option>
-				<option th:each="resClassLevel3:${resClassLevel3}"
-					th:value="${resClassLevel3.resClassId}"
-					th:data-upper-res-class-id="${resClassLevel3.upperResClassId}"
-					th:text="${resClassLevel3.resClassName}"></option>
-			</select> <span>사용 여부</span> <label> <input type="radio"
-				name="monitoringYn" value="Y" /> 전체
-			</label> <label> <input type="radio" name="monitoringYn" value="A" />
-				미사용 포함
-			</label> <input type="button" id="searchBtn" value="검색">
-
-			<form action="/search" method="get">
-				<input type="text" name="search" placeholder="자원명을 검색하세요.">
-				<input type="submit" value="검색">
-			</form>
+				<select id="resClassLevel2" name="resClassLevel2">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel2:${resClassLevel2}" th:value="${resClassLevel2.resClassId}" th:text="${resClassLevel2.resClassName}"></option>
+				</select> 
+			<span>소 분 류</span> 
+				<select disabled id="resClassLevel3" name="resClassLevel3">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel3:${resClassLevel3}" th:value="${resClassLevel3.resClassId}" th:data-upper-res-class-id="${resClassLevel3.upperResClassId}" th:text="${resClassLevel3.resClassName}"></option>
+				</select> 
+			<span>사용 여부</span> 
+				<label> 
+					<input type="radio" name="monitoringYn" value="Y" checked="checked" /> 전체
+				</label> 
+				<label> 
+					<input type="radio" name="monitoringYn" value="A" /> 미사용 포함
+				</label> 
+			<input type="text" name="resName" placeholder="자원명을 검색하세요.">
+			<input type="button" id="searchBtn" value="검색">
 		</div>
-		<table class="table table-striped">
+		<table id="resInfoTable" class="table table-striped">
 			<thead>
 				<tr>
 					<th>상태</th>
@@ -53,11 +48,11 @@
 					<th>자원 관리 ID</th>
 				</tr>
 			</thead>
-			<tbody th:each="resourceInfo:${resourceInfo}">
-				<tr>
+			<tbody>
+				<tr th:each="resourceInfo:${resourceInfo}">
 					<td>상태</td>
-					<td th:text="${resourceInfo.ip}"></td>
-					<td th:text="${resourceInfo.resClassFullName}"></td>
+					<td id="ip" th:text="${resourceInfo.ip}"></td>
+					<td th:text="${resourceInfo.resClassPath}"></td>
 					<td th:text="${resourceInfo.resName}"></td>
 					<td th:text="${resourceInfo.installPlaceName}"></td>
 					<td th:text="${resourceInfo.installPlaceFullAddress}"></td>
@@ -94,7 +89,7 @@ $(document).ready(function(){
         
         resClassLevel3.find("option[value='all']").text('전체');
      	// 중분류 선택 후 소분류 초기화 시 선택된 값 적용
-        resClassLevel3.val('all');
+        resClassLevel3.val('A');
      	
     	// 중분류 선택란의 '전체' 옵션을 선택 가능하도록 처리
         $('#resClassLevel2 option[value="all"]').prop('disabled', false);
@@ -110,12 +105,14 @@ $(document).ready(function(){
         // 선택된 중분류와 소분류 값을 가져옴
         var midResClass = $("#resClassLevel2").val();
         var bottomResClass = $("#resClassLevel3").val();
-
+		var resName = $("input[name='resName']").val();
         // 선택된 라디오 버튼 값 가져오기 (사용 여부)
         var monitoringYn = $("input[name='monitoringYn']:checked").val();
+        
 		console.log(midResClass);
 		console.log(bottomResClass);
 		console.log(monitoringYn);
+		console.log(resName);
 		
         // Ajax 요청을 보냄
         $.ajax({
@@ -124,19 +121,41 @@ $(document).ready(function(){
             data: {
             	midResClass: midResClass,
             	bottomResClass: bottomResClass,
-                monitoringYn: monitoringYn
+            	monitoringYn: monitoringYn,
+                resName: resName
             },
-            success: function(data) {
-                // 성공적으로 요청이 완료되면 이곳에서 처리
+            success: function(response) {
+                $('#resInfoTable > tbody tr').remove();
+            	if(response.length === 0){
+                	alert('검색된 결과가 없습니다.');
+                	addTableRow = "<tr>" + "<td colspan='8' style='text-align:center; font-weight: bold;'>" 
+                		+ "검색된 결과가 없습니다." + "</td>" + "</tr>";
+               	 	$('#resInfoTable > tbody').append(addTableRow);
+                	return;
+                }
+            	// 성공적으로 요청이 완료되면 이곳에서 처리
+            	console.log(response);
                 alert('성공');
-                console.log('서버 응답:', data);
-                console.log(data[0]);
-                // 이후에 필요한 처리를 추가하십시오.
+                for(var i=0; i<response.length; i++){
+                	// table 행 추가
+                	addTableRow = "<tr>" + 
+                	 "<td>" + "상태" + "</td>" +
+					 "<td>" + response[i].ip + "</td>" +
+					 "<td>" + response[i].resClassPath + "</td>" +
+					 "<td>" + response[i].resName+ "</td>" +
+					 "<td>" + response[i].installPlaceName + "</td>" +
+					 "<td>" + response[i].installPlaceFullAddress + "</td>" +
+					 "<td>" + response[i].introductionDate + "</td>" +
+					 "<td>" + response[i].mgmtId + "</td>" +
+					 "</tr>";
+
+                	 $('#resInfoTable > tbody').append(addTableRow);
+                }
+                return ;
             },
             error: function(error) {
                 // 요청이 실패한 경우 처리
                 console.log('에러:', error);
-                // 에러 처리를 추가하십시오.
             }
         });
     });
