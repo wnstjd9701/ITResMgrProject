@@ -1,5 +1,23 @@
 package kr.co.kcc.itmgr.domain.installplace.service;
 
-public class InstallPlaceService {
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+import kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository;
+import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class InstallPlaceService implements IInstallPlaceService {
+	
+	private final IInstallPlaceRepository installPlaceRepository;
+
+	// 모든 설치 장소 조회
+	@Override
+	public List<InstallPlace> selectAllAddress() {
+		return installPlaceRepository.selectAllAddress();
+	}
+	
 }

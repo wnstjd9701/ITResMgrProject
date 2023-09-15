@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/nav}"></th:block>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <title>Bootstrap Example</title>
-
+<head>
 <meta charset="utf-8">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
 </head>
 <body>
+	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 	<div class="container">
 		<div>
 			<span>중 분 류</span>
@@ -62,6 +58,7 @@
 			</tbody>
 		</table>
 	</div>
+	<div th:replace="~{../common/fragments/footer.html :: fragment-footer}"></div>
 	<script>
 $(document).ready(function(){
 	$('#resClassLevel2').on("change", function(){

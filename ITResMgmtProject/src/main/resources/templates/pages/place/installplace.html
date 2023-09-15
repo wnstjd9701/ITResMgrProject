@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="../common/layout/default">
+<head>
+<meta charset="UTF-8">
+<style>
+.place {
+	text-align: center;
+	height: 50vh;
+	margin-left: 10em;
+}
+
+.address-container {
+	margin-top: 20px; /* 주소 입력창과의 간격 조정 */
+}
+
+.place-name:hover {
+	cursor: pointer;
+}
+</style>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<th:block layout:fragment="content">
+	<div class="container">
+		<div class="content">
+			<div>
+				<div class="place" id="place-list">
+					<div>
+						<h2>설치 장소 관리</h2>
+					</div>
+					<div class="search-container">
+						<input type="text" placeholder="장소명을 입력하세요"> <input
+							type="button" value="검색">
+					</div>
+					<div class="place-list-table-container">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">번호</th>
+									<th scope="col">선택</th>
+									<th scope="col">설치 장소명</th>
+									<th scope="col">주소</th>
+									<th scope="col">상세 주소</th>
+									<th scope="col">자원 수</th>
+								</tr>
+							</thead>
+							<tbody th:each="installPlace, i : ${installPlace}">
+								<tr>
+									<th th:text="${i.count}"></th>
+									<th><input type="checkbox"></th>
+									<td class="place-name" th:text="${installPlace.installPlaceName}" th:data-install-place-sn="${installPlace.installPlaceSn}"></td>
+									<td th:text="${installPlace.installPlaceAddress}"></td>
+									<td th:text="${installPlace.installPlaceDetailAddress}"></td>
+									<td th:text="${installPlace.resCount}"></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="address-container">
+						<!-- Daum 주소 검색 API를 사용하는 입력창 -->
+						<div class="order-info-box">
+							<h2>주소</h2>
+						</div>
+						<p class="address-box">
+							<input type="text" id="zip-code"
+								class="address-input_box input-box" placeholder="우편번호">
+							<input type="button" class="btn-find-postcode" value="우편번호 찾기">
+							<input type="text" id="address-1"
+								class="address-input-box input-box" placeholder="도로명주소">
+							<input type="text" id="address-2"
+								class="address-input-box input-box" placeholder="상세주소">
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+$(document).ready(function(){
+	$(".btn-find-postcode").click(() => {
+		new daum.Postcode({
+			oncomplete: function (data) {
+				$('#zip-code').val(data.zonecode);
+				$('#address-1').val(data.address);
+			}
+		}).open();
+	})
+	
+	$(".place-list-table-container").on("click", ".place-name", function() {
+		var placeName = $(this).text();
+		console.log(placeName);
+	})
+})
+</script>
+</th:block>
+</html>

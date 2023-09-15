@@ -27,5 +27,5 @@ public interface ICommonCodeRepository {
 	
 	// 상세 코드 저장
 	int insertCommonCodeDetail(List<CommonCodeDetail> commonCodeDetail); // 상세 코드 생성
-	int updateCommonCodeDetail(CommonCodeDetail commonCodeDetail); // 상세 코드 수정
+	int updateCommonCodeDetail(CommonCodeDetail commonCodeDetail); // 상세 코드 수정, 삭제
 }

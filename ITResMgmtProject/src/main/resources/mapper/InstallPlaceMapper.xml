@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository">
+	<select id="selectAllAddress">
+		SELECT
+		    i.install_place_sn AS "installPlaceSn",
+		    i.install_place_name AS "installPlaceName",
+		    i.install_place_postno AS "installPlacePostno",
+		    i.install_place_address AS "installPlaceAddress",
+		    i.install_place_detail_address AS "installPlaceDetailAddress",
+		    i.longitude AS "longitude",
+		    i.latitude AS "latitude",
+		    r."resCount" AS "resCount"
+		FROM
+		    installplace i
+		LEFT JOIN (
+		    SELECT
+		        i.install_place_sn AS "install_place_sn",
+		        COUNT(r.res_sn) AS "resCount"
+		    FROM
+		        installplace i
+		    LEFT JOIN
+		        resinfo r ON i.install_place_sn = r.install_place_sn
+		    GROUP BY
+		        i.install_place_sn
+		) r ON i.install_place_sn = r."install_place_sn"
+	</select>
+</mapper>
