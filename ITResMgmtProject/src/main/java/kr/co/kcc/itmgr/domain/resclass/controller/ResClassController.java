@@ -6,17 +6,19 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
-import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;
+import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;	
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -24,15 +26,18 @@ import lombok.RequiredArgsConstructor;
 public class ResClassController {
 
 	static final Logger logger = LoggerFactory.getLogger(ResClassController.class);
-	private final IResClassService IResClassService;
+	private final IResClassService resClassService;
 
 
 	@RequestMapping(value="/resclass" , method=RequestMethod.GET)
-	public String selectAllResClass(Model model) {
+	public String selectAllResClass(Model model,String upperResClassId) {
 
 		Map<String, Map<String, List<String>>> resClassMap = new LinkedHashMap<>();
 
-		List<ResClass> resClassList = IResClassService.selectAllResClass();
+
+		List<ResClass> resClassList = resClassService.selectAllResClass();
+
+		
 		for(ResClass r : resClassList) {
 			if(r.getUpperResClassId()==null) {
 				String[] resClassName2s = r.getResClassName2().split(",");
@@ -60,29 +65,42 @@ public class ResClassController {
 				}
 			}
 		}
+		
 
 		model.addAttribute("resClassMap", resClassMap);
-
+		
 	
-		List<Map<Object, Object>> numberOfRes = IResClassService.numberOfResByResClass();
+		List<Map<Object, Object>> numberOfRes = resClassService.numberOfResByResClass();
 		Map<Object, Object> numOfRes = new HashMap<>();
+		Map<Object, Object> numOfRes2 = new HashMap<>();
 
-			  for(int i = 0; i < numberOfRes.size(); i++) {
-				    Object key = (String) numberOfRes.get(i).get("resClassName");
-				    Object value = numberOfRes.get(i).get("mappingNumberOfRes");
-				    numOfRes.put(key, value);
-				  }
-
-
+		  for(int i = 0; i < numberOfRes.size(); i++) {
+			    Object key = (String) numberOfRes.get(i).get("resClassName");
+			    int value = Integer.parseInt(String.valueOf(numberOfRes.get(i).get("mappingNumberOfRes")));
+			    numOfRes.put(key, value);
+			  }
+		
+		  for(int i = 0; i < numberOfRes.size(); i++) {
+			    Object key = (String) numberOfRes.get(i).get("upperResClassId");
+			    int value = Integer.parseInt(String.valueOf(numberOfRes.get(i).get("mappingNumberOfRes")));
+			    numOfRes2.put(key, value);
+			  }
+			 
+		  
 		model.addAttribute("numOfRes", numOfRes);
-		List<ResClass> selectResClass1 = IResClassService.selectResClass(1);
-		List<ResClass> selectResClass2 = IResClassService.selectResClass(2);
-		List<ResClass> selectResClass3 = IResClassService.selectResClass(3);
-		model.addAttribute("selectResClass1", selectResClass1);
-		model.addAttribute("selectResClass2", selectResClass2);
-		model.addAttribute("selectResClass3", selectResClass3);
+	  	model.addAttribute("numOfRes2", numOfRes2);
+		
 		return "itres/resclass"; 
 	}
 	
+	@GetMapping("/resclassdetail")
+	@ResponseBody
+	public List<ResClass> selectResClassByResClassName(@RequestParam("resClassName")String resClassName){
+		List<ResClass> selectResClassByResClassName = resClassService.selectResClassByResClassName(resClassName);
+		logger.info("RESULT" + selectResClassByResClassName);
+		return selectResClassByResClassName;
+	}
+	
+
 
 }

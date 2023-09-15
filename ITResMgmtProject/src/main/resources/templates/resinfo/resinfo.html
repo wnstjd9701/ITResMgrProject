@@ -2,9 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="/nav"></th:block>
 <head>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 	<div class="container" style="margin-top:50px; margin-left:270px; max-width:85%;">
@@ -129,8 +128,7 @@ $(document).ready(function () {
         var mgmtId = $("input[name='mgmtId']").val();
         // 선택된 라디오 버튼 값 가져오기 (사용 여부)
         var monitoringYn = $("input[name='monitoringYn']:checked").val();
-        
-        console.log(resName)
+
         //Ajax 요청을 보냄
         $.ajax({
             type: 'GET', // 또는 'GET', 요청 방식 선택
@@ -146,7 +144,6 @@ $(document).ready(function () {
                 "monitoringYn" : monitoringYn
             },
             success: function(response) {
-                console.log(response.length)
                 $('tbody#resInfoTable > tr').remove();
                 if (response.length === 0) {
                     alert('검색된 결과가 없습니다.');
@@ -154,7 +151,6 @@ $(document).ready(function () {
                     $('tbody#resInfoTable').append(addTableRow);
                     return;
                 }
-                console.log(response.length)
                 // 성공적으로 요청이 완료되면 이곳에서 처리
                 for (var i = 0; i < response.length; i++) {
                     // table 행 추가
@@ -179,7 +175,6 @@ $(document).ready(function () {
         });
     });
 });
-  
 </script>
 </body>
 </html>

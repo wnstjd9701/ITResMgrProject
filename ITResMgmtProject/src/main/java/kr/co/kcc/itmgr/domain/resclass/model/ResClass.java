@@ -11,7 +11,7 @@ public class ResClass {
 	private String upperResClassId;
 	private String resClassName;
 
-	private char useYN;
+	private char useYn;
 	private Timestamp createDate;
 	private String createrId;
 	private Timestamp updateDate;
@@ -21,6 +21,10 @@ public class ResClass {
 	//추가컬럼
 	private int level;
 	private String resClassName2;
+	
+	private String topUpperResClassName;
+	private String upperResClassName;
+	private String bottomResClassName;
 
 	
 }
