@@ -39,4 +39,5 @@ public class ResInfoController {
 		logger.info("'"+searchResInfo);
 		return searchResInfo;
 	}
+	
 }
