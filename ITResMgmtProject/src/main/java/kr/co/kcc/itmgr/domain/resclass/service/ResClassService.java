@@ -14,22 +14,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ResClassService implements IResClassService {
 
-	private final IResClassRepository IResClassRepository;
+	private final IResClassRepository resClassRepository;
 
 	@Override
 	public List<ResClass> selectAllResClass() {
-		return IResClassRepository.selectAllResClass();
+		return resClassRepository.selectAllResClass();
 	}
 
 	@Override
 	public List<Map<Object, Object>> numberOfResByResClass() {
-		return IResClassRepository.numberOfResByResClass();
+		return resClassRepository.numberOfResByResClass();
 	}
 
 	@Override
-	public List<ResClass> selectResClass(int level) {
-		return IResClassRepository.selectResClass(level);
+	public List<ResClass> selectResClassByResClassName(String resClassName) {
+		return resClassRepository.selectResClassByResClassName(resClassName);
 	}
+
+
+
+
 
 
 

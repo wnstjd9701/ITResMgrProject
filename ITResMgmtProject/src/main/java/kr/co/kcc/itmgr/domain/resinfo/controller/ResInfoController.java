@@ -36,7 +36,6 @@ public class ResInfoController {
 	@ResponseBody
 	public List<ResInfo> searchResInfo(ResInfo resInfo) {
 		List<ResInfo> searchResInfo = resInfoService.searchResInfo(resInfo);
-		logger.info("'"+searchResInfo);
 		return searchResInfo;
 	}
 	
