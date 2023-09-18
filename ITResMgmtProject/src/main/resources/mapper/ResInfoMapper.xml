@@ -88,6 +88,20 @@
 			  
 	</select>
 	
+	<insert id="insertResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			INSERT INTO 
+				RESINFO
+					(res_serial_id, res_class_id, res_name, res_sn, mgmt_id, res_status_code, manufacture_company_name,
+					model_name, mgmt_dept_name, manager_name, introduction_date, introduction_price, purchase_company_name, use_yn,
+					monitoring_yn, rack_info, expiration_date, add_info, create_date, creater_id, update_date, updater_id, install_place_sn)
+				VALUES
+					(#{resSerialId}, #{resClassId}, #{resName}, #{resSn}, #{mgmtId}, #{resStatusCode}, #{manufactureCompanyName},
+					#{modelName}, #{mgmtDeptName}, #{managerName}, #{introductionDate}, #{introductionPrice}, #{purchaseCompanyName}, #{useYn},
+					#{monitoringYn}, #{rackInfo}, #{expirationDate}, #{addInfo}, SYSDATE, #{createrId}, SYSDATE, #{updaterId}, #{installPlaceYn})	
+		]]>
+	</insert>
+	
 	
 	
 </mapper>

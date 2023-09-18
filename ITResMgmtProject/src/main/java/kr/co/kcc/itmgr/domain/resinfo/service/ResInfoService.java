@@ -30,4 +30,10 @@ public class ResInfoService implements IResInfoService {
 		return resInfoRepository.searchResInfo(resInfo);
 	}
 
+	@Override
+	public void insertResInfo(ResInfo resInfo) {
+		resInfoRepository.insertResInfo(resInfo);
+		
+	}
+
 }

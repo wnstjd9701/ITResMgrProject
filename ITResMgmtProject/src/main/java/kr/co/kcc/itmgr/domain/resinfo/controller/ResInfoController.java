@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.resclass.controller.ResClassController;
@@ -39,4 +39,10 @@ public class ResInfoController {
 		return searchResInfo;
 	}
 	
+	@PostMapping("/resinfo/insert")
+	public String insertResInfo(ResInfo resInfo, Model model) {
+		model.addAttribute("resInfo", resInfo);
+		resInfoService.insertResInfo(resInfo);
+		return "resinfo/resinfo";
+	}
 }

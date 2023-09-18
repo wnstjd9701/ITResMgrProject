@@ -90,7 +90,7 @@ public class ResClassController {
 		model.addAttribute("numOfRes", numOfRes);
 	  	model.addAttribute("numOfRes2", numOfRes2);
 		
-		return "itres/resclass"; 
+		return "resclass/resclass"; 
 	}
 	
 	@GetMapping("/resclassdetail")

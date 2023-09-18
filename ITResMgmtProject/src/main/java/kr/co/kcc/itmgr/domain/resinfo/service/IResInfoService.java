@@ -8,4 +8,6 @@ public interface IResInfoService {
 	List<ResInfo> selectAllResInfo();
 	List<ResInfo> searchResInfoByResClass();
 	List<ResInfo> searchResInfo(ResInfo resInfo); //검색결과조회
+	
+	void insertResInfo(ResInfo resInfo); //자원입력
 }
