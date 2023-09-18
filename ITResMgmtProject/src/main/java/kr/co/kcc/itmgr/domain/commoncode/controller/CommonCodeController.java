@@ -141,16 +141,24 @@ public class CommonCodeController {
 	@PostMapping("/commoncodedetail")
 	@ResponseBody
 	public Map<String, Object> saveCommonCodeDetail(@RequestBody List<CommonCodeDetail> commonCodeDetailList){
-		Map<String, List<CommonCodeDetail>> groupedCommonCode = commonCodeDetailList.stream()
+		Map<String, List<CommonCodeDetail>> groupedCommonCodeDetail = commonCodeDetailList.stream()
 				.collect(Collectors.groupingBy(CommonCodeDetail::getFlag)); // Flag가 Key값이 됨
-
-		if (groupedCommonCode.containsKey("C")) {
-			List<CommonCodeDetail> insertList = groupedCommonCode.get("C");
+		
+		if (groupedCommonCodeDetail.containsKey("C")) {
+			List<CommonCodeDetail> insertList = groupedCommonCodeDetail.get("C");
 			commonCodeService.insertCommonCodeDetail(insertList);
 		}
-		else if(groupedCommonCode.containsKey("U") || groupedCommonCode.containsKey("D")) {
-			List<CommonCodeDetail> updateList = groupedCommonCode.get("U");
+		if(groupedCommonCodeDetail.containsKey("U")) {
+			List<CommonCodeDetail> updateList = groupedCommonCodeDetail.get("U");
+			logger.info("updateList; " + updateList);
 			int updateRow = updateList.stream()
+	    	        .mapToInt(commonCodeService::updateCommonCodeDetail)
+	    	        .sum();
+		}
+		if(groupedCommonCodeDetail.containsKey("D")) {
+			List<CommonCodeDetail> deleteList = groupedCommonCodeDetail.get("D");
+			logger.info("deleteList: " + deleteList);
+			int deleteRow = deleteList.stream()
 	    	        .mapToInt(commonCodeService::updateCommonCodeDetail)
 	    	        .sum();
 		}

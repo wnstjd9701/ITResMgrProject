@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <th:block th:replace="~{../common/fragments/head :: fragment-head}"></th:block>
+</head>
+<body id="page-top">
+    <div class="grid-container">
+        <div class="nav">
+            <th:block th:replace="~{../common/fragments/nav.html :: fragment-nav}"></th:block>
+        </div>
+        <div class="content" layout:fragment="content">
+            <!-- Content 내용 추가 -->
+        </div>
+    </div>
+    <th:block th:replace="~{../common/fragments/footer :: fragment-footer}"></th:block>
+</body>
+</html>

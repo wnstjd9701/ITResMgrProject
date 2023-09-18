@@ -25,7 +25,7 @@ public class MonitoringController {
 	private final IMoniteringService monitoringService;
 	
 	/*
-	 * API No1. 모니터링 화면
+	 * API No1-1. 모니터링 화면
 	 * Info : 모든 모니터링 자원 정보 보여주는 API (N인 경우도 보여줌)
 	 */
 	@GetMapping("/")
@@ -42,11 +42,11 @@ public class MonitoringController {
 		model.addAttribute("resClassLevel2", resClassLevel2);
 		model.addAttribute("resClassLevel3", resClassLevel3);
 	
-		return "/index"; 
+		return "index"; 
 	}
 	
 	/* 
-	 * API No2. 모니터링 화면 검색
+	 * API No1-2. 모니터링 화면 검색
 	 * Info : 자원 분류를 선택하고 검색 버튼을 누를 때 API 
 	 */
 	@PostMapping("/search")

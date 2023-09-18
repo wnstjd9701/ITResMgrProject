@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="/nav"></th:block>
 <head>
-<meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
 </head>
+<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
+</head>
 <body>
-	<!-- 검색창 -->
-	<div class="container" style="margin-top:20px; margin-left:270px; max-width:85%;">
-	
+	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
+	<div class="container" style="margin-top:50px; margin-left:270px; max-width:85%;">
 		<button id="search_btn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;margin-left:10px; background-color:navy; border:navy;">조회</button>
 		<button id="newResInfoBtn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;  background-color:navy; border:navy;">신규</button>	
 		<span>대 분 류</span>
