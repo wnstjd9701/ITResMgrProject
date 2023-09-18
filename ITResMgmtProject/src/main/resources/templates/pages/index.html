@@ -46,14 +46,15 @@
 			</thead>
 			<tbody>
 				<tr th:each="resourceInfo:${resourceInfo}">
-					<td>상태</td>
-					<td id="ip" th:text="${resourceInfo.ip}"></td>
-					<td th:text="${resourceInfo.resClassPath}"></td>
-					<td th:text="${resourceInfo.resName}"></td>
-					<td th:text="${resourceInfo.installPlaceName}"></td>
-					<td th:text="${resourceInfo.installPlaceFullAddress}"></td>
-					<td th:text="${resourceInfo.introductionDate}"></td>
-					<td th:text="${resourceInfo.mgmtId}"></td>
+					<td class="resInfoTd status">상태</td> <!-- Health Check -->
+					<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}">[[${resourceInfo.ip}]]</td>
+					<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}">-</td>
+					<td class="resInfoTd resClassPath" th:text="${resourceInfo.resClassPath}"></td>
+					<td class="resInfoTd resName" th:text="${resourceInfo.resName}"></td>
+					<td class="resInfoTd installPlaceName" th:text="${resourceInfo.installPlaceName}"></td>
+					<td class="resInfoTd installPlaceFullName" th:text="${resourceInfo.installPlaceFullAddress}"></td>
+					<td class="resInfoTd introductionDate" th:text="${resourceInfo.introductionDate}"></td>
+					<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}"></td>
 				</tr>
 			</tbody>
 		</table>
@@ -134,19 +135,32 @@ $(document).ready(function(){
             	console.log(response);
                 alert('성공');
                 for(var i=0; i<response.length; i++){
+                	const newRow = $("<tr>");
+                	const status = $("<td>").addClass("resInfoTd status").text("상태");
+                	var ip;
+                	if(response[i].ip !== null){
+	                	ip = $("<td>").addClass("resInfoTd ip").text(response[i].ip);
+                	}else{
+	                	ip = $("<td>").addClass("resInfoTd ip").text("-");
+                	}
+                	const resClassPath = $("<td>").addClass("resInfoTd resClassPath").text(response[i].resClassPath);
+                	const resName = $("<td>").addClass("resInfoTd resName").text(response[i].resName);
+                	const installPlaceName = $("<td>").addClass("resInfoTd installPlaceName").text(response[i].installPlaceName);
+                	const installPlaceFullAddress = $("<td>").addClass("resInfoTd installPlaceFullAddress").text(response[i].installPlaceFullAddress);
+                	const introductionDate = $("<td>").addClass("resInfoTd introductionDate").text(response[i].introductionDate);
+                	const mgmtId = $("<td>").addClass("resInfoTd mgmtId").text(response[i].mgmtId);
+                	
                 	// table 행 추가
-                	addTableRow = "<tr>" + 
-                	 "<td>" + "상태" + "</td>" +
-					 "<td>" + response[i].ip + "</td>" +
-					 "<td>" + response[i].resClassPath + "</td>" +
-					 "<td>" + response[i].resName+ "</td>" +
-					 "<td>" + response[i].installPlaceName + "</td>" +
-					 "<td>" + response[i].installPlaceFullAddress + "</td>" +
-					 "<td>" + response[i].introductionDate + "</td>" +
-					 "<td>" + response[i].mgmtId + "</td>" +
-					 "</tr>";
+                	newRow.append(status);
+                	newRow.append(ip);
+                	newRow.append(resClassPath);
+                	newRow.append(resName);
+                	newRow.append(installPlaceName);
+                	newRow.append(installPlaceFullAddress);
+                	newRow.append(introductionDate);
+                	newRow.append(mgmtId);
 
-                	 $('#resInfoTable > tbody').append(addTableRow);
+                	 $('#resInfoTable > tbody').append(newRow);
                 }
                 return ;
             },

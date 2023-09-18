@@ -20,4 +20,10 @@ public class InstallPlaceService implements IInstallPlaceService {
 		return installPlaceRepository.selectAllAddress();
 	}
 	
+	// 설치 장소 검색
+	@Override
+	public List<InstallPlace> selectInstallPlaceByName(String placeName) {
+		return installPlaceRepository.selectInstallPlaceByName(placeName);
+	}
+	
 }

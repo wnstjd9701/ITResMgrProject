@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.installplace.service.IInstallPlaceService;
@@ -31,5 +32,17 @@ public class InstallPlaceController {
 		model.addAttribute("installPlace", installPlace);
 		
 		return "place/installplace";
+	}
+	
+	/*
+	 * API No.3-2. 설치 장소 검색 [비동기]
+	 * Info: 설치장소명으로 설치 장소 검색 
+	 */
+	@GetMapping("search/installplace")
+	@ResponseBody
+	public List<InstallPlace> selectInstallPlaceByName(String placeName) {
+		List<InstallPlace> installPlace = installPlaceService.selectInstallPlaceByName(placeName);
+		logger.info("InstallPlaceList: " + installPlace);
+		return installPlace;
 	}
 }
