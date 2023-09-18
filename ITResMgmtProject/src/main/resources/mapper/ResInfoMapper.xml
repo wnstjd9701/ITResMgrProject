@@ -98,9 +98,28 @@
 				VALUES
 					(#{resSerialId}, #{resClassId}, #{resName}, #{resSn}, #{mgmtId}, #{resStatusCode}, #{manufactureCompanyName},
 					#{modelName}, #{mgmtDeptName}, #{managerName}, #{introductionDate}, #{introductionPrice}, #{purchaseCompanyName}, #{useYn},
-					#{monitoringYn}, #{rackInfo}, #{expirationDate}, #{addInfo}, SYSDATE, #{createrId}, SYSDATE, #{updaterId}, #{installPlaceYn})	
+					#{monitoringYn}, #{rackInfo}, #{expirationDate}, #{addInfo}, SYSDATE, 'wh467925', SYSDATE, 'wh467925', #{installPlaceSn})	
 		]]>
 	</insert>
+	
+	<select id="selectResStatusCode" parameterType="String" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
+		<![CDATA[
+			SELECT 
+				detail_code	"resStatusCode",
+				detail_code_name	"detailCodeName"
+			FROM COMMONCODEDETAIL
+			WHERE code_group_id = #{codeGroupId}			
+		]]>
+	</select>
+	
+	<select id="selectResInstallPlace" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		<![CDATA[
+			SELECT
+				install_place_sn	"installPlaceSn",
+				install_place_name	"installPlaceName"
+			FROM INSTALLPLACE
+		]]>
+	</select>
 	
 	
 	

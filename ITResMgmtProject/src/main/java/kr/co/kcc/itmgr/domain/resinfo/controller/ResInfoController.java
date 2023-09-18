@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.resclass.controller.ResClassController;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 import kr.co.kcc.itmgr.domain.resinfo.service.IResInfoService;
@@ -29,6 +30,8 @@ public class ResInfoController {
 		model.addAttribute("selectAllResInfo", selectAllResInfo);
 		List<ResInfo> searchResInfoByResClass = resInfoService.searchResInfoByResClass();
 		model.addAttribute("search", searchResInfoByResClass);
+		List<CommonCodeDetail> selectResStatusCode = resInfoService.selectResStatusCode("RES000");
+		model.addAttribute("selectResStatusCode", selectResStatusCode);
 		return "resinfo/resinfo";
 	}
 	

@@ -82,6 +82,7 @@
 	<!-- 모달창 -->
     <div class="modal">
     <!-- 자원정보 입력 -->
+    	<form id="resInfoSave" name="resInfoSave" method="post" th:action="@{/resinfo/insert}">
         <div class="modal-body" style="margin-top:20px;">
 					<div class="col-md-16">
 						<table id="resInfoDetailTable" class="table table-hover">
@@ -89,67 +90,74 @@
 							    <tr>
 							      <th scope="row">자원분류명</th>
 							      	<td>
-							      	<select>
+							      	<select name="resClassId">
 							      		<option th:each="search:${search}" th:if="${search.level}==3" th:value="${search.resClassId}" th:text="${search.resClassName}">
 							      		</option>
 							      	</select>
 							      	</td>
 							      <th scope="row">관리ID</th>
-							      	<td><input type="text"></input>
+							      	<td><input type="text" name="mgmtId"></input>
 							      	</td>
 							      <th scope="row">관리부서명</th>
-							      	<td><input type="text"></input>
+							      	<td><input type="text" name="mgmtDeptName"></input>
 							      	</td>
+							      <th scope="row">자원시리얼아이디</th>
+							      	<td><input type="text" name="resSerialId"></input>
+							      	</td>	
 							    </tr>
 							    <tr>
 							      <th scope="row">자원명</th>
 							      	<td>
-							      	<input type="text"></input>
+							      	<input type="text" name="resName"></input>
 							      	</td>
 							      <th scope="row">자원상태</th>
-							      	<td><input type="text"></input>
+							      	<td>
+							      	<select name="resStatusCode">
+							      		<option th:each="selectResStatusCode:${selectResStatusCode}" th:value="${selectResStatusCode.resStatusCode}" th:text="${selectResStatusCode.detailCodeName}">
+							      		</option>
+							      	</select>
 							      	</td>
 							      <th scope="row">담당자명</th>
-							      	<td><input type="text"></input>
+							      	<td><input type="text" name="managerName"></input>
 							      	</td>
 							    </tr>
 							  	<tr>
 							      <th scope="row">자원시리얼번호</th>
 							      	<td>
-							      	<input type="text"></input>
+							      	<input type="text" name="resSn"></input>
 							      	</td>
 							      <th scope="row">제조회사명</th>
-							      	<td><input type="text"></input>
+							      	<td><input type="text" name="manufactureCompanyName"></input>
 							      	</td>
 							      <th scope="row">모델명</th>
-							      	<td><input type="text"></input>
+							      	<td><input type="text" name="modelName"></input>
 							      	</td>
 							    </tr>
 							    <tr>
 							      <th scope="row">설치장소</th>
 							      	<td>
-							      	<input type="text"></input>
+							      	<input type="text" name="installPlaceSn"></input>
 							      	</td>
 							      <th scope="row">랙정보</th>
-							      	<td><input type="text"></input>
+							      	<td><input type="text" name="rackInfo"></input>
 							      	</td>
 							    </tr>
 							  	<tr>
 							      <th scope="row">도입일자</th>
 							      	<td>
-							      	<input type="date"></input>
+							      	<input type="text" name="introductionDate" placeholder="YYYYMMDD"></input>
 							      	</td>
 							      <th scope="row">폐기일자</th>
-							      	<td><input type="date"></input>
+							      	<td><input type="text" name="expirationDate" placeholder="YYYYMMDD"></input>
 							      	</td>
 							      <th scope="row">추가정보</th>
-							      	<td><input type="text"></input>
+							      	<td><input type="text" name="addInfo"></input>
 							      	</td>
 							    </tr>
 							    <tr>
 							      <th scope="row">도입가격</th>
 							      	<td>
-							      	<input type="text"></input>
+							      	<input type="text" name="introdutionPrice"></input>
 							      	</td>
 							      <th scope="row">사용여부</th>
 							      	<td>
@@ -160,17 +168,26 @@
 							    <tr>
 							      <th scope="row">구매처명</th>
 							      	<td>
-							      	<input type="text"></input>
+							      	<input type="text" name="purchaseCompanyName"></input>
 							      	</td>
 							      <th scope="row">모니터링여부</th>
 							      	<td>
 										<label> <input type="radio" name="monitoringYn" value="Y" checked="checked"/> Y </label>		
 										<label> <input type="radio"name="monitoringYn" value="N" /> N </label> 
 							      	</td>
+							      <th scope="row"></th>
+							      	<td>
+							      	<input type="hidden" name="createrId"></input>
+							      	</td>
+							      	<td>
+							      	<input type="hidden" name="updaterId"></input>
+							      	</td>
 							    </tr>
 						    </tbody>
+						    <button type="submit">등록</button>
 						</table>
     				</div>
+			    	</form>
     <!-- 자원정보입력칸 끝 -->
     			
     <!-- 매핑된 부가정보 및 ip목록 -->
@@ -206,5 +223,6 @@
     		</div>
     <!-- 모달 끝 -->
 <script type="text/javascript" th:src="@{/js/resinfo/resinfo.js}"></script>
+
 </body>
 </html>
