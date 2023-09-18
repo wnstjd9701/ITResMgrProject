@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
+import kr.co.kcc.itmgr.domain.installplace.model.InstallRes;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,6 +25,11 @@ public class InstallPlaceService implements IInstallPlaceService {
 	@Override
 	public List<InstallPlace> selectInstallPlaceByName(String placeName) {
 		return installPlaceRepository.selectInstallPlaceByName(placeName);
+	}
+
+	@Override
+	public List<InstallRes> selectResInformationByInstallPlaceName(String placeName) {
+		return installPlaceRepository.selectResInformationByInstallPlaceName(placeName);
 	}
 	
 }
