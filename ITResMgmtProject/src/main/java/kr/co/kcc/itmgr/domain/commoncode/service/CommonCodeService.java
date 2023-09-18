@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import kr.co.kcc.itmgr.domain.commoncode.dao.ICommonCodeRepository;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCode;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
+import kr.co.kcc.itmgr.domain.commoncode.model.CommonDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -55,6 +56,19 @@ public class CommonCodeService implements ICommonCodeService{
 				})
 				.collect(Collectors.toList());
 	}
+	/*
+	 *  공통, 상세 코드 Flag 생성
+	 *  제너릭 타입으로 CommonDTO 인터페이스를 상속 / setFlag를 사용하기 위해
+	 */
+	@Override
+	public <T extends CommonDTO> List<T> setFlag(List<T> code) {
+		return code.stream()
+				.map(c -> {
+					c.setFlag("E");
+					return c;
+				})
+				.collect(Collectors.toList());
+	}
 	
 	// 공통 코드 검색 
 	@Override
@@ -80,7 +94,7 @@ public class CommonCodeService implements ICommonCodeService{
 		return commonCodeRepository.insertCommonCode(commonCode);
 	}
 
-	// 공통 코드 수정 / 삭제
+	// 공통 코드 수정
 	@Override
 	public int updateCommonCode(CommonCode commonCode) {
 		return commonCodeRepository.updateCommonCode(commonCode);
@@ -97,4 +111,5 @@ public class CommonCodeService implements ICommonCodeService{
 	public int updateCommonCodeDetail(CommonCodeDetail commonCodeDetail) {
 		return commonCodeRepository.updateCommonCodeDetail(commonCodeDetail);
 	}
+
 }
