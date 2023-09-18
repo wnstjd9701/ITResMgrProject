@@ -149,7 +149,17 @@
 		SET
 			detail_code = #{detailCode},
 			detail_code_name = #{detailCodeName},
-			use_yn = #{useYn}
+			update_date = SYSDATE,
+			updater_id = 'WNSTJD',
+			use_yn = 
+			<choose>
+				<when test='flag.equals("D")'>
+					'N'
+				</when>
+				<otherwise>
+					#{useYn}
+				</otherwise>
+			</choose>
 		WHERE
 			detail_code = #{detailCode}
 	</update>

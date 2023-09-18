@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/nav}"></th:block> 
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
 <style>
 /* 스크롤 가능한 영역의 스타일 */
 		.container{
@@ -33,6 +27,7 @@
 </style>
 </head>
 <body>
+<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 	<div id="wrapper">
 		<div id="commonCode">
 			<div class="container">
@@ -96,7 +91,7 @@
 							<option value="Y">Y</option>
 							<option value="N">N</option>
 						</select> 
-					<span>코드 그룹명 및 ID</span> <input name="commonCodeDetailKeyword" type="text" placeholder="상세 코드 및 코드명 입력">
+					<span>상세 코드 및 코드명</span> <input name="commonCodeDetailKeyword" type="text" placeholder="상세 코드 및 코드명 입력">
 					<input id="searchCommonCodeDetailBtn" type="button" value="검색">
 					<div>
 						<input id="commonCodeDetailAddRowBtn" type="button" value="행추가">
@@ -116,7 +111,7 @@
 								</tr>
 							</thead>
 							<tbody id="commonCodeDetail-table-body">
-								<tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
+								<!-- <tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
 									<td th:text="${commonCodeDetail.flag}"></td>
 									<td><input class="detailCheck" type="checkbox" name="detailCheck"></td>
 									<td class="detailCodeGroupId" th:text="${commonCodeDetail.codeGroupId}"></td>
@@ -128,7 +123,7 @@
 										<option value="N">N</option>
 									</select>
 									</td>
-								</tr>
+								</tr> -->
 							</tbody>
 						</table>
 					</div>
@@ -395,17 +390,26 @@
 							$("#commonCodeDetailDeleteRowBtn").click(() => {
 								var commonCodeTable = $(".commoncodedetail-table");
 								var selectedRows = $("input[name='detailCheck']:checked").closest("tr"); // 선택된 체크박스의 부모 행을 가져옵니다.
-								console.log(selectedRows);
 
 							    if (selectedRows.length === 0) {
 							        alert("삭제할 행을 선택하세요.");
 							        return;
 							    }
-
+								
+								var updateCount = 0;
+								var deleteCount = 0;
+								var deleteText = "";
 							    // 선택된 각 행에 대해 처리
 							    selectedRows.each(function() {
 							        var selectedRow = $(this);
-							        
+							        var deleteStatus = selectedRow.find("select").val();
+							        if(deleteStatus === 'N'){
+							        	const codeGroupId = selectedRow.find("input[type='text']").val();
+							        	deleteCount++;
+							        	selectedRow.find("input[type='checkbox']").prop("checked", false);
+							        	deleteText += `상세 코드 ${codeGroupId}는 이미 사용여부가 N 입니다.\n`;
+							        	return;	
+							        }
 							        // 선택된 행을 두번 누를 경우 checked되 있는 상태이기 때문에 선택한 행이 삭제되었다고 뜨는 것을 막기 위해
 							        selectedRow.find("input[name='detailCheck']").prop("checked", false);
 
@@ -419,9 +423,15 @@
 							            selectedRow.find("input[type='text']").prop("disabled", true);
 							            selectedRow.find("select").prop("disabled", true);
 							            selectedRow.find("input[type='checkbox']").prop("disabled", true);
+							            
+							            const codeGroupId = selectedRow.find("input[type='text']").val();
+							            updateCount++;
+							            deleteText += `상세 코드 ${codeGroupId}가 삭제되었습니다.\n`;
 							        }
 							    });
-							    alert("선택된 행이 삭제되었습니다.");
+							    if(deleteCount > 0 || updateCount > 0){
+							    	alert(`${deleteText}`);
+							    }
 							    return;
 							})
 							
@@ -459,13 +469,15 @@
 								$("#commonCodeDetail-table-body tr").each(function(){
 									var flag = $(this).find("td:first").text();
 									var detailCodeGroupId;
+									var detailCode;
 									if(flag == 'U' || flag == 'D'){
 										detailCodeGroupId = $(this).find("td:eq(2)").text();
+										detailCode = $(this).find("td:eq(3)").text();
+										console.log(detailCode);
 									}else if(flag == 'C'){
 										detailCodeGroupId = $(this).find("input[name='detailCodeGroupId']").val();
+										detailCode = $(this).find("input[name='detailCode']").val();
 									}
-									// detailCodeGroupId 가 존재 해야 다음으로 넘어갈 수 있음
-									var detailCode = $(this).find("input[name='detailCode']").val();
 									var detailCodeName = $(this).find("input[name='detailCodeName']").val();
 									var useYn = $(this).find("select option:selected").val();
 
@@ -487,9 +499,9 @@
 								}
 								
 								console.log(commonCodeDetailList);
-								/* $.ajax({
+								$.ajax({
 									method: "POST",
-									url: "/commoncodedetail"
+									url: "/commoncodedetail",
 									data: JSON.stringify(commonCodeDetailList),
 									contentType: "application/json",
 									success : function(response){
@@ -500,8 +512,7 @@
 									error : function(xhr,status,error) {
 										alert("에러 발생:", error);
 									}
-								}); */
-							
+								});
 							});
 							
 							// 상세 코드 테이블 업데이트 함수
@@ -528,19 +539,19 @@
 										name: "detailCodeGroupId",
 										class: "detailCodeGroupId detail-code-group-id"
 									});
-									var detailCode = $("<td>").append($("<input>").attr({
-										type: "text",
+									var detailCode = $("<td>").text(response[i].detailCode).attr({
 										name: "detailCode",
-										value: response[i].detailCode,
 										class: "detailCode"
-									}));
+									});
 									var detailCodeName = $("<td>").append($("<input>").attr({
 										type: "text",
 										name: "detailCodeName",
 										value: response[i].detailCodeName,
 										class: "detailCodeName"
 									}));
-									var useYn = $("<td>").append("<select><option>Y</option><option>N</option></select>");
+									var selectElement = $("<select><option>Y</option><option>N</option></select>");
+									selectElement.val(response[i].useYn);
+									var useYn = $("<td>").append(selectElement);
 									
 									newRow.append(status);
 									newRow.append(select);
