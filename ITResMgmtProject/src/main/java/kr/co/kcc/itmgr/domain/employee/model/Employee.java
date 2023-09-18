@@ -1,7 +1,7 @@
 package kr.co.kcc.itmgr.domain.employee.model;
 
 import java.sql.Timestamp;
-
+import java.util.List;
 
 import lombok.Data;
 
@@ -16,11 +16,15 @@ public class Employee {
 	private Timestamp createDate;
 	private String createrId;
 	private Timestamp updateDate;
+	
 	private String updaterId;
 	private char useYN;
 	
 	private String employeeType;
 	private String employeeStatus;
-	private String[] selectedEmployeeIds;
-	
+
+	private List<Employee> employee;
+	private List<String> deletedEmployeeIds;
+	private List<Employee> updatedEmployeeInfo;
+
 }

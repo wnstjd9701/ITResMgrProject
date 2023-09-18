@@ -19,39 +19,29 @@
 	]]>
 </select>
 
-<!-- <select id="selectSearchEmployee" resultType = "kr.co.kcc.itmgr.domain.employee.model.Employee">
-	<![CDATA[
-		SELECT	e.employee_id AS employeeId, 
-				e.employee_name AS employeeName,
-				(SELECT c.detail_code_name
-					FROM commoncodedetail c 
-					WHERE c.detail_code = e.employee_type_code) AS employeeType,
-				(SELECT c.detail_code_name
-					FROM commoncodedetail c 
-					WHERE c.detail_code = e.employee_status_code) AS employeeStatus
-		FROM employeeinfo e
-		WHERE use_yn = 'Y' AND
-		ORDER BY employeeName
-	
-]]>
-</select> -->
-
 <select id="selectSearchEmployee" resultType = "kr.co.kcc.itmgr.domain.employee.model.Employee">
-	<![CDATA[
-		SELECT	e.employee_id AS employeeId, 
-				e.employee_name AS employeeName,
-				(SELECT c.detail_code_name
-					FROM commoncodedetail c 
-					WHERE c.detail_code = e.employee_type_code) AS employeeType,
-				(SELECT c.detail_code_name
-					FROM commoncodedetail c 
-					WHERE c.detail_code = e.employee_status_code) AS employeeStatus
+		SELECT	e.employee_id AS employeeId,
+    			e.employee_name AS employeeName,
+    			(SELECT c.detail_code_name
+     				FROM commoncodedetail c
+     				WHERE c.detail_code = e.employee_type_code) AS employeeType,
+    			(SELECT c.detail_code_name
+    				FROM commoncodedetail c
+    				WHERE c.detail_code = e.employee_status_code) AS employeeStatus
 		FROM employeeinfo e
 		WHERE use_yn = 'Y' 
-		ORDER BY employeeName
-	
-]]>
+		<if test="employeeTypeCode  != null and employeeTypeCode  != ''">
+        	AND e.employee_type_code = #{employeeTypeCode}
+    	</if>
+    	<if test="employeeStatusCode != null and employeeStatusCode != ''">
+    		AND e.employee_status_code = #{employeeStatusCode}
+		</if>
+		<if test="searchText != null and searchText != ''">
+		 	AND (e.employee_id LIKE '%${searchText}%' OR e.employee_name LIKE '%${searchText}%')
+		</if>
+		ORDER BY employee_name
 </select>
+
 
 <insert id="insertEmployee" parameterType="kr.co.kcc.itmgr.domain.employee.model.Employee">
 		<foreach collection="list" item="employee" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
@@ -78,9 +68,33 @@
 	]]>
 </update>
 
- 
- 
 
+<!-- <update id="updateEmployee" parameterType="kr.co.kcc.itmgr.domain.employee.model.Employee">
+	<![CDATA[
+    	UPDATE EMPLOYEEINFO 
+    	SET 
+    		employee_name=#{employeeName},
+			employee_type_code=#{employeeTypeCode}, 
+        	employee_status_code=#{employeeStatusCode}
+		WHERE
+       		employee_id=#{employeeId}
+	]]>
+</update> -->
+ 
+<update id="updateEmployee" parameterType="kr.co.kcc.itmgr.domain.employee.model.Employee">
+    <foreach collection="list" item="employee" separator=";" open="DECLARE BEGIN" close="; END;">
+        
+            UPDATE EMPLOYEEINFO 
+            SET 
+                employee_name=#{employee.employeeName},
+                employee_type_code=#{employee.employeeTypeCode}, 
+                employee_status_code=#{employee.employeeStatusCode}
+            <where>
+                employee_id=#{employee.employeeId}
+                </where>
+    
+    </foreach>
+</update>
 
 
 </mapper>

@@ -12,14 +12,16 @@ public interface IEmployeeRepository {
 	List<Employee> selectAllEmployee();
 
 	//사원 검색
-	void selectSearchEmployee(String employeeTypeCode);
+	List<Employee> selectSearchEmployee(String employeeTypeCode, String employeeStatusCode, String searchText);
 
 	//사원등록
 	void insertEmployee(List<Employee> employee);
 
 	//사원삭제(사용여부:N)
 	void deleteEmployeeByUseYN(String employeeId); 
-//	void deleteEmployeeByUseYN(List<Employee> employeeId); 
 	
+	//사원수정
+//	List<Employee> updateEmployee(String employeeId);
+	void updateEmployee(List<Employee> updatedEmployeeInfo);
 
 }

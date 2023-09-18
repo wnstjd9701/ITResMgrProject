@@ -1,6 +1,8 @@
 var rowCount = 0;
 
 
+
+
 //행추가 버튼
 function addRow() {
 	var table = document.getElementById("empTable");
@@ -8,7 +10,7 @@ function addRow() {
 	newRow.setAttribute("data-row-id", rowCount);
 
 	var newCell0 = newRow.insertCell(0);
-	newCell0.innerHTML = "<input type='checkbox'>";
+	newCell0.innerHTML = "<input type='checkbox' name='emp_checkbox'>";
 
 	var newCell1 = newRow.insertCell(1);
 	newCell1.innerHTML = "<input type='text' id='empId" + rowCount + "' size='10'>";
@@ -34,46 +36,128 @@ function addRow() {
 	rowCount++;
 }
 
-//행추가저장 버튼
-function addEmp() {
-	var employee = new Array();
-	for (var i = 0; i < rowCount; i++) {
-		var empId = document.getElementById('empId' + i).value;
-		var empName = document.getElementById('empName' + i).value;
-		var empStatusCode = document.getElementById('empStatusCode' + i).value;
-		var empTypeCode = document.getElementById('empTypeCode' + i).value;
 
-		if (empId && empName && empStatusCode && empTypeCode) {
-			var empValue = {
-				employeeId: empId,
-				employeeName: empName,
-				employeeStatusCode: empStatusCode,
-				employeeTypeCode: empTypeCode
-			};
-			employee.push(empValue);
+//행삭제(행숨김)
+function hideRow() {
+	const selectedCheckboxes = document.querySelectorAll('input[name="emp_checkbox"]:checked');
+	const hiddenBox = document.querySelector("input[name='hiddenBox']");
+
+	selectedCheckboxes.forEach(function(checkbox) {
+		var row = checkbox.closest('tr');
+		//row.style.display = 'none';
+		row.querySelector("input[name='hiddenBox']").value = "d";
+	});
+
+	console.log("hiddenBox.value", hiddenBox.value)
+}
+
+
+
+//저장버튼
+function saveList() {
+
+	//Insert
+	if (rowCount > 0) {
+		var employee = new Array();
+		for (var i = 0; i < rowCount; i++) {
+			var empId = document.getElementById('empId' + i).value;
+			var empName = document.getElementById('empName' + i).value;
+			var empStatusCode = document.getElementById('empStatusCode' + i).value;
+			var empTypeCode = document.getElementById('empTypeCode' + i).value;
+
+
+
+			if (empId && empName && empStatusCode && empTypeCode) {
+				var empValue = {
+					employeeId: empId,
+					employeeName: empName,
+					employeeStatusCode: empStatusCode,
+					employeeTypeCode: empTypeCode
+				};
+				employee.push(empValue);
+			}
+		}
+		console.log("employee", employee);
+	}
+
+	//Delete
+	var deletedEmployeeIds = [];
+
+	var hiddenFields = document.getElementsByName("hiddenBox");
+
+	for (var i = 0; i < hiddenFields.length; i++) {
+		var hiddenValue = hiddenFields[i].value;
+		if (hiddenValue === "d") {
+			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
+			var row = hiddenFields[i].closest("tr");
+			var employeeId = row.querySelector('[name="employeeId"]').textContent;
+			console.log("employeeId : ", employeeId);
+			deletedEmployeeIds.push(employeeId);
 		}
 	}
-	console.log("employee", employee);
+
+	//Update
+	/*	var updatedEmployeeInfo = [];
+		for (var i = 0; i < hiddenFields.length; i++) {
+			var hiddenValue = hiddenFields[i].value;
+			if (hiddenValue === "u") {
+				// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
+				var row = hiddenFields[i].closest("tr");
+				var u_empId = row.querySelector('[name="employeeId"]').textContent;
+				var u_empName = row.querySelector('[name="employeeName"]').textContent;
+				var u_empType = row.querySelector('[name="employeeType"]').textContent;
+				var u_empStatus = row.querySelector('[name="employeeStatus"]').textContent;
+				
+				var updateEmployee = {
+					employeeId: u_empId,
+					employeeName: u_empName,
+					employeeType: u_empType,
+					employeeStatus: u_empStatus
+				};
+				updatedEmployeeInfo.push(updateEmployee);
+			}
+		}*/
+
+
+	var requestData = {
+		employee: employee,
+		deletedEmployeeIds: deletedEmployeeIds
+	};
+
+
 	$.ajax({
-		url: '/employeeview',
+		url: '/save/employee',
 		type: 'POST',
 		contentType: 'application/json',
-		data: JSON.stringify(employee),
+		data: JSON.stringify(requestData),
 		success: function(response) {
 			console.log("response", response)
 			rowCount = 0;
+
 
 			$('#empTable > tbody').empty();
 
 			for (var i = 0; i < response.length; i++) {
 				var addTableRow = "<tr>" +
 					"<td><input type='checkbox' name='emp_checkbox'></td>" +
-					"<td>" + response[i].employeeId + "</td>" +
-					"<td>" + response[i].employeeName + "</td>" +
-					"<td>" + response[i].employeeType + "</td>" +
-					"<td>" + response[i].employeeStatus + "</td>" +
-					"</tr>";
-					
+					"<td name='employeeId'>" + response[i].employeeId + "</td>" +
+					"<td name='employeeName' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
+					"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
+					"<select name='empTypeList' class='select' style='display: none;'>" +
+					"<option value=''>선택</option>" +
+					"<option value='EMT002'>IT자원관리자</option>" +
+					"<option value='EMT001'>시스템관리자</option>" +
+					"</select>" + "</td>" +
+					"<td name='employeeStatus' onclick='handleClick(this)'>" + "<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>" +
+					"<select name='empStatusList' class='select' style='display: none;'>" +
+					"<option value=''>선택</option>" +
+					"<option value='EMS001'>재직중</option>" +
+					"<option value='EMS002'>휴직중</option>" +
+					"<option value='EMS003'>퇴직</option>" +
+					"</select>" + "</td>" +
+					"<td><input type='' name='hiddenBox'></td>" + "</tr>";
+
+
 				$('#empTable > tbody').append(addTableRow);
 			}
 			return;
@@ -84,46 +168,29 @@ function addEmp() {
 	});
 }
 
-// 행바로삭제 버튼(바로 사용여부 : N)
-function deleteRow() {
-	var employeeIdList = new Array();
 
-	$('input[name="emp_checkbox"]:checked').each(function() {
-		var empId = $(this).closest('tr').find('td:eq(1)').text();
-		employeeIdList.push(empId);
+// 모든 셀을 클릭 이벤트 핸들러에 연결
+const cells = document.querySelectorAll('td[name="employeeName"], td[name="employeeType"], td[name="employeeStauts"]');
+
+cells.forEach((cell) => {
+	cell.addEventListener('click', function() {
+		handleClick(this);
 	});
-	
-	console.log("employeeId", employeeIdList);
+});
 
-	$.ajax({
-		url: '/employeeview',
-		type: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(employeeIdList),
-		success: function(response) {
-			console.log("response", response)
-			rowCount = 0;
 
-			$('#empTable > tbody').empty();
+// ID, 유형, 상태를 클릭하면 'u' 값을 hiddenBox에 넣기
+function handleClick(element) {
+	const hiddenBox = element.closest('tr').querySelector("input[name='hiddenBox']");
+	hiddenBox.value = 'u';
 
-			for (var i = 0; i < response.length; i++) {
-				var addTableRow = "<tr>" +
-					"<td><input type='checkbox' name='emp_checkbox'></td>" +
-					"<td>" + response[i].employeeId + "</td>" +
-					"<td>" + response[i].employeeName + "</td>" +
-					"<td>" + response[i].employeeType + "</td>" +
-					"<td>" + response[i].employeeStatus + "</td>" +
-					"</tr>";
+	// 클릭한 셀이 'employeeType' 또는 'employeeStatus'인 경우에만 showSelectBox 함수 실행
+	if (element.getAttribute('name') === 'employeeType' || element.getAttribute('name') === 'employeeStauts') {
+		showSelectBox(element);
+	}
 
-				$('#empTable > tbody').append(addTableRow);
-			}
-			return;
-		},
-		error: function(request, error) {
-			alert("메시지:" + request.responseText + "\n" + "에러:" + error);
-		}
-	});
 }
+
 
 function showSelectBox(listItem) {
 	const textElement = listItem.querySelector(".text");
@@ -135,150 +202,200 @@ function showSelectBox(listItem) {
 	selectElement.focus();
 
 	selectElement.addEventListener("blur", function() {
-		 const selectedOption = selectElement.options[selectElement.selectedIndex];
-        textElement.innerText = selectedOption.innerText;
+		const selectedOption = selectElement.options[selectElement.selectedIndex];
+		textElement.innerText = selectedOption.innerText;
 		textElement.style.display = "inline-block";
 		selectElement.style.display = "none";
 	});
 }
 
-function updateRow(){
-	var updateEmployee = [];
-	
-	const tbody = document.querySelector("#empTable tbody");
 
-	// tbody 내의 모든 행을 선택합니다.
-	const rows = tbody.querySelectorAll("tr");
+//사원유형, 사원상태 클릭 시 selectBox 보여짐
+/*function showSelectBox(listItem) {
+	const textElement = listItem.querySelector(".text");
+	textElement.style.display = "none";
 
-	// 각 행에 대해 반복합니다.
-	rows.forEach(function(row) {
-    // 행 내의 각 셀에 접근하려면 다음과 같이 사용할 수 있습니다:
-    const cells = row.querySelectorAll("td");
-	for (var i = 0; i < rows; i++) {
-		var empId = document.getElementById('empId' + i).value;
-		var empName = document.getElementById('empName' + i).value;
-		var empStatusCode = document.getElementById('empStatusCode' + i).value;
-		var empTypeCode = document.getElementById('empTypeCode' + i).value;
-		
-		if (empId && empName && empStatusCode && empTypeCode) {
-			var updateEmpValue = {
-				employeeId: empId,
-				employeeName: empName,
-				employeeStatusCode: empStatusCode,
-				employeeTypeCode: empTypeCode
-			};
-			updateEmployee.push(updateEmpValue);
-		}
-	}
-	
-	
-    // 각 셀에 대한 조작을 수행합니다.
-    cells.forEach(function(cell) {
-        // cell에 대한 조작을 수행합니다.
-        // 예를 들어 cell.textContent를 사용하여 셀 내의 텍스트를 가져올 수 있습니다.
-        const cellText = cell.textContent;
-        
-        // 추가적인 작업을 수행하거나 조작할 수 있습니다.
-    });
-});
-	
-}
+	const selectElement = listItem.querySelector(".select");
+	selectElement.style.display = "inline-block";
 
+	selectElement.focus();
 
-
-/*function hideRow() {
-	var table = document.getElementById("empTable");
-	var rows = table.getElementsByTagName('tr');
-	var employeeIdArray = [];
-
-
-	for (var i = 1; i < rows.length; i++) {
-		var empIdArr = new Object();
-		var row = rows[i];
-		var checkboxes = row.querySelectorAll('[name="emp_checkbox"]');
-
-		if (checkboxes.length > 0) {
-			var checkbox = checkboxes[0];
-			if (checkbox.checked) {
-				row.style.display = 'none';
-				var employeeIdCell = row.querySelector("#employeeId");
-				console.log(employeeIdCell)
-				empIdArr = employeeIdCell.textContent;
-				employeeIdArray.push(empIdArr);
-
-
-			}
-			console.log("employeeIdArray : " + employeeIdArray);
-		}
-	}
-
-	return employeeIdArray;
-
+	selectElement.addEventListener("blur", function() {
+		const selectedOption = selectElement.options[selectElement.selectedIndex];
+		textElement.innerText = selectedOption.innerText;
+		textElement.style.display = "inline-block";
+		selectElement.style.display = "none";
+	});
 }*/
 
 
 
 
 
-//행 저장
-/*function saveList() {
-	var employeeIdArray = hideRow();
-	var employee = new [];
 
 
-	for (var i = 0; i < rowCount; i++) {
-		var emp = new Object();
-		emp.employeeId = document.getElementById('empId' + i).value;
-		emp.employeeName = document.getElementById('empName' + i).value;
-		emp.employeeStatusCode = document.getElementById('empStatusCode' + i).value;
-		emp.employeeTypeCode = document.getElementById('empTypeCode' + i).value;
+function updateRow() {
 
-		employee.push(emp);
+	var hiddenFields = document.getElementsByName("hiddenBox");
+	var updatedEmployeeInfo = [];
+	for (var i = 0; i < hiddenFields.length; i++) {
+		var hiddenValue = hiddenFields[i].value;
+		if (hiddenValue === "u") {
+			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
+			var row = hiddenFields[i].closest("tr");
+			var u_empId = row.querySelector('[name="employeeId"]').textContent;
+			var u_empName = row.querySelector('[name="employeeName"]').textContent;
+			var u_empType = null;
+			var u_empStatus = null;
+
+			//name="empType"인 <span> text와 일치하는 <select><option> value값 가져오기
+			//span text값 가지고오기
+			var empTypeElement = row.querySelector('span.text[name="empType"]');
+			var empTypetext = empTypeElement.textContent;
+
+			//empTypeList <select> 가지고 오기	
+			var selectElement = row.querySelector('select[name="empTypeList"]');
+
+			//empTypeList <select>의 <option> 가지고 오기
+			for (var j = 0; j < selectElement.options.length; j++) {
+				var option = selectElement.options[j];
+				//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
+				if (empTypetext === option.textContent) {
+					u_empType = option.value;
+					break;
+				}
+			}
+			
+			//name="empStatus"인 <span> text와 일치하는 <select><option> value값 가져오기
+			//span text값 가지고오기
+			var empStatusElement = row.querySelector('span.text[name="empStatus"]');
+			var empStatustext = empStatusElement.textContent;
+
+			//empTypeList <select> 가지고 오기	
+			var typeSelectElement = row.querySelector('select[name="empStatusList"]');
+
+			//empTypeList <select>의 <option> 가지고 오기
+			for (var k = 0; k < typeSelectElement.options.length; k++) {
+				var tpyeOption = typeSelectElement.options[k];
+				//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
+				if (empStatustext === tpyeOption.textContent) {
+					u_empStatus = tpyeOption.value;
+					break;
+				}
+			}
+			//console.log("u_empStatus", u_empStatus);
+			var updateEmployee = {
+				employeeId: u_empId,
+				employeeName: u_empName,
+				employeeTypeCode: u_empType,
+				employeeStatusCode: u_empStatus
+			};
+
+			updatedEmployeeInfo.push(updateEmployee)
+		}
 	}
-
-	var temp = new Object();
-	temp.employeeIdArray = employeeIdArray;
-	employee.push(temp);
-
-	console.log("employee", employee)
+	console.log("updatedEmployeeInfo",updatedEmployeeInfo)
 
 	$.ajax({
-		url: '/employeeview',
+		url: '/update/employee',
 		type: 'POST',
-		dataType: 'json',
 		contentType: 'application/json',
-		data: JSON.stringify(employee),
+		data: JSON.stringify(updatedEmployeeInfo),
 		success: function(response) {
-
 			console.log("response", response)
 			rowCount = 0;
-
-
 
 			$('#empTable > tbody').empty();
 
 			for (var i = 0; i < response.length; i++) {
 				var addTableRow = "<tr>" +
 					"<td><input type='checkbox' name='emp_checkbox'></td>" +
-					"<td>" + response[i].employeeId + "</td>" +
-					"<td>" + response[i].employeeName + "</td>" +
-					"<td>" + response[i].employeeType + "</td>" +
-					"<td>" + response[i].employeeStatus + "</td>" +
-					"</tr>";
-
+					"<td name='employeeId'>" + response[i].employeeId + "</td>" +
+					"<td name='employeeName' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
+					"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
+					"<select name='empTypeList' class='select' style='display: none;'>" +
+					"<option value=''>선택</option>" +
+					"<option value='EMT002'>IT자원관리자</option>" +
+					"<option value='EMT001'>시스템관리자</option>" +
+					"</select>" + "</td>" +
+					"<td name='employeeStatus' onclick='handleClick(this)'>" + "<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>" +
+					"<select name='empStatusList' class='select' style='display: none;'>" +
+					"<option value=''>선택</option>" +
+					"<option value='EMS001'>재직중</option>" +
+					"<option value='EMS002'>휴직중</option>" +
+					"<option value='EMS003'>퇴직</option>" +
+					"</select>" + "</td>" +
+					"<td><input type='' name='hiddenBox'></td>" + "</tr>";
 				$('#empTable > tbody').append(addTableRow);
+				
+				console.log("여기타나")
 			}
-			console.log(" 결과 employee", employee)
-
 			return;
-
-
 		},
 		error: function(request, error) {
-			alert("메시지:" + request.responseText + "\n" + "에러:" + error);
+			console.log("메시지:" + request.responseText + "\n" + "에러:" + error);
 		}
 	});
+}
 
-}*/
+//검색
+function searchList() {
+	var employeeTypeCode = document.getElementById('searchEmpTypeList').value;
+	var employeeStatusCode = document.getElementById('searchEmpStatusList').value;
+	var searchText = document.getElementById('searchText').value;
 
- 
+	console.log("employeeTypeCode", employeeTypeCode)
+	console.log("employeeStatusCode", employeeStatusCode)
+
+	var searchData = {
+		employeeTypeCode: employeeTypeCode,
+		employeeStatusCode: employeeStatusCode,
+		searchText: searchText
+	};
+
+	$.ajax({
+		url: '/search/employee',
+		type: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(searchData),
+		success: function(response) {
+			console.log("response", response)
+			console.log("response", response)
+
+			$('#empTable > tbody').empty();
+
+			if (response.length === 0) {
+				// 검색 결과가 없는 경우
+				var noResultRow = "<tr><td colspan='5'>검색결과가 없습니다</td></tr>";
+				$('#empTable > tbody').append(noResultRow);
+			} else {
+				// 검색 결과가 있는 경우
+				for (var i = 0; i < response.length; i++) {
+					var addTableRow = "<tr>" +
+						"<td><input type='checkbox' name='emp_checkbox'></td>" +
+						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
+						"<td name='employeeName' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
+						"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text'>" + response[i].employeeType + "</span>" +
+						"<select name='empTypeList' class='select' style='display: none;'>" +
+						"<option value=''>선택</option>" +
+						"<option value='EMT002'>IT자원관리자</option>" +
+						"<option value='EMT001'>시스템관리자</option>" +
+						"</select>" + "</td>" +
+						"<td name='employeeStatus' onclick='handleClick(this)'>" + "<span class='text'>" + response[i].employeeStatus + "</span>"
+					"<select name='empStatusList' class='select' style='display: none;'>" +
+						"<option value=''>선택</option>" +
+						"<option value='EMS001'>재직중</option>" +
+						"<option value='EMS002'>휴직중</option>" +
+						"<option value='EMS003'>퇴직</option>" +
+						"</select>" + "</td>" +
+						"<td><input type='hidden' name='hiddenBox'></td>" +
+						"</tr>";
+
+
+					$('#empTable > tbody').append(addTableRow);
+				}
+			}
+			return;
+		}
+	});
+}

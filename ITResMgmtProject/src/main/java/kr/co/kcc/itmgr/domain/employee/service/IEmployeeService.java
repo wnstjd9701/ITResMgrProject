@@ -9,13 +9,15 @@ public interface IEmployeeService {
 	List<Employee> selectAllEmployee();
 	
 	//사원 검색
-	void selectSearchEmployee(String employeeStatusCode);
+	List<Employee> selectSearchEmployee(String employeeTypeCode, String employeeStatusCode, String searchText);
 
 	//사원등록
 	void insertEmployee(List<Employee> employee);
 
 	//사원삭제(사용여부:N)
 	void deleteEmployeeByUseYN(String employeeId);
-//	void deleteEmployeeByUseYN(List<Employee> employeeId);
-
+	
+	//사원수정
+//	void updateEmployee(Employee employee);
+	void updateEmployee(List<Employee> employee);
 }
