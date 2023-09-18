@@ -45,4 +45,8 @@ public class InstallPlaceController {
 		logger.info("InstallPlaceList: " + installPlace);
 		return installPlace;
 	}
+	
+	/*
+	 * 
+	 */
 }
