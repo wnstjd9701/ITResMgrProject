@@ -37,14 +37,14 @@ function addRow() {
 }
 
 
-//행삭제(행숨김)
+//행삭제 버튼 (행숨김)
 function hideRow() {
 	const selectedCheckboxes = document.querySelectorAll('input[name="emp_checkbox"]:checked');
 	const hiddenBox = document.querySelector("input[name='hiddenBox']");
 
 	selectedCheckboxes.forEach(function(checkbox) {
 		var row = checkbox.closest('tr');
-		//row.style.display = 'none';
+		row.style.display = 'none';
 		row.querySelector("input[name='hiddenBox']").value = "d";
 	});
 
@@ -97,31 +97,71 @@ function saveList() {
 	}
 
 	//Update
-	/*	var updatedEmployeeInfo = [];
-		for (var i = 0; i < hiddenFields.length; i++) {
-			var hiddenValue = hiddenFields[i].value;
-			if (hiddenValue === "u") {
-				// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
-				var row = hiddenFields[i].closest("tr");
-				var u_empId = row.querySelector('[name="employeeId"]').textContent;
-				var u_empName = row.querySelector('[name="employeeName"]').textContent;
-				var u_empType = row.querySelector('[name="employeeType"]').textContent;
-				var u_empStatus = row.querySelector('[name="employeeStatus"]').textContent;
-				
-				var updateEmployee = {
-					employeeId: u_empId,
-					employeeName: u_empName,
-					employeeType: u_empType,
-					employeeStatus: u_empStatus
-				};
-				updatedEmployeeInfo.push(updateEmployee);
+	var hiddenFields = document.getElementsByName("hiddenBox");
+	var updatedEmployeeInfo = [];
+	for (var i = 0; i < hiddenFields.length; i++) {
+		var hiddenValue = hiddenFields[i].value;
+		if (hiddenValue === "u") {
+			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
+			var row = hiddenFields[i].closest("tr");
+			var u_empId = row.querySelector('[name="employeeId"]').textContent;
+			var u_empName = row.querySelector('[name="employeeName"]').textContent;
+			var u_empType = null;
+			var u_empStatus = null;
+
+			//name="empType"인 <span> text와 일치하는 <select><option> value값 가져오기
+			//span text값 가지고오기
+			var empTypeElement = row.querySelector('span.text[name="empType"]');
+			var empTypetext = empTypeElement.textContent;
+
+			//empTypeList <select> 가지고 오기	
+			var selectElement = row.querySelector('select[name="empTypeList"]');
+
+			//empTypeList <select>의 <option> 가지고 오기
+			for (var j = 0; j < selectElement.options.length; j++) {
+				var option = selectElement.options[j];
+				//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
+				if (empTypetext === option.textContent) {
+					u_empType = option.value;
+					break;
+				}
 			}
-		}*/
+
+			//name="empStatus"인 <span> text와 일치하는 <select><option> value값 가져오기
+			//span text값 가지고오기
+			var empStatusElement = row.querySelector('span.text[name="empStatus"]');
+			var empStatustext = empStatusElement.textContent;
+
+			//empTypeList <select> 가지고 오기	
+			var typeSelectElement = row.querySelector('select[name="empStatusList"]');
+
+			//empTypeList <select>의 <option> 가지고 오기
+			for (var k = 0; k < typeSelectElement.options.length; k++) {
+				var tpyeOption = typeSelectElement.options[k];
+				//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
+				if (empStatustext === tpyeOption.textContent) {
+					u_empStatus = tpyeOption.value;
+					break;
+				}
+			}
+			//console.log("u_empStatus", u_empStatus);
+			var updateEmployee = {
+				employeeId: u_empId,
+				employeeName: u_empName,
+				employeeTypeCode: u_empType,
+				employeeStatusCode: u_empStatus
+			};
+
+			updatedEmployeeInfo.push(updateEmployee)
+		}
+	}
+	console.log("updatedEmployeeInfo", updatedEmployeeInfo)
 
 
 	var requestData = {
 		employee: employee,
-		deletedEmployeeIds: deletedEmployeeIds
+		deletedEmployeeIds: deletedEmployeeIds,
+		updatedEmployeeInfo : updatedEmployeeInfo
 	};
 
 
@@ -155,7 +195,7 @@ function saveList() {
 					"<option value='EMS002'>휴직중</option>" +
 					"<option value='EMS003'>퇴직</option>" +
 					"</select>" + "</td>" +
-					"<td><input type='' name='hiddenBox'></td>" + "</tr>";
+					"<td><input type='hidden' name='hiddenBox'></td>" + "</tr>";
 
 
 				$('#empTable > tbody').append(addTableRow);
@@ -185,7 +225,7 @@ function handleClick(element) {
 	hiddenBox.value = 'u';
 
 	// 클릭한 셀이 'employeeType' 또는 'employeeStatus'인 경우에만 showSelectBox 함수 실행
-	if (element.getAttribute('name') === 'employeeType' || element.getAttribute('name') === 'employeeStauts') {
+	if (element.getAttribute('name') === 'employeeType' || element.getAttribute('name') === 'employeeStatus') {
 		showSelectBox(element);
 	}
 
@@ -209,134 +249,6 @@ function showSelectBox(listItem) {
 	});
 }
 
-
-//사원유형, 사원상태 클릭 시 selectBox 보여짐
-/*function showSelectBox(listItem) {
-	const textElement = listItem.querySelector(".text");
-	textElement.style.display = "none";
-
-	const selectElement = listItem.querySelector(".select");
-	selectElement.style.display = "inline-block";
-
-	selectElement.focus();
-
-	selectElement.addEventListener("blur", function() {
-		const selectedOption = selectElement.options[selectElement.selectedIndex];
-		textElement.innerText = selectedOption.innerText;
-		textElement.style.display = "inline-block";
-		selectElement.style.display = "none";
-	});
-}*/
-
-
-
-
-
-
-
-function updateRow() {
-
-	var hiddenFields = document.getElementsByName("hiddenBox");
-	var updatedEmployeeInfo = [];
-	for (var i = 0; i < hiddenFields.length; i++) {
-		var hiddenValue = hiddenFields[i].value;
-		if (hiddenValue === "u") {
-			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
-			var row = hiddenFields[i].closest("tr");
-			var u_empId = row.querySelector('[name="employeeId"]').textContent;
-			var u_empName = row.querySelector('[name="employeeName"]').textContent;
-			var u_empType = null;
-			var u_empStatus = null;
-
-			//name="empType"인 <span> text와 일치하는 <select><option> value값 가져오기
-			//span text값 가지고오기
-			var empTypeElement = row.querySelector('span.text[name="empType"]');
-			var empTypetext = empTypeElement.textContent;
-
-			//empTypeList <select> 가지고 오기	
-			var selectElement = row.querySelector('select[name="empTypeList"]');
-
-			//empTypeList <select>의 <option> 가지고 오기
-			for (var j = 0; j < selectElement.options.length; j++) {
-				var option = selectElement.options[j];
-				//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
-				if (empTypetext === option.textContent) {
-					u_empType = option.value;
-					break;
-				}
-			}
-			
-			//name="empStatus"인 <span> text와 일치하는 <select><option> value값 가져오기
-			//span text값 가지고오기
-			var empStatusElement = row.querySelector('span.text[name="empStatus"]');
-			var empStatustext = empStatusElement.textContent;
-
-			//empTypeList <select> 가지고 오기	
-			var typeSelectElement = row.querySelector('select[name="empStatusList"]');
-
-			//empTypeList <select>의 <option> 가지고 오기
-			for (var k = 0; k < typeSelectElement.options.length; k++) {
-				var tpyeOption = typeSelectElement.options[k];
-				//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
-				if (empStatustext === tpyeOption.textContent) {
-					u_empStatus = tpyeOption.value;
-					break;
-				}
-			}
-			//console.log("u_empStatus", u_empStatus);
-			var updateEmployee = {
-				employeeId: u_empId,
-				employeeName: u_empName,
-				employeeTypeCode: u_empType,
-				employeeStatusCode: u_empStatus
-			};
-
-			updatedEmployeeInfo.push(updateEmployee)
-		}
-	}
-	console.log("updatedEmployeeInfo",updatedEmployeeInfo)
-
-	$.ajax({
-		url: '/update/employee',
-		type: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(updatedEmployeeInfo),
-		success: function(response) {
-			console.log("response", response)
-			rowCount = 0;
-
-			$('#empTable > tbody').empty();
-
-			for (var i = 0; i < response.length; i++) {
-				var addTableRow = "<tr>" +
-					"<td><input type='checkbox' name='emp_checkbox'></td>" +
-					"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-					"<td name='employeeName' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
-					"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
-					"<select name='empTypeList' class='select' style='display: none;'>" +
-					"<option value=''>선택</option>" +
-					"<option value='EMT002'>IT자원관리자</option>" +
-					"<option value='EMT001'>시스템관리자</option>" +
-					"</select>" + "</td>" +
-					"<td name='employeeStatus' onclick='handleClick(this)'>" + "<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>" +
-					"<select name='empStatusList' class='select' style='display: none;'>" +
-					"<option value=''>선택</option>" +
-					"<option value='EMS001'>재직중</option>" +
-					"<option value='EMS002'>휴직중</option>" +
-					"<option value='EMS003'>퇴직</option>" +
-					"</select>" + "</td>" +
-					"<td><input type='' name='hiddenBox'></td>" + "</tr>";
-				$('#empTable > tbody').append(addTableRow);
-				
-				console.log("여기타나")
-			}
-			return;
-		},
-		error: function(request, error) {
-			console.log("메시지:" + request.responseText + "\n" + "에러:" + error);
-		}
-	});
-}
 
 //검색
 function searchList() {
@@ -375,21 +287,20 @@ function searchList() {
 						"<td><input type='checkbox' name='emp_checkbox'></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
 						"<td name='employeeName' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
-						"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text'>" + response[i].employeeType + "</span>" +
+						"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
 						"<select name='empTypeList' class='select' style='display: none;'>" +
 						"<option value=''>선택</option>" +
 						"<option value='EMT002'>IT자원관리자</option>" +
 						"<option value='EMT001'>시스템관리자</option>" +
 						"</select>" + "</td>" +
-						"<td name='employeeStatus' onclick='handleClick(this)'>" + "<span class='text'>" + response[i].employeeStatus + "</span>"
-					"<select name='empStatusList' class='select' style='display: none;'>" +
+						"<td name='employeeStatus' onclick='handleClick(this)'>" + "<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>" +
+						"<select name='empStatusList' class='select' style='display: none;'>" +
 						"<option value=''>선택</option>" +
 						"<option value='EMS001'>재직중</option>" +
 						"<option value='EMS002'>휴직중</option>" +
 						"<option value='EMS003'>퇴직</option>" +
 						"</select>" + "</td>" +
-						"<td><input type='hidden' name='hiddenBox'></td>" +
-						"</tr>";
+						"<td><input type='hidden' name='hiddenBox'></td>" + "</tr>";
 
 
 					$('#empTable > tbody').append(addTableRow);

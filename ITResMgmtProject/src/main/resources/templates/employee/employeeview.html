@@ -16,9 +16,10 @@
 		<div id="searchEmpType">
 			<p id="p1">사원유형</p>
 			<select id="searchEmpTypeList">
-				<option value=''>전체</option>
-				<option value='EMT002'>IT자원관리자</option>
-				<option value='EMT001'>시스템관리자</option>
+				<th:block th:each="commonCode: ${commonCodeList}">
+				<option th:value="${commonCode.key}" th:text="${commonCode.value}"></option>
+				</th:block>
+				
 			</select>
 		</div>
 
@@ -66,7 +67,7 @@
 							<option value='EMT001'>시스템관리자</option>
 						</select>
 					</td>
-					<td onclick="handleClick(this)" name="employeeStauts">
+					<td onclick="handleClick(this)" name="employeeStatus">
 						<span class="text" th:text="${employeeList.employeeStatus}" name="empStatus"></span> 
 						<select name='empStatusList' class="select" style="display: none;">
 							<option value=''>선택</option>
@@ -75,7 +76,7 @@
 							<option value='EMS003'>퇴직</option>
 						</select>
 					</td>
-					<td><input type="" name="hiddenBox"></td>
+					<td><input type="hidden" name="hiddenBox"></td>
 				</tr>
 			</tbody>
 		</table>

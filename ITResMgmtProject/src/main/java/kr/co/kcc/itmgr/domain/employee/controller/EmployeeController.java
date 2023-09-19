@@ -1,6 +1,6 @@
 package kr.co.kcc.itmgr.domain.employee.controller;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,50 +30,56 @@ public class EmployeeController {
 	@RequestMapping(value = "/employeeview", method=RequestMethod.GET)
 	public String selectAllEmployee(Model model) {
 		List<Employee> employeeList = employeeService.selectAllEmployee();
+		
+		
 		model.addAttribute("employeeList", employeeList);
+		Map<String, String> commonCodeList = new HashMap<>();//employeeService.getCommonCodeList();
+		commonCodeList.put("", "전체");
+		commonCodeList.put("EMT002", "IT자원관리자");
+		commonCodeList.put("EMT001", "시스템자원관리자");
+		model.addAttribute("commonCodeList", commonCodeList);
+		
+		
+		
 		return "employee/employeeview";
 	}
 
-
-	//수정
-//	@PostMapping("/update/employee")
-//	@ResponseBody
-//	public List<Employee> updateEmployee(@RequestBody(required = false) List<Employee> updateEmployeeList) {
-//		List<Employee> employeeList = new ArrayList<>();
-//
-//
-//		logger.info("updatedEmployeeInfo: " + updateEmployeeList);
-//
-//
-//		for(Employee emp : updateEmployeeList) {
-//			employeeService.updateEmployee(emp);
-//		}
-//
-//		System.out.println("-----------------");
-//		employeeList = employeeService.selectAllEmployee();
-//
-//		return employeeList;
-//	}  
-	
-	
-	@PostMapping("/update/employee")
+	//Insert, Update, Delete 저장
+	@PostMapping("/save/employee")
 	@ResponseBody
-	public List<Employee> updateEmployee(@RequestBody(required = false) List<Employee> updatedEmployeeInfo) {
+	public List<Employee> saveAll(@RequestBody(required = false) Employee requestData) {
 		List<Employee> employeeList = new ArrayList<>();
 
+		try {
+			List<Employee> employee = requestData.getEmployee();
+			List<String> deletedEmployeeIds = requestData.getDeletedEmployeeIds();
+			List<Employee> updatedEmployeeInfo = requestData.getUpdatedEmployeeInfo();
 
-		logger.info("updatedEmployeeInfo: " + updatedEmployeeInfo);
+			//Insert
+			if (employee != null && !employee.isEmpty()) {
+				employeeService.insertEmployee(employee);
+			}
 
+			//Delete
+			if(deletedEmployeeIds != null) {
+				for (String employeeId : deletedEmployeeIds) {
+					employeeService.deleteEmployeeByUseYN(employeeId);
+				}
+			}
 
-	
-			employeeService.updateEmployee(updatedEmployeeInfo);
-	
-
-		System.out.println("-----------------");
-		employeeList = employeeService.selectAllEmployee();
-
+			//Update
+			if(updatedEmployeeInfo != null && !updatedEmployeeInfo.isEmpty()) {
+				employeeService.updateEmployee(updatedEmployeeInfo);
+			}
+			
+			employeeList = employeeService.selectAllEmployee();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return employeeList;
-	}  
+	}
+
 
 	//검색(완료)
 	@RequestMapping(value = "/search/employee", method = RequestMethod.POST)
@@ -87,49 +93,10 @@ public class EmployeeController {
 			String searchText = searchData.get("searchText");
 
 			employeeList = employeeService.selectSearchEmployee(employeeTypeCode, employeeStatusCode, searchText);
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return employeeList;
 	}  
-
-
-
-	@PostMapping("/save/employee")
-	@ResponseBody
-	public List<Employee> saveAll(@RequestBody(required = false) Employee requestData) {
-		List<Employee> employeeList = new ArrayList<>();
-
-		try {
-			List<Employee> employee = requestData.getEmployee();
-			List<String> deletedEmployeeIds = requestData.getDeletedEmployeeIds();
-
-			//Insert
-			if (employee != null && !employee.isEmpty()) {
-				logger.info("Employee List: " + employee);
-				employeeService.insertEmployee(employee);
-			}
-
-			//Delete
-			if(deletedEmployeeIds != null) {
-				System.out.println("deletedEmployeeIds" + deletedEmployeeIds);
-				for (String employeeId : deletedEmployeeIds) {
-					employeeService.deleteEmployeeByUseYN(employeeId);
-				}
-			}
-
-			employeeList = employeeService.selectAllEmployee();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return employeeList;
-	}
-
-
-
-
-
-
 }
-
-
