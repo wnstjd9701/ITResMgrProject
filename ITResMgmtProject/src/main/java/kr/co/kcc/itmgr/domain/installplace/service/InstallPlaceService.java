@@ -26,10 +26,17 @@ public class InstallPlaceService implements IInstallPlaceService {
 	public List<InstallPlace> selectInstallPlaceByName(String placeName) {
 		return installPlaceRepository.selectInstallPlaceByName(placeName);
 	}
-
+	
+	// 자원 정보 조회
 	@Override
 	public List<InstallRes> selectResInformationByInstallPlaceName(String placeName) {
 		return installPlaceRepository.selectResInformationByInstallPlaceName(placeName);
+	}
+
+	// 설치 장소 상세 정보 조회
+	@Override
+	public InstallPlace selectInstallPlaceDetail(String placeName) {
+		return installPlaceRepository.selectInstallPlaceDetail(placeName);
 	}
 	
 }
