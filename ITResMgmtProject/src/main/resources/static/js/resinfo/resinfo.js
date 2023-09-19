@@ -103,9 +103,14 @@ $(document).ready(function () {
 // 모달창 생성
 var modal = document.querySelector('.modal');
 var newResInfoBtn = document.querySelector('button#newResInfoBtn');
+var closeBtn = modal.querySelector("#closeModal")
 
 newResInfoBtn.addEventListener("click", ()=>{
     modal.style.display="flex";
+});
+
+closeBtn.addEventListener("click", e => {
+    modal.style.display = "none"
 });
 
 // 모달창에서 table별 클릭이동
@@ -123,3 +128,13 @@ function showTable(tableName) {
         return $(this).text().trim() === tableName;
     }).addClass('active');
 }
+
+var modal2 = document.querySelector('.installPlaceModal');
+var installPlaceSearchBtn = document.querySelector('button#installPlaceSearchBtn');
+var closeBtn2 = modal.querySelector("#closeModal2")
+installPlaceSearchBtn.addEventListener("click", ()=>{
+    modal2.style.display="flex";
+});
+closeBtn2.addEventListener("click", e => {
+    modal2.style.display = "none"
+});

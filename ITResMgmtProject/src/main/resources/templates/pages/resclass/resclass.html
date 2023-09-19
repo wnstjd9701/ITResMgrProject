@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="/nav"></th:block>
 <head>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="utf-8">
 <link th:href="@{/css/resclass/menutree.css}" rel="stylesheet" />
 <link th:href="@{/css/resclass/resclass.css}" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
 </head>
 <body>
-
+<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 <div class="container" style="margin:50px 0 50px 270px; width:1150px;">
 	<button type="button" class="btn btn-primary" style="float:right;margin-left: 10px; background-color:navy;">저장</button>
 	<button type="button" id="newResClass" class="btn btn-primary" style="float:right; background-color:navy;" >신규</button>

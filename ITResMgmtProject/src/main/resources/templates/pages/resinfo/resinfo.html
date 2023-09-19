@@ -3,8 +3,8 @@
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
-</head>
 <div th:replace="~{../common/fragments/head :: fragment-head}"></div>
+
 </head>
 <body>
 	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
@@ -34,7 +34,6 @@
 			<input type="text" name="resName"></input>
 		<span>설치장소</span>
 			<input type="text" name="installPlaceName"></input>
-		<br>
 		<span>제조회사명</span>
 			<input type="text" name="manufactureCompanyName"></input>
 		<span>관리ID</span>
@@ -84,6 +83,7 @@
     	<form id="resInfoSave" name="resInfoSave" method="post" th:action="@{/resinfo/insert}">
         <div class="modal-body" style="margin-top:20px;">
 					<div class="col-md-16">
+					 	<button type="button" id="closeModal">✖️</button>
 						<table id="resInfoDetailTable" class="table table-hover">
 						 <tbody>
 							    <tr>
@@ -135,7 +135,9 @@
 							    <tr>
 							      <th scope="row">설치장소</th>
 							      	<td>
-							      	<input type="text" name="installPlaceSn"></input>
+							      	<input type="text" id="install-place-input" name="installPlaceName">
+							      	<input type="hidden" id="install-place-sn-input" name="installPlaceSn">
+							      	 <button type="button" class="btn btn-primary" id="installPlaceSearchBtn">찾기</button>
 							      	</td>
 							      <th scope="row">랙정보</th>
 							      	<td><input type="text" name="rackInfo"></input>
@@ -221,7 +223,46 @@
 	<!-- 매핑된 부가정보 및 ip목록 끝 -->
     		</div>
     <!-- 모달 끝 -->
+    <!-- 설치장소 리스트 모달창 -->
+ 	<div class="installPlaceModal">
+ 	<button type="button" id="closeModal2">✖️</button>
+ 	<!-- 설치장소 리스트 테이블 -->
+ 	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>선택</th>
+				<th>설치장소명</th>
+				<th>우편번호</th>
+				<th>주소</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="checkbox" id="place-sn"name="checkInstallPlace" th:each="selectResInstallPlace:${selectResInstallPlace}" th:value="${selectResInstallPlace.installPlaceSn}"></td>
+				<td id="place-name" th:each="selectResInstallPlace:${selectResInstallPlace}" th:text=${selectResInstallPlace.installPlaceName}></td7>
+				<td th:each="selectResInstallPlace:${selectResInstallPlace}" th:text=${selectResInstallPlace.installPlacePostno}></td>
+				<td th:each="selectResInstallPlace:${selectResInstallPlace}" th:text=${selectResInstallPlace.installPlaceAddress}></td>
+			</tr>	
+		</tbody>
+ 	</table>
+ 	<!-- 설치장소 리스트 테이블 끝 -->
+	<button id="save_btn" type="button" class="btn btn-primary" style="background-color:navy; border:navy;">저장</button>
+ 	</div>
+ 	<!-- 설치장소 리스트 모달창 끝 -->
 <script type="text/javascript" th:src="@{/js/resinfo/resinfo.js}"></script>
+<script>
 
+$(document).ready(function(){
+	$("#save_btn").click(() => {
+		const placeSn = $("#place-sn").val();
+		const placeName = $("#place-name").text();
+		
+		$("#install-place-input").val(placeName);
+		$("#install-place-sn-input").val(placeSn)
+		//모달창닫기
+		
+	})
+})
+</script>
 </body>
 </html>

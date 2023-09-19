@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
+import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,11 @@ public class ResInfoService implements IResInfoService {
 	@Override
 	public List<CommonCodeDetail> selectResStatusCode(String codeGroupId) {
 		return resInfoRepository.selectResStatusCode(codeGroupId);
+	}
+
+	@Override
+	public List<InstallPlace> selectResInstallPlace() {
+		return resInfoRepository.selectResInstallPlace();
 	}
 
 }

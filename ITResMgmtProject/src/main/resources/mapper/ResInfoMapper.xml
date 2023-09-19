@@ -116,7 +116,9 @@
 		<![CDATA[
 			SELECT
 				install_place_sn	"installPlaceSn",
-				install_place_name	"installPlaceName"
+				install_place_name	"installPlaceName",
+				install_place_postno	"installPlacePostno",
+				install_place_address	"installPlaceAddress"
 			FROM INSTALLPLACE
 		]]>
 	</select>

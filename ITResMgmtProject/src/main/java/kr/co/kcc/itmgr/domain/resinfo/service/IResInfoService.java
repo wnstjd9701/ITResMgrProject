@@ -3,6 +3,7 @@ package kr.co.kcc.itmgr.domain.resinfo.service;
 import java.util.List;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
+import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 
 public interface IResInfoService {
@@ -13,4 +14,5 @@ public interface IResInfoService {
 	void insertResInfo(ResInfo resInfo); //자원입력
 	
 	List<CommonCodeDetail> selectResStatusCode(String codeGroupId); //자원상태코드 리스트 불러오기
+	List<InstallPlace> selectResInstallPlace(); //자원설치장소 리스트 불러오기
 }
