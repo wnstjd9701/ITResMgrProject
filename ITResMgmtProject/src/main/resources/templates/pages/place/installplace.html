@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="../common/layout/default">
+<head>
+<meta charset="UTF-8">
+<style>
+.place {
+	text-align: center;
+	height: 50vh;
+	margin-left: 10em;
+}
+
+.address-container {
+	margin-top: 20px; /* 주소 입력창과의 간격 조정 */
+}
+
+.place-name:hover {
+	cursor: pointer;
+}
+</style>
+<!-- <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> -->
+</head>
+<th:block layout:fragment="content">
+	<div class="container">
+		<div class="place" id="place-list">
+			<div>
+				<h2>설치 장소 관리</h2>
+			</div>
+			<div class="search-container">
+				<input class="place-name-text" type="text" placeholder="장소명을 입력하세요">
+				<input id="search-btn" type="button" value="검색">
+			</div>
+			<div class="place-list-table-container">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">번호</th>
+							<th scope="col">선택</th>
+							<th scope="col">설치 장소명</th>
+							<th scope="col">주소</th>
+							<th scope="col">상세 주소</th>
+							<th scope="col">자원 수</th>
+						</tr>
+					</thead>
+					<tbody id="place-table-body"
+						th:each="installPlace, i : ${installPlace}">
+						<tr>
+							<th th:text="${i.count}"></th>
+							<th><input type="checkbox"></th>
+							<td class="place-name" th:text="${installPlace.installPlaceName}"
+								th:data-install-place-sn="${installPlace.installPlaceSn}"></td>
+							<td th:text="${installPlace.installPlaceAddress}"></td>
+							<td th:text="${installPlace.installPlaceDetailAddress}"></td>
+							<td th:text="${installPlace.resCount}"></td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+			<!-- 상세 장소 및 설치 장소 등록 -->
+			<div class="place-detail-container">
+				<!-- Daum 주소 검색 API를 사용하는 입력창 -->
+				<div class="order-info-box">
+					<h2>주소</h2>
+				</div>
+				<div class="address-box">
+					<div>
+						<input type="text" id="zip-code"
+							class="address-input_box input-box" placeholder="우편번호" readonly>
+					</div>
+					<div>
+						<input type="text" id="road-name-address"
+							class="address-input-box input-box" placeholder="도로명주소" readonly>
+						<input type="text" id="detail-address"
+							class="address-input-box input-box" placeholder="상세주소">
+							<input
+							type="button" class="btn-find-postcode" value="주소 찾기">
+					</div>
+				</div>
+			</div>
+			<!-- 자원 정보 -->
+			<div class="resinfo-container">
+				<div class="resinfo-container">
+					<h2>자원 정보</h2>
+				</div>
+				<div class="resinfo-table-container">
+					<table class="resinfo-table table table-striped">
+						<thead>
+							<tr>
+								<th>IP</th>
+								<th>IP 유형</th>
+								<th>자원 분류</th>
+								<th>자원명</th>
+								<th>랙 정보</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th>1</th>
+								<th>2</th>
+								<th>3</th>
+								<th>4</th>
+								<th>5</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+$(document).ready(function(){
+	// 주소 창 열기
+	/* $(".btn-find-postcode").click(() => {
+		new daum.Postcode({
+			oncomplete: function (data) {
+				$('#zip-code').val(data.zonecode);
+				$('#address-1').val(data.address);
+			}
+		}).open();
+	}) */
+	
+	// 이벤트 위임 - 설치 장소 모달창 열기
+	$(".place-list-table-container").on("click", ".place-name", function() {
+		var placeName = $(this).text();
+		console.log(placeName);
+	})
+	
+	$("#search-btn").click(() => {
+		const placeName = $(".place-name-text").val();
+		
+		if(placeName == ""){
+			alert("장소명을 입력하세요.");
+			return;
+		}
+		
+		$.ajax({
+			method: "GET",
+			url: "search/installplace",
+			data: {
+				placeName: placeName
+			},
+			success: function(response){
+				if(response.length < 1){
+					alert("검색된 결과가 없습니다.");
+					$("#place-table-body tr").remove();
+					const result = "<tr>" + "<td colspan='6' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+					
+					$("#place-table-body").append(result);
+					return;
+				}
+				console.log(response);
+			},
+			error: function(xhr, status, err){
+				alert("error: " + err);
+			}
+		})
+	})
+})
+</script>
+</th:block>
+</html>
