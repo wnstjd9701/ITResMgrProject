@@ -1,6 +1,8 @@
 package kr.co.kcc.itmgr.domain.installplace.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +51,18 @@ public class InstallPlaceController {
 	}
 	
 	/*
-	 * API No.3-3. 자원 정보 조회
-	 * Info: 설치 장소 시리얼 번호로 자원 정보 조회
+	 * API No.3-3. 자원 정보 조회 [비동기]
+	 * Info: 설치 장소 이름으로 자원 정보 조회
 	 */
 	@GetMapping("/installplace/resinfo")
 	@ResponseBody
-	public List<InstallRes> selectResInformationByInstallPlaceName(String placeName){
+	public Map<String, Object> selectResInformationByInstallPlaceName(String placeName){
 		List<InstallRes> resInfo = installPlaceService.selectResInformationByInstallPlaceName(placeName);
-		logger.info("resInfo: " + resInfo);
-		return resInfo;
+		InstallPlace installPlace = installPlaceService.selectInstallPlaceDetail(placeName);
+		
+		Map<String, Object> placeMap = new HashMap<String, Object>();
+		placeMap.put("resInfo", resInfo);
+		placeMap.put("installPlace", installPlace);
+		return placeMap;
 	}
 }
