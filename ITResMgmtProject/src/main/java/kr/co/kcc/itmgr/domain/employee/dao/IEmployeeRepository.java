@@ -21,7 +21,6 @@ public interface IEmployeeRepository {
 	void deleteEmployeeByUseYN(String employeeId); 
 	
 	//사원수정
-//	List<Employee> updateEmployee(String employeeId);
 	void updateEmployee(List<Employee> updatedEmployeeInfo);
 
 }

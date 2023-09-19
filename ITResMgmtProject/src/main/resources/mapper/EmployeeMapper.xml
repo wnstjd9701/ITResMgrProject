@@ -15,7 +15,6 @@
 		FROM employeeinfo e
 		WHERE use_yn = 'Y'
 		ORDER BY employee_name
-	
 	]]>
 </select>
 
@@ -87,8 +86,6 @@
 		SELECT detail_code_name AS detailCodeName
 		FROM commoncode c, commoncodedetail cd
 		WHERE c.code_group_id = cd.code_group_id AND c.code_group_id = 'EMT000'
-
-	
 	]]>
 </select>
 

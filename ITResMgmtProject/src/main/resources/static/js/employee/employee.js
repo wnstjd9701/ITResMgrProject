@@ -1,8 +1,5 @@
 var rowCount = 0;
 
-
-
-
 //행추가 버튼
 function addRow() {
 	var table = document.getElementById("empTable");
@@ -25,7 +22,6 @@ function addRow() {
 		+ "<option value='EMT002'>IT자원관리자</option>"
 		+ "</select>";
 
-
 	var newCell4 = newRow.insertCell(4);
 	newCell4.innerHTML = "<select id='empStatusCode" + rowCount + "'>"
 		+ "<option value=''>선택</option>"
@@ -33,6 +29,7 @@ function addRow() {
 		+ "<option value='EMS002'>휴직중</option>"
 		+ "<option value='EMS003'>퇴직</option>"
 		+ "</select>";
+
 	rowCount++;
 }
 
@@ -64,8 +61,6 @@ function saveList() {
 			var empName = document.getElementById('empName' + i).value;
 			var empStatusCode = document.getElementById('empStatusCode' + i).value;
 			var empTypeCode = document.getElementById('empTypeCode' + i).value;
-
-
 
 			if (empId && empName && empStatusCode && empTypeCode) {
 				var empValue = {
@@ -201,12 +196,13 @@ function saveList() {
 				$('#empTable > tbody').append(addTableRow);
 			}
 			return;
-		},
+},
 		error: function(request, error) {
 			alert("메시지:" + request.responseText + "\n" + "에러:" + error);
 		}
 	});
 }
+
 
 
 // 모든 셀을 클릭 이벤트 핸들러에 연결

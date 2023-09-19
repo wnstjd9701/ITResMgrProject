@@ -37,14 +37,6 @@ public class EmployeeService implements IEmployeeService{
 		return employeeRepository.selectSearchEmployee(employeeTypeCode, employeeStatusCode, searchText);
 	}
 
-
-//	@Override
-//	public void updateEmployee(Employee employee) {
-//		employeeRepository.updateEmployee(employee);
-//		
-//	}
-
-
 	@Override
 	public void updateEmployee(List<Employee> updatedEmployeeInfo) {
 		employeeRepository.updateEmployee(updatedEmployeeInfo);

@@ -16,13 +16,11 @@ public class Employee {
 	private Timestamp createDate;
 	private String createrId;
 	private Timestamp updateDate;
-	
 	private String updaterId;
 	private char useYN;
 	
 	private String employeeType;
 	private String employeeStatus;
-
 	private List<Employee> employee;
 	private List<String> deletedEmployeeIds;
 	private List<Employee> updatedEmployeeInfo;

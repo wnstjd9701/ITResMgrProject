@@ -18,6 +18,5 @@ public interface IEmployeeService {
 	void deleteEmployeeByUseYN(String employeeId);
 	
 	//사원수정
-//	void updateEmployee(Employee employee);
 	void updateEmployee(List<Employee> employee);
 }
