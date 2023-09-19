@@ -31,11 +31,16 @@ public class ResClassService implements IResClassService {
 		return resClassRepository.selectResClassByResClassName(resClassName);
 	}
 
+	@Override
+	public void insertResClass(ResClass resClass) {
+		resClassRepository.insertResClass(resClass);
+		
+	}
 
-
-
-
-
+	@Override
+	public List<ResClass> selectResClassByLevel() {
+		return resClassRepository.selectResClassByLevel();
+	}
 
 
 

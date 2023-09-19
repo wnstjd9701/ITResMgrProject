@@ -53,7 +53,26 @@
 
 	</select>
 	
-
+	<insert id="insertResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<![CDATA[
+			INSERT INTO
+				RESCLASS
+				(upper_res_class_id, res_class_id, res_class_name, use_yn, create_date, creater_id, update_date, updater_id)
+			VALUES
+				(#{upperResClassId}, #{resClassId}, #{resClassName}, #{useYn}, SYSDATE, 'wh467925', SYSDATE, 'wh467925')
+		]]>
+	</insert>
 	
+	<select id="selectResClassByLevel" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+			SELECT
+			    LEVEL	"level",
+			    res_class_id	"resClassId",
+			    res_class_name	"resClassName",
+			    upper_res_class_id	"upperResClassId"
+			FROM RESCLASS
+			START WITH upper_res_class_id IS NULL
+			CONNECT BY PRIOR res_class_id = upper_res_class_id
+			ORDER SIBLINGS BY res_class_id
+	</select>
 
 </mapper>

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
 <div th:replace="~{../common/fragments/head :: fragment-head}"></div>
 
@@ -224,7 +225,7 @@
     		</div>
     <!-- 모달 끝 -->
     <!-- 설치장소 리스트 모달창 -->
- 	<div class="installPlaceModal">
+ 	<div class="installPlaceModal" id="install-place-modal">
  	<button type="button" id="closeModal2">✖️</button>
  	<!-- 설치장소 리스트 테이블 -->
  	<table class="table table-striped">
@@ -237,11 +238,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td><input type="checkbox" id="place-sn"name="checkInstallPlace" th:each="selectResInstallPlace:${selectResInstallPlace}" th:value="${selectResInstallPlace.installPlaceSn}"></td>
-				<td id="place-name" th:each="selectResInstallPlace:${selectResInstallPlace}" th:text=${selectResInstallPlace.installPlaceName}></td7>
-				<td th:each="selectResInstallPlace:${selectResInstallPlace}" th:text=${selectResInstallPlace.installPlacePostno}></td>
-				<td th:each="selectResInstallPlace:${selectResInstallPlace}" th:text=${selectResInstallPlace.installPlaceAddress}></td>
+			<tr th:each="selectResInstallPlace:${selectResInstallPlace}">
+				<td><input type="checkbox" id="place-sn"name="checkInstallPlace" th:value="${selectResInstallPlace.installPlaceSn}"></td>
+				<td id="place-name" th:text=${selectResInstallPlace.installPlaceName}></td>
+				<td th:text=${selectResInstallPlace.installPlacePostno}></td>
+				<td th:text=${selectResInstallPlace.installPlaceAddress}></td>
 			</tr>	
 		</tbody>
  	</table>
@@ -259,7 +260,6 @@ $(document).ready(function(){
 		
 		$("#install-place-input").val(placeName);
 		$("#install-place-sn-input").val(placeSn)
-		//모달창닫기
 		
 	})
 })
