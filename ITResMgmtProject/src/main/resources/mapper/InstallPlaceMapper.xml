@@ -53,4 +53,52 @@
 			<if test="placeName != null">AND install_place_name LIKE '%' || #{placeName} || '%'</if>
 		</where>
 	</select>
+	
+	<select id="selectResInformationByInstallPlaceName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
+		WITH CommonCodes AS (
+	    SELECT
+	        detail_code,
+	        detail_code_name
+	    FROM
+	        commoncodedetail
+		)
+		SELECT
+		    r.res_serial_id AS "resSerialId",
+		    r.res_name AS "resName",
+		    cd_res_status.detail_code_name AS "resStatusCodeName",
+		    r.mgmt_dept_name AS "mgmtDeptName",
+		    r.rack_info AS "rackInfo",
+		    rc.res_class_name AS "resClassName",
+		    rim.ip_sn AS "ipSn",
+		    i.ip AS "ip",
+		    i.ip_desc AS "ipDesc",
+		    cd_ip_type.detail_code_name AS "ipTypeCodeName"
+		FROM
+		    installPlace insp
+		    LEFT JOIN resInfo r ON insp.install_place_sn = r.install_place_sn
+		    LEFT JOIN CommonCodes cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipinfo i ON rim.ip_sn = i.ip_sn
+		    LEFT JOIN CommonCodes cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		    LEFT JOIN resclass rc ON r.res_class_id = rc.res_class_id
+		<where>
+			insp.install_place_name = #{placeName}
+		</where>			
+	</select>
+	
+	<select id="selectInstallPlaceDetail" parameterType="String" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		SELECT
+			install_place_sn             AS "installPlaceSn",
+		    install_place_name           AS "installPlaceName",
+		    install_place_postno         AS "installPlacePostno",
+		    install_place_address        AS "installPlaceAddress",
+		    install_place_detail_address AS "installPlaceDetailAddress",
+		    longitude                    AS "longitude",
+		    latitude                     AS "latitude"
+		FROM
+		    installplace
+		<where>
+			install_place_name = #{placeName}
+		</where>	
+	</select>
 </mapper>
