@@ -5,9 +5,9 @@ function addRow() {
 	var table = document.getElementById("empTable");
 	var newRow = table.insertRow();
 	newRow.setAttribute("data-row-id", rowCount);
-
+	
 	var newCell0 = newRow.insertCell(0);
-	newCell0.innerHTML = "<input type='checkbox' name='emp_checkbox'>";
+	newCell0.innerHTML = "<input type='checkBox' name='addCheckbox'>";
 
 	var newCell1 = newRow.insertCell(1);
 	newCell1.innerHTML = "<input type='text' id='empId" + rowCount + "' size='10'>";
@@ -262,12 +262,9 @@ function searchList() {
 	};
 
 	$.ajax({
-		url: '/search/employee',
-		type: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(searchData),
+		url: '/search/employee?' + $.param(searchData),
+		type: 'GET',
 		success: function(response) {
-			console.log("response", response)
 			console.log("response", response)
 
 			$('#empTable > tbody').empty();
