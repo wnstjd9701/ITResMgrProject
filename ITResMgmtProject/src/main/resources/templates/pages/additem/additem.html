@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{../common/fragments/head}"></th:block>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+<link rel="stylesheet" type="text/css"
+	th:href="@{../css/additem/additem.css}">
+<meta charset="UTF-8">
+
+</head>
+<body>
+	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
+	<div class="container" style="margin-left: 270px;" id="addItemSearchBar">
+		<p>사용여부</p>
+		<select id="searchUseYN">
+			<option value="">전체</option>
+			<option value="Y">Y</option>
+			<option value="N">N</option>
+		</select>
+		<p>부가항목명</p>
+		<input id="addItemSearchText" type="text" placeholder="부가항목명 입력">
+		<input id="addItemsearchButton" type="button" value="검색" onclick="addItemsearch()"/>
+		<div style="margin-left: 950px;">
+			<input id="addItemsDownButton" type="button" value="엑셀다운로드"/>
+			<input id="addItemAddRow" type="button" value="행추가" onclick="addItemAddRow()"/>
+			<input id="addItemHideRow" type="button" value="행삭제" onclick="addItemHideRow()"/>
+		</div>
+	</div>
+	
+	
+	
+	
+
+	<div class="container" style="margin-left: 270px;">
+		<table id="addItemTable" class="table table-striped">
+			<thead>
+				<tr>
+					<th>선택</th>
+					<th>일련번호</th>
+					<th>부가항목명</th>
+					<th>부가항목설명</th>
+					<th>사용여부</th>
+				</tr>
+			</thead>
+			<tbody id="addItem-table-body">
+				<tr th:each="addItemList : ${addItemList}">
+					<td><input type="checkbox" name="checkBox"></td>
+					<td name="addItemSn" th:text="${addItemList.addItemSn}"></td>
+					<td name="addItemName" th:text="${addItemList.addItemName}"></td>
+					<td name="addItemDesc" th:text="${addItemList.addItemDesc}"></td>
+					<td name="useYN" th:text="${addItemList.useYN}"></td>
+					<td><input type="hidden" name="hiddenBox"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+
+
+
+
+	<script src="js/additem/additem.js"></script>
+</body>
+</html>
