@@ -16,19 +16,16 @@ function addRow() {
 	newCell2.innerHTML = "<input type='text' id='empName" + rowCount + "' size='10'>";
 
 	var newCell3 = newRow.insertCell(3);
-	newCell3.innerHTML = "<select id='empTypeCode" + rowCount + "'>"
-		+ "<option value=''>선택</option>"
-		+ "<option value='EMT001'>시스템관리자</option>"
-		+ "<option value='EMT002'>IT자원관리자</option>"
-		+ "</select>";
+	var selectEmpType = document.querySelector('select[name="searchEmpTypeList"]');
+	var clonedSelect = selectEmpType.cloneNode(true);
+	clonedSelect.id = 'empTypeCode' + rowCount;
+	newCell3.appendChild(clonedSelect);
 
 	var newCell4 = newRow.insertCell(4);
-	newCell4.innerHTML = "<select id='empStatusCode" + rowCount + "'>"
-		+ "<option value=''>선택</option>"
-		+ "<option value='EMS001'>재직중</option>"
-		+ "<option value='EMS002'>휴직중</option>"
-		+ "<option value='EMS003'>퇴직</option>"
-		+ "</select>";
+	var selectEmpStatus = document.querySelector('select[name="searchEmpStatusList"]');  
+	var clonedSelect2 = selectEmpStatus.cloneNode(true);
+	clonedSelect2.id = 'empTypeStatus' + rowCount;
+	newCell4.appendChild(clonedSelect2);
 
 	rowCount++;
 }
@@ -52,15 +49,18 @@ function hideRow() {
 
 //저장버튼
 function saveList() {
-
 	//Insert
 	if (rowCount > 0) {
 		var employee = new Array();
 		for (var i = 0; i < rowCount; i++) {
 			var empId = document.getElementById('empId' + i).value;
 			var empName = document.getElementById('empName' + i).value;
-			var empStatusCode = document.getElementById('empStatusCode' + i).value;
-			var empTypeCode = document.getElementById('empTypeCode' + i).value;
+
+			var empTypeSelect = document.getElementById('empTypeCode' + i);
+			var empTypeCode = empTypeSelect.value;
+
+			var empStatusSelect = document.getElementById('empTypeStatus' + i);
+			var empStatusCode = empStatusSelect.value;
 
 			if (empId && empName && empStatusCode && empTypeCode) {
 				var empValue = {
@@ -156,7 +156,7 @@ function saveList() {
 	var requestData = {
 		employee: employee,
 		deletedEmployeeIds: deletedEmployeeIds,
-		updatedEmployeeInfo : updatedEmployeeInfo
+		updatedEmployeeInfo: updatedEmployeeInfo
 	};
 
 
@@ -176,7 +176,7 @@ function saveList() {
 				var addTableRow = "<tr>" +
 					"<td><input type='checkbox' name='emp_checkbox'></td>" +
 					"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-					"<td name='employeeName' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
+					"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
 					"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
 					"<select name='empTypeList' class='select' style='display: none;'>" +
 					"<option value=''>선택</option>" +
@@ -196,7 +196,7 @@ function saveList() {
 				$('#empTable > tbody').append(addTableRow);
 			}
 			return;
-},
+		},
 		error: function(request, error) {
 			alert("메시지:" + request.responseText + "\n" + "에러:" + error);
 		}
@@ -215,7 +215,7 @@ cells.forEach((cell) => {
 });
 
 
-// ID, 유형, 상태를 클릭하면 'u' 값을 hiddenBox에 넣기
+// name, 유형, 상태를 클릭하면 'u' 값을 hiddenBox에 넣기
 function handleClick(element) {
 	const hiddenBox = element.closest('tr').querySelector("input[name='hiddenBox']");
 	hiddenBox.value = 'u';
@@ -282,7 +282,7 @@ function searchList() {
 					var addTableRow = "<tr>" +
 						"<td><input type='checkbox' name='emp_checkbox'></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-						"<td name='employeeName' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
+						"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
 						"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
 						"<select name='empTypeList' class='select' style='display: none;'>" +
 						"<option value=''>선택</option>" +

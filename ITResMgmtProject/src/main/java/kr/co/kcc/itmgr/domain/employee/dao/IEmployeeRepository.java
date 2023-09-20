@@ -3,6 +3,7 @@ package kr.co.kcc.itmgr.domain.employee.dao;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.employee.model.Employee;
 
 @Repository
@@ -23,4 +24,9 @@ public interface IEmployeeRepository {
 	//사원수정
 	void updateEmployee(List<Employee> updatedEmployeeInfo);
 
+	//공통코드 사원유형
+	List<CommonCodeDetail> commonCodeEmpType();
+
+	//공통코드 사원상태
+	List<CommonCodeDetail> commonCodeEmpStatus();
 }

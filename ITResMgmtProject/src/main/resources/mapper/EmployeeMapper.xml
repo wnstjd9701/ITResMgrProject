@@ -69,7 +69,6 @@
  
 <update id="updateEmployee" parameterType="kr.co.kcc.itmgr.domain.employee.model.Employee">
     <foreach collection="list" item="employee" separator=";" open="DECLARE BEGIN" close="; END;">
-        
             UPDATE EMPLOYEEINFO 
             SET 
                 employee_name=#{employee.employeeName},
@@ -81,11 +80,19 @@
     </foreach>
 </update>
 
-<select id="commonCodeEmpType" resultType = "kr.co.kcc.itmgr.domain.commoncode.model.CommonCode">
+<select id="commonCodeEmpType" resultType ="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
 	<![CDATA[
-		SELECT detail_code_name AS detailCodeName
+		SELECT cd.detail_code AS detailCode, cd.detail_code_name AS detailCodeName
 		FROM commoncode c, commoncodedetail cd
 		WHERE c.code_group_id = cd.code_group_id AND c.code_group_id = 'EMT000'
+	]]>
+</select>
+
+<select id="commonCodeEmpStatus" resultType ="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
+	<![CDATA[
+		SELECT cd.detail_code AS detailCode, cd.detail_code_name AS detailCodeName
+		FROM commoncode c, commoncodedetail cd
+		WHERE c.code_group_id = cd.code_group_id AND c.code_group_id = 'EMS000'
 	]]>
 </select>
 

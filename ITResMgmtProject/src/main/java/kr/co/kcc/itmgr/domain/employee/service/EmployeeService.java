@@ -1,12 +1,11 @@
 package kr.co.kcc.itmgr.domain.employee.service;
 
 import java.util.List;
-
-
 import org.springframework.stereotype.Service;
-
+import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.employee.dao.IEmployeeRepository;
 import kr.co.kcc.itmgr.domain.employee.model.Employee;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,8 +43,14 @@ public class EmployeeService implements IEmployeeService{
 	}
 
 
+	@Override
+	public List<CommonCodeDetail> commonCodeEmpType() {
+		return employeeRepository.commonCodeEmpType();
+	}
 
 
-
-
+	@Override
+	public List<CommonCodeDetail> commonCodeEmpStatus() {
+		return employeeRepository.commonCodeEmpStatus();
+	}
 }

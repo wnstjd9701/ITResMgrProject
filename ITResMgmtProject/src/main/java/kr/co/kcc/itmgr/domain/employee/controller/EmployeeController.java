@@ -1,6 +1,7 @@
 package kr.co.kcc.itmgr.domain.employee.controller;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.employee.model.Employee;
 import kr.co.kcc.itmgr.domain.employee.service.IEmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +32,24 @@ public class EmployeeController {
 	@RequestMapping(value = "/employeeview", method=RequestMethod.GET)
 	public String selectAllEmployee(Model model) {
 		List<Employee> employeeList = employeeService.selectAllEmployee();
-
 		model.addAttribute("employeeList", employeeList);
-		Map<String, String> commonCodeList = new HashMap<>();//employeeService.getCommonCodeList();
-		commonCodeList.put("", "전체");
-		commonCodeList.put("EMT002", "IT자원관리자");
-		commonCodeList.put("EMT001", "시스템자원관리자");
-		model.addAttribute("commonCodeList", commonCodeList);
+
+		//검색창 사원유형
+		Map<String, String> commonCodeTypeList = new HashMap<>();
+		List<CommonCodeDetail> commonCodeType = employeeService.commonCodeEmpType();
+		for (CommonCodeDetail commonCode : commonCodeType) {
+			commonCodeTypeList.put(commonCode.getDetailCode(), commonCode.getDetailCodeName());
+		}
+		model.addAttribute("commonCodeTypeList", commonCodeTypeList);
+
+		//검색창 사원상태
+		Map<String, String> commonCodeStatusList = new HashMap<>();
+		List<CommonCodeDetail> commonCodeStatus = employeeService.commonCodeEmpStatus();
+		for (CommonCodeDetail commonCode2 : commonCodeStatus) {
+			commonCodeStatusList.put(commonCode2.getDetailCode(), commonCode2.getDetailCodeName());
+		}
+		model.addAttribute("commonCodeStatusList", commonCodeStatusList);
+
 
 
 		return "employee/employeeview";
