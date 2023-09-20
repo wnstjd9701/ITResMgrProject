@@ -26,7 +26,8 @@ public class InstallPlaceController {
 	private final IInstallPlaceService installPlaceService;
 	
 	/*
-	 * API No.3-1. 모든 설치 장소 조회
+	 * Author: [윤준성]
+	 * API No.3-1. 설치 장소 페이지
 	 * Info: 설치 장소 모두 조회
 	 */
 	@GetMapping("/installplace")
@@ -39,6 +40,7 @@ public class InstallPlaceController {
 	}
 	
 	/*
+	 * Author: [윤준성]
 	 * API No.3-2. 설치 장소 검색 [비동기]
 	 * Info: 설치장소명으로 설치 장소 검색 
 	 */
@@ -51,7 +53,8 @@ public class InstallPlaceController {
 	}
 	
 	/*
-	 * API No.3-3. 자원 정보 조회 [비동기]
+	 * Author: [윤준성]
+	 * API No.3-3. 자원 정보 및 상세 주소 조회 [비동기]
 	 * Info: 설치 장소 이름으로 자원 정보 조회
 	 */
 	@GetMapping("/installplace/resinfo")
