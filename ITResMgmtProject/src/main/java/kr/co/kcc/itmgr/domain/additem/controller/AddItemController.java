@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,16 +22,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AddItemController {
 	static final Logger logger = LoggerFactory.getLogger(AddItemController.class);
-	
+
 	private final IAddItemService addItemService;
-	
+
 	@RequestMapping(value="/addItem", method=RequestMethod.GET)
 	public String selectAddItem(Model model) {
 		List<AddItem> addItemList = addItemService.selectAllAddItem();
 		model.addAttribute("addItemList", addItemList);
 		return "additem/additem";
 	}
-	
+
 	//검색
 	@RequestMapping(value="/search/addItem", method = RequestMethod.GET)
 	@ResponseBody
@@ -48,6 +49,39 @@ public class AddItemController {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-			return addItemList;
+		return addItemList;
 	}  
+
+	//Insert, Delete 저장
+	@RequestMapping(value="/save/addItem", method = RequestMethod.POST)
+	@ResponseBody
+	public List<AddItem> saveAll(@RequestBody(required = false) AddItem requestData){
+		List<AddItem> addItemList = new ArrayList<>(); 
+
+		try {
+			List<AddItem> insertAddItem = requestData.getInsertAddItem();
+			List<Integer> deletedAddItems = requestData.getDeletedAddItems();
+			
+			
+			//Insert
+			if(insertAddItem != null && !insertAddItem.isEmpty()) {
+				for (AddItem addItem : insertAddItem) {
+					addItemService.insertAddItem(addItem);
+				}
+			}
+			
+			//Delete
+			if(deletedAddItems != null) {
+				for (int addItemSn : deletedAddItems) {
+					addItemService.deleteAddItemByUseYN(addItemSn);
+				}
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		addItemList = addItemService.selectAllAddItem();
+
+		return addItemList;
+	}
 }
