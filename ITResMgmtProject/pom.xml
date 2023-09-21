@@ -35,8 +35,6 @@
          <artifactId>mybatis-spring-boot-starter</artifactId>
          <version>3.0.2</version>
       </dependency>
-
-<<<<<<< HEAD
       <dependency>
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-devtools</artifactId>
