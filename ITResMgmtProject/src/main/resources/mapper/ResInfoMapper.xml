@@ -88,6 +88,41 @@
 			  
 	</select>
 	
+	<insert id="insertResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			INSERT INTO 
+				RESINFO
+					(res_serial_id, res_class_id, res_name, res_sn, mgmt_id, res_status_code, manufacture_company_name,
+					model_name, mgmt_dept_name, manager_name, introduction_date, introduction_price, purchase_company_name, use_yn,
+					monitoring_yn, rack_info, expiration_date, add_info, create_date, creater_id, update_date, updater_id, install_place_sn)
+				VALUES
+					(#{resSerialId}, #{resClassId}, #{resName}, #{resSn}, #{mgmtId}, #{resStatusCode}, #{manufactureCompanyName},
+					#{modelName}, #{mgmtDeptName}, #{managerName}, #{introductionDate}, #{introductionPrice}, #{purchaseCompanyName}, #{useYn},
+					#{monitoringYn}, #{rackInfo}, #{expirationDate}, #{addInfo}, SYSDATE, 'wh467925', SYSDATE, 'wh467925', #{installPlaceSn})	
+		]]>
+	</insert>
+	
+	<select id="selectResStatusCode" parameterType="String" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
+		<![CDATA[
+			SELECT 
+				detail_code	"resStatusCode",
+				detail_code_name	"detailCodeName"
+			FROM COMMONCODEDETAIL
+			WHERE code_group_id = #{codeGroupId}			
+		]]>
+	</select>
+	
+	<select id="selectResInstallPlace" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		<![CDATA[
+			SELECT
+				install_place_sn	"installPlaceSn",
+				install_place_name	"installPlaceName",
+				install_place_postno	"installPlacePostno",
+				install_place_address	"installPlaceAddress"
+			FROM INSTALLPLACE
+		]]>
+	</select>
+	
 	
 	
 </mapper>

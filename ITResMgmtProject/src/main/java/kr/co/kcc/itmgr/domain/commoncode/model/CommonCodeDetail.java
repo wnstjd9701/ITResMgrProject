@@ -18,4 +18,6 @@ public class CommonCodeDetail {
 	
 	// Flag - Create / Update / Delete인지 확인하는 변수
 	private String flag;
+	
+	private String resStatusCode;
 }
