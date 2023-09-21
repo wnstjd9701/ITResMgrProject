@@ -189,12 +189,11 @@
 							<th scope="col">자원 수</th>
 						</tr>
 					</thead>
-					<tbody class="place-table-body"
-						th:each="installPlace, i : ${installPlace}">
-						<tr>
-							<th class="place-count" th:text="${i.count}"></th>
-							<th><input type="checkbox" class="place-sn"
-								th:value="${installPlace.installPlaceSn}"></th>
+					<tbody class="place-table-body">
+						<tr th:each="installPlace, i : ${installPlace}">
+							<td class="place-count" th:text="${i.count}"></td>
+							<td><input type="checkbox" name="${installPlace.installPlaceSn" class="place-sn"
+								th:value="${installPlace.installPlaceSn}"></td>
 							<td class="place-name" th:text="${installPlace.installPlaceName}"></td>
 							<td class="place-address"
 								th:text="${installPlace.installPlaceAddress}"></td>
@@ -209,23 +208,26 @@
 			<div class="address-map-container">
 				<div class="address-container">
 					<h2>상세 주소</h2>
-					<div>
-						<span>설치 장소명</span> 
-						<input type="hidden" id="flag" value="">
-						<input type="text" id="detail-place-name" class="address-input-box input-box detail-place-name" placeholder="설치 장소명">
-					</div>
-					<span>상세 주소</span>
-					<div class="zip-code-container">
-						<input type="text" id="zip-code" class="address-input-box input-box" placeholder="우편번호" readonly>
-						<input type="button" class="find-postcode-btn" value="주소 찾기">
-					</div>
-					<input type="hidden" id="latitude" value="">
-					<input type="hidden" id="longitude" value="">
-					<input type="text" id="road-name-address" class="address-input-box input-box" placeholder="도로명주소" readonly>
-					<input type="text" id="detail-address" class="address-input-box input-box" placeholder="상세주소">
-					<div id="map" class="map"></div>
-					<input type="button" id="new-address" value="신규">
-					<input type="button" id="edit-address" value="저장">
+					<form id="place-address-form">
+						<div>
+							<span>설치 장소명</span> 
+							<input type="hidden" name="flag" id="flag" value="">
+							<input type="hidden" name="installPlaceSn" id="install-place-sn" value="">
+							<input type="text" name="installPlaceName" id="detail-place-name" class="address-input-box input-box detail-place-name" placeholder="설치 장소명">
+						</div>
+						<span>상세 주소</span>
+						<div class="zip-code-container">
+							<input type="text" name="installPlacePostno" id="zip-code" class="address-input-box input-box" placeholder="우편번호" readonly>
+							<input type="button" class="find-postcode-btn" value="주소 찾기">
+						</div>
+						<input type="hidden" name="latitude" id="latitude" value="">
+						<input type="hidden" name="longitude" id="longitude" value="">
+						<input type="text" name="installPlaceAddress" id="road-name-address" class="address-input-box input-box" placeholder="도로명주소" readonly>
+						<input type="text" name="installPlaceDetailAddress" id="detail-address" class="address-input-box input-box" placeholder="상세주소">
+						<div id="map" class="map"></div>
+						<input type="button" id="new-address" value="신규">
+						<input type="button" id="edit-address" value="저장">
+					</form>
 				</div>
 				<!-- 자원 정보 -->
 				<div class="resinfo-container">
@@ -280,46 +282,42 @@ $(document).ready(function(){
 		})
 	})
 	
-	function updateInstallPlace(place){
+	function removePlaceTable(){
 		$(".place-table-body tr").remove();
-		if(place.length < 1){
-			alert("검색된 결과가 없습니다.");
-			const result = "<tr>" + "<td colspan='6' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
-			
-			$(".place-table-body").append(result);
-			return;
-		}
-		
-		for(var i=0; i < place.length; i++){
-			var newRow = $("<tr>");
-			const placeCount = $("<td>").text(i+1);
-			const checkbox = $("<td>").append($("<input>").attr({
-				type: "checkbox",
-				value: place[i].installPlaceSn,
-				class: "place-sn"
-			}));
-			const placeName = $("<td>").addClass("place-name").text(place[i].installPlaceName);
-			const placeAddress = $("<td>").addClass("place-address").text(place[i].installPlaceAddress);
-			const placeDetailAddress = $("<td>").addClass("place-detail-address").text(place[i].installPlaceDetailAddress);
-			const placeResCount = $("<td>").addClass("place-res-count").text(place[i].resCount);
-			const placeDetail = $("<td>").append($("<input>").attr({
-				type: "button",
-				class: "place-detail",
-				value: "상세보기",
-				"data-install-place-sn": place[i].installPlaceSn
-			}));
-
-			newRow.append(placeCount);
-			newRow.append(checkbox);
-			newRow.append(placeName);
-			newRow.append(placeAddress);
-			newRow.append(placeDetailAddress);
-			newRow.append(placeResCount);
-			newRow.append(placeDetail);
-			
-			$(".place-table-body").append(newRow);
-		}
-		alert("성공적으로 조회되었습니다.");
+	}
+	
+	function updateInstallPlace(place) {
+	    removePlaceTable();
+	    if (place.length < 1) {
+	        alert("조회된 장소 결과가 없습니다.");
+	        const result = "<tr>" + "<td colspan='6' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+	        $(".place-table-body").append(result);
+	    } else {
+	        console.log("Place" + place.length);
+	        for (var i = 0; i < place.length; i++) {
+	            var newRow = $("<tr>");
+	            const placeCount = $("<td>").text(i + 1);
+	            const checkbox = $("<td>").append($("<input>").attr({
+	                type: "checkbox",
+	                value: place[i].installPlaceSn,
+	                class: "place-sn"
+	            }));
+	            const placeName = $("<td>").addClass("place-name").text(place[i].installPlaceName);
+	            const placeAddress = $("<td>").addClass("place-address").text(place[i].installPlaceAddress);
+	            const placeDetailAddress = $("<td>").addClass("place-detail-address").text(place[i].installPlaceDetailAddress);
+	            const placeResCount = $("<td>").addClass("place-res-count").text(place[i].resCount);
+				
+	            newRow.append(placeCount);
+	            newRow.append(checkbox);
+	            newRow.append(placeName);
+	            newRow.append(placeAddress);
+	            newRow.append(placeDetailAddress);
+	            newRow.append(placeResCount);
+	            $(".place-table-body").append(newRow);
+	        }
+	        alert("성공적으로 조회되었습니다.");
+	    }
+	    return;
 	}
 	
 	// 설치장소명으로 매핑된 자원, 상세 주소 조회
@@ -341,10 +339,14 @@ $(document).ready(function(){
 	        }
 	    });
 	});
-	
-	function updateResInfo(resInfo){
+	// 자원 정보 테이블 초기화
+	function removeResInfo(){
 		$(".resinfo-table-body tr").remove();
-
+	}
+	
+	// 자원 정보 업데이트
+	function updateResInfo(resInfo){
+		removeResInfo();
 		if(resInfo.length < 1 || resInfo[0] === null){
         	alert("설치장소에 매핑된 자원이 없습니다.");
         	const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "매핑된 자원이 없습니다." + "</td>" + "</tr>";
@@ -392,6 +394,7 @@ $(document).ready(function(){
         }
 	}
 	
+	// 상세 주소 업데이트
 	async function updateAddressInfo(place){
 		try {
 		    const placeSn = place.installPlaceSn;
@@ -403,6 +406,7 @@ $(document).ready(function(){
 			var latitude = place.latitude;
 			
 			$("#flag").val(placeSn);
+			$("#install-place-sn").val(placeSn);
 		    $("#detail-place-name").val(placeName)
 		    $("#zip-code").val(placePostno);
 		    $("#road-name-address").val(placeAddress);
@@ -414,6 +418,7 @@ $(document).ready(function(){
 	    }
 	}
 
+	// 지도 업데이트
 	async function updateMap(placeAddress, placeName){
 	    return new Promise((resolve, reject) => {
 	        var mapContainer = document.getElementById('map'); // 지도를 표시할 div 
@@ -443,10 +448,9 @@ $(document).ready(function(){
 	                    position: coords
 	                });
 
-	                var content = '<div class ="label"><span class="left"></span><span class="center">카카오!</span><span class="right"></span></div>';
 	                // 인포윈도우로 장소에 대한 설명을 표시합니다
 	                var infowindow = new kakao.maps.InfoWindow({
-	                    content: `<div style="width:150px;text-align:center;padding:6px 0;font-weight:bolder">${placeName}</div>`
+	                    content: `<div style="width:150px;text-align:center;padding:6px 0;font-weight:bolder;">${placeName}</div>`
 	                });
 	                infowindow.open(map, marker);
 
@@ -462,10 +466,20 @@ $(document).ready(function(){
 	    });
 	}
 	
+	// 장소명을 입력 했을 때 주소가 있다면 실시간으로 장소명이 바뀌도록 
+	$(".address-container").on("input", "#detail-place-name", function(){
+		var placeName = $(this).val();
+		var placeAddress = $("#road-name-address").val();
+		if(placeAddress === ""){
+			return;
+		}
+		updateMap(placeAddress,placeName);
+	});
 	
 	// 주소 찾기	
 	$(".address-container").on("click", ".find-postcode-btn", findAddress);
 	
+	// 주소 찾기 
 	async function findAddress(){
 		try{
 		    var result = await openPostcode();
@@ -504,16 +518,23 @@ $(document).ready(function(){
 	    })
 	}
 	
+	// 신규 버튼 클릭 시 상세 주소 칸 초기화
 	$("#new-address").click(() => {
 		removePlaceDetail();
 	});
 	
+	// 상세 주소 지우기
 	function removePlaceDetail(){
-		$("#flag").val("");
+		$("#place-address-form")
+			.find("input")
+		    .not("[type='button']") // class가 find-postcode-btn인 요소를 제외합니다.
+		    .val('');		
+		/* $("#flag").val("");
+		$("#install-place-sn").val("");
 		$("#detail-place-name").val("");
 		$("#zip-code").val("");
 		$("#road-name-address").val("");
-		$("#detail-address").val("");
+		$("#detail-address").val(""); */
 		$("#map").empty();
 		$("#map").removeAttr("style");
 	}
@@ -523,52 +544,113 @@ $(document).ready(function(){
 		saveAddress(flag);
 	});
 	
-	function saveAddress(flag){
-		console.log(flag);
-		// 신규일 경우
-		var installPlace = getDetailAddressInfo();
-		console.log(installPlace)
+	async function saveAddress(flag){
+		// 빈 칸 확인
+	    var isValid = true; // 빈 칸 여부를 나타내는 플래그
+	    // "installPlaceDetailAddress" 필드를 제외한 다른 필드를 검사
+	    $("#place-address-form input[type='text']").not("[name='installPlaceDetailAddress']").each(function() {
+	        var inputValue = $(this).val();
+	        if (inputValue.trim() === "") { // 입력 값이 공백이라면
+	            isValid = false; // 플래그를 false로 설정
+	            return false; // 각각의 입력 필드를 검사 중단
+	        }
+	    });
+
+	    if (!isValid) {
+	        alert("장소명과 주소를 모두 입력하세요.");
+	        return; // 빈 칸이 있으면 함수 종료
+	    }
 		
+		var formData = new FormData($("#place-address-form")[0]);
+		var installPlaceJSON = {};
+		formData.forEach(function(value, key){
+		    installPlaceJSON[key] = value;
+		});
+
+		var installPlace = JSON.stringify(installPlaceJSON);
+		var installPlaceSn = installPlaceJSON.installPlaceSn;
+		var installPlaceName = installPlaceJSON.installPlaceName;
+		
+		// 장소명이 중복되는 지 체크 , 비동기 요청이 끝날 때 까지 기다리고 값을 가져온 후 다음으로 넘어감
+		var result = await checkPlaceName(installPlaceSn, installPlaceName);
+		if(result > 1){
+			alert("장소명이 이미 존재합니다.");
+			return;	
+		}
+		
+		// 신규일 경우
 		if(flag === ""){
-			/* $.ajax({
+			$.ajax({
 				method: "POST",
 				url: "/detailaddress",
-				data: "",
+				data: installPlace,
 				contentType: "application/json",
 				success: function(response){
-					
+					console.log(response);		
+					alert("성공");
+					// 수정 완료 후 장소 테이블 업데이트
+					updateInstallPlace(response);
+					// 상세 주소 비우기
+					removePlaceDetail();
+					removeResInfo();
+					const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
+			    	$(".resinfo-table-body").append(result);
 				},
 				error: function(xhr, status, err){
 					alert(err);
 				}
-			}) */
+			})
 			// 신규 등록 후 장소 테이블 업데이트
 			// 상세 주소 비우기
 		}
 		else{ // 수정일 경우
-			// 수정 완료 후 장소 테이블 업데이트
-			// 상세 주소 비우기
+			console.log(installPlaceJSON.installPlaceSn);
+			var placesn = installPlaceJSON.installPlaceSn
+			$.ajax({
+				method: "POST",
+				url: `/detailaddress/${placesn}`,
+				data: installPlace,
+				dataType: "JSON",
+				contentType: "application/json",
+				success: function(response){
+					console.log(response);
+					alert("성공");
+					// 수정 완료 후 장소 테이블 업데이트
+					updateInstallPlace(response);
+					// 상세 주소 비우기
+					removePlaceDetail();
+					removeResInfo();
+					const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
+			    	$(".resinfo-table-body").append(result);
+				},
+				error: function(xhr, status, err){
+					alert(err);
+				}
+			})
 		}
 	}
 	
-	function getDetailAddressInfo(){
-		var latitude = $("#latitude").val(); // 위도
-		var longitude = $("#longitude").val(); // 경도
-		var installPlaceName = $("#detail-place-name").val(); // 설치 장소명
-		var installPlacePostno = $("#zip-code").val(); // 우편 번호
-		var installPlaceAddress = $("#road-name-address"); // 도로명주소
-		var installPlaceDetailAddress = $("#detail-address").val(); // 상세 주소
-		
-		var installPlace = {
-				installPlaceName: installPlaceName,
-				installPlacePostno: installPlacePostno,
-				installPlaceAddress: installPlaceAddress,
-				installPlaceDetailAddress: installPlaceDetailAddress,
-				latitude: latitude,
-				longitude: longitude
-		}
-		return installPlace;
-	}
+	// 장소명이 존재하는 지 체크
+	async function checkPlaceName(installPlaceSn, installPlaceName) {
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            method: "GET",
+            url: "/check/name",
+            data: {
+                placeSn: installPlaceSn,
+                placeName: installPlaceName
+            },
+            success: function(response) {
+                console.log(response);
+                resolve(response); // 비동기 작업이 완료되면 결과를 resolve로 반환
+            },
+            error: function(xhr, status, err) {
+                alert("Error: " + err);
+                reject(err); // 오류가 발생한 경우 reject로 오류를 반환
+            }
+        });
+    });
+}
 })
 </script>
 </th:block>
