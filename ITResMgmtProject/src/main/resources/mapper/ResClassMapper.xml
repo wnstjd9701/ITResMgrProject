@@ -64,6 +64,7 @@
 	</insert>
 	
 	<select id="selectResClassByLevel" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<![CDATA[
 			SELECT
 			    LEVEL	"level",
 			    res_class_id	"resClassId",
@@ -73,6 +74,17 @@
 			START WITH upper_res_class_id IS NULL
 			CONNECT BY PRIOR res_class_id = upper_res_class_id
 			ORDER SIBLINGS BY res_class_id
+		]]>
 	</select>
-
+	
+	
+	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+		<![CDATA[
+			SELECT 
+			    add_item_sn "addItemSn",
+			    add_item_name   "addItemName",
+			    use_yn  "useYn"
+			FROM ADDITEM
+		]]>
+	</select>
 </mapper>
