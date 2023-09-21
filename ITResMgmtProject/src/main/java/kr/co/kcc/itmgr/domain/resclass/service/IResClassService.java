@@ -3,6 +3,7 @@ package kr.co.kcc.itmgr.domain.resclass.service;
 import java.util.List;
 import java.util.Map;
 
+import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 
 
@@ -14,4 +15,6 @@ public interface IResClassService {
 	List<ResClass> selectResClassByLevel(); //lv별 자원분류조회
 	
 	void insertResClass(ResClass resClass);
+	
+	List<AddItem> selectAddItemInResClass(); //부가정보 조회
 }

@@ -8,12 +8,37 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 <div th:replace="~{../common/fragments/head :: fragment-head}"></div>
+<style>
+div.paging {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+div.paging>i,
+div.paging>div.pages {
+  margin: 0 10px;
+}
+
+div.paging>i,
+div.paging>div.pages>span {
+  margin: 0 3px;
+  cursor: pointer;
+}
+
+span.active {
+  color: orangered;
+  font-weight: bold;
+}
+</style>
 </head>
 <body>
 <div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 <div class="container" style="margin:50px 0 50px 270px; width:1150px;">
 	<button type="button" class="btn btn-primary" style="float:right;margin-left: 10px; background-color:navy;">저장</button>
-	<buttontype="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:right; background-color:navy;" >신규</button>
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resClassInsertModal" style="float:right; background-color:navy;" >신규</button>
 </div>
 <div class="container" style="margin-top:70px; display:flex; clear:both;">
     <div class="flex-item" style="width: 1200px;">
@@ -90,8 +115,8 @@
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- 자원분류 등록 모달창 -->
+<div class="modal fade" id="resClassInsertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -99,9 +124,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <!-- Content of the modal -->
         <form id="resClassSave" name="resClassSave" method="post" th:action="@{/resclass/insert}">
-          <div class="mb-3">
-			<label for="resClassLevel" class="form-label">분류 레벨</label>
+          <label for="resClassLevel" class="form-label">분류 레벨</label>
 			<select class="form-select" id="resClassLevel">
 			    <option value="null">선택안함</option>
 			    <option value="1">대분류</option>
@@ -116,7 +141,6 @@
 			        <option data-level="2" th:each="level:${selectResClassByLevel}" th:if="${level.level}==2" th:text="${level.resClassName}" th:value="${level.resClassId}"></option>
 			    </select>
 			</div>
-          </div>
           <table class="table">
             <tbody>
               <tr>
@@ -136,17 +160,53 @@
                   </select>
                 </td>
               </tr>
-            </tbody>
+          </tbody>
           </table>
+			<div class="mb-3">
+	            <label for="addItem" class="form-label">부가정보</label>
+	            <button type="button" class="button" id="openAddItemModal">➕</button>
+          </div>
+        </form>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit">Save changes</button>
-      </div>
-        </form>
+         <button type="button" onclick="saveSelectedItems()">Save changes</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- 부가정보 리스트 모달창 -->
+<div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addItemList">부가정보</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+     	<div class="mb-3">
+			<table class="table" id="add-item-table">
+				<thead>
+					<tr>
+						<th>선택</th>
+						<th>부가항목명</th>
+						<th>부가항목설명</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+				</table>
+		   	 	</div>
+			</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		  <button type="button" onclick="saveSelectedItems()">Save changes</button>
+		</div>
+			</div>
+	  </div>
+</div>
+
 
 <script type="text/javascript" th:src="@{/js/resclass/menutree.js}"></script>
 <script type="text/javascript" th:src="@{/js/resclass/resclass.js}"></script>
@@ -170,6 +230,14 @@ $(document).ready(function(){
         }
     });
 });
+$(document).ready(function() {
+    $('#openAddItemModal').click(function() {
+      // 부가정보 리스트 모달 열기
+      $('#addItemModal').modal('show');
+    });
+  });
+  
+
 </script>
 </body>
 </html>

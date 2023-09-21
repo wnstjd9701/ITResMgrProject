@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.dao.IResClassRepository;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,11 @@ public class ResClassService implements IResClassService {
 	@Override
 	public List<ResClass> selectResClassByLevel() {
 		return resClassRepository.selectResClassByLevel();
+	}
+
+	@Override
+	public List<AddItem> selectAddItemInResClass() {
+		return resClassRepository.selectAddItemInResClass();
 	}
 
 

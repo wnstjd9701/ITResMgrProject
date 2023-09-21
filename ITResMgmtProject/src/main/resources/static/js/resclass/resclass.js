@@ -29,3 +29,39 @@ $(document).ready(function() {
         });
     });
 });
+
+// 부가정보
+$(document).ready(function () {
+    // "조회" 버튼 클릭 시
+    $('#openAddItemModal').on('click', function() {
+
+        //Ajax 요청을 보냄
+        $.ajax({
+            type: 'GET', // 또는 'GET', 요청 방식 선택
+            url: '/resclass/additem', // Controller의 URL,
+			contentType: "application/json",
+            success: function(response) {
+                // 성공적으로 요청이 완료되면 이곳에서 처리
+				updateTable(response.test);
+            },
+            error: function(error) {
+                // 요청이 실패한 경우 처리
+                console.log('에러:', error);
+            }
+        });
+    });
+	function updateTable(addItem){
+		for (var i = 0; i < addItem.length; i++) {
+					// table 행 추가
+					console.log(addItem[i])
+                   	addTableRow = "<tr>" +
+                        "<td>" + addItem[i].addItemSn + "</td>" +
+                        "<td>" + addItem[i].addItemName + "</td>" +
+                        "<td>" + addItem[i].addItemDesc + "</td>" +
+                        "</tr>";
+                    $('table#add-item-table').append(addTableRow);
+         }
+	}
+});
+
+
