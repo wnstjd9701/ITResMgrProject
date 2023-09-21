@@ -13,10 +13,13 @@ public interface IAddItemRepository {
 	//부가정보 전체조회
 	List<AddItem> selectAllAddItem();
 
-	//부가정보 개수
-	int countAddItem();
-	
 	//검색
 	List<AddItem> selectSearchAddItem(String useYN, String searchText);
+	
+	//부가정보 등록
+	void insertAddItem(AddItem addItem);
+
+	//부가정보 삭제(사용여부:N)
+	void deleteAddItemByUseYN(int addItemSn);
 
 }

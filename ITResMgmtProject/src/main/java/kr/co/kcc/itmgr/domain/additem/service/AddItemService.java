@@ -20,12 +20,20 @@ public class AddItemService implements IAddItemService{
 	}
 
 	@Override
-	public int countAddItem() {
-		return addItemRepository.countAddItem();
-	}
-
-	@Override
 	public List<AddItem> selectSearchAddItem(String useYN, String searchText) {
 		return addItemRepository.selectSearchAddItem(useYN, searchText);
 	}
+
+	@Override
+	public void insertAddItem(AddItem addItem) {
+		addItemRepository.insertAddItem(addItem);
+	}
+
+	@Override
+	public void deleteAddItemByUseYN(int addItemSn) {
+		addItemRepository.deleteAddItemByUseYN(addItemSn);
+		
+	}
+
+
 }
