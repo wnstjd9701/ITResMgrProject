@@ -12,11 +12,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;	
 import lombok.RequiredArgsConstructor;
@@ -89,8 +92,11 @@ public class ResClassController {
 		  
 		model.addAttribute("numOfRes", numOfRes);
 	  	model.addAttribute("numOfRes2", numOfRes2);
+	  	
+	  	List<ResClass> selectResClassByLevel = resClassService.selectResClassByLevel();
+	  	model.addAttribute("selectResClassByLevel", selectResClassByLevel);
 		
-		return "itres/resclass"; 
+		return "resclass/resclass"; 
 	}
 	
 	@GetMapping("/resclassdetail")
@@ -101,6 +107,21 @@ public class ResClassController {
 		return selectResClassByResClassName;
 	}
 	
-
+	@PostMapping("/resclass/insert")
+	public String insertResClassInsert(ResClass resClass, Model model) {
+		model.addAttribute("resClass", resClass);
+		resClassService.insertResClass(resClass);
+		return"resclass/resclass";
+	}
+	
+	@GetMapping("/resclass/additem")
+	@ResponseBody
+	public Map<String, Object> selectAddItemInResClass(){
+		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass();
+		Map<String, Object> test = new HashMap<String, Object>();
+		test.put("test",selectAddItemInResClass);
+		logger.info("ddddd"+test);
+		return test;
+	}
 
 }
