@@ -43,7 +43,7 @@ function addItemsearch() {
 	console.log("searchAddItemData", searchAddItemData);
 
 	$.ajax({
-		url: '/search/addItem?' + $.param(searchAddItemData),
+		url: '/search/additem?' + $.param(searchAddItemData),
 		type: 'GET',
 		success: function(response) {
 			console.log("response", response)
@@ -137,7 +137,7 @@ function addItemSaveAll() {
 	
 	
 		$.ajax({
-		url: '/save/addItem',
+		url: '/save/additem',
 		type: 'POST',
 		contentType: 'application/json',
 		data: JSON.stringify(requestData),

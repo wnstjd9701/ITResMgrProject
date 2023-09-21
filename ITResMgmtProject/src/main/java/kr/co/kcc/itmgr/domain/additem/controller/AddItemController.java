@@ -25,7 +25,7 @@ public class AddItemController {
 
 	private final IAddItemService addItemService;
 
-	@RequestMapping(value="/addItem", method=RequestMethod.GET)
+	@RequestMapping(value="/additem", method=RequestMethod.GET)
 	public String selectAddItem(Model model) {
 		List<AddItem> addItemList = addItemService.selectAllAddItem();
 		model.addAttribute("addItemList", addItemList);
@@ -33,7 +33,7 @@ public class AddItemController {
 	}
 
 	//검색
-	@RequestMapping(value="/search/addItem", method = RequestMethod.GET)
+	@RequestMapping(value="/search/additem", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AddItem> selectSearchAddItem(@RequestParam Map<String, String> searchAddItemData) {
 		List<AddItem> addItemList = new ArrayList<>(); 
@@ -53,7 +53,7 @@ public class AddItemController {
 	}  
 
 	//Insert, Delete 저장
-	@RequestMapping(value="/save/addItem", method = RequestMethod.POST)
+	@RequestMapping(value="/save/additem", method = RequestMethod.POST)
 	@ResponseBody
 	public List<AddItem> saveAll(@RequestBody(required = false) AddItem requestData){
 		List<AddItem> addItemList = new ArrayList<>(); 
