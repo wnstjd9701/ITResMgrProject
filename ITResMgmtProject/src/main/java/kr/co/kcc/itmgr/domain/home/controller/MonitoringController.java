@@ -25,7 +25,8 @@ public class MonitoringController {
 	private final IMoniteringService monitoringService;
 	
 	/*
-	 * API No1-1. 모니터링 화면
+	 * Author: [윤준성]
+	 * API No1-1. 모니터링 페이지
 	 * Info : 모든 모니터링 자원 정보 보여주는 API (N인 경우도 보여줌)
 	 */
 	@GetMapping("/")
@@ -46,8 +47,9 @@ public class MonitoringController {
 	}
 	
 	/* 
-	 * API No1-2. 모니터링 화면 검색
-	 * Info : 자원 분류를 선택하고 검색 버튼을 누를 때 API 
+	 * Author: [윤준성]
+	 * API No1-2. 모니터링 화면 검색 [비동기]
+	 * Info : 자원 분류를 선택하고 검색 버튼 클릭 
 	 */
 	@PostMapping("/search")
 	@ResponseBody
