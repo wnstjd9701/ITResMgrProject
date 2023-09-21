@@ -17,8 +17,8 @@ public class InstallPlaceService implements IInstallPlaceService {
 
 	// 모든 설치 장소 조회
 	@Override
-	public List<InstallPlace> selectAllAddress() {
-		return installPlaceRepository.selectAllAddress();
+	public List<InstallPlace> selectAllPlace() {
+		return installPlaceRepository.selectAllPlace();
 	}
 	
 	// 설치 장소 검색
@@ -38,5 +38,24 @@ public class InstallPlaceService implements IInstallPlaceService {
 	public InstallPlace selectInstallPlaceDetail(String placeName) {
 		return installPlaceRepository.selectInstallPlaceDetail(placeName);
 	}
+
+	// 설치 장소명 중복 체크
+	@Override
+	public int checkPlaceNameBySn(String placeName) {
+		return installPlaceRepository.checkPlaceNameBySn(placeName);
+	}
+	
+	// 설치 장소 등록
+	@Override
+	public int insertInstallPlace(InstallPlace installPlace) {
+		return installPlaceRepository.insertInstallPlace(installPlace);
+	}
+
+	// 설치 장소 수정
+	@Override
+	public int updateInstallPlace(InstallPlace installPlace) {
+		return installPlaceRepository.updateInstallPlace(installPlace);
+	}
+
 	
 }

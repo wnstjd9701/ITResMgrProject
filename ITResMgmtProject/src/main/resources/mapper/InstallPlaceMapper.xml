@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository">
-	<select id="selectAllAddress">
+	<select id="selectAllPlace">
 		SELECT
 		    i.install_place_sn             AS "installPlaceSn",
 		    i.install_place_name           AS "installPlaceName",
@@ -98,5 +98,53 @@
 		<where>
 			install_place_name = #{placeName}
 		</where>	
+	</select>
+	
+	<insert id="insertInstallPlace" parameterType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		INSERT INTO installplace (
+		    install_place_sn,
+		    install_place_name,
+		    install_place_postno,
+		    install_place_address,
+		    install_place_detail_address,
+		    longitude,
+		    latitude,
+		    creater_id,
+		    create_date
+		) VALUES (
+		    install_place_sn_seq.NEXTVAL,
+		    #{installPlaceName},
+		    #{installPlacePostno},
+		    #{installPlaceAddress},
+		    #{installPlaceDetailAddress},
+		    #{longitude},
+		    #{latitude},
+		    'wnstjd',
+		    sysdate
+		)
+	</insert>
+	
+	<update id="updateInstallPlace" parameterType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+	    UPDATE installplace
+	    SET
+	        install_place_name = nvl(#{installPlaceName}, install_place_name),
+	        install_place_postno = nvl(#{installPlacePostno}, install_place_postno),
+	        install_place_address = nvl(#{installPlaceAddress}, install_place_address),
+	        install_place_detail_address = nvl(#{installPlaceDetailAddress}, install_place_detail_address),
+	        longitude = #{longitude},
+	        latitude = #{latitude},
+	        updater_id = 'junsung',
+	        update_date = SYSDATE
+	    WHERE
+	        install_place_sn = #{installPlaceSn}
+	</update>
+	
+	<select id="checkPlaceNameBySn" parameterType="map" resultType="int">
+		SELECT
+		    COUNT(*) AS result
+		FROM
+		    installplace
+		WHERE
+		    install_place_name = #{placeName}
 	</select>
 </mapper>
