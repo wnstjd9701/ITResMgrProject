@@ -40,7 +40,6 @@ public class AddItemController {
 		try {
 			String useYN = searchAddItemData.get("searchAddItemUseYN");
 			String searchText = searchAddItemData.get("searchAddItemText");
-			
 			logger.info("useYN",useYN);
 			logger.info("searchText",searchText);
 
