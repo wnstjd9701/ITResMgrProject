@@ -1,6 +1,7 @@
 package kr.co.kcc.itmgr.domain.additem.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.Data;
 
@@ -16,4 +17,6 @@ public class AddItem {
 	private String updaterId;
 	
 	private String searchText;
+	private List<AddItem> insertAddItem;
+	private List<Integer> deletedAddItems;
 }
