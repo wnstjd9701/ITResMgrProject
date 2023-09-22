@@ -53,7 +53,7 @@ function saveList() {
 	//Insert
 	if (rowCount > 0) {
 		const employee = new Array();
-		for (const i = 0; i < rowCount; i++) {
+		for (var i = 0; i < rowCount; i++) {
 			const empId = document.getElementById('empId' + i).value;
 			const empName = document.getElementById('empName' + i).value;
 
