@@ -120,7 +120,6 @@ public class ResClassController {
 		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass();
 		Map<String, Object> test = new HashMap<String, Object>();
 		test.put("test",selectAddItemInResClass);
-		logger.info("ddddd"+test);
 		return test;
 	}
 
