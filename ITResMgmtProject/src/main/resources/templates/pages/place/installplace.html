@@ -7,6 +7,7 @@
 <style>
 .container {
 	margin-left: 12vw;
+	font-size: 12px;
 }
 
 .page-title-container {
@@ -31,7 +32,8 @@
 	margin-left: 10em;
 }
 
-.place-list-table-container{
+.place-list-table-container {
+	font-size: 12px;
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -65,7 +67,8 @@
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
-.place-list-container h2{
+
+.place-list-container h2 {
 	font-size: 16px;
 }
 
@@ -92,11 +95,11 @@
 
 .zip-code-container {
 	display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-content: stretch;
-    justify-content: flex-start;
-    align-items: center;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: stretch;
+	justify-content: flex-start;
+	align-items: center;
 }
 /* Style the "주소 찾기" button */
 .find-postcode-btn {
@@ -170,14 +173,20 @@
 				<h2>설치 장소 관리</h2>
 			</div>
 			<div class="place-list-table-container">
-				<div class="place-list-container"><h2>설치 장소</h2></div>
-				<div class="search-container">
-				    <input class="place-name-text" type="text" placeholder="장소명을 입력하세요">
-				    <input id="search-btn" type="button" value="검색">
+				<div class="place-list-container">
+					<h2>설치 장소</h2>
+					<div class="common-btn">
+						<input type="button" id="new-address" value="신규"> <input
+							type="button" id="edit-address" value="저장">
+					</div>
 				</div>
-				<div style="text-align:left;">
-				    <input type="button" id="delete-address" value="행삭제">
-				 </div>
+				<div class="search-container">
+					<input class="place-name-text" type="text" placeholder="장소명을 입력하세요">
+					<input id="search-btn" type="button" value="검색">
+				</div>
+				<div style="text-align: left;">
+					<input type="button" id="delete-address" value="행삭제">
+				</div>
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
@@ -192,7 +201,8 @@
 					<tbody class="place-table-body">
 						<tr th:each="installPlace, i : ${installPlace}">
 							<td class="place-count" th:text="${i.count}"></td>
-							<td><input type="checkbox" name="${installPlace.installPlaceSn" class="place-sn"
+							<td><input type="checkbox"
+								name="${installPlace.installPlaceSn" class="place-sn"
 								th:value="${installPlace.installPlaceSn}"></td>
 							<td class="place-name" th:text="${installPlace.installPlaceName}"></td>
 							<td class="place-address"
@@ -207,26 +217,29 @@
 			<!-- 상세 장소 및 설치 장소 등록 -->
 			<div class="address-map-container">
 				<div class="address-container">
-					<h2>상세 주소</h2>
 					<form id="place-address-form">
 						<div>
-							<span>설치 장소명</span> 
-							<input type="hidden" name="flag" id="flag" value="">
-							<input type="hidden" name="installPlaceSn" id="install-place-sn" value="">
-							<input type="text" name="installPlaceName" id="detail-place-name" class="address-input-box input-box detail-place-name" placeholder="설치 장소명">
+							<span>설치 장소명</span> <input type="hidden" name="flag" id="flag"
+								value=""> <input type="hidden" name="installPlaceSn"
+								id="install-place-sn" value=""> <input type="text"
+								name="installPlaceName" id="detail-place-name"
+								class="address-input-box input-box detail-place-name"
+								placeholder="설치 장소명">
 						</div>
 						<span>상세 주소</span>
 						<div class="zip-code-container">
-							<input type="text" name="installPlacePostno" id="zip-code" class="address-input-box input-box" placeholder="우편번호" readonly>
+							<input type="text" name="installPlacePostno" id="zip-code"
+								class="address-input-box input-box" placeholder="우편번호" readonly>
 							<input type="button" class="find-postcode-btn" value="주소 찾기">
 						</div>
 						<input type="hidden" name="latitude" id="latitude" value="">
 						<input type="hidden" name="longitude" id="longitude" value="">
-						<input type="text" name="installPlaceAddress" id="road-name-address" class="address-input-box input-box" placeholder="도로명주소" readonly>
-						<input type="text" name="installPlaceDetailAddress" id="detail-address" class="address-input-box input-box" placeholder="상세주소">
+						<input type="text" name="installPlaceAddress"
+							id="road-name-address" class="address-input-box input-box"
+							placeholder="도로명주소" readonly> <input type="text"
+							name="installPlaceDetailAddress" id="detail-address"
+							class="address-input-box input-box" placeholder="상세주소">
 						<div id="map" class="map"></div>
-						<input type="button" id="new-address" value="신규">
-						<input type="button" id="edit-address" value="저장">
 					</form>
 				</div>
 				<!-- 자원 정보 -->
@@ -521,6 +534,9 @@ $(document).ready(function(){
 	// 신규 버튼 클릭 시 상세 주소 칸 초기화
 	$("#new-address").click(() => {
 		removePlaceDetail();
+		removeResInfo();
+		const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
+		$(".resinfo-table-body").append(result);
 	});
 	
 	// 상세 주소 지우기
@@ -590,9 +606,6 @@ $(document).ready(function(){
 					alert("성공");
 					// 수정 완료 후 장소 테이블 업데이트
 					updateInstallPlace(response);
-					// 상세 주소 비우기
-					removePlaceDetail();
-					removeResInfo();
 					const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
 			    	$(".resinfo-table-body").append(result);
 				},
@@ -617,11 +630,6 @@ $(document).ready(function(){
 					alert("성공");
 					// 수정 완료 후 장소 테이블 업데이트
 					updateInstallPlace(response);
-					// 상세 주소 비우기
-					removePlaceDetail();
-					removeResInfo();
-					const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
-			    	$(".resinfo-table-body").append(result);
 				},
 				error: function(xhr, status, err){
 					alert(err);
