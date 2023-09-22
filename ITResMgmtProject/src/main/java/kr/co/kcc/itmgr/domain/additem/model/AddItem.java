@@ -19,4 +19,5 @@ public class AddItem {
 	private String searchText;
 	private List<AddItem> insertAddItem;
 	private List<Integer> deletedAddItems;
+
 }

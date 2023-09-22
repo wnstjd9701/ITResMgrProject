@@ -8,10 +8,12 @@
 
 </head>
 <body>
-	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-	<div class="container" style="margin-top:50px; margin-left:270px; max-width:85%;">
+	<div class="" style=" float:right; width:20%;">
 		<button id="search_btn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;margin-left:10px; background-color:navy; border:navy;">조회</button>
 		<button id="newResInfoBtn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;  background-color:navy; border:navy;">신규</button>	
+	</div>
+	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
+	<div class="container" style="margin-top:50px; margin-left:270px; max-width:85%;">
 		<span>대 분 류</span>
 		<select id="topUpperResClassName" name="topUpperResClassName">
 		    <!-- "전체" 옵션 추가 -->

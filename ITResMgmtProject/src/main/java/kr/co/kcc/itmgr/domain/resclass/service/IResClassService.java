@@ -16,5 +16,6 @@ public interface IResClassService {
 	
 	void insertResClass(ResClass resClass);
 	
-	List<AddItem> selectAddItemInResClass(); //부가정보 조회
+	List<AddItem> selectAddItemInResClass(int page); //부가정보 조회
+	int countAddItem();
 }

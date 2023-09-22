@@ -78,13 +78,30 @@
 	</select>
 	
 	
-	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+	<select id="selectAddItemInResClass"  resultType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
 		<![CDATA[
-			SELECT 
-			    add_item_sn "addItemSn",
-			    add_item_name   "addItemName",
-			    use_yn  "useYn"
-			FROM ADDITEM
+		SELECT 
+			    add_item_sn AS "addItemSn",
+			    add_item_name AS "addItemName",
+			    add_item_desc AS "addItemDesc",
+			    use_yn AS "useYN"
+			FROM (
+				SELECT rownum AS "rnum",
+					add_item_sn,
+					add_item_name,
+					add_item_desc,
+					use_yn
+				FROM ADDITEM
+				WHERE use_yn = 'Y'
+				)
+			WHERE 
+			    rownum BETWEEN #{start} AND #{end}
+		]]>
+	</select>
+	
+	<select id="countAddItem" resultType="integer">
+		<![CDATA[
+			SELECT COUNT(*) FROM ADDITEM
 		]]>
 	</select>
 </mapper>
