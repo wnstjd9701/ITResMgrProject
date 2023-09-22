@@ -52,7 +52,7 @@ function hideRow() {
 function saveList() {
 	//Insert
 	if (rowCount > 0) {
-		const employee = new Array();
+		var employee = new Array();
 		for (var i = 0; i < rowCount; i++) {
 			const empId = document.getElementById('empId' + i).value;
 			const empName = document.getElementById('empName' + i).value;
