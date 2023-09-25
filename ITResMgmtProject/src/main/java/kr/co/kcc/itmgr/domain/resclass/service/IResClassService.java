@@ -14,7 +14,7 @@ public interface IResClassService {
 	List<ResClass> selectResClassByLevel(); //lv별 자원분류조회
 	
 	void insertResClass(ResClass resClass);
-	
+
 	List<AddItem> selectAddItemInResClass(); //부가정보 조회
 
 }

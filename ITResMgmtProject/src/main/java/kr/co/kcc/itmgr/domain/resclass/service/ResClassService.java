@@ -52,10 +52,4 @@ public class ResClassService implements IResClassService {
 	}
 
 
-
-
-
-
-
-
 }

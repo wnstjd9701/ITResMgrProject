@@ -12,25 +12,19 @@
 	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 	<div class="container" style="margin-left: 270px;" id="addItemSearchBar">
 		<p>사용여부</p>
-		<select id="searchUseYN">
-			<option value="">전체</option>
-			<option value="Y">Y</option>
-			<option value="N">N</option>
-		</select>
+			<label><input name="searchUseYN" type="radio" value=""/>미사용포함</label>
+			<label><input name="searchUseYN" type="radio" value="Y"/>Y</label>
 		<p>부가항목명</p>
 		<input id="addItemSearchText" type="text" placeholder="부가항목명 입력">
 		<input id="addItemsearchButton" type="button" value="검색" onclick="addItemsearch()"/>
-		<div style="margin-left: 950px;">
+		<div style="margin-left: 850px;">
 			<input id="addItemsDownButton" type="button" value="엑셀다운로드"/>
 			<input id="addItemAddRow" type="button" value="행추가" onclick="addItemAddRow()"/>
 			<input id="addItemHideRow" type="button" value="행삭제" onclick="addItemHideRow()"/>
+			<input id="addItemSave" type="button" value="저장" onclick="addItemSaveAll()"/>
 		</div>
 	</div>
 	
-	
-	
-	
-
 	<div class="container" style="margin-left: 270px;">
 		<table id="addItemTable" class="table table-striped">
 			<thead>

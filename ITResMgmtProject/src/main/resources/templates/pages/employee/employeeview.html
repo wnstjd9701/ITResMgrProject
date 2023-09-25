@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css"
 	th:href="@{../css/employee/employeeview.css}">
 <meta charset="UTF-8">
-<title>Insert title here</title>
 
 </head>
 <body>
@@ -57,7 +56,7 @@
 			</thead>
 			<tbody id="employee-table-body">
 				<tr th:each="employeeList : ${employeeList}" id="empList">
-					<td><input type="checkbox" name="emp_checkbox"></td>
+					<td><input type="checkbox" name="empCheckbox"></td>
 					<td th:text="${employeeList.employeeId}" name="employeeId"></td>
 					<td th:text="${employeeList.employeeName}" name="employeeName"
 						contenteditable="true" onclick="handleClick(this)"></td>

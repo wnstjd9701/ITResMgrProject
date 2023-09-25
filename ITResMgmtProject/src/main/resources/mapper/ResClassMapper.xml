@@ -85,17 +85,6 @@
 	</select>
 	
 	
-	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
-		<![CDATA[
-			SELECT 
-			    add_item_sn "addItemSn",
-			    add_item_name   "addItemName",
-			    add_item_desc	"addItemDesc",
-			    use_yn  "useYN"
-			FROM ADDITEM
-		]]>
-	</select>
-	
 	<insert id="insertAddItemToResClass" parameterType="Hashmap">
 		<![CDATA[
 			INSERT INTO

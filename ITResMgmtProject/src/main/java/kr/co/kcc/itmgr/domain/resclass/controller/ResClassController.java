@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
-import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;	
+import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -115,13 +116,13 @@ public class ResClassController {
 	}
 	
 	@GetMapping("/resclass/additem")
-	@ResponseBody
 	public Map<String, Object> selectAddItemInResClass(){
 		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass();
 		Map<String, Object> test = new HashMap<String, Object>();
 		test.put("test",selectAddItemInResClass);
 		return test;
 	}
+
 	
 	@GetMapping("/view")
 	public String view() {

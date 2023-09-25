@@ -6,10 +6,15 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
@@ -26,12 +31,13 @@ public class InstallPlaceController {
 	private final IInstallPlaceService installPlaceService;
 	
 	/*
-	 * API No.3-1. 모든 설치 장소 조회
+	 * Author: [윤준성]
+	 * API No.3-1. 설치 장소 페이지
 	 * Info: 설치 장소 모두 조회
 	 */
 	@GetMapping("/installplace")
 	public String selectInstallPlace(Model model) {
-		List<InstallPlace> installPlace = installPlaceService.selectAllAddress();
+		List<InstallPlace> installPlace = installPlaceService.selectAllPlace();
 		logger.info("installPlace: " + installPlace);
 		model.addAttribute("installPlace", installPlace);
 		
@@ -39,6 +45,7 @@ public class InstallPlaceController {
 	}
 	
 	/*
+	 * Author: [윤준성]
 	 * API No.3-2. 설치 장소 검색 [비동기]
 	 * Info: 설치장소명으로 설치 장소 검색 
 	 */
@@ -51,7 +58,8 @@ public class InstallPlaceController {
 	}
 	
 	/*
-	 * API No.3-3. 자원 정보 조회 [비동기]
+	 * Author: [윤준성]
+	 * API No.3-3. 자원 정보 및 상세 주소 조회 [비동기]
 	 * Info: 설치 장소 이름으로 자원 정보 조회
 	 */
 	@GetMapping("/installplace/resinfo")
@@ -64,5 +72,46 @@ public class InstallPlaceController {
 		placeMap.put("resInfo", resInfo);
 		placeMap.put("installPlace", installPlace);
 		return placeMap;
+	}
+	
+	/* Author: [윤준성]
+	 * API No.3-6. 설치 장소명 중복 체크
+	 * Info: 장소명이 이미 등록되어 있는지 확인 
+	 */
+	@GetMapping("/check/name")
+	@ResponseBody
+	public int checkPlaceName(@RequestParam("placeName") String placeName) {
+		int result = installPlaceService.checkPlaceNameBySn(placeName);
+		logger.info("result: " + result);
+		return result;
+	}
+	/*
+	 * Author: [윤준성]
+	 * API No.3-4. 주소 등록 [비동기]
+	 * Info: 상세 주소 등록 
+	 */
+	@PostMapping("/detailaddress")
+	@ResponseBody
+	public List<InstallPlace> installPlaceSave(@RequestBody InstallPlace installPlace) {
+		int result = installPlaceService.insertInstallPlace(installPlace);
+		logger.info("Test: " + installPlace);
+		List<InstallPlace> newInstallPlace = installPlaceService.selectAllPlace();
+		return newInstallPlace;
+	}
+	
+	/*
+	 * Author: [윤준성]
+	 * API No.3-5. 주소 수정 [비동기]
+	 * Info: 상세 주소 수정
+	 */
+	@PostMapping("/detailaddress/{placesn}")
+	@ResponseBody
+	public List<InstallPlace> updateInstallPlace(@PathVariable("placesn") String placesn, @RequestBody InstallPlace installPlace) {
+		logger.info("placesn: " + placesn);
+		logger.info("installPlace: " + installPlace);
+		int result = installPlaceService.updateInstallPlace(installPlace);
+		logger.info("result: " + result);
+		List<InstallPlace> newInstallPlace = installPlaceService.selectAllPlace();
+        return newInstallPlace;
 	}
 }
