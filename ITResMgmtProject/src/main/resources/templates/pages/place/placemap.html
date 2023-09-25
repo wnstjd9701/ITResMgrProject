@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="../common/layout/default">
+<head>
+<meta charset="UTF-8">
+<style>
+.place-map-container {
+	margin: 20px 20px 0 10px;
+	display: flex;
+	width: 80vw;
+}
+#map{
+	width: 45%; 
+	height: 90vh;
+}
+.place-list-container{
+	width: 50%;
+	margin:10px 0 0 10px;
+	padding: 0 0 0 10px;
+}
+.place-table{
+	font-size: 14px;
+}
+</style>
+</head>
+<th:block layout:fragment="content">
+	<div class="container">
+		<div class="place-map-container">
+			<div id="map"></div>
+			<div class="place-list-container">
+				<table class="table table-striped place-table">
+					<thead>
+						<tr>
+							<th>설치 장소명</th>
+							<th>우편 번호</th>
+							<th>주소</th>
+							<th>상세 주소</th>
+							<th>장비 개수</th>
+						</tr>
+					</thead>
+					<tbody class="place-table-body">
+						<tr th:each="place, i : ${place}">
+							<td class="place-count" th:text="${i.count}"></td>
+							<td class="place-name" th:text="${place.installPlaceName}"></td>
+							<td class="place-address"
+								th:text="${place.installPlaceAddress}"></td>
+							<td class="place-detail-address"
+								th:text="${place.installPlaceDetailAddress}"></td>
+							<td class="place-res-count" th:text="${place.resCount}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=28bed2e7a81023c99f56920a94503f99&libraries=services,clusterer"></script>
+<script th:inline="javascript">
+$(document).ready(function(){
+    var positions = /*[[${place}]]*/ [];
+
+    var container = document.getElementById('map');
+    var options = {
+        center : new kakao.maps.LatLng(37.402707, 126.922044),
+        level : 11
+    };
+
+    var map = new kakao.maps.Map(container, options);
+
+    var markers = positions.map(function(position){
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(position.latitude, position.longitude),
+            title: position.installPlaceName
+        });
+
+        // 마커에 대한 InfoWindow 생성
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div>' + position.installPlaceName + '</div>'
+        });
+
+        // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록하여 InfoWindow 표시 및 숨김
+        kakao.maps.event.addListener(marker, 'mouseover', function() {
+            infowindow.open(map, marker);
+        });
+
+        kakao.maps.event.addListener(marker, 'mouseout', function() {
+            infowindow.close();
+        });
+        
+        kakao.maps.event.addListener(marker, 'click', function() {
+        	var placeName = position.installPlaceName;
+            // Ajax 요청을 보냅니다
+            $.ajax({
+                url: '/map/detail', // 컨트롤러 엔드포인트 URL
+                type: 'POST', // 또는 'GET' 등 HTTP 요청 메서드 선택
+                data: JSON.stringify({ placeName: placeName }), // 마커 정보를 JSON 형식으로 전달
+                contentType: 'application/json', // 요청 데이터 타입
+                success: function(response) {
+                    // Ajax 요청이 성공하면 이 곳에서 처리
+                    console.log('Ajax 요청 성공:', response);
+                    updatePlace(response);
+                },
+                error: function(error) {
+                    // Ajax 요청이 실패하면 이 곳에서 처리
+                    console.error('Ajax 요청 실패:', error);
+                }
+            });
+        });
+
+        return marker;
+    });
+
+    var clusterer = new kakao.maps.MarkerClusterer({
+        map : map,
+        averageCenter : true,
+        minLevel : 5,
+        markers : markers,
+        disableClickZoom: true
+    });
+    
+    function updatePlace(place) {
+        console.log("업데이트 Place: " + place.installPlaceSn);
+
+        // 기존 테이블 행을 삭제합니다.
+        $(".place-table-body").empty();
+
+        // 새로운 데이터를 추가합니다.
+        var newRow = $("<tr>")
+            .append($("<td>").addClass("place-count").text("1"))
+            .append($("<td>").addClass("place-name").text(place.installPlaceName))
+            .append($("<td>").addClass("place-address").text(place.installPlaceAddress))
+            .append($("<td>").addClass("place-detail-address").text(place.installPlaceDetailAddress))
+            .append($("<td>").addClass("place-res-count").text(place.resCount));
+
+        // 테이블의 tbody에 새로운 행을 추가합니다.
+        $(".place-table tbody").append(newRow);
+    }
+});
+	</script>
+</th:block>
+</html>

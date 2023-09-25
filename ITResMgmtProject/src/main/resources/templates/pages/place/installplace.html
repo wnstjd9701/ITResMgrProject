@@ -173,19 +173,17 @@
 				<h2>설치 장소 관리</h2>
 			</div>
 			<div class="place-list-table-container">
-				<div class="place-list-container">
-					<h2>설치 장소</h2>
-					<div class="common-btn">
-						<input type="button" id="new-address" value="신규"> <input
-							type="button" id="edit-address" value="저장">
-					</div>
-				</div>
 				<div class="search-container">
+					<div class="common-btn">
+						<input id="search-btn" type="button" value="조회">
+						<input type="button" id="new-address" value="신규"> 
+						<input type="button" id="edit-address" value="저장">
+					</div>
+					<span>설치 장소명</span>
 					<input class="place-name-text" type="text" placeholder="장소명을 입력하세요">
-					<input id="search-btn" type="button" value="검색">
 				</div>
 				<div style="text-align: left;">
-					<input type="button" id="delete-address" value="행삭제">
+					<div><input type="button" id="delete-address" value="행삭제"></div>
 				</div>
 				<table class="table table-striped table-hover">
 					<thead>
@@ -202,7 +200,7 @@
 						<tr th:each="installPlace, i : ${installPlace}">
 							<td class="place-count" th:text="${i.count}"></td>
 							<td><input type="checkbox"
-								name="${installPlace.installPlaceSn" class="place-sn"
+								name="installPlaceSn" class="place-sn"
 								th:value="${installPlace.installPlaceSn}"></td>
 							<td class="place-name" th:text="${installPlace.installPlaceName}"></td>
 							<td class="place-address"
@@ -332,9 +330,16 @@ $(document).ready(function(){
 	    }
 	    return;
 	}
+	$(".place-sn").on("change", function() {
+		console.log($(this));
+	    if ($(this).prop("checked")) {
+	        $(".place-sn").not(this).prop("checked", false);
+	    }
+	});
 	
 	// 설치장소명으로 매핑된 자원, 상세 주소 조회
 	$(".place-list-table-container").on("click", ".place-name", function(){
+		unCheckbox();
 	    const placeName = $(this).text();
 
 	    $.ajax({
@@ -543,14 +548,8 @@ $(document).ready(function(){
 	function removePlaceDetail(){
 		$("#place-address-form")
 			.find("input")
-		    .not("[type='button']") // class가 find-postcode-btn인 요소를 제외합니다.
+		    .not("[type='button']") 
 		    .val('');		
-		/* $("#flag").val("");
-		$("#install-place-sn").val("");
-		$("#detail-place-name").val("");
-		$("#zip-code").val("");
-		$("#road-name-address").val("");
-		$("#detail-address").val(""); */
 		$("#map").empty();
 		$("#map").removeAttr("style");
 	}
@@ -606,8 +605,6 @@ $(document).ready(function(){
 					alert("성공");
 					// 수정 완료 후 장소 테이블 업데이트
 					updateInstallPlace(response);
-					const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
-			    	$(".resinfo-table-body").append(result);
 				},
 				error: function(xhr, status, err){
 					alert(err);
@@ -641,24 +638,61 @@ $(document).ready(function(){
 	// 장소명이 존재하는 지 체크
 	async function checkPlaceName(installPlaceSn, installPlaceName) {
     return new Promise(function(resolve, reject) {
-        $.ajax({
-            method: "GET",
-            url: "/check/name",
-            data: {
-                placeSn: installPlaceSn,
-                placeName: installPlaceName
-            },
-            success: function(response) {
-                console.log(response);
-                resolve(response); // 비동기 작업이 완료되면 결과를 resolve로 반환
-            },
-            error: function(xhr, status, err) {
-                alert("Error: " + err);
-                reject(err); // 오류가 발생한 경우 reject로 오류를 반환
-            }
-        });
+	        $.ajax({
+	            method: "GET",
+	            url: "/check/name",
+	            data: {
+	                placeSn: installPlaceSn,
+	                placeName: installPlaceName
+	            },
+	            success: function(response) {
+	                console.log(response);
+	                resolve(response); // 비동기 작업이 완료되면 결과를 resolve로 반환
+	            },
+	            error: function(xhr, status, err) {
+	                alert("Error: " + err);
+	                reject(err); // 오류가 발생한 경우 reject로 오류를 반환
+	            }
+	        });
+    	});
+	}
+	
+	function unCheckbox(){
+		const checkedCheckboxes = $(".place-sn:checked"); // 체크된 체크박스 선택
+	    const checkedValues = checkedCheckboxes.map(function() {
+	        return this.value;
+	    }).get(); // 체크된 체크박스의 값을 배열로 추출
+
+	    // 체크된 체크박스 해제
+	    checkedCheckboxes.prop("checked", false);
+	}
+	
+	$("#delete-address").click(() => {
+		const placesn = $(".place-sn:checked").eq(0).val(); // 첫 번째 체크된 요소의 값만 가져오기
+	    
+	    if (!placesn) {
+	        alert("삭제할 주소를 선택하세요.");
+	        return;
+	    }
+		console.log(placesn);
+    	$.ajax({
+    		method: "POST",
+    		url: "/delete/place",
+    		data: {
+    			placesn:placesn
+    		},
+    		success: function(response){
+    			alert("주소 삭제 완료");
+    			console.log(response);
+    			updateInstallPlace(response);
+    			unCheckbox();
+    		},
+    		error: function(xhr, status, err){
+    			alert(err)
+    		}
+    		
+    	})
     });
-}
 })
 </script>
 </th:block>
