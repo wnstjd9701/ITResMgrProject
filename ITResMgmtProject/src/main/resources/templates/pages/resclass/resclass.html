@@ -96,19 +96,21 @@ span.active {
 						<button style="float:right;" type="button" id="openAddItemModal">행추가</button>
 						</div>
 						<br>
-						<div class="addInfoTable">
-							<table>
+						<div class="addInfoTableClass">
+							<table class="addInfoTable">
 								<thead class="addInfoTableHead">
-									<th></th>
-									<th>일련번호</th>
+									<tr>
+									<th>선택</th>
 									<th>부가항목명</th>
 									<th>사용여부</th>
+									</tr>
 								</thead>
 								<tbody>
-									<td><input type="checkbox"/></td>
-									<td>dd</td>
-									<td>dd</td>
-									<td>dd</td>
+									<tr>
+									<td id="add-item-sn"></td>
+									<td id="add-item-name"></td>
+									<td id="add-item-use-yn"></td>
+									<tr>
 								</tbody>
 								
 							</table>
@@ -166,11 +168,11 @@ span.active {
               </tr>
           </tbody>
           </table>
-        </form>
-      </div>
       <div class="modal-footer">
-        <button type="button" onclick="saveSelectedItems()">저장</button>
+        <button type="submit">저장</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+      </div>
+        </form>
       </div>
     </div>
   </div>
@@ -178,6 +180,7 @@ span.active {
 <!-- 부가정보 리스트 모달창 -->
 <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
+  <form>
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addItemList">부가정보</h5>
@@ -196,42 +199,15 @@ span.active {
 				<tbody>
 				</tbody>
 				</table>
-		<!-- 페이징 -->
-			<div class="paging pagination">
-			<!-- 앞으로 가는 버튼 -->
-			<a href="#" onclick="movePage(1)"></a>
-			
-			<div th:if="${currentPage > 1}">
-			    <a href="#" th:if="${currentPage != null}" th:onclick="'movePage(' + (${currentPage} - 1) + ')'" class="left-btn"></a>
-			</div>
-			
-			<!-- 리스트 목록 나열 -->
-			<div id="number-list">
-			    <div class="page-btn">
-			        <div th:each="page : ${#numbers.sequence(startPage, endPage)}">
-			            <div th:if="${page} &lt;= ${totalPage}">
-			                <a href="javascript:void(0)" th:onclick="'movePage(' + ${page} + ')'" th:classappend="${currentPage == page} ? 'selected' : ''" class="pagination page-btn">
-			                    <span th:text="${page}"></span>
-			                </a>
-			            </div>
-			        </div>
-			    </div>
-			</div>
-			
-			<!-- 뒤로 가는 버튼 -->
-			<a href="#" th:if="${currentPage < totalPage}" class="right-btn" th:onclick="'movePage(' + (${currentPage} + 1) + ')">⏪</a>
-			
-			<a href="javascript:void(0);" th:if="${currentPage == totalPage}" class="right-btn"></a>
-			
-			<a href="#" class="end-btn" th:onclick="'movePage(' + (${totalPage}) + ')">⏩</a>
-
 		<div class="modal-footer">
-		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		  <button type="button" onclick="saveSelectedItems()">Save changes</button>
+		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+		  <button type="button" id="check-additem">확인</button>
 		</div>
-			</div>
-	  </div>
-</div>
+		</div>
+	  	</div>
+		</div>
+  </form>
+	</div>
 </div>
 
 

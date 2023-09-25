@@ -9,7 +9,7 @@ public class AddItem {
 	private int addItemSn;
 	private String addItemName;
 	private String addItemDesc;
-	private char useYN;
+	private String  useYN;
 	private Timestamp createDate;
 	private String createrId;
 	private Timestamp updateDate;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.dao.IResClassRepository;
@@ -33,8 +34,10 @@ public class ResClassService implements IResClassService {
 	}
 
 	@Override
+	@Transactional
 	public void insertResClass(ResClass resClass) {
 		resClassRepository.insertResClass(resClass);
+		resClassRepository.insertAddItemToResClass(resClass.getResClassId(), resClass.getAddItemSn());
 		
 	}
 
@@ -47,6 +50,7 @@ public class ResClassService implements IResClassService {
 	public List<AddItem> selectAddItemInResClass() {
 		return resClassRepository.selectAddItemInResClass();
 	}
+
 
 
 

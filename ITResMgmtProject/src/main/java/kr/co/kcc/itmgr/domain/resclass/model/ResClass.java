@@ -26,6 +26,11 @@ public class ResClass {
 	private String upperResClassName;
 	private String bottomResClassName;
 	
+	//AddItem 매핑
+	private int addItemSn;
+	private String addItemName;
+	private String addItemDesc;
+	private String addItemUseYn;
 	
 
 	
