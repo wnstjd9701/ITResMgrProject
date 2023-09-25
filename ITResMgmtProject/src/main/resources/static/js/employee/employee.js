@@ -5,45 +5,76 @@ function addRow() {
 	const table = document.getElementById("empTable");
 	const newRow = table.insertRow();
 	newRow.setAttribute("data-row-id", rowCount);
-	
+
 	const newCell0 = newRow.insertCell(0);
-	newCell0.innerHTML = "<input type='checkBox' name='addCheckbox'>";
+	newCell0.innerHTML = "<input type='checkbox' name='addCheckbox'>";
 
 	const newCell1 = newRow.insertCell(1);
-	newCell1.innerHTML = "<input type='text' id='empId" + rowCount + "' size='10'>";
+	newCell1.innerHTML = "<span name='hiddenBox'>I</span>";
 
 	const newCell2 = newRow.insertCell(2);
-	newCell2.innerHTML = "<input type='text' id='empName" + rowCount + "' size='10'>";
+	newCell2.innerHTML = "<input type='text' id='empId" + rowCount + "'>";
 
 	const newCell3 = newRow.insertCell(3);
-	const selectEmpType = document.querySelector('select[name="searchEmpTypeList"]');
-	//selectEmpType 하위 자식 요소들도 함께 복제하여 clonedSelect에 저장
-	const clonedSelect = selectEmpType.cloneNode(true);
-	clonedSelect.id = 'empTypeCode' + rowCount;
-	newCell3.appendChild(clonedSelect);
+	newCell3.innerHTML = "<input type='text' id='empName" + rowCount + "'>";
 
+	//<select>에서 전체옵션 뺀 나머지 옵션
 	const newCell4 = newRow.insertCell(4);
-	const selectEmpStatus = document.querySelector('select[name="searchEmpStatusList"]');  
-	const clonedSelect2 = selectEmpStatus.cloneNode(true);
+	const clonedSelect = document.createElement('select');
+	clonedSelect.id = 'empTypeCode' + rowCount;
+	clonedSelect.name = 'empTypeList'; // 선택 목록의 name 속성 설정
+
+	document.querySelectorAll('#searchEmpTypeList option:not(:first-child)').forEach((option) => {
+		const clonedOption = document.createElement('option');
+		clonedOption.value = option.value;
+		clonedOption.textContent = option.textContent;
+		clonedSelect.appendChild(clonedOption);
+	});
+
+	newCell4.appendChild(clonedSelect);
+
+	const newCell5 = newRow.insertCell(5);
+	const clonedSelect2 = document.createElement('select');
 	clonedSelect2.id = 'empTypeStatus' + rowCount;
-	newCell4.appendChild(clonedSelect2);
+	clonedSelect2.name = 'empStatusList';
+
+	document.querySelectorAll('#searchEmpStatusList option:not(:first-child)').forEach((option) => {
+		const clonedOption2 = document.createElement('option');
+		clonedOption2.value = option.value;
+		clonedOption2.textContent = option.textContent;
+		clonedSelect2.appendChild(clonedOption2);
+	});
+
+	newCell5.appendChild(clonedSelect2);
+
 
 	rowCount++;
 }
 
 
+
 //행삭제 버튼 (행숨김)
 function hideRow() {
+	//원래 있던 사원 삭제
 	const selectedCheckboxes = document.querySelectorAll('input[name="empCheckbox"]:checked');
-	const hiddenBox = document.querySelector("input[name='hiddenBox']");
+	const hiddenBox = document.querySelector("span[name='hiddenBox']").textContent;
+	console.log("hiddenBox", hiddenBox);
 
 	selectedCheckboxes.forEach(function(checkbox) {
 		const row = checkbox.closest('tr');
-		row.style.display = 'none';
-		row.querySelector("input[name='hiddenBox']").value = "d";
+		//row.style.display = 'none';
+		row.querySelector("span[name='hiddenBox']").textContent = "d";
 	});
 
-	console.log("hiddenBox.value", hiddenBox.value)
+	//console.log("hiddenBox.value", hiddenBox.value);
+
+	//행추가 후 행삭제
+	const insertCheckboxes = document.querySelectorAll('input[name="addCheckbox"]:checked');
+	insertCheckboxes.forEach(function(checkbox) {
+		const row = checkbox.closest('tr');
+		row.remove();
+		rowCount--;
+	});
 }
 
 
@@ -52,8 +83,8 @@ function hideRow() {
 function saveList() {
 	//Insert
 	if (rowCount > 0) {
-		const employee = new Array();
-		for (const i = 0; i < rowCount; i++) {
+		var employee = new Array();
+		for (var i = 0; i < rowCount; i++) {
 			const empId = document.getElementById('empId' + i).value;
 			const empName = document.getElementById('empName' + i).value;
 
@@ -82,7 +113,7 @@ function saveList() {
 	var hiddenFields = document.getElementsByName("hiddenBox");
 
 	for (var i = 0; i < hiddenFields.length; i++) {
-		var hiddenValue = hiddenFields[i].value;
+		var hiddenValue = hiddenFields[i].textContent;
 		if (hiddenValue === "d") {
 			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
 			var row = hiddenFields[i].closest("tr");
@@ -96,7 +127,7 @@ function saveList() {
 	var hiddenFields = document.getElementsByName("hiddenBox");
 	var updatedEmployeeInfo = [];
 	for (var i = 0; i < hiddenFields.length; i++) {
-		var hiddenValue = hiddenFields[i].value;
+		var hiddenValue = hiddenFields[i].textContent;
 		if (hiddenValue === "u") {
 			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
 			var row = hiddenFields[i].closest("tr");
@@ -167,7 +198,8 @@ function saveList() {
 		contentType: 'application/json',
 		data: JSON.stringify(requestData),
 		success: function(response) {
-			console.log("response", response)
+
+			console.log("response", response);
 			rowCount = 0;
 
 
@@ -176,22 +208,52 @@ function saveList() {
 			for (var i = 0; i < response.length; i++) {
 				var addTableRow = "<tr>" +
 					"<td><input type='checkbox' name='empCheckbox'></td>" +
+					"<td><span name='hiddenBox'>E</span></td>" +
 					"<td name='employeeId'>" + response[i].employeeId + "</td>" +
 					"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
 					"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
 					"<select name='empTypeList' class='select' style='display: none;'>" +
-					"<option value=''>선택</option>" +
 					"<option value='EMT002'>IT자원관리자</option>" +
 					"<option value='EMT001'>시스템관리자</option>" +
 					"</select>" + "</td>" +
 					"<td name='employeeStatus' onclick='handleClick(this)'>" + "<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>" +
 					"<select name='empStatusList' class='select' style='display: none;'>" +
-					"<option value=''>선택</option>" +
 					"<option value='EMS001'>재직중</option>" +
 					"<option value='EMS002'>휴직중</option>" +
 					"<option value='EMS003'>퇴직</option>" +
 					"</select>" + "</td>" +
-					"<td><input type='hidden' name='hiddenBox'></td>" + "</tr>";
+					"</tr>";
+
+
+				/*	var addTableRow = "<tr id='empList'>" +
+						"<td><input type='checkbox' name='empCheckbox'></td>" +
+						"<td><span name='hiddenBox'>E</span></td>" +
+						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
+						"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
+						"<td onclick='handleClick(this)' name='employeeType'>" +
+						"<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
+						"<select name='empTypeList' class='select' style='display: none;'>";
+	
+					//console.log("commonCodeTypeList", commonCodeTypeList);
+					// employeeType 선택 목록 추가
+					for (var j = 0; j < commonCodeTypeList.length; j++) {
+						var commonCode = commonCodeTypeList[j];
+						addTableRow += "<option value='" + commonCode.key + "'>" + commonCode.value + "</option>";
+					}
+	
+					addTableRow += "</select></td>" +
+						"<td onclick='handleClick(this)' name='employeeStatus'>" +
+						"<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>" +
+						"<select name='empStatusList' class='select' style='display: none;'>";
+	
+					// employeeStatus 선택 목록 추가
+					for (var k = 0; k < commonCodeStatusList.length; k++) {
+						var commonCode2 = commonCodeStatusList[k];
+						addTableRow += "<option value='" + commonCode2.key + "'>" + commonCode2.value + "</option>";
+					}
+	
+					addTableRow += "</select></td></tr>";*/
+
 
 
 				$('#empTable > tbody').append(addTableRow);
@@ -204,10 +266,7 @@ function saveList() {
 	});
 }
 
-
-
-// 모든 셀을 클릭 이벤트 핸들러에 연결
-const cells = document.querySelectorAll('td[name="employeeName"], td[name="employeeType"], td[name="employeeStauts"]');
+const cells = document.querySelectorAll('td[name="employeeName"], td[name="employeeType"], td[name="employeeStatus"]');
 
 cells.forEach((cell) => {
 	cell.addEventListener('click', function() {
@@ -215,25 +274,24 @@ cells.forEach((cell) => {
 	});
 });
 
-
-// name, 유형, 상태를 클릭하면 'u' 값을 hiddenBox에 넣기
 function handleClick(element) {
-	const hiddenBox = element.closest('tr').querySelector("input[name='hiddenBox']");
-	hiddenBox.value = 'u';
+	const hiddenBox = element.closest('tr').querySelector("span[name='hiddenBox']");
+	hiddenBox.textContent = 'u';
 
 	// 클릭한 셀이 'employeeType' 또는 'employeeStatus'인 경우에만 showSelectBox 함수 실행
 	if (element.getAttribute('name') === 'employeeType' || element.getAttribute('name') === 'employeeStatus') {
 		showSelectBox(element);
 	}
-
 }
-
 
 function showSelectBox(listItem) {
 	const textElement = listItem.querySelector(".text");
 	textElement.style.display = "none";
 
 	const selectElement = listItem.querySelector(".select");
+
+
+
 	selectElement.style.display = "inline-block";
 
 	selectElement.focus();
@@ -244,6 +302,20 @@ function showSelectBox(listItem) {
 		textElement.style.display = "inline-block";
 		selectElement.style.display = "none";
 	});
+
+	// 현재 선택한 text 값
+	const selectedText = textElement.textContent;
+
+	// select 요소 내의 모든 option 요소를 가져옵니다.
+	const options = Array.from(selectElement.options);
+
+	// 선택한 셀의 값을 기반으로 첫 번째 옵션을 선택 상자에 표시합니다.
+	for (let i = 0; i < options.length; i++) {
+		if (options[i].textContent === selectedText) {
+			selectElement.selectedIndex = i;
+			break; // 찾았으므로 루프 종료
+		}
+	}
 }
 
 
@@ -279,6 +351,7 @@ function searchList() {
 				for (var i = 0; i < response.length; i++) {
 					var addTableRow = "<tr>" +
 						"<td><input type='checkbox' name='empCheckbox'></td>" +
+						"<td><input type='' name='hiddenBox'></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
 						"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
 						"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
@@ -294,13 +367,16 @@ function searchList() {
 						"<option value='EMS002'>휴직중</option>" +
 						"<option value='EMS003'>퇴직</option>" +
 						"</select>" + "</td>" +
-						"<td><input type='hidden' name='hiddenBox'></td>" + "</tr>";
+						"</tr>";
 
 
 					$('#empTable > tbody').append(addTableRow);
 				}
 			}
 			return;
+		},
+		error: function(request, status, error) {
+			alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 		}
 	});
 }

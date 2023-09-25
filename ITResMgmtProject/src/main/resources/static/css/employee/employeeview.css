@@ -9,5 +9,53 @@
 }
 
 #searchButton{
-	margin-left:5px;
+	margin-left:450px;
+}
+
+/* 테이블 */
+/* #empTable {
+    width: 120%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+#empTable th, #empTable td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#empTable th {
+    background-color: #f2f2f2;
+}
+
+#empTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#empTable tbody tr:hover {
+    background-color: #ddd;
+}
+
+ */
+/* 테이블 컨테이너에 스타일링 추가 */
+.table-container {
+    max-height: 1000px; 
+    overflow-y: auto; 
+    position: relative; 
+}
+
+.table-container table {
+    width: 100%;
+}
+
+.table-container thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+}
+
+#title{
+	font-size:20px;
+	
 }
