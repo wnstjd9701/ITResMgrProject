@@ -7,19 +7,25 @@ function addItemAddRow() {
 	newRow.setAttribute("data-row-id", rowCount);
 
 	var newCell0 = newRow.insertCell(0);
-	newCell0.innerHTML = "<input type='checkbox' name='checkBox'>";
-
+	newCell0.innerHTML = "<input type='checkbox' name='insertCheckBox'>";
+	
 	var newCell1 = newRow.insertCell(1);
-	/*	newCell1.innerHTML = "<input type='text' id='addItemSn" + rowCount + "' size='5'>";*/
+	newCell1.innerHTML = "<span name='status'>I</span>";
+	
+	
+	
 
 	var newCell2 = newRow.insertCell(2);
-	newCell2.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='15'>";
+	/*	newCell1.innerHTML = "<input type='text' id='addItemSn" + rowCount + "' size='5'>";*/
 
 	var newCell3 = newRow.insertCell(3);
-	newCell3.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "' size='40'>";
+	newCell3.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='15'>";
 
 	var newCell4 = newRow.insertCell(4);
-	newCell4.innerHTML = "<select id='addItemUseYN" + rowCount + "'>" +
+	newCell4.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "' size='40'>";
+
+	var newCell5 = newRow.insertCell(5);
+	newCell5.innerHTML = "<select id='addItemUseYN" + rowCount + "'>" +
 		"<option value='Y'>Y</option>" +
 		"<option value='N'>N</option>" +
 		"</select>";
@@ -59,6 +65,7 @@ function addItemsearch() {
 				for (var i = 0; i < response.length; i++) {
 					var addTableRow = "<tr>" +
 						"<td><input type='checkbox' name='checkBox'></td>" +
+						"<td><span name='status'>E</span></td>" +
 						"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 						"<td name='addItemName'>" + response[i].addItemName + "</td>" +
 						"<td name='addItemDesc'>" + response[i].addItemDesc + "</td>" +
@@ -78,15 +85,22 @@ function addItemsearch() {
 //행삭제 버튼 (행숨김)
 function addItemHideRow() {
 	const selectedCheckboxes = document.querySelectorAll('input[name="checkBox"]:checked');
-	const hiddenBox = document.querySelector("input[name='hiddenBox']");
+	//const hiddenBox = document.querySelector("span[name='status']");
 
 	selectedCheckboxes.forEach(function(checkbox) {
 		var row = checkbox.closest('tr');
-		row.style.display = 'none';
-		row.querySelector("input[name='hiddenBox']").value = "d";
+		//row.style.display = 'none';
+		row.querySelector("span[name='status']").textContent = "d";
+	});
+	
+	//행추가 후 행삭제
+	const insertCheckboxes = document.querySelectorAll('input[name="insertCheckBox"]:checked');
+	insertCheckboxes.forEach(function(checkbox) {
+		const row = checkbox.closest('tr');
+		row.remove();
+		rowCount--;
 	});
 
-	console.log("hiddenBox.value", hiddenBox.value)
 }
 
 
@@ -117,13 +131,13 @@ function addItemSaveAll() {
 	//Delete
 	var deletedAddItems = [];
 
-	var hiddenFields = document.getElementsByName("hiddenBox");
+	var spanFields = document.getElementsByName("status");
 
-	for (var i = 0; i < hiddenFields.length; i++) {
-		var hiddenValue = hiddenFields[i].value;
-		if (hiddenValue === "d") {
+	for (var i = 0; i < spanFields.length; i++) {
+		var spanValue = spanFields[i].textContent;
+		if (spanValue === "d") {
 			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
-			var row = hiddenFields[i].closest("tr");
+			var row = spanFields[i].closest("tr");
 			var addItemSn = row.querySelector('[name="addItemSn"]').textContent;
 			console.log("addItemSn : ", addItemSn);
 			deletedAddItems.push(addItemSn);
@@ -154,6 +168,7 @@ function addItemSaveAll() {
 				for (var i = 0; i < response.length; i++) {
 					var addTableRow = "<tr>" +
 						"<td><input type='checkbox' name='checkBox'></td>" +
+						"<td><span name='status'>E</span></td>" +
 						"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 						"<td name='addItemName'>" + response[i].addItemName + "</td>" +
 						"<td name='addItemDesc'>" + response[i].addItemDesc + "</td>" +
