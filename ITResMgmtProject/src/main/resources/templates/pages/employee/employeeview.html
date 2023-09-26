@@ -11,7 +11,7 @@
 <body>
 	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 	<div class="container" style="margin-left: 270px;" id="searchBar">
-
+		<p id="title">사원정보</p>
 		<p id="p1">사원유형</p>
 		<select id="searchEmpTypeList" name="searchEmpTypeList">
 			<option value=''>전체</option>
@@ -32,38 +32,38 @@
 		<p id="p3">사원ID 및 사원명</p>
 		<input id="searchText" type="text" placeholder="사원ID 및 사원명 입력">
 
-		<input id="searchButton" type="button" value="검색"
-			onclick="searchList()" />
+			<div style="text-align: right;">
+				<input id="searchButton" type="button" value="조회" onclick="searchList()"/> 
+				<input type="button" value="행추가" onclick="addRow()" /> 
+				<input type="button" value="행삭제" onclick="hideRow()" /> 
+				<input type="submit" id="i_submit" onclick="saveList()" value="저장" />
+			</div>
 	</div>
-
-	<div class="container" style="margin-left: 1250px;">
-		<input type="button" value="행추가" onclick="addRow()" /> <input
-			type="button" value="행삭제" onclick="hideRow()" /> <input
-			type="submit" id="i_submit" onclick="saveList()" value="저장" />
-	</div>
-
 
 	<div class="container" id="employeeTable" style="margin-left: 270px;">
+	<div class="table-container">
 		<table id="empTable" class="table table-striped">
 			<thead>
 				<tr>
 					<th>선택</th>
+					<th>상태</th>
 					<th>사원ID</th>
 					<th>사원명</th>
 					<th>사원유형</th>
 					<th>사원상태</th>
 				</tr>
 			</thead>
-			<tbody id="employee-table-body">
+			<tbody>
 				<tr th:each="employeeList : ${employeeList}" id="empList">
 					<td><input type="checkbox" name="empCheckbox"></td>
+					<!-- <td><input type="text" name="hiddenBox"></td> -->
+					<td><span name="hiddenBox">E</span></td>
 					<td th:text="${employeeList.employeeId}" name="employeeId"></td>
 					<td th:text="${employeeList.employeeName}" name="employeeName"
 						contenteditable="true" onclick="handleClick(this)"></td>
 					<td onclick="handleClick(this)" name="employeeType"><span
 						class="text" th:text="${employeeList.employeeType}" name="empType"></span>
 						<select name="empTypeList" class="select" style="display: none;">
-							<option value=''>선택</option>
 							<th:block th:each="commonCode: ${commonCodeTypeList}">
 								<option th:value="${commonCode.key}"
 									th:text="${commonCode.value}"></option>
@@ -73,18 +73,17 @@
 						class="text" th:text="${employeeList.employeeStatus}"
 						name="empStatus"></span> <select name='empStatusList'
 						class="select" style="display: none;">
-							<option value=''>선택</option>
 							<th:block th:each="commonCode2: ${commonCodeStatusList}">
 								<option th:value="${commonCode2.key}"
 									th:text="${commonCode2.value}"></option>
 							</th:block>
 					</select></td>
-					<td><input type="hidden" name="hiddenBox"></td>
 				</tr>
 			</tbody>
 		</table>
+		</div>
 	</div>
-
+	
 
 	<script src="js/employee/employee.js"></script>
 </body>
