@@ -197,6 +197,47 @@ span.active {
 				<tbody>
 				</tbody>
 				</table>
+		<!-- 페이징 -->
+			<div class="paging pagination">
+
+				<!-- 앞으로 가는 버튼 -->
+				<a href="#" onclick="movePage(1)"></a>
+
+				<c:choose>
+					<c:when test="${currentPage > 1}">
+						<a href="#" th:if="${currentPage != null}"  th:onclick="'movePage(' + (${currentPage} - 1) + ')'"></a>
+					</c:when>
+					<c:otherwise>
+						<a href="#" class="left-btn"></a>
+					</c:otherwise>
+				</c:choose>
+				<!-- 리스트 목록 나열 -->
+				<div id="number-list">
+					<div class="page-btn">
+						<c:forEach var="page" begin="${startPage}" end="${endPage}" step="1">
+							<c:if test="${page <= totalPage}">
+							<a href="javascript:void(0)" th:onclick="'movePage(' + ${page} + ')'" 
+   								class="pagination page-btn" th:class="${currentPage == page ? 'selected' : ''}"><span th:text="${page}"></span></a>
+							</c:if>
+						</c:forEach>
+					</div>
+				</div>
+
+				<!-- 뒤로 가는 버튼 -->
+				<c:if test="${currentPage < totalPage}">
+					<a href="#" class="right-btn" th:onclick="'movePage(' + (${currentPage} + 1) + ')'"> 
+					⏪
+					</a>
+				</c:if>
+				<c:if test="${currentPage == totalPage}">
+					<a href="javascript:void(0);" class="right-btn"> 
+					
+					</a>
+				</c:if>
+
+				<a href="#" class="end-btn" th:onclick="'movePage(' + (${totalPage}) + ')'" >
+				⏩
+				</a>
 		   	 	</div>
 			</div>
 		<div class="modal-footer">
@@ -237,7 +278,7 @@ $(document).ready(function() {
     });
   });
   
-
+  
 </script>
 </body>
 </html>
