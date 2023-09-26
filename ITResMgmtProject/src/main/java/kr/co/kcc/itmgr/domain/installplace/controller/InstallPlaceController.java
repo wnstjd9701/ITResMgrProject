@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +32,9 @@ public class InstallPlaceController {
 	private final IInstallPlaceService installPlaceService;
 	
 	/*
-	 * Author: [윤준성]
-	 * API No.3-1. 설치 장소 페이지
-	 * Info: 설치 장소 모두 조회
+	 * @Author: [윤준성]
+	 * @API No.3-1. 설치 장소 페이지
+	 * @Info: 설치 장소 모두 조회
 	 */
 	@GetMapping("/installplace")
 	public String selectInstallPlace(Model model) {
@@ -45,9 +46,9 @@ public class InstallPlaceController {
 	}
 	
 	/*
-	 * Author: [윤준성]
-	 * API No.3-2. 설치 장소 검색 [비동기]
-	 * Info: 설치장소명으로 설치 장소 검색 
+	 * @Author: [윤준성]
+	 * @API No.3-2. 설치 장소 검색 [비동기]
+	 * @Info: 설치장소명으로 설치 장소 검색 
 	 */
 	@GetMapping("/installplace/search")
 	@ResponseBody
@@ -58,9 +59,9 @@ public class InstallPlaceController {
 	}
 	
 	/*
-	 * Author: [윤준성]
-	 * API No.3-3. 자원 정보 및 상세 주소 조회 [비동기]
-	 * Info: 설치 장소 이름으로 자원 정보 조회
+	 * @Author: [윤준성]
+	 * @API No.3-3. 자원 정보 및 상세 주소 조회 [비동기]
+	 * @Info: 설치 장소 이름으로 자원 정보 조회
 	 */
 	@GetMapping("/installplace/resinfo")
 	@ResponseBody
@@ -74,9 +75,9 @@ public class InstallPlaceController {
 		return placeMap;
 	}
 	
-	/* Author: [윤준성]
-	 * API No.3-6. 설치 장소명 중복 체크
-	 * Info: 장소명이 이미 등록되어 있는지 확인 
+	/* @Author: [윤준성]
+	 * @API No.3-6. 설치 장소명 중복 체크
+	 * @Info: 장소명이 이미 등록되어 있는지 확인 
 	 */
 	@GetMapping("/check/name")
 	@ResponseBody
@@ -86,9 +87,9 @@ public class InstallPlaceController {
 		return result;
 	}
 	/*
-	 * Author: [윤준성]
-	 * API No.3-4. 주소 등록 [비동기]
-	 * Info: 상세 주소 등록 
+	 * @Author: [윤준성]
+	 * @API No.3-4. 주소 등록 [비동기]
+	 * @Info: 상세 주소 등록 
 	 */
 	@PostMapping("/detailaddress")
 	@ResponseBody
@@ -100,18 +101,33 @@ public class InstallPlaceController {
 	}
 	
 	/*
-	 * Author: [윤준성]
-	 * API No.3-5. 주소 수정 [비동기]
-	 * Info: 상세 주소 수정
+	 * @Author: [윤준성]
+	 * @API No.3-5. 주소 수정 [비동기]
+	 * @Info: 상세 주소 수정
 	 */
 	@PostMapping("/detailaddress/{placesn}")
 	@ResponseBody
 	public List<InstallPlace> updateInstallPlace(@PathVariable("placesn") String placesn, @RequestBody InstallPlace installPlace) {
-		logger.info("placesn: " + placesn);
-		logger.info("installPlace: " + installPlace);
 		int result = installPlaceService.updateInstallPlace(installPlace);
-		logger.info("result: " + result);
 		List<InstallPlace> newInstallPlace = installPlaceService.selectAllPlace();
         return newInstallPlace;
+	}
+	
+	/*
+	 *  @Author: [윤준성]
+	 *  @API No.3-6. 주소 삭제 [비동기]
+	 *  @Info: 기존 주소 삭제 
+	 */
+	@PostMapping("/delete/place")
+	public ResponseEntity<Object> deleteInstallPlace(@RequestParam("placesn") int placesn) {
+	    logger.info("placesn: " + placesn);
+	    boolean result = installPlaceService.deleteInstallPlace(placesn);
+
+	    if (result) {
+	        List<InstallPlace> newInstallPlace = installPlaceService.selectAllPlace();
+	        return ResponseEntity.ok(newInstallPlace); // 성공 시 200 OK와 데이터 반환
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail"); // 실패 시 500 Internal Server Error와 실패 메시지 반환
+	    }
 	}
 }

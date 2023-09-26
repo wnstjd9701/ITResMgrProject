@@ -21,4 +21,9 @@ public class InstallPlace {
 	
 	// 자원 매핑 개수
 	private int resCount;
+	
+	//도 이름
+	private String doName;
+	private double doLatitude;
+	private double doLongitude;
 }

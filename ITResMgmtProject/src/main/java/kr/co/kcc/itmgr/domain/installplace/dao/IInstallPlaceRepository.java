@@ -21,4 +21,5 @@ public interface IInstallPlaceRepository {
 	int checkPlaceNameBySn(String placeName); // 설치 장소명 중복 체크
 	int insertInstallPlace(InstallPlace installPlace); // 설치 장소 등록 
 	int updateInstallPlace(InstallPlace installPlace); // 설치 장소 수정
+	boolean deleteInstallPlace(int placesn); // 설치 장소 삭제 
 }

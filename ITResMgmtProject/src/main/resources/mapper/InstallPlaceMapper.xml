@@ -147,4 +147,10 @@
 		WHERE
 		    install_place_name = #{placeName}
 	</select>
+	
+	<delete id="deleteInstallPlace" parameterType="int">
+		DELETE installplace
+		WHERE
+		    install_place_sn = #{placesn}
+	</delete>
 </mapper>
