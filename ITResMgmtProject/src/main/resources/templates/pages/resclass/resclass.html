@@ -4,240 +4,214 @@
 <meta charset="utf-8">
 <link th:href="@{/css/resclass/menutree.css}" rel="stylesheet" />
 <link th:href="@{/css/resclass/resclass.css}" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+	integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+	crossorigin="anonymous"></script>
 <div th:replace="~{../common/fragments/head :: fragment-head}"></div>
-<style>
-div.paging {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  margin-top: 20px;
-  justify-content: center;
-}
-
-div.paging>i,
-div.paging>div.pages {
-  margin: 0 10px;
-}
-
-div.paging>i,
-div.paging>div.pages>span {
-  margin: 0 3px;
-  cursor: pointer;
-}
-
-span.active {
-  color: orangered;
-  font-weight: bold;
-}
-</style>
 </head>
 <body>
-<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-<div class="container" style="margin:50px 0 50px 270px; width:1150px;">
-	<button type="button" class="btn btn-primary" style="float:right;margin-left: 10px; background-color:navy;">저장</button>
-	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resClassInsertModal" style="float:right; background-color:navy;" >신규</button>
-</div>
-<div class="container" style="margin-top:70px; display:flex; clear:both;">
-    <div class="flex-item" style="width: 1200px;">
-        <div class="col-md-12">
+	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
+	<div class="container"
+		style="margin: 50px 0 50px 270px; width: 1150px;">
+		<button type="button" onClick="window.location.reload()"
+			class="btn btn-primary"
+			style="float: right; margin-left: 10px; background-color: navy;">조회</button>
+		<button type="button" class="btn btn-primary"
+			style="float: right; margin-left: 10px; background-color: navy;">저장</button>
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+			data-bs-target="#resClassInsertModal"
+			style="float: right; background-color: navy;">신규</button>
+	</div>
 
-            <ul th:each="res:${resClassMap}" class="tree2">[[${res.key}]]
+<div class="container" style="display: flex; clear: both;">
+    <!-- 첫 번째 컨테이너 -->
+    <div class="first-container">
+        <div class="col-md-12">
+            <ul th:each="res:${resClassMap}" class="tree2">
+                [[${res.key}]]
                 <li></li>
                 <ul>
                     <li th:each="rv:${res.value}">[[${rv.key}]](<span id="resultNumOfRes"></span>)
                         <ul>
-                            <li th:each="name:${rv.value}" th:value="${name}"><a href="#" class="resClassDetail">[[${name}]]</a>(<span id="number" th:text="${numOfRes.get('__${name}__')}"/>)</li>
+                            <li th:each="name:${rv.value}" th:value="${name}">
+                                <a href="#" class="resClassDetail">[[${name}]]</a>(<span id="number" th:text="${numOfRes.get('__${name}__')}" />)
+                            </li>
                         </ul>
                     </li>
                 </ul>
             </ul>
         </div>
     </div>
-			<div class="flex-item" style="width:1200px;">
-			
-				<div class="row">
-					<div class="col-md-16">
-						<table id="resClassDetailTable" class="table table-hover">
-						 <tbody>
-							    <tr>
-							      <th scope="row">대 분 류</th>
-							      	<td id="topUpperResClassNameCell">
-							      	</td>
-							      
-							    </tr>
-							    <tr>
-							      <th scope="row">중 분 류</th>
-							      	<td id="upperResClassNameCell">
-							      	</td>
-							    </tr>
-							    <tr>
-							      <th scope="row">소 분 류</th>
-							      	<td id="resClassNameCell">
-							      	</td>
-							    </tr>
-							    <tr>
-							      <th scope="row">사용여부</th>
-							      	<td id="useYNCell">
-							      	</td>
-							    </tr>
-							    <tr>
-							      <th scope="row">분류명</th>
-							      	<td id="resClassName2Cell">
-							      	</td>
-							    </tr>
-						    </tbody>
-						</table>
-						<div>➕부 가 정 보</div>
-						<br>
-						<div class="addInfoTable">
-							<table>
-								<thead class="addInfoTableHead">
-									<th></th>
-									<th>일련번호</th>
-									<th>부가항목명</th>
-									<th>사용여부</th>
-								</thead>
-								<tbody>
-									<td><input type="checkbox"/></td>
-									<td>dd</td>
-									<td>dd</td>
-									<td>dd</td>
-								</tbody>
-								
-							</table>
-						</div>
-					</div>
+	<div style="width: 5%;"></div>
+    <!-- 두 번째 컨테이너 -->
+    <div class="second-container">
+        <div class="row">
+            <div class="col-md-16">
+                <table id="resClassDetailTable" class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <th scope="row">대 분 류</th>
+                            <td id="topUpperResClassNameCell"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">중 분 류</th>
+                            <td id="upperResClassNameCell"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">소 분 류</th>
+                            <td id="resClassNameCell"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">사용여부</th>
+                            <td id="useYNCell"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">분류명</th>
+                            <td id="resClassName2Cell"></td>
+                        </tr>
+                    </tbody>
+                </table>
+				<div>
+				     ➕부 가 정 보
+				    <button style="margin-right: 5px; float: right;" type="button">행삭제</button>
+				    <button style="margin-right: 5px;float: right;" type="button" id="openAddItemModal">행추가</button>
+				</div>
+				<br>
+				<div class="addInfoTableClass">
+				    <table class="table" id="addInfoTable">
+				        <thead class="addInfoTableHead">
+				            <tr>
+				                <th>선택</th>
+				                <th>부가항목명</th>
+				                <th>사용여부</th>
+				            </tr>
+				        </thead>
+				        <tbody>
+				            <tr>
+				                <td id="add-item-sn"></td>
+				                <td id="add-item-name"></td>
+				                <td id="add-item-use-yn"></td>
+				            </tr>
+				        </tbody>
+				    </table>
 				</div>
 			</div>
-</div>
-
-
-<!-- 자원분류 등록 모달창 -->
-<div class="modal fade" id="resClassInsertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">자원분류 등록</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Content of the modal -->
-        <form id="resClassSave" name="resClassSave" method="post" th:action="@{/resclass/insert}">
-          <label for="resClassLevel" class="form-label">분류 레벨</label>
-			<select class="form-select" id="resClassLevel">
-			    <option value="null">선택안함</option>
-			    <option value="1">대분류</option>
-			    <option value="2">중분류</option>
-			</select>
-			
-			<div class="mb-3">
-			    <label for="resClassByLevel" class="form-label">분류</label>
-			    <select class="form-select" id="resClassByLevel" name="upperResClassId">
-			        <option data-level="null" th:each="level:${selectResClassByLevel}" th:text="${level.resClassName}" th:value="${level.resClassId}"></option>
-			        <option data-level="1" th:each="level:${selectResClassByLevel}" th:if="${level.level}==1" th:text="${level.resClassName}" th:value="${level.resClassId}"></option>
-			        <option data-level="2" th:each="level:${selectResClassByLevel}" th:if="${level.level}==2" th:text="${level.resClassName}" th:value="${level.resClassId}"></option>
-			    </select>
-			</div>
-          <table class="table">
-            <tbody>
-              <tr>
-                <th scope="row">자원ID</th>
-                <td><input type="text" class="form-control" id="resClassId" name="resClassId"></td>
-              </tr>
-              <tr>
-                <th scope="row">자원분류명</th>
-                <td><input type="text" class="form-control" id="resClassName" name="resClassName"></td>
-              </tr>
-              <tr>
-                <th scope="row">사용여부</th>
-                <td>
-                  <select class="form-select" name="useYn">
-                    <option value="Y">Y</option>
-                    <option value="N">N</option>
-                  </select>
-                </td>
-              </tr>
-          </tbody>
-          </table>
-			<div class="mb-3">
-	            <label for="addItem" class="form-label">부가정보</label>
-	            <button type="button" class="button" id="openAddItemModal">➕</button>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-         <button type="button" onclick="saveSelectedItems()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 부가정보 리스트 모달창 -->
-<div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addItemList">부가정보</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-     	<div class="mb-3">
-			<table class="table" id="add-item-table">
-				<thead>
-					<tr>
-						<th>선택</th>
-						<th>부가항목명</th>
-						<th>부가항목설명</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-				</table>
-		   	 	</div>
-			</div>
-		<div class="modal-footer">
-		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		  <button type="button" onclick="saveSelectedItems()">Save changes</button>
 		</div>
+	</div>
+
+
+	<!-- 자원분류 등록 모달창 -->
+	<div class="modal fade" id="resClassInsertModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">자원분류 등록</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- Content of the modal -->
+					<form id="resClassSave" name="resClassSave" method="post"
+						th:action="@{/resclass/insert}">
+						<label for="resClassLevel" class="form-label">자원분류</label> 
+						<select class="form-select" id="resClassLevel">
+							<option value="1">중분류</option>
+							<option value="2">소분류</option>
+						</select>
+
+						<div class="mb-3">
+							<label for="resClassByLevel" class="form-label">상위분류명</label> 
+							<select class="form-select" id="resClassByLevel" name="upperResClassId">
+								<option data-level="1" th:each="level:${selectResClassByLevel}"
+									th:if="${level.level}==1" th:text="${level.resClassName}"
+									th:value="${level.resClassId}"></option>
+								<option data-level="2" th:each="level:${selectResClassByLevel}"
+									th:if="${level.level}==2 and ${level.upperResClassId}=='SW_000000'" th:text="' 소프트웨어 > ' + ${level.resClassName}"
+									th:value="${level.resClassId}"></option>
+								<option data-level="2" th:each="level:${selectResClassByLevel}"
+									th:if="${level.level}==2 and ${level.upperResClassId}=='HW_000000'" th:text="' 하드웨어 > ' + ${level.resClassName}"
+									th:value="${level.resClassId}"></option>
+							</select>
+						</div>
+						<table class="table">
+							<tbody>
+								<tr>
+									<th scope="row">자원ID</th>
+									<td><input type="text" class="form-control"
+										id="resClassId" name="resClassId"></td>
+								</tr>
+								<tr>
+									<th scope="row">자원분류명</th>
+									<td><input type="text" class="form-control"
+										id="resClassName" name="resClassName"></td>
+								</tr>
+								<tr>
+									<th scope="row">사용여부</th>
+									<td><select class="form-select" name="useYn">
+											<option value="Y">Y</option>
+											<option value="N">N</option>
+									</select></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="modal-footer">
+							<button type="submit">저장</button>
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">취소</button>
+						</div>
+					</form>
+				</div>
 			</div>
-	  </div>
+		</div>
+	</div>
+	<!-- 부가정보 리스트 모달창 -->
+	<div class="modal fade" id="addItemModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addItemList">부가정보</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<form>
+					<div class="modal-body">
+						<div class="mb-3">
+							<table class="table" id="add-item-table">
+								<thead>
+									<tr>
+										<th>선택</th>
+										<th>부가항목명</th>
+										<th>부가항목설명</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">취소</button>
+								<button type="button" id="check-additem">확인</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 <script type="text/javascript" th:src="@{/js/resclass/menutree.js}"></script>
 <script type="text/javascript" th:src="@{/js/resclass/resclass.js}"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-    $("#resClassLevel").change(function(){
-        const selectedValue = $(this).val();
 
-        // 숨기기
-        $("#resClassByLevel option").hide();
-
-        if (selectedValue === "null") {
-            // 선택안함에 해당하는 옵션만 표시
-        	 $("#resClassByLevel option[data-level='null']").show();
-        } else if (selectedValue === "1") {
-            // 대분류에 해당하는 옵션만 표시
-            $("#resClassByLevel option[data-level='1']").show();
-        } else if (selectedValue === "2") {
-            // 중분류에 해당하는 옵션만 표시
-            $("#resClassByLevel option[data-level='2']").show();
-        }
-    });
-});
-$(document).ready(function() {
-    $('#openAddItemModal').click(function() {
-      // 부가정보 리스트 모달 열기
-      $('#addItemModal').modal('show');
-    });
-  });
-  
-
-</script>
 </body>
 </html>

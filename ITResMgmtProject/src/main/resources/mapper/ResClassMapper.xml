@@ -42,12 +42,19 @@
 			    urc_name.res_class_name "topUpperResClassName",
 			    urc.res_class_name   "upperResClassName",
 			    rc.res_class_name   "resClassName",
-			    rc.use_yn   "useYn"
+			    rc.use_yn   "useYn",
+                a.add_item_sn   "addItemSn",
+                ad.add_item_name "addItemName",
+                ad.use_yn    "addItemUseYn"
 			FROM RESCLASS rc
 			    INNER JOIN RESCLASS urc
 			        ON urc.res_class_id = rc.upper_res_class_id
 			    INNER JOIN RESCLASS urc_name
 			        ON urc_name.res_class_id = urc.upper_res_class_id
+                LEFT OUTER JOIN resclassasideinfomapping a
+                    ON a.res_class_id = rc.res_class_id
+                LEFT OUTER JOIN additem ad
+                    ON ad.add_item_sn = a.add_item_sn
 			    WHERE rc.res_class_name = #{resClassName}
 		]]>
 
@@ -77,14 +84,27 @@
 		]]>
 	</select>
 	
-	
 	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
 		<![CDATA[
 			SELECT 
 			    add_item_sn "addItemSn",
 			    add_item_name   "addItemName",
-			    use_yn  "useYn"
+			    add_item_desc	"addItemDesc",
+			    use_yn  "useYN"
 			FROM ADDITEM
+			WHERE use_yn = 'Y'
 		]]>
 	</select>
+	
+	
+	<insert id="insertAddItemToResClass" parameterType="Hashmap">
+		<![CDATA[
+			INSERT INTO
+				RESCLASSASIDEINFOMAPPING
+				(res_class_id, add_item_sn, create_date, creater_id)
+				VALUES
+				(#{resClassId},#{addItemSn},SYSDATE,'wh467925')
+		]]>
+	</insert>
+	
 </mapper>

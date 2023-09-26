@@ -1,29 +1,30 @@
-var rowCount = 0;
+let rowCount = 0;
 
 //행추가 버튼
 function addRow() {
-	var table = document.getElementById("empTable");
-	var newRow = table.insertRow();
+	const table = document.getElementById("empTable");
+	const newRow = table.insertRow();
 	newRow.setAttribute("data-row-id", rowCount);
+	
+	const newCell0 = newRow.insertCell(0);
+	newCell0.innerHTML = "<input type='checkBox' name='addCheckbox'>";
 
-	var newCell0 = newRow.insertCell(0);
-	newCell0.innerHTML = "<input type='checkbox' name='emp_checkbox'>";
-
-	var newCell1 = newRow.insertCell(1);
+	const newCell1 = newRow.insertCell(1);
 	newCell1.innerHTML = "<input type='text' id='empId" + rowCount + "' size='10'>";
 
-	var newCell2 = newRow.insertCell(2);
+	const newCell2 = newRow.insertCell(2);
 	newCell2.innerHTML = "<input type='text' id='empName" + rowCount + "' size='10'>";
 
-	var newCell3 = newRow.insertCell(3);
-	var selectEmpType = document.querySelector('select[name="searchEmpTypeList"]');
-	var clonedSelect = selectEmpType.cloneNode(true);
+	const newCell3 = newRow.insertCell(3);
+	const selectEmpType = document.querySelector('select[name="searchEmpTypeList"]');
+	//selectEmpType 하위 자식 요소들도 함께 복제하여 clonedSelect에 저장
+	const clonedSelect = selectEmpType.cloneNode(true);
 	clonedSelect.id = 'empTypeCode' + rowCount;
 	newCell3.appendChild(clonedSelect);
 
-	var newCell4 = newRow.insertCell(4);
-	var selectEmpStatus = document.querySelector('select[name="searchEmpStatusList"]');  
-	var clonedSelect2 = selectEmpStatus.cloneNode(true);
+	const newCell4 = newRow.insertCell(4);
+	const selectEmpStatus = document.querySelector('select[name="searchEmpStatusList"]');  
+	const clonedSelect2 = selectEmpStatus.cloneNode(true);
 	clonedSelect2.id = 'empTypeStatus' + rowCount;
 	newCell4.appendChild(clonedSelect2);
 
@@ -33,11 +34,11 @@ function addRow() {
 
 //행삭제 버튼 (행숨김)
 function hideRow() {
-	const selectedCheckboxes = document.querySelectorAll('input[name="emp_checkbox"]:checked');
+	const selectedCheckboxes = document.querySelectorAll('input[name="empCheckbox"]:checked');
 	const hiddenBox = document.querySelector("input[name='hiddenBox']");
 
 	selectedCheckboxes.forEach(function(checkbox) {
-		var row = checkbox.closest('tr');
+		const row = checkbox.closest('tr');
 		row.style.display = 'none';
 		row.querySelector("input[name='hiddenBox']").value = "d";
 	});
@@ -51,19 +52,19 @@ function hideRow() {
 function saveList() {
 	//Insert
 	if (rowCount > 0) {
-		var employee = new Array();
-		for (var i = 0; i < rowCount; i++) {
-			var empId = document.getElementById('empId' + i).value;
-			var empName = document.getElementById('empName' + i).value;
+		const employee = new Array();
+		for (const i = 0; i < rowCount; i++) {
+			const empId = document.getElementById('empId' + i).value;
+			const empName = document.getElementById('empName' + i).value;
 
-			var empTypeSelect = document.getElementById('empTypeCode' + i);
-			var empTypeCode = empTypeSelect.value;
+			const empTypeSelect = document.getElementById('empTypeCode' + i);
+			const empTypeCode = empTypeSelect.value;
 
-			var empStatusSelect = document.getElementById('empTypeStatus' + i);
-			var empStatusCode = empStatusSelect.value;
+			const empStatusSelect = document.getElementById('empTypeStatus' + i);
+			const empStatusCode = empStatusSelect.value;
 
 			if (empId && empName && empStatusCode && empTypeCode) {
-				var empValue = {
+				const empValue = {
 					employeeId: empId,
 					employeeName: empName,
 					employeeStatusCode: empStatusCode,
@@ -174,7 +175,7 @@ function saveList() {
 
 			for (var i = 0; i < response.length; i++) {
 				var addTableRow = "<tr>" +
-					"<td><input type='checkbox' name='emp_checkbox'></td>" +
+					"<td><input type='checkbox' name='empCheckbox'></td>" +
 					"<td name='employeeId'>" + response[i].employeeId + "</td>" +
 					"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
 					"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +
@@ -248,26 +249,23 @@ function showSelectBox(listItem) {
 
 //검색
 function searchList() {
-	var employeeTypeCode = document.getElementById('searchEmpTypeList').value;
-	var employeeStatusCode = document.getElementById('searchEmpStatusList').value;
-	var searchText = document.getElementById('searchText').value;
+	const employeeTypeCode = document.getElementById('searchEmpTypeList').value;
+	const employeeStatusCode = document.getElementById('searchEmpStatusList').value;
+	const searchText = document.getElementById('searchText').value;
 
 	console.log("employeeTypeCode", employeeTypeCode)
 	console.log("employeeStatusCode", employeeStatusCode)
 
-	var searchData = {
+	const searchData = {
 		employeeTypeCode: employeeTypeCode,
 		employeeStatusCode: employeeStatusCode,
 		searchText: searchText
 	};
 
 	$.ajax({
-		url: '/search/employee',
-		type: 'POST',
-		contentType: 'application/json',
-		data: JSON.stringify(searchData),
+		url: '/search/employee?' + $.param(searchData),
+		type: 'GET',
 		success: function(response) {
-			console.log("response", response)
 			console.log("response", response)
 
 			$('#empTable > tbody').empty();
@@ -280,7 +278,7 @@ function searchList() {
 				// 검색 결과가 있는 경우
 				for (var i = 0; i < response.length; i++) {
 					var addTableRow = "<tr>" +
-						"<td><input type='checkbox' name='emp_checkbox'></td>" +
+						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
 						"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>" +
 						"<td name='employeeType' onclick='handleClick(this)'>" + "<span class='text' name='empType'>" + response[i].employeeType + "</span>" +

@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.employee.model.Employee;
@@ -95,15 +97,17 @@ public class EmployeeController {
 
 
 	//검색
-	@RequestMapping(value = "/search/employee", method = RequestMethod.POST)
+	@RequestMapping(value = "/search/employee", method=RequestMethod.GET)
 	@ResponseBody
-	public List<Employee> searchEmployees(@RequestBody Map<String, String> searchData) {
+	public List<Employee> searchEmployees(@RequestParam Map<String, String> searchData) {
 		List<Employee> employeeList = new ArrayList<>(); 
 
 		try {
 			String employeeTypeCode = searchData.get("employeeTypeCode");
 			String employeeStatusCode = searchData.get("employeeStatusCode");
 			String searchText = searchData.get("searchText");
+			
+			System.out.println("employeeTypeCode" + employeeTypeCode);
 
 			employeeList = employeeService.selectSearchEmployee(employeeTypeCode, employeeStatusCode, searchText);
 
