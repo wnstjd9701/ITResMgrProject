@@ -7,14 +7,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -104,7 +104,7 @@ public class ResClassController {
 	@ResponseBody
 	public List<ResClass> selectResClassByResClassName(@RequestParam("resClassName")String resClassName){
 		List<ResClass> selectResClassByResClassName = resClassService.selectResClassByResClassName(resClassName);
-		logger.info("RESULT" + selectResClassByResClassName);
+		logger.info("ddddd"+selectResClassByResClassName);
 		return selectResClassByResClassName;
 	}
 	
@@ -117,48 +117,17 @@ public class ResClassController {
 	
 	@GetMapping("/resclass/additem")
 	@ResponseBody
-	public List<AddItem> selectAddItemInResClass(int page){
-		HashMap<String, Integer> pageInfo= new HashMap<String, Integer>();
-		JSONArray result = new JSONArray();
-		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass(page);
-
-		int AddItemListCount=resClassService.countAddItem();
-		int totalPage = 0;
-		if (AddItemListCount > 0) {
-			// 점포 목록을 5개씩 보여줄 때의 총 페이지 수
-			totalPage = (int) Math.ceil(AddItemListCount / 5.0); 
-		}
-		// 페이지 수을 5개씩 보여줄 때의 총 페이지 블럭 수 ex - (1,2,3,4,5),(6,7,8,9,10) 
-		int totalPageBlock = (int) (Math.ceil(totalPage / 5.0)); 
-		//현재 페이지 블럭 ex)-1,2,3,4,5
-		int nowPageBlock = (int) (Math.ceil(page / 5.0));
-		// 블럭의 시작 번호 ex) 1,6,11
-		int startPage = (nowPageBlock-1) * 5 + 1;
-		// 끝페이지
-		int endPage=0;
-		if(totalPage>nowPageBlock*5) {
-			endPage=nowPageBlock*5;
-		}else {
-			endPage=totalPage;
-		}
-		//JSON 형식으로 데이터 삽입
-		JSONArray addItemJson= new JSONArray();
-		for(AddItem addItemList: selectAddItemInResClass) {
-			addItemJson.add(addItemList);
-		}
-		result.add(addItemJson);
-
-		pageInfo.put("productCount", AddItemListCount);
-		pageInfo.put("totalPageCount", totalPage);
-		pageInfo.put("currentPage", page);
-		pageInfo.put("totalPage", totalPage);
-		pageInfo.put("nowPageBlock", nowPageBlock);
-		pageInfo.put("startPage", startPage);
-		pageInfo.put("endPage", endPage);
-		JSONObject pageInfoAddItem= new JSONObject(pageInfo);	
-		result.add(pageInfoAddItem);
-		logger.info("dd"+result);
-		return result;
+	public Map<String, Object> selectAddItemInResClass(){
+		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass();
+		Map<String, Object> test = new HashMap<String, Object>();
+		test.put("test",selectAddItemInResClass);
+		return test;
 	}
 
+	
+	@GetMapping("/view")
+	public String view() {
+		return "resclass/view";
+	}
+	
 }
