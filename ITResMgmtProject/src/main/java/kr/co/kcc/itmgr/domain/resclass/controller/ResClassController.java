@@ -116,6 +116,7 @@ public class ResClassController {
 	}
 	
 	@GetMapping("/resclass/additem")
+	@ResponseBody
 	public Map<String, Object> selectAddItemInResClass(){
 		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass();
 		Map<String, Object> test = new HashMap<String, Object>();

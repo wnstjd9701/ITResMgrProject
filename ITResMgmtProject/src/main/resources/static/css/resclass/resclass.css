@@ -34,3 +34,20 @@ table th{
   text-align: left;
   vertical-align: middle; 
 }
+
+.second-container{
+	border-radius: 10px; /* 테두리 모서리를 둥글게 */
+    padding: 20px;
+    background-color: white;
+    width: 75%; 
+    padding-bottom: 20px; 
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+.first-container{
+	border-radius: 10px; /* 테두리 모서리를 둥글게 */
+    padding: 20px;
+    background-color: white;
+    width: 20%; 
+    padding-bottom: 20px; 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+}
