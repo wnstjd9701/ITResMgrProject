@@ -5,173 +5,278 @@
 <head>
 <meta charset="utf-8">
 <div th:replace="~{../common/fragments/head :: fragment-head}"></div>
+<style>
+.title-container {
+	margin: 15px;
+	text-align: center;
+}
+
+.search-container {
+	display: flex;
+}
+
+.search-info {
+	margin: 10px 5px 0 0;
+	padding: 0 5px 0 0;
+}
+
+.refresh-btn-container {
+	margin: 10px 0 0 0;
+	padding: 5px 5px 5px 0;
+}
+</style>
 </head>
 <body>
 	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 	<div class="container">
-		<div>
-			<span>중 분 류</span>
-			<!-- Level 2 -->
-				<select id="resClassLevel2" name="resClassLevel2">
-					<option value="A" th:text="전체" th:data-all="all"></option>
-					<option th:each="resClassLevel2:${resClassLevel2}" th:value="${resClassLevel2.resClassId}" th:text="${resClassLevel2.resClassName}"></option>
-				</select> 
-			<span>소 분 류</span> 
-				<select disabled id="resClassLevel3" name="resClassLevel3">
-					<option value="A" th:text="전체" th:data-all="all"></option>
-					<option th:each="resClassLevel3:${resClassLevel3}" th:value="${resClassLevel3.resClassId}" th:data-upper-res-class-id="${resClassLevel3.upperResClassId}" th:text="${resClassLevel3.resClassName}"></option>
-				</select> 
-			<span>사용 여부</span> 
-				<label> 
-					<input type="radio" name="monitoringYn" value="Y" checked="checked" /> 전체
-				</label> 
-				<label> 
-					<input type="radio" name="monitoringYn" value="A" /> 미사용 포함
-				</label> 
-			<input type="text" name="resName" placeholder="자원명을 검색하세요.">
-			<input type="button" id="searchBtn" value="검색">
+		<div class="title-container">
+			<h2>설치 장소</h2>
 		</div>
-		<table id="resInfoTable" class="table table-striped">
-			<thead>
-				<tr>
-					<th>상태</th>
-					<th>호스트</th>
-					<th>자원 분류</th>
-					<th>자원명</th>
-					<th>설치 장소명</th>
-					<th>설치 주소</th>
-					<th>도입일자</th>
-					<th>자원 관리 ID</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="resourceInfo:${resourceInfo}">
-					<td class="resInfoTd status">상태</td> <!-- Health Check -->
-					<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}">[[${resourceInfo.ip}]]</td>
-					<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}">-</td>
-					<td class="resInfoTd resClassPath" th:text="${resourceInfo.resClassPath}"></td>
-					<td class="resInfoTd resName" th:text="${resourceInfo.resName}"></td>
-					<td class="resInfoTd installPlaceName" th:text="${resourceInfo.installPlaceName}"></td>
-					<td class="resInfoTd installPlaceFullName" th:text="${resourceInfo.installPlaceFullAddress}"></td>
-					<td class="resInfoTd introductionDate" th:text="${resourceInfo.introductionDate}"></td>
-					<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}"></td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="search-container">
+			<div class="search-info">
+				<span>대 분 류</span> <select id="resClassLevel1" disabled>
+					<option value="HW">하드웨어</option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>중 분 류</span> <select id="resClassLevel2" name="resClassLevel2">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel2:${resClassLevel2}"
+						th:value="${resClassLevel2.resClassId}"
+						th:text="${resClassLevel2.resClassName}"></option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>소 분 류</span> <select disabled id="resClassLevel3"
+					name="resClassLevel3">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel3:${resClassLevel3}"
+						th:value="${resClassLevel3.resClassId}"
+						th:data-upper-res-class-id="${resClassLevel3.upperResClassId}"
+						th:text="${resClassLevel3.resClassName}"></option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>사용 여부</span> <select id="monitoringYn">
+					<option value="Y">전체</option>
+					<option value="A">미사용 포함</option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>자원명 <input type="text" name="resName"
+					placeholder="자원명을 검색하세요."> <input type="button"
+					id="searchBtn" value="조회">
+				</span>
+			</div>
+		</div>
+		<div class="refresh-btn-container">
+			<input type="button" class="refresh-all-status-btn" value="모든 상태 최신화">
+		</div>
+		<div class="table-container">
+			<table id="resInfoTable" class="table table-striped">
+				<thead>
+					<tr>
+						<th>상태</th>
+						<th>상태 최신화</th>
+						<th>IP 주소</th>
+						<th>자원 분류</th>
+						<th>자원명</th>
+						<th>설치 장소명</th>
+						<th>설치 주소</th>
+						<th>도입일자</th>
+						<th>자원 관리 ID</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="resourceInfo:${resourceInfo}">
+						<!-- Health Check -->
+						<td class="resInfoTd status">상태</td>
+						<td class="refresh"><input type="button" class="refresh"
+							value="새로고침"></td>
+						<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}">[[${resourceInfo.ip}]]</td>
+						<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}">-</td>
+						<td class="resInfoTd resClassPath"
+							th:text="${resourceInfo.resClassPath}"></td>
+						<td class="resInfoTd resName" th:text="${resourceInfo.resName}"></td>
+						<td class="resInfoTd installPlaceName"
+							th:text="${resourceInfo.installPlaceName}"></td>
+						<td class="resInfoTd installPlaceFullName"
+							th:text="${resourceInfo.installPlaceFullAddress}"></td>
+						<td class="resInfoTd introductionDate"
+							th:text="${resourceInfo.introductionDate}"></td>
+						<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<div th:replace="~{../common/fragments/footer.html :: fragment-footer}"></div>
 	<script>
-$(document).ready(function(){
-	$('#resClassLevel2').on("change", function(){
-        var selectedValue = $(this).val();
-        var resClassLevel3 = $('#resClassLevel3');
-		
-        // 중분류 선택이 'All'이 아니면 소분류 활성화
-        if (selectedValue !== 'all') {
-            resClassLevel3.removeAttr("disabled");
-        } else {
-            // 중분류 선택이 'All'인 경우, 소분류 비활성화 및 선택 옵션 초기화
-            resClassLevel3.attr("disabled", "disabled");
-            resClassLevel3.val('all'); // 선택 옵션을 'All'로 초기화
-        }
-		
-        // 선택된 중분류 값과 소분류의 upperResClassId가 일치하는 옵션만 표시
-        var selectedOption = $("option:selected", this);
-        var selectedResClassId = selectedOption.val();
-        
-        // 모든 소분류 옵션 숨기기
-        resClassLevel3.find("option").hide();
-        // 선택된 중분류와 upperResClassId가 일치하는 소분류 옵션만 표시
-        resClassLevel3.find("option[data-upper-res-class-id='" + selectedResClassId + "']").show();
-        resClassLevel3.find("option[data-all='all']").show();
-        
-        resClassLevel3.find("option[value='all']").text('전체');
-     	// 중분류 선택 후 소분류 초기화 시 선택된 값 적용
-        resClassLevel3.val('A');
-     	
-    	// 중분류 선택란의 '전체' 옵션을 선택 가능하도록 처리
-        $('#resClassLevel2 option[value="all"]').prop('disabled', false);
+		$(document)
+				.ready(
+						function() {
+							$('#resClassLevel2')
+									.on(
+											"change",
+											function() {
+												var selectedValue = $(this)
+														.val();
+												var resClassLevel3 = $('#resClassLevel3');
 
-    });
-	// 중분류 선택란의 '전체' 옵션 선택 시 소분류도 '전체'로 선택 가능하도록 처리
-    $('#resClassLevel2 option[value="all"]').on('click', function() {
-        $('#resClassLevel3').val('all');
-        resClassLevel3.find("option[value='all']").text('전체');
-    });
-	
-    $('#searchBtn').on('click', function() {
-        // 선택된 중분류와 소분류 값을 가져옴
-        var midResClass = $("#resClassLevel2").val();
-        var bottomResClass = $("#resClassLevel3").val();
-		var resName = $("input[name='resName']").val();
-        // 선택된 라디오 버튼 값 가져오기 (사용 여부)
-        var monitoringYn = $("input[name='monitoringYn']:checked").val();
-        
-		console.log(midResClass);
-		console.log(bottomResClass);
-		console.log(monitoringYn);
-		console.log(resName);
-		
-        // Ajax 요청을 보냄
-        $.ajax({
-            type: 'POST', // 또는 'GET', 요청 방식 선택
-            url: '/search', // Controller의 URL
-            data: {
-            	midResClass: midResClass,
-            	bottomResClass: bottomResClass,
-            	monitoringYn: monitoringYn,
-                resName: resName
-            },
-            success: function(response) {
-                $('#resInfoTable > tbody tr').remove();
-            	if(response.length === 0){
-                	alert('검색된 결과가 없습니다.');
-                	addTableRow = "<tr>" + "<td colspan='8' style='text-align:center; font-weight: bold;'>" 
-                		+ "검색된 결과가 없습니다." + "</td>" + "</tr>";
-               	 	$('#resInfoTable > tbody').append(addTableRow);
-                	return;
-                }
-            	// 성공적으로 요청이 완료되면 이곳에서 처리
-            	console.log(response);
-                alert('성공');
-                for(var i=0; i<response.length; i++){
-                	const newRow = $("<tr>");
-                	const status = $("<td>").addClass("resInfoTd status").text("상태");
-                	var ip;
-                	if(response[i].ip !== null){
-	                	ip = $("<td>").addClass("resInfoTd ip").text(response[i].ip);
-                	}else{
-	                	ip = $("<td>").addClass("resInfoTd ip").text("-");
-                	}
-                	const resClassPath = $("<td>").addClass("resInfoTd resClassPath").text(response[i].resClassPath);
-                	const resName = $("<td>").addClass("resInfoTd resName").text(response[i].resName);
-                	const installPlaceName = $("<td>").addClass("resInfoTd installPlaceName").text(response[i].installPlaceName);
-                	const installPlaceFullAddress = $("<td>").addClass("resInfoTd installPlaceFullAddress").text(response[i].installPlaceFullAddress);
-                	const introductionDate = $("<td>").addClass("resInfoTd introductionDate").text(response[i].introductionDate);
-                	const mgmtId = $("<td>").addClass("resInfoTd mgmtId").text(response[i].mgmtId);
-                	
-                	// table 행 추가
-                	newRow.append(status);
-                	newRow.append(ip);
-                	newRow.append(resClassPath);
-                	newRow.append(resName);
-                	newRow.append(installPlaceName);
-                	newRow.append(installPlaceFullAddress);
-                	newRow.append(introductionDate);
-                	newRow.append(mgmtId);
+												// 중분류 선택이 'All'이 아니면 소분류 활성화
+												if (selectedValue !== 'all') {
+													resClassLevel3
+															.removeAttr("disabled");
+												} else {
+													// 중분류 선택이 'All'인 경우, 소분류 비활성화 및 선택 옵션 초기화
+													resClassLevel3.attr(
+															"disabled",
+															"disabled");
+													resClassLevel3.val('all'); // 선택 옵션을 'All'로 초기화
+												}
 
-                	 $('#resInfoTable > tbody').append(newRow);
-                }
-                return ;
-            },
-            error: function(error) {
-                // 요청이 실패한 경우 처리
-                console.log('에러:', error);
-            }
-        });
-    });
-})
-</script>
+												// 선택된 중분류 값과 소분류의 upperResClassId가 일치하는 옵션만 표시
+												var selectedOption = $(
+														"option:selected", this);
+												var selectedResClassId = selectedOption
+														.val();
+
+												// 모든 소분류 옵션 숨기기
+												resClassLevel3.find("option")
+														.hide();
+												// 선택된 중분류와 upperResClassId가 일치하는 소분류 옵션만 표시
+												resClassLevel3
+														.find(
+																"option[data-upper-res-class-id='"
+																		+ selectedResClassId
+																		+ "']")
+														.show();
+												resClassLevel3
+														.find(
+																"option[data-all='all']")
+														.show();
+
+												resClassLevel3.find(
+														"option[value='all']")
+														.text('전체');
+												// 중분류 선택 후 소분류 초기화 시 선택된 값 적용
+												resClassLevel3.val('A');
+
+												// 중분류 선택란의 '전체' 옵션을 선택 가능하도록 처리
+												$(
+														'#resClassLevel2 option[value="all"]')
+														.prop('disabled', false);
+
+											});
+							// 중분류 선택란의 '전체' 옵션 선택 시 소분류도 '전체'로 선택 가능하도록 처리
+							$('#resClassLevel2 option[value="all"]').on(
+									'click',
+									function() {
+										$('#resClassLevel3').val('all');
+										resClassLevel3.find(
+												"option[value='all']").text(
+												'전체');
+									});
+
+							$('#searchBtn')
+									.on(
+											'click',
+											function() {
+												// 선택된 중분류와 소분류 값을 가져옴
+												var midResClass = $(
+														"#resClassLevel2")
+														.val();
+												var bottomResClass = $(
+														"#resClassLevel3")
+														.val();
+												var resName = $(
+														"input[name='resName']")
+														.val();
+												// 선택된 라디오 버튼 값 가져오기 (사용 여부)
+												var monitoringYn = $(
+														"#monitoringYn").val();
+
+												console.log(midResClass);
+												console.log(bottomResClass);
+												console.log(monitoringYn);
+												console.log(resName);
+
+												// Ajax 요청을 보냄
+												$
+														.ajax({
+															type : 'POST', // 또는 'GET', 요청 방식 선택
+															url : '/search', // Controller의 URL
+															data : {
+																midResClass : midResClass,
+																bottomResClass : bottomResClass,
+																monitoringYn : monitoringYn,
+																resName : resName
+															},
+															success : function(
+																	response) {
+																$('#resInfoTable > tbody tr').remove();
+																if (response.length === 0) {
+																	alert('검색된 결과가 없습니다.');
+																	addTableRow = "<tr>"
+																			+ "<td colspan='8' style='text-align:center; font-weight: bold;'>"
+																			+ "검색된 결과가 없습니다."
+																			+ "</td>"
+																			+ "</tr>";
+																	$('#resInfoTable > tbody').append(addTableRow);
+																	return;
+																}
+																// 성공적으로 요청이 완료되면 이곳에서 처리
+																console.log(response);
+																alert('성공');
+																for (var i = 0; i < response.length; i++) {
+																	const newRow = $("<tr>");
+																	const status = $("<td>").addClass("resInfoTd status").text("상태");
+																	const refreshButton = $("<input>").attr({
+																		type: "button",
+																        class: "refresh-btn",
+																        value: "새로고침"
+																    });
+
+																    const refresh = $("<td>").addClass("refresh").append(refreshButton);
+																	var ip;
+																	if (response[i].ip !== null) {
+																		ip = $("<td>").addClass("resInfoTd ip").text(response[i].ip);
+																	} else {
+																		ip = $("<td>").addClass("resInfoTd ip").text("-");
+																	}
+																	const resClassPath = $("<td>").addClass("resInfoTd resClassPath").text(response[i].resClassPath);
+																	const resName = $("<td>").addClass("resInfoTd resName").text(response[i].resName);
+																	const installPlaceName = $("<td>").addClass("resInfoTd installPlaceName").text(response[i].installPlaceName);
+																	const installPlaceFullAddress = $("<td>").addClass("resInfoTd installPlaceFullAddress").text(response[i].installPlaceFullAddress);
+																	const introductionDate = $("<td>").addClass("resInfoTd introductionDate").text(response[i].introductionDate);
+																	const mgmtId = $("<td>").addClass("resInfoTd mgmtId").text(response[i].mgmtId);
+
+																	// table 행 추가
+																	newRow.append(status);
+																	newRow.append(refresh);
+																	newRow.append(ip);
+																	newRow.append(resClassPath);
+																	newRow.append(resName);
+																	newRow.append(installPlaceName);
+																	newRow.append(installPlaceFullAddress);
+																	newRow.append(introductionDate);
+																	newRow.append(mgmtId);
+
+																	$('#resInfoTable > tbody').append(newRow);
+																}
+																return;
+															},
+															error : function(
+																	error) {
+																// 요청이 실패한 경우 처리
+																console.log(
+																		'에러:',
+																		error);
+															}
+														});
+											});
+						})
+	</script>
 
 </body>
 </html>

@@ -57,5 +57,11 @@ public class InstallPlaceService implements IInstallPlaceService {
 		return installPlaceRepository.updateInstallPlace(installPlace);
 	}
 
+	// 설치 장소 삭제 
+	@Override
+	public boolean deleteInstallPlace(int placesn) {
+		return installPlaceRepository.deleteInstallPlace(placesn);
+	}
+
 	
 }

@@ -1,117 +1,237 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="../common/layout/default">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
 <style>
-/* 스크롤 가능한 영역의 스타일 */
-		.container{
-			overflow-x: auto;
-		}
-        .table-container {
-            max-height: 20em; /* 원하는 높이로 조절 */
-            overflow-y: auto; /* 세로 스크롤 표시 */
-        }
+/* 테이블 스타일 */
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
 
-        /* 고정된 테이블 헤더 스타일 */
-        .fixed-header {
-            position: sticky;
-            top: 0;
-            background-color: white;
-            z-index: 1;
-        }
-		.code-group-id-text:hover {
-		    cursor: pointer;
-		}
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* 마우스 오버 효과 */
+.table tr:hover {
+  background-color: #e0e0e0;
+}
+/* 스크롤 가능한 영역의 스타일 */
+.container {
+	overflow-x: auto;
+}
+
+#commonCode {
+	display: flex;
+	margin: 10px;
+}
+
+.commoncode-container {
+	font-size: 13px;
+	margin: 30px 10px 0 280px;
+	width: 45vw;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+.commoncodedetail-container {
+	font-size: 13px;
+	margin: 30px 0 0 10px;
+	width: 51vw;
+	padding: 10px;
+	border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.table-container {
+	max-height: 40em; /* 원하는 높이로 조절 */
+	overflow-y: auto; /* 세로 스크롤 표시 */
+}
+
+.codeGroupId {
+	width: 30%;
+}
+/* 고정된 테이블 헤더 스타일 */
+.fixed-header {
+	position: sticky;
+	top: 0;
+	background-color: white;
+	z-index: 1;
+}
+
+.search-info-container {
+	margin: 20px 5px 10px 0;
+	justify-content: center; /* 가로 중앙 정렬을 위해 추가 */
+  	align-items: center; /* 세로 중앙 정렬을 위해 추가 */
+}
+.search-detail-info{
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+.common-btn-container {
+	margin-left: auto;
+	text-align: right;
+}
+
+.row-btn {
+	text-align: right;
+}
+
+.code-group-id-text:hover {
+	cursor: pointer;
+}
+
+/* 입력란 스타일 */
+input[type="text"] {
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 14px;
+	outline: none;
+}
+
+/* 선택 상자 스타일 */
+select {
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 12px;
+	outline: none;
+}
+
+/* 버튼 스타일 */
+input[type="button"] {
+	padding: 5px 5px;
+	background-color: #007BFF;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	font-size: 14px;
+	cursor: pointer;
+}
 </style>
 </head>
-<body>
-<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-	<div id="wrapper">
-		<div id="commonCode">
-			<div class="container">
-				<div>
+<th:block layout:fragment="content">
+	<div id="commonCode">
+		<div class="container commoncode-container">
+			<!-- <div>
 					🟢 기존 코드
 					🟡 수정 
 					🔵 생성
 					🔴 삭제
-				</div>
-				<h2>공통 코드</h2>
-				<p>* 공통 코드 관리</p>
-				<span>사용 여부</span> 
-					<select id="commonCodeUseYn">
+				</div> -->
+
+			<h2>공통 코드</h2>
+			<p>* 공통 코드 관리</p>
+			<div class="common-btn-container">
+				<input id="searchCommonCodeBtn" type="button" value="조회"> <input id="commonCodeSaveBtn" type="button" value="저장">
+			</div>
+			<div class="search-info-container">
+				<div class="search-detail-info">
+					<span>사용 여부</span> <select id="commonCodeUseYn">
 						<option value="A">전체</option>
 						<option value="Y">Y</option>
 						<option value="N">N</option>
-					</select> 
-				<span>코드 그룹명 및 ID</span> <input name="commonCodeKeyword" type="text" placeholder="공통 코드 및 그룹 ID 입력">
-				<input id="searchCommonCodeBtn" type="button" value="검색">
-				<div>
-					<input id="commonCodeAddRowBtn" type="button" value="행추가">
-					<input id="commonCodeDeleteRowBtn" type="button" value="행삭제">
-					<input id="commonCodeSaveBtn" type="button" value="저장">
-				</div>
-				<div class="table-container commoncode-table-container">
-					<table class="table table-striped commoncode-table">
-						<thead class="fixed-header">
-							<tr>
-								<th>상태</th>
-								<th>코드 그룹 ID</th>
-								<th>코드 그룹명</th>
-								<th>상세 코드 개수</th>
-								<th>사용 여부</th>
-							</tr>
-						</thead>
-						<tbody id="commonCode-table-body">
-							<tr th:each="commonCode, i : ${commonCode}">
-								<td th:text="${commonCode.flag}"></td>
-								<td id="commonCode-group-id" class="code-group-id-text" th:text="${commonCode.codeGroupId}" th:data-code-group-id="${commonCode.codeGroupId}"></td>
-								<td><input id="commonCode-group-name" class="code-group-name" name="codeGroupName" type="text" th:value="${commonCode.codeGroupName}"></td>
-								<td th:text="${commonCode.codeDetailCount}"></td>
-								<td>
-							    <select>
-							        <option th:value="Y" th:text="Y" th:selected="${commonCode.useYn == 'Y'}"></option>
-							        <option th:value="N" th:text="N" th:selected="${commonCode.useYn == 'N'}"></option>
-							    </select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					</select> <span>코드 그룹명 및 ID</span> <input name="commonCodeKeyword"
+						type="text" placeholder="공통 코드 및 그룹 ID 입력">
 				</div>
 			</div>
-			<div id="commonCodeDetail">
-				<div></div>
-				<div class="container">
-					<h2>상세 코드</h2>
-					<p>* 상세 코드 관리</p>
-					<span>사용 여부</span> 
-						<select id="commonCodeDetailUseYn">
-							<option value="A" selected>전체</option>
-							<option value="Y">Y</option>
-							<option value="N">N</option>
-						</select> 
-					<span>상세 코드 및 코드명</span> <input name="commonCodeDetailKeyword" type="text" placeholder="상세 코드 및 코드명 입력">
-					<input id="searchCommonCodeDetailBtn" type="button" value="검색">
-					<div>
-						<input id="commonCodeDetailAddRowBtn" type="button" value="행추가">
-						<input id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제">
-						<input id="commonCodeDetailSaveBtn" type="button" value="저장">
-					</div>
-					<div class="table-container commoncodedetail-table-container">
-						<table class="table table-striped commoncodedetail-table">
-							<thead class="fixed-header">
-								<tr>
-									<th>상태</th>
-									<th>선택</th>
-									<th>코드 그룹 ID</th>
-									<th>상세 코드</th>
-									<th>상세 코드명</th>
-									<th>사용 여부</th>
-								</tr>
-							</thead>
-							<tbody id="commonCodeDetail-table-body">
-								<!-- <tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
+			<div class="row-btn">
+				<input id="commonCodeAddRowBtn" type="button" value="행추가"> <input
+					id="commonCodeDeleteRowBtn" type="button" value="행삭제">
+			</div>
+			<div class="table-container commoncode-table-container">
+				<table class="table table-striped commoncode-table">
+					<thead class="fixed-header">
+						<tr>
+							<th>상태</th>
+							<th>코드 그룹 ID</th>
+							<th>코드 그룹명</th>
+							<th>상세 코드 개수</th>
+							<th>사용 여부</th>
+							<th>조회</th>
+						</tr>
+					</thead>
+					<tbody id="commonCode-table-body">
+						<tr th:each="commonCode, i : ${commonCode}">
+							<td th:text="${commonCode.flag}"></td>
+							<td id="commonCode-group-id"
+								class="code-group-td code-group-id-text"
+								th:text="${commonCode.codeGroupId}"
+								th:data-code-group-id="${commonCode.codeGroupId}"></td>
+							<td><input id="commonCode-group-name"
+								class="code-group-name" name="codeGroupName" type="text"
+								th:value="${commonCode.codeGroupName}"></td>
+							<td th:text="${commonCode.codeDetailCount}"></td>
+							<td><select>
+									<option th:value="Y" th:text="Y"
+										th:selected="${commonCode.useYn == 'Y'}"></option>
+									<option th:value="N" th:text="N"
+										th:selected="${commonCode.useYn == 'N'}"></option>
+							</select></td>
+							<td><input type="button" value="조회" th:data-code-group-id="${commonCode.codeGroupId}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="container commoncodedetail-container">
+			<h2>상세 코드</h2>
+			<p>* 상세 코드 관리</p>
+			<div class="common-btn-container">
+				<input id="searchCommonCodeDetailBtn" type="button" value="조회">
+				<input id="commonCodeDetailSaveBtn" type="button" value="저장">
+			</div>
+			<div class="search-info-container">
+				<div class="search-detail-info">
+					<span>사용 여부</span> <select id="commonCodeDetailUseYn">
+						<option value="A" selected>전체</option>
+						<option value="Y">Y</option>
+						<option value="N">N</option>
+					</select> <span>상세 코드 및 코드명</span> <input name="commonCodeDetailKeyword"
+						type="text" placeholder="상세 코드 및 코드명 입력">
+				</div>
+			</div>
+			<div class="row-btn">
+				<input id="commonCodeDetailAddRowBtn" type="button" value="행추가">
+				<input id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제">
+			</div>
+			<div class="table-container commoncodedetail-table-container">
+				<table class="table table-striped commoncodedetail-table">
+					<thead class="fixed-header">
+						<tr>
+							<th>상태</th>
+							<th>선택</th>
+							<th>코드 그룹 ID</th>
+							<th>상세 코드</th>
+							<th>상세 코드명</th>
+							<th>사용 여부</th>
+						</tr>
+					</thead>
+					<tbody id="commonCodeDetail-table-body">
+						<!-- <tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
 									<td th:text="${commonCodeDetail.flag}"></td>
 									<td><input class="detailCheck" type="checkbox" name="detailCheck"></td>
 									<td class="detailCodeGroupId" th:text="${commonCodeDetail.codeGroupId}"></td>
@@ -124,16 +244,12 @@
 									</select>
 									</td>
 								</tr> -->
-							</tbody>
-						</table>
-					</div>
-				</div>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
-
 	<script th:inline="javascript">
-		
 		$(document)
 				.ready(
 						function() {
@@ -144,13 +260,16 @@
 							var commonCodeDetail = JSON.parse(commonCodeDetail);
 							//console.log(commonCodeList[0]);
 
-							// 공통 코드 행추가 버튼
+							// 공통 코드 행 추가 버튼
 							$("#commonCodeAddRowBtn").click(() => {
+								const resultText = $("#commonCode-table-body tr>td").text();
+								if(resultText.startsWith("검색")) {
+									removeCommonCodeRow();
+								}
 								// 새로운 행 생성
 								var newRow = $("<tr>");
 								var status = $("<td>").text("C");
-								var codeGroupId = $("<td>").addClass("codeGroupId code-group-id").append("<input type='text'>");
-								var codeGroupId = $("<td>").append($("<input>").attr({
+								var codeGroupId = $("<td>").addClass("code-group-td").append($("<input>").attr({
 									type: "text",
 									name: "codeGroupId",
 									class: "codeGroupId code-group-id"
@@ -239,10 +358,15 @@
 								});
 							});
 							
-							// 공통 코드 테이블 업데이트 함수
-							function updateCommonCode(response){
+							function removeCommonCodeRow(){
 								const commonCodeTable = $("#commonCode-table-body tr");
 								commonCodeTable.remove();
+							}
+							
+							// 공통 코드 테이블 업데이트 함수
+							function updateCommonCode(response){
+								const resultText = $("#commonCode-table-body tr>td").text();
+								removeCommonCodeRow();
 								
 								if(response.length < 1){
 									const result = "<tr>" + "<td colspan='5' style='text-align:center; font-weight: bold;'>" 
@@ -254,7 +378,7 @@
 								for(var i=0; i<response.length; i++){
 									var newRow = $("<tr>");
 									var status = $("<td>").addClass("flag").text(response[i].flag);
-									var codeGroupId = $("<td>").addClass("codeGroupId code-group-id-text").text(response[i].codeGroupId);
+									var codeGroupId = $("<td>").addClass("codeGroupId code-group-id-text code-group-td").text(response[i].codeGroupId);
 									var codeGroupName = $("<td>").append($("<input>").attr({
 										type: "text",
 										name: "codeGroupName",
@@ -266,12 +390,20 @@
 									var selectElement = $("<select><option>Y</option><option>N</option></select>");
 									selectElement.val(response[i].useYn);
 									var useYn = $("<td>").append(selectElement);
+									var searchDetailCode = $("<td>").append($("<input>").attr({
+										type: "button",
+										name: "codeGroupId",
+										"data-code-group-id": response[i].codeGroupId,
+										value: "조회",
+										class: "code-group-id"
+									}))
 									
 									newRow.append(status);
 									newRow.append(codeGroupId);
 									newRow.append(codeGroupName);
 									newRow.append(codeDetailCount);
 									newRow.append(useYn);
+									newRow.append(searchDetailCode);
 
 									$(".commoncode-table tbody").append(newRow);
 								}
@@ -304,7 +436,7 @@
 									var flag = $(this).find("td:first").text();
 									var codeGroupId;
 									var codeGroupName;
-									console.log(flag);
+
 									if (flag === 'C') {
 									    codeGroupId = $(this).find("input[name='codeGroupId']").val();
 									    codeGroupName = $(this).find("input[name='codeGroupName']").val();
@@ -346,8 +478,17 @@
 								
 							});
 							
+							function removeCommonCodeDetailRow(){
+								const commonCodeDetailTable = $("#commonCodeDetail-table-body tr");
+								commonCodeDetailTable.remove();
+							}
+							
 							// 상세 코드 행 추가 버튼
 							$("#commonCodeDetailAddRowBtn").click(() => {
+								const resultText = $("#commonCodeDetail-table-body tr>td").text();
+								if(resultText.startsWith("검색")){
+									removeCommonCodeDetailRow();
+								}
 								// 새로운 행 생성
 								var newRow = $("<tr>");
 								var status = $("<td>").text("C");
@@ -402,8 +543,9 @@
 							    // 선택된 각 행에 대해 처리
 							    selectedRows.each(function() {
 							        var selectedRow = $(this);
+							        var flag = selectedRow.find("td:first").text();
 							        var deleteStatus = selectedRow.find("select").val();
-							        if(deleteStatus === 'N'){
+							        if(deleteStatus === 'N' && flag === 'E'){
 							        	const codeGroupId = selectedRow.find("input[type='text']").val();
 							        	deleteCount++;
 							        	selectedRow.find("input[type='checkbox']").prop("checked", false);
@@ -413,7 +555,6 @@
 							        // 선택된 행을 두번 누를 경우 checked되 있는 상태이기 때문에 선택한 행이 삭제되었다고 뜨는 것을 막기 위해
 							        selectedRow.find("input[name='detailCheck']").prop("checked", false);
 
-							        var flag = selectedRow.find("td:first").text();
 							        if (flag === "C") {
 							            // Create는 반영하지 않으면 되므로 그냥 행 삭제
 							            selectedRow.remove();
@@ -515,13 +656,17 @@
 								});
 							});
 							
-							// 상세 코드 테이블 업데이트 함수
-							function updateCommonCodeDetail(response){
+							function removeCommonCodeDetailRow(){
 								const commonCodeDetailTable = $("#commonCodeDetail-table-body tr");
 								commonCodeDetailTable.remove();
+							}
+							
+							// 상세 코드 테이블 업데이트 함수
+							function updateCommonCodeDetail(response){
+								removeCommonCodeDetailRow();
 								
 								if(response.length < 1){
-									const result = "<tr>" + "<td colspan='5' style='text-align:center; font-weight: bold;'>" 
+									const result = "<tr>" + "<td colspan='6' style='text-align:center; font-weight: bold;'>" 
 			                		+ "검색된 결과가 없습니다." + "</td>" + "</tr>";
 									$("#commonCodeDetail-table-body").append(result);
 									return;
@@ -564,10 +709,4 @@
 							}
 				});
 	</script>
-<!--  
-	초록색 원 🟢
-	빨간색 원 🔴
-	노란색 원 🟡
--->
-</body>
 </html>
