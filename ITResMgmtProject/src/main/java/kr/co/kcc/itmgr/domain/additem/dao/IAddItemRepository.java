@@ -22,4 +22,8 @@ public interface IAddItemRepository {
 	//부가정보 삭제(사용여부:N)
 	void deleteAddItemByUseYN(int addItemSn);
 
+	//부가정보 수정
+	void updateAddItemDesc(List<AddItem> updateAddItems);
+	
+
 }

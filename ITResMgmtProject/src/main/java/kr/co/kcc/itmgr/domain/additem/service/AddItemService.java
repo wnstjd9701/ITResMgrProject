@@ -35,5 +35,12 @@ public class AddItemService implements IAddItemService{
 		
 	}
 
+	@Override
+	public void updateAddItemDesc(List<AddItem> updateAddItems) {
+		addItemRepository.updateAddItemDesc(updateAddItems);
+		
+	}
+
+
 
 }

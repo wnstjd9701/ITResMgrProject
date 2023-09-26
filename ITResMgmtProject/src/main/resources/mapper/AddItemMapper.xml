@@ -33,16 +33,26 @@
 
 <insert id="insertAddItem" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
     INSERT INTO additem (add_item_sn, add_item_name, add_item_desc, use_yn, create_date, creater_id)
-    VALUES (add_item_sn_seq.NEXTVAL, #{addItemName}, #{addItemDesc}, #{useYN}, SYSDATE, '임시ID')
+    VALUES (add_item_sn_seq.NEXTVAL, #{addItemName}, #{addItemDesc}, 'Y', SYSDATE, '임시ID')
 </insert>
 
 <update id="deleteAddItemByUseYN" parameterType="int">
 	<![CDATA[
 		UPDATE additem
 		SET use_yn = 'N'
-		WHERE add_item_sn=#{addItemSn}
+		WHERE add_item_sn = #{addItemSn}
 	]]>
 </update>
+
+<update id="updateAddItemDesc" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+	<foreach collection="list" item="addItem" separator=";" open="DECLARE BEGIN" close="; END;">
+		UPDATE additem
+		SET add_item_desc = #{addItem.addItemDesc}
+		WHERE add_item_sn=#{addItem.addItemSn}
+	</foreach>
+</update>
+
+
 
 
 
