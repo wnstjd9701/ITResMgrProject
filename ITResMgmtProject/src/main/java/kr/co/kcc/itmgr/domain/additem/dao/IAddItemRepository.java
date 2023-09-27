@@ -18,6 +18,9 @@ public interface IAddItemRepository {
 	
 	//부가정보 등록
 	void insertAddItem(AddItem addItem);
+	
+	//부가정보 등록(엑셀파일)
+	void insertAddItem(String addItemName, String addItemDesc);
 
 	//부가정보 삭제(사용여부:N)
 	void deleteAddItemByUseYN(int addItemSn);

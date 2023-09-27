@@ -1,4 +1,5 @@
 var rowCount = 0;
+var uniqueAddItemNames = [];
 
 //행추가 버튼
 function addItemAddRow() {
@@ -16,7 +17,7 @@ function addItemAddRow() {
 	/*	newCell1.innerHTML = "<input type='text' id='addItemSn" + rowCount + "' size='5'>";*/
 
 	var newCell3 = newRow.insertCell(3);
-	newCell3.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='15'>";
+	newCell3.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='15' placeholder='반드시 입력해주세요.'>";
 
 	var newCell4 = newRow.insertCell(4);
 	newCell4.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "' size='40'>";
@@ -137,7 +138,11 @@ function addItemSaveAll() {
 			var addItemName = document.getElementById('insertName' + i).value;
 			console.log("addItemName", addItemName);
 			var addItemDesc = document.getElementById('addItemDesc' + i).value;
-			//var addItemUseYN = document.getElementById('addItemUseYN' + i).value;
+
+			if (addItemName.trim() === '') {
+				alert("부가항목명을 입력해주세요.");
+				return;
+			}
 
 			if (addItemName) {
 				var addItemValue = {
@@ -159,7 +164,7 @@ function addItemSaveAll() {
 	for (var i = 0; i < spanFields.length; i++) {
 		var spanValue = spanFields[i].textContent;
 		if (spanValue === "D") {
-			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
+			// 해당 숨겨진 필드의 부모 행을 찾아서 addItemSn 값을 가져옵니다.
 			var row = spanFields[i].closest("tr");
 			var addItemSn = row.querySelector('[name="addItemSn"]').textContent;
 			console.log("addItemSn : ", addItemSn);
@@ -227,6 +232,57 @@ function addItemSaveAll() {
 			return;
 		}
 	});
-	
+}
 
+
+function uploadFile() {
+	// 파일 선택 필드를 클릭하여 파일 선택 대화 상자 열기
+	document.getElementById('fileInput').click();
+}
+
+// 파일 선택 이벤트 처리
+document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+function handleFileSelect(event) {
+	const fileInput = event.target;
+	const file = fileInput.files[0];
+	if (file) {
+		const formData = new FormData();
+		formData.append('file', file);
+
+		$.ajax({
+			url: '/excel/upload',
+			type: 'POST',
+			contentType: false,
+			processData: false,
+			data: formData,
+			success: function(response) {
+				alert("엑셀 업로드가 완료되었습니다.");
+				rowCount = 0;
+				console.log("response", response)
+
+				$('#addItemTable > tbody').empty();
+
+				if (response.length === 0) {
+					$('#addItemTable > tbody').append(noResultRow);
+				} else {
+					for (var i = 0; i < response.length; i++) {
+						var addTableRow = "<tr>" +
+							"<td><input type='checkbox' name='checkBox'></td>" +
+							"<td><span name='status'>E</span></td>" +
+							"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
+							"<td name='addItemName'>" + response[i].addItemName + "</td>" +
+							"<td name='addItemDesc'>" + response[i].addItemDesc + "</td>" +
+							"<td name='useYN'>" + response[i].useYN + "</td>" +
+							"</tr>";
+
+						$('#addItemTable > tbody').append(addTableRow);
+					}
+				}
+			},
+			error: function() {
+				alert("엑셀 업로드에 실패했습니다. 파일을 다시 선택해주세요.");
+			}
+		});
+	}
 }

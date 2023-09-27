@@ -19,10 +19,19 @@
 		<input id="addItemSearchText" type="text" placeholder="부가항목명 입력">
 		<input id="addItemsearchButton" type="button" value="조회" onclick="addItemsearch()"/>
 		<div style="margin-left: 850px;">
-		<form action="/excel/download" method="get">
-			   <button type="submit">엑셀양식다운로드</button>
-		</form>
-			<input id="addItemsDownBtn" type="button" value="엑셀다운로드"/>
+		
+			<form action="/excel/download" method="get">
+				<button type="submit">엑셀양식다운로드</button>
+			</form>
+
+			<form id="uploadForm" enctype="multipart/form-data">
+				<!-- 파일 선택(input) 필드를 버튼으로 대체합니다. -->
+				<input type="file" id="fileInput" name="file" accept=".xlsx, .xls"
+					style="display: none;">
+				<button type="button" onclick="uploadFile()">엑셀업로드</button>
+			</form>
+
+
 			<input id="addItemAddRow" type="button" value="행추가" onclick="addItemAddRow()"/>
 			<input id="addItemHideRow" type="button" value="행삭제" onclick="addItemHideRow()"/>
 			<input id="addItemSave" type="button" value="저장" onclick="addItemSaveAll()"/>
@@ -55,7 +64,6 @@
 		</table>
 		</div>
 	</div>
-
 
 
 

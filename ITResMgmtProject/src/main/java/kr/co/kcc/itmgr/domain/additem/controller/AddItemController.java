@@ -1,29 +1,26 @@
 package kr.co.kcc.itmgr.domain.additem.controller;
 
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import jakarta.servlet.ServletOutputStream;
+import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.additem.service.IAddItemService;
 import lombok.RequiredArgsConstructor;
-
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -108,7 +105,9 @@ public class AddItemController {
 		return addItemList;
 	}
 	
-	//엑셀다운로드
+
+	
+	//엑셀양식다운로드
 	@GetMapping("/excel/download")
     public void excelDownload(HttpServletResponse response) throws IOException {
 		Workbook wb = new XSSFWorkbook();
@@ -147,7 +146,131 @@ public class AddItemController {
 		// Excel File Output
 		wb.write(response.getOutputStream());
 		wb.close();
-	
 	}
+	
+	//엑셀업로드
+	@PostMapping("/excel/upload")
+	@ResponseBody
+	public List<AddItem> excelUpload(@RequestParam("file") MultipartFile file) {
+		List<AddItem> addItemList = new ArrayList<>(); 
+		try {
+			// 업로드된 엑셀 파일을 읽기 위해 MultipartFile.getInputStream()을 사용
+			InputStream inputStream = file.getInputStream();
+
+			// 엑셀 파일을 읽기 위해 Workbook을 생성
+			Workbook workbook = new XSSFWorkbook(inputStream);
+
+			// 엑셀 파일의 첫 번째 시트를 가져오기
+			Sheet sheet = workbook.getSheetAt(0);
+
+			// 엑셀 파일에서 데이터 읽기
+			int rowIndex = 0; // 행 인덱스 초기화
+
+			// 엑셀 파일에서 데이터를 읽어오기
+			for (Row row : sheet) {
+				if (rowIndex == 0) {
+					// 첫 번째 행은 '부가항목명', '부가항목설명'이므로 두번째 행부터 읽어옴
+					rowIndex++;
+					continue;
+				}
+
+				// 각 행에서 셀 값 읽어오기
+				String addItemName = row.getCell(0).getStringCellValue();
+				String addItemDesc = row.getCell(1).getStringCellValue();
+
+				// 데이터베이스에 저장하는 로직 추가
+				addItemService.insertAddItem(addItemName, addItemDesc);
+
+				rowIndex++;
+			}
+
+			workbook.close();
+			inputStream.close();
+
+			addItemList = addItemService.selectAllAddItem();
+		} catch (Exception e) {
+			e.printStackTrace();
+			// 업로드 실패 시 예외 처리
+		}
+		return addItemList;
+	}
+	
+
+	
+	
+	
+//	@PostMapping("/excel/upload")
+//	public ResponseEntity<String> excelUpload(@RequestParam("file") MultipartFile file) {
+//	    try {
+//	        // 엑셀 파일을 읽어온 후 데이터 유효성 검사 수행
+//	        Workbook workbook = new XSSFWorkbook(file.getInputStream());
+//	        Sheet sheet = workbook.getSheetAt(0);
+//
+//	        List<String> errors = new ArrayList<>(); // 오류 메시지를 저장할 리스트
+//
+//	        // 최대 바이트 수 정의
+//	        int maxItemNameBytes = 200;
+//	        int maxItemDescriptionBytes = 1000;
+//
+//	        for (Row row : sheet) {
+//	            // 각 행에서 셀 값을 읽어옴
+//	            String itemName = row.getCell(0).getStringCellValue();
+//	            String itemDescription = row.getCell(1).getStringCellValue();
+//
+//	            // 데이터 유효성 검사 수행
+//	            if (!isValid(itemName, itemDescription, maxItemNameBytes, maxItemDescriptionBytes)) {
+//	                errors.add("유효하지 않은 데이터: " + itemName + ", " + itemDescription);
+//	                continue; // 유효하지 않은 데이터를 건너뜀
+//	            }
+//
+//	            // 유효한 데이터 처리 (데이터베이스 저장 또는 처리)
+//	            // addItemToDatabase(itemName, itemDescription);
+//	        }
+//
+//	        workbook.close();
+//
+//	        // 유효성 검사 오류가 있는 경우 처리
+//	        if (!errors.isEmpty()) {
+//	            // 오류 메시지를 로그에 기록하거나 클라이언트에게 반환할 수 있음
+//	            return ResponseEntity.badRequest().body("엑셀 파일 업로드 실패: " + String.join(", ", errors));
+//	        }
+//
+//	        // 업로드 성공 시 응답 메시지 반환
+//	        return ResponseEntity.ok("엑셀 파일 업로드 성공");
+//
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        // 업로드 실패 시 예외 처리
+//	        return ResponseEntity.badRequest().body("엑셀 파일 업로드 실패: " + e.getMessage());
+//	    }
+//	}
+//
+//	// 데이터 유효성 검사 메서드
+//	private boolean isValid(String itemName, String itemDescription, int maxItemNameBytes, int maxItemDescriptionBytes) {
+//	    try {
+//	        // 부가항목명을 바이트로 변환하여 길이 확인
+//	        byte[] itemNameBytes = itemName.getBytes("UTF-8");
+//	        if (itemNameBytes.length > maxItemNameBytes) {
+//	            // 오류 처리: 부가항목명 바이트 수 초과
+//	            return false;
+//	        }
+//
+//	        // 부가항목설명을 바이트로 변환하여 길이 확인
+//	        byte[] itemDescriptionBytes = itemDescription.getBytes("UTF-8");
+//	        if (itemDescriptionBytes.length > maxItemDescriptionBytes) {
+//	            // 오류 처리: 부가항목설명 바이트 수 초과
+//	            return false;
+//	        }
+//
+//	        // 유효한 데이터인 경우
+//	        return true;
+//	    } catch (UnsupportedEncodingException e) {
+//	        e.printStackTrace();
+//	        // 인코딩 오류 처리
+//	        return false;
+//	    }
+//	}
+
+	
 }
 

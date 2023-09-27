@@ -28,6 +28,12 @@ public class AddItemService implements IAddItemService{
 	public void insertAddItem(AddItem addItem) {
 		addItemRepository.insertAddItem(addItem);
 	}
+	
+	@Override
+	public void insertAddItem(String addItemName, String addItemDesc) {
+		addItemRepository.insertAddItem(addItemName, addItemDesc);
+		
+	}
 
 	@Override
 	public void deleteAddItemByUseYN(int addItemSn) {
@@ -40,6 +46,8 @@ public class AddItemService implements IAddItemService{
 		addItemRepository.updateAddItemDesc(updateAddItems);
 		
 	}
+
+
 
 
 
