@@ -11,11 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.installplace.service.IInstallPlaceService;
 import kr.co.kcc.itmgr.domain.placemap.service.IPlaceMapService;
+import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,11 +35,20 @@ public class PlaceMapController {
 	 * @Info: 상세 주소 수정
 	 */
 	@GetMapping("/placemap")
-	public String selectPlaceMap(Model model) {
-		List<InstallPlace> installPlace = installPlaceService.selectAllPlace();
-		model.addAttribute("place", installPlace);
-		return "/place/placemap";
-	}
+    public ModelAndView selectPlaceMap() {
+        ModelAndView modelAndView = new ModelAndView("/place/placemap"); // 뷰 이름 설정
+
+        List<InstallPlace> installPlace = installPlaceService.selectAllPlace();
+        
+        // stream을 사용하여 각 InstallPlace 객체에 getDoName 메서드 적용
+        List<InstallPlace> place = installPlace.stream()
+                .map(placeMapService::getDoName) // 각 객체에 getDoName 메서드 적용
+                .collect(Collectors.toList());
+        log.info("place" + place);
+        modelAndView.addObject("place", place); // 모델에 데이터 추가
+
+        return modelAndView;
+    }
 	
 	/*
 	 * @Author: [윤준성]
@@ -78,4 +89,17 @@ public class PlaceMapController {
         log.info("place: " + place);
         return ResponseEntity.ok().body(place);
     }
+	
+	/*
+	 * @Author: [윤준성]
+	 * @API No.4-4. 지역별 자원 조회 
+	 * @Info: 지역에 따른 설치 장소에 있는 자원 조회
+	 */
+	@PostMapping("/city/resinfo")
+	public ResponseEntity<String> selectResInfoByCity(@RequestBody String placeNameList){
+		log.info("placaeNameList: " + placeNameList);
+		//List<ResInfo> resInfo = installPlaceService.selectResInfoByCity(placeNameList);
+		
+		return ResponseEntity.ok().body(placeNameList);
+	}
 }

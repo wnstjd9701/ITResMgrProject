@@ -23,6 +23,7 @@
 		        GROUP BY
 		            i.install_place_sn
 		    )            r ON i.install_place_sn = r."install_place_sn"
+		ORDER BY i.install_place_address
 	</select>
 	
 	<select id="selectInstallPlaceByName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
