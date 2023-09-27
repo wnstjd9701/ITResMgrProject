@@ -10,19 +10,22 @@
 	display: flex;
 	width: 80vw;
 }
-#map{
-	width: 45%; 
+
+#map {
+	width: 45%;
 	height: 90vh;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
-.place-list-container{
+
+.place-list-container {
 	width: 50%;
-	margin:10px 0 0 10px;
+	margin: 10px 0 0 10px;
 	padding: 0 0 0 10px;
 }
-.place-table{
+
+.place-table {
 	font-size: 12px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -33,15 +36,23 @@
 <th:block layout:fragment="content">
 	<div class="container">
 		<div class="place-map-container">
-			<div><input type="button" class="refresh-map" value="지도 초기화"></div>
-			<div><input type="button" class="group-do" value="도 별로"></div>
 			<div id="map"></div>
 			<div class="place-list-container">
+				<div>
+					<input type="button" class="group-do" value="도 별로">
+				</div>
+				<select>
+					<option>전체</option>
+					<option>경기도</option>
+					<option>강원도</option>
+					<option>서울</option>
+				</select>
 				<table class="table table-striped place-table">
 					<thead>
 						<tr>
+							<th>번호</th>
 							<th>설치 장소명</th>
-							<th>우편 번호</th>
+							<th>우편번호</th>
 							<th>주소</th>
 							<th>상세 주소</th>
 							<th>장비 개수</th>
@@ -52,12 +63,17 @@
 						<tr th:each="place, i : ${place}">
 							<td class="place-count" th:text="${i.count}"></td>
 							<td class="place-name" th:text="${place.installPlaceName}"></td>
+							<td class="place-name" th:text="${place.installPlacePostno}"></td>
 							<td class="place-address" th:text="${place.installPlaceAddress}"></td>
-							<td class="place-detail-address" th:text="${place.installPlaceDetailAddress}"></td>
+							<td class="place-detail-address"
+								th:text="${place.installPlaceDetailAddress}"></td>
 							<td class="place-res-count" th:text="${place.resCount}"></td>
-							<td>
-								<input name="search" type="button" value="조회" class="place-detail-btn">
-								<input name="placesn" class="place-sn" type="hidden" th:value="${place.installPlaceSn}">
+							<td><input name="search" type="button" value="조회"
+								class="place-detail-btn"> <input name="placesn"
+								class="place-sn" type="hidden"
+								th:value="${place.installPlaceSn}"> <input type="hidden"
+								class="latitude" th:value="${place.latitude}"> <input
+								type="hidden" class="longitude" th:value="${place.longitude}">
 							</td>
 						</tr>
 					</tbody>
@@ -68,34 +84,99 @@
 
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=28bed2e7a81023c99f56920a94503f99&libraries=services,clusterer"></script>
-<script th:inline="javascript">
+	<script th:inline="javascript">
+var places = `[[${place}]]`;
 $(document).ready(function(){
+	
+	var mapContainer = document.getElementById('map'); // 지도를 표시할 div 요소
+    var mapOption = {
+        center: new kakao.maps.LatLng(36.5, 127.5), // 지도 중심 좌표
+        level: 12 // 지도 확대 레벨
+    };
+    // 지도를 생성합니다.
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+ // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+    var zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    
+    var allMarkers = [];
+	var regions = JSON.parse(places);
+	var clusterers = groupDo(regions);
+	clusterEvent(clusterers);
+	markerClickEvent(allMarkers);
+	
+	function clusterEvent(clusterers){
+		for (var groupName in clusterers) {
+	        kakao.maps.event.addListener(clusterers[groupName], 'clusterclick', function(cluster) {
+	        	var markers = cluster._clusterer._markers;
+	        	var placeName = {};
+	        	placeName[groupName] = [];
+	        	for(var i=0; i<markers.length; i++){
+	        		placeName[groupName].push(markers[i].Gb);
+	        	}
+	        	console.log(placeName[groupName]);
+	        	
+	        	var placeNameList = placeName[groupName];
+	        	var jsonData = JSON.stringify(placeNameList);
+
+	        	$.ajax({
+	        		   method: "POST", // POST 요청으로 변경
+	        		   url: "/city/resinfo",
+	        		   contentType: "application/json", // JSON 데이터 전송을 명시
+	        		   data: jsonData, // JSON 데이터를 요청 바디에 직접 전송
+	        		   success: function(data) {
+	        		       // 서버 응답 처리
+	        		   },
+	        		   error: function(xhr, status, err) {
+	        		       alert(err);
+	        		   }
+	        	});
+	        });
+	    }
+	}
+	
+	function markerClickEvent(allMarkers){
+		for(var i = 0; i < allMarkers.length; i++) {
+	        for(var j = 0; j < allMarkers[i].length; j++) {
+	            var marker = allMarkers[i][j];
+	            marker.clicked = false;
+	            kakao.maps.event.addListener(marker, 'click', (function (marker) {
+	                return function () {
+	                		var placeName = marker.Gb;
+			                var position = marker.getPosition();
+			                var lat = position.getLat();
+			                var lng = position.getLng();
+		
+			                var iwContent = `<div style="padding:5px;">${placeName}<br><a href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">길찾기</a></div>`;
+		
+			                var iwPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+		
+			                // 인포윈도우를 생성합니다
+			                var infowindow = new kakao.maps.InfoWindow({
+			                    position: iwPosition,
+			                    content: iwContent,
+			                    removable: true
+			                });
+			                // 마커 위에 인포윈도우를 표시합니다.
+			                infowindow.open(map, marker);	 
+			                console.log(`${placeName}`);
+	                };
+	            })(marker));
+	        }
+	    }
+	} 
+
 	$(".group-do").click(() => {
-		$.ajax({
-			method: "GET",
-			url: "/place",
-			contentType: "application/json",
-			success: function(response){
-				console.log(response);
-				groupDo(response);
-			}
-		});
-	})	
+		var moveLatLon = new kakao.maps.LatLng(36.5, 127.5);
+		map.setCenter(moveLatLon);
+		map.setLevel(12);
+	})
+	
 	
 	function groupDo(regions){
-		console.log(regions);
-		var mapContainer = document.getElementById('map'); // 지도를 표시할 div 요소
-        var mapOption = {
-            center: new kakao.maps.LatLng(36.5, 127.5), // 지도 중심 좌표
-            level: 12 // 지도 확대 레벨
-        };
-
-        // 지도를 생성합니다.
-        var map = new kakao.maps.Map(mapContainer, mapOption);
 
         // 지역을 그룹화할 객체를 생성합니다.
         var groupedRegions = {};
-
         // 지역 정보를 그룹화합니다.
         regions.forEach(function (region) {
             if (!groupedRegions[region.doName]) {
@@ -103,8 +184,9 @@ $(document).ready(function(){
             }
             groupedRegions[region.doName].push(region);
         });
-		
         
+        var clusterers = {};
+        var infowindows = [];
         for (var groupName in groupedRegions) {
         	// 도 별로 그룹핑
             var group = groupedRegions[groupName];
@@ -112,95 +194,56 @@ $(document).ready(function(){
 			var clusterSize = 1;
 			for (var i = 0; i < group.length; i++) {
 	            resCount += group[i].resCount;
-	        }            
-            var clusterer = new kakao.maps.MarkerClusterer({
+	        }
+			
+			clusterers[groupName] = new kakao.maps.MarkerClusterer({
                 map: map,
                 averageCenter: true,
-                minLevel: 9,
+                clickable: true,
+                minLevel: 5,
                 minClusterSize: clusterSize,
-                texts: [groupName + ' 자원 : ' + resCount + '개'],
+                texts: [groupName + ' 자원'],
                 calculator: [1, 2, 3]
             });
-            $(".cluster_label").css("font-size", "12px");
-            group.forEach(function (region) {
+
+            var markers = [];
+            var positions = [];
+            for (var i = 0; i < group.length; i++) {
                 var marker = new kakao.maps.Marker({
-                    position: new kakao.maps.LatLng(region.latitude, region.longitude),
-                    title: region.name
+                    position: new kakao.maps.LatLng(group[i].latitude, group[i].longitude),
+                    title: group[i].installPlaceName,
+                    clickable: true
                 });
-                marker.setMap(map);
-                clusterer.addMarker(marker);
-            });
+                markers.push(marker);
+                
+                var content = '<div>' + group[i].installPlaceName + '</div>';
+                var infowindow = new kakao.maps.InfoWindow({
+			        content: content // 인포윈도우에 표시할 내용
+    			});
+                infowindows.push(infowindow);
+                kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+            }
+            allMarkers.push(markers);
+            clusterers[groupName].addMarkers(markers);
         }
+        return clusterers;
 	}
 	
-	//mapRefresh();
-	$(".refresh-map").click(() => {
-		mapRefresh();
-	})
-    function mapRefresh(){
-    	var positions = /*[[${place}]]*/ [];
+	// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+	function makeOverListener(map, marker, infowindow) {
+	    return function() {
+	        infowindow.open(map, marker);
+	    };
+	}
 
-        var container = document.getElementById('map');
-        var options = {
-            center : new kakao.maps.LatLng(37.402707, 126.922044),
-            level : 13
-        };
-
-        var map = new kakao.maps.Map(container, options);
-
-        var markers = positions.map(function(position){
-            var marker = new kakao.maps.Marker({
-                map: map,
-                position: new kakao.maps.LatLng(position.latitude, position.longitude),
-                title: position.installPlaceName
-            });
-
-            // 마커에 대한 InfoWindow 생성
-            var infowindow = new kakao.maps.InfoWindow({
-                content: '<div>' + position.installPlaceName + '</div>'
-            });
-
-            // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록하여 InfoWindow 표시 및 숨김
-            kakao.maps.event.addListener(marker, 'mouseover', function() {
-                infowindow.open(map, marker);
-            });
-
-            kakao.maps.event.addListener(marker, 'mouseout', function() {
-                infowindow.close();
-            });
-            
-            kakao.maps.event.addListener(marker, 'click', function() {
-            	var placeName = position.installPlaceName;
-                // Ajax 요청을 보냅니다
-                $.ajax({
-                    url: '/map/detail', 
-                    type: 'POST', 
-                    data: JSON.stringify({ placeName: placeName }), // 마커 정보를 JSON 형식으로 전달
-                    contentType: 'application/json', // 요청 데이터 타입
-                    success: function(response) {
-                        console.log('Ajax 요청 성공:', response);
-                        updatePlace(response);
-                    },
-                    error: function(error) {
-                        console.error('Ajax 요청 실패:', error);
-                    }
-                });
-            });
-
-            return marker;
-        });
-
-        var clusterer = new kakao.maps.MarkerClusterer({
-            map : map,
-            averageCenter : true,
-            minLevel : 5,
-            markers : markers,
-            disableClickZoom: true,
-            calculator: [10, 30, 50],
-            texts: ['삐약', '꼬꼬', '꼬끼오', '치멘'] 
-        });
-    }
-    
+	// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+	function makeOutListener(infowindow) {
+	    return function() {
+	        infowindow.close();
+	    };
+	}
+	
     function updatePlace(place) {
         console.log("업데이트 Place: " + place.installPlaceSn);
 
@@ -223,78 +266,20 @@ $(document).ready(function(){
     	
         var placeName = clickedRow.find(".place-name").text();
         var placeAddress = clickedRow.find(".place-address").text();
-
-        updateMap(placeAddress,placeName);
-       	
-     	/* // 주소를 기반으로 좌표를 가져오기 위해 지오코더를 사용합니다.
-        var geocoder = new kakao.maps.services.Geocoder();
-
-        geocoder.addressSearch(placeAddress, function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-                // 지도의 중심 변경을 부드럽게 애니메이션화합니다.
-                $("html, body").animate(
-                    {
-                        scrollTop: $("#map").offset().top, // 지도로 스크롤합니다.
-                    },
-                    500, // 애니메이션 지속 시간 (밀리초)
-                    function () {
-                        map.setCenter(coords); // 스크롤 애니메이션 완료 후 지도의 중심 변경
-                    }
-                );
-            } else {
-                console.error("지오코딩 실패: " + status);
-            }
-        }); */
+		var latitude = clickedRow.find(".latitude").val();
+		var longitude = clickedRow.find(".longitude").val();
+		
+        panTo(latitude, longitude);
     });
     
-    async function updateMap(placeAddress, placeName){
-	    return new Promise((resolve, reject) => {
-	        var mapContainer = document.getElementById('map'); // 지도를 표시할 div 
-	        var mapOption = {
-	            center: new kakao.maps.LatLng(0, 0), // 지도의 중심좌표
-	            level: 3 // 지도의 확대 레벨
-	        };  
-
-	        // 지도를 생성합니다    
-	        var map = new kakao.maps.Map(mapContainer, mapOption); 
-
-	        // 주소-좌표 변환 객체를 생성합니다
-	        var geocoder = new kakao.maps.services.Geocoder();
-
-	        // 주소로 좌표를 검색합니다
-	        geocoder.addressSearch(placeAddress, function(result, status) {
-	            // 정상적으로 검색이 완료됐으면 
-	            if (status === kakao.maps.services.Status.OK) {
-	                const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-	                var coord = {
-	                		latitude: coords.getLat(), 
-	                		longitude: coords.getLng()
-	                }
-	                // 결과값으로 받은 위치를 마커로 표시합니다
-	                var marker = new kakao.maps.Marker({
-	                    map: map,
-	                    position: coords
-	                });
-
-	                // 인포윈도우로 장소에 대한 설명을 표시합니다
-	                var infowindow = new kakao.maps.InfoWindow({
-	                    content: `<div style="width:150px;text-align:center;padding:6px 0;font-weight:bolder;">${placeName}</div>`
-	                });
-	                infowindow.open(map, marker);
-
-	                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-	                map.setCenter(coords);
-	                $("#latitude").val(coord.latitude);
-	    		    $("#longitude").val(coord.longitude);
-	                resolve(coord);
-	            } else {
-	                reject(status); // 오류 상태를 reject
-	            }
-	        });
-	    });
-	}
+    function panTo(latitude, longitude) {
+        // 이동할 위도 경도 위치를 생성합니다 
+        var moveLatLon = new kakao.maps.LatLng(latitude, longitude);
+        // 지도 중심을 부드럽게 이동시킵니다
+        // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+        map.setLevel(3);
+        map.panTo(moveLatLon);            
+    }  
 });
 	</script>
 </th:block>
