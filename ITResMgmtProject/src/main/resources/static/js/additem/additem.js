@@ -131,6 +131,140 @@ function handleClick(element) {
 
 //저장버튼
 function addItemSaveAll() {
+	
+	//기존테이블 vs 행추가한 네임
+			var addItemNameCells = document.querySelectorAll('td[name="addItemName"]');
+
+			// 선택된 td 요소들의 개수를 구함
+			var rowCount = addItemNameCells.length;
+
+			// rowCount를 출력하거나 필요한 작업에 활용
+			console.log("addItemName 열의 행 개수: " + rowCount);
+			
+			
+	//Insert
+	if (rowCount > 0) {
+		var insertAddItems = new Array();
+		for (var i = 0; i < rowCount; i++) {
+			var addItemName = document.getElementById('insertName' + i).value;
+			console.log("addItemName", addItemName);
+			var addItemDesc = document.getElementById('addItemDesc' + i).value;
+			
+			//행추가한 addItemName이 비어있을 경우
+			if (addItemName.trim() === '') {
+				alert("부가항목명을 입력해주세요.");
+				return;
+			}
+
+			//행추가한 addItemName 중 중복되었을 경우
+			if (uniqueAddItemNames.includes(addItemName)) {
+				alert("부가항목명 '" + addItemName + "' 이 중복되었습니다. 다시 입력해주세요.");
+				uniqueAddItemNames = [];
+				return;
+			}
+			uniqueAddItemNames.push(addItemName);
+			console.log("uniqueAddItemNames", uniqueAddItemNames);
+			
+			
+			//총 additemname과 행추가name이 같을경우
+			
+			
+			
+			
+			
+			
+			
+
+			if (addItemName) {
+				var addItemValue = {
+					addItemName: addItemName,
+					addItemDesc: addItemDesc
+					//useYN: addItemUseYN
+				};
+				insertAddItems.push(addItemValue);
+			}
+		}
+		console.log("insertAddItem", insertAddItems);
+	}
+	
+	//Delete
+	var deletedAddItems = [];
+
+	var spanFields = document.getElementsByName("status");
+
+	for (var i = 0; i < spanFields.length; i++) {
+		var spanValue = spanFields[i].textContent;
+		if (spanValue === "D") {
+			// 해당 숨겨진 필드의 부모 행을 찾아서 addItemSn 값을 가져옵니다.
+			var row = spanFields[i].closest("tr");
+			var addItemSn = row.querySelector('[name="addItemSn"]').textContent;
+			console.log("addItemSn : ", addItemSn);
+			deletedAddItems.push(addItemSn);
+		}
+	}
+	
+	//Update
+	var spanFields2 = document.getElementsByName("status");
+	var updateAddItems = [];
+	for(var i=0; i<spanFields2.length; i++){
+		var spanFields2Value = spanFields2[i].textContent;
+		if(spanFields2Value === 'U'){
+			var row = spanFields2[i].closest("tr");
+			var u_addItemSn = row.querySelector('[name="addItemSn"]').textContent;
+			var u_addItemDesc = row.querySelector('[name="addItemDesc"]').textContent;
+			
+		}
+		
+		var updateAddItem = {
+			addItemSn : u_addItemSn,
+			addItemDesc : u_addItemDesc
+		};	
+	}
+	updateAddItems.push(updateAddItem);
+	console.log("updateAddItems",updateAddItems);
+	
+	
+	var requestData = {
+		insertAddItems: insertAddItems,
+		deletedAddItems: deletedAddItems,
+		updateAddItems : updateAddItems
+	};
+	
+	
+		$.ajax({
+		url: '/save/additem',
+		type: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(requestData),
+		success: function(response) {
+			rowCount=0;
+			console.log("response", response)
+
+			
+
+			if (response.length > 0) {
+			$('#addItemTable > tbody').empty();
+			} else {
+				// 검색 결과가 있는 경우
+				for (var i = 0; i < response.length; i++) {
+					var addTableRow = "<tr>" +
+						"<td><input type='checkbox' name='checkBox'></td>" +
+						"<td><span name='status'>E</span></td>" +
+						"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
+						"<td name='addItemName'>" + response[i].addItemName + "</td>" +
+						"<td name='addItemDesc'>" + response[i].addItemDesc + "</td>" +
+						"<td name='useYN'>" + response[i].useYN + "</td>" +
+						"</tr>";
+
+
+					$('#addItemTable > tbody').append(addTableRow);
+				}
+			}
+			return;
+		}
+	});
+}
+/*function addItemSaveAll() {
 	//Insert
 	if (rowCount > 0) {
 		var insertAddItems = new Array();
@@ -232,7 +366,7 @@ function addItemSaveAll() {
 			return;
 		}
 	});
-}
+}*/
 
 
 function uploadFile() {
