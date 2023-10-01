@@ -31,7 +31,7 @@ public class EmployeeController {
 	private final IEmployeeService employeeService;
 
 	//사원 기본 페이지
-	@RequestMapping(value = "/employeeview", method=RequestMethod.GET)
+	@RequestMapping(value = "/employee", method=RequestMethod.GET)
 	public String selectAllEmployee(Model model) {
 		List<Employee> employeeList = employeeService.selectAllEmployee();
 		model.addAttribute("employeeList", employeeList);
@@ -54,7 +54,7 @@ public class EmployeeController {
 
 
 
-		return "employee/employeeview";
+		return "employee/employee";
 	}
 
 
