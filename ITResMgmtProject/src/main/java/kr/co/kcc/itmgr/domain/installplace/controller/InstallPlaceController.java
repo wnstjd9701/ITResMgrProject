@@ -53,7 +53,7 @@ public class InstallPlaceController {
 	@GetMapping("/installplace/search")
 	@ResponseBody
 	public List<InstallPlace> selectInstallPlaceByName(String placeName) {
-		List<InstallPlace> installPlace = installPlaceService.selectInstallPlaceByName(placeName);
+		List<InstallPlace> installPlace = installPlaceService.searchInstallPlaceByName(placeName);
 		logger.info("InstallPlaceList: " + installPlace);
 		return installPlace;
 	}
