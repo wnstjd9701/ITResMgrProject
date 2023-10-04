@@ -42,6 +42,7 @@
 			    urc_name.res_class_name "topUpperResClassName",
 			    urc.res_class_name   "upperResClassName",
 			    rc.res_class_name   "resClassName",
+			    rc.res_class_id		"resClassId",
 			    rc.use_yn   "useYn",
                 a.add_item_sn   "addItemSn",
                 ad.add_item_name "addItemName",
@@ -86,25 +87,50 @@
 	
 	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
 		<![CDATA[
-			SELECT 
-			    add_item_sn "addItemSn",
-			    add_item_name   "addItemName",
-			    add_item_desc	"addItemDesc",
-			    use_yn  "useYN"
-			FROM ADDITEM
+			SELECT
+				add_item_sn	"addItemSn",
+				add_item_name	"addItemName",
+				add_item_desc	"addItemDesc",
+				use_yn	"useYN"
+			FROM
+				ADDITEM
 			WHERE use_yn = 'Y'
 		]]>
 	</select>
+
 	
-	
-	<insert id="insertAddItemToResClass" parameterType="Hashmap">
-		<![CDATA[
-			INSERT INTO
-				RESCLASSASIDEINFOMAPPING
-				(res_class_id, add_item_sn, create_date, creater_id)
-				VALUES
-				(#{resClassId},#{addItemSn},SYSDATE,'wh467925')
-		]]>
+	<insert id="insertAddItemToResClass"  parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+			<foreach collection="resClass.addItemSn" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+				INTO
+					RESCLASSASIDEINFOMAPPING
+						(res_class_id, add_item_sn, create_date, creater_id)
+					VALUES
+					   (#{resClass.resClassId}, #{item},SYSDATE,'wh467925')
+		    </foreach>
 	</insert>
+	
+	<select id="countOfAddItemList" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem" resultType="integer">
+			SELECT COUNT(*) AS "addItemSn"
+			FROM ADDITEM
+	</select>
+	
+	<update id="updateResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<![CDATA[
+			UPDATE
+				SET 
+				res_class_name	=	#{resClassName}, 
+				use_yn	=	#{useYn}
+			WHERE res_class_id	=	#{resClassId}
+		]]>
+	</update>
+	
+	<delete id="deleteAddItemInResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<foreach collection="resClass.addItemSn" item="item" separator=" " open="DELETE" close="SELECT * FROM DUAL">
+				FROM RESCLASSASIDEINFOMAPPING
+			WHERE 
+				res_class_id = #{resClass.resClassId} AND add_item_sn = #{item}		
+		</foreach> 
+
+	</delete>
 	
 </mapper>
