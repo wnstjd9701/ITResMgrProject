@@ -29,4 +29,7 @@ public interface IEmployeeRepository {
 
 	//공통코드 사원상태
 	List<CommonCodeDetail> commonCodeEmpStatus();
+
+	//기존 employeeId 가져오기
+	List<String> selectEmployeeId();
 }

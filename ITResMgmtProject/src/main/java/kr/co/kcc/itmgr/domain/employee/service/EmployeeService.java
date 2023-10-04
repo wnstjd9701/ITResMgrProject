@@ -53,4 +53,11 @@ public class EmployeeService implements IEmployeeService{
 	public List<CommonCodeDetail> commonCodeEmpStatus() {
 		return employeeRepository.commonCodeEmpStatus();
 	}
+
+
+	@Override
+	public List<String> selectEmployeeId() {
+		return employeeRepository.selectEmployeeId();
+		
+	}
 }

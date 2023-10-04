@@ -1,6 +1,7 @@
 #searchBar {
     display: flex;
     align-items: center; /* 내부 요소들을 수직 가운데 정렬 */
+    white-space: nowrap;
 }
 #p1, #p2, #p3{
 	margin-top : 10px;
@@ -12,32 +13,6 @@
 	margin-left:450px;
 }
 
-/* 테이블 */
-/* #empTable {
-    width: 120%;
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-#empTable th, #empTable td {
-    padding: 8px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-#empTable th {
-    background-color: #f2f2f2;
-}
-
-#empTable tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-#empTable tbody tr:hover {
-    background-color: #ddd;
-}
-
- */
 /* 테이블 컨테이너에 스타일링 추가 */
 .table-container {
     max-height: 1000px; 
@@ -58,4 +33,26 @@
 #title{
 	font-size:20px;
 	
+}
+
+.saveBtn{
+	background-color: navy;
+    color: white;
+}
+
+.addRowBtn{
+    background-color: skyblue;
+    color: white;
+	border: 2px solid skyblue;
+}
+
+.hideRowBtn{
+    background-color: skyblue;
+    color: white;
+    border: 2px solid skyblue;
+}
+
+.chechBtn{
+	background-color: lightgray;
+	border: 2px solid lightgray;
 }

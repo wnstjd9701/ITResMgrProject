@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-
 	static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 
 	private final IEmployeeService employeeService;
@@ -51,8 +50,6 @@ public class EmployeeController {
 			commonCodeStatusList.put(commonCode2.getDetailCode(), commonCode2.getDetailCodeName());
 		}
 		model.addAttribute("commonCodeStatusList", commonCodeStatusList);
-
-
 
 		return "employee/employee";
 	}
@@ -115,5 +112,69 @@ public class EmployeeController {
 			e.printStackTrace();
 		}
 		return employeeList;
-	}  
+	}
+	
+	//기존의 사원ID값 가져오기
+//	@RequestMapping(value = "/select/employeeId{employeeIds}", method=RequestMethod.GET)
+//	@ResponseBody
+//	public Map<String, String> DuplicateCheck(@RequestParam Map<String, String> employeeIds) {
+//		Map<String, String> duplicateCheck = new HashMap<>(); 
+//
+//		try {
+//
+//
+//			duplicateCheck = employeeService.selectEmployeeId();
+//
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		return duplicateCheck;
+//	}
+	
+//	@RequestMapping(value = "/select/employeeId", method=RequestMethod.GET)
+//    @ResponseBody
+//    public List<String> getEmployeeIds() {
+//        List<String> employeeIds = employeeService.selectEmployeeId();
+//        
+//        
+//        return employeeIds;
+//    }
+
+	@RequestMapping(value = "/select/employeeId", method=RequestMethod.GET)
+	public List<String> selectEmployeeId() {
+		List<String> employeeIds = new ArrayList<>(); 
+		employeeIds = employeeService.selectEmployeeId();
+
+		System.out.println("-----------employeeIds-----------" + employeeIds);
+
+		return employeeIds;
+	}
+	
+	@PostMapping("/checkDuplicateEmployeeIds")
+    public List<String> checkDuplicateEmployeeIds(@RequestBody List<String> empIds) {
+        List<String> duplicateIds = new ArrayList<>();
+
+        // 기존 DB에 저장된 사원 ID들을 가져옴
+        List<String> existingEmployeeIds = new ArrayList<>();
+
+        List<Employee> employees = employeeService.selectAllEmployee();
+        for (Employee employee : employees) {
+            existingEmployeeIds.add(employee.getEmployeeId());
+        }
+
+        System.out.println("기존id값" + existingEmployeeIds);
+
+        // 새로운 사원 ID들과 기존 DB에 저장된 ID들을 비교하여 중복된 ID를 찾음
+        for (String empId : empIds) {
+            if (existingEmployeeIds.contains(empId)) {
+                duplicateIds.add(empId);
+            }
+        }
+        
+        System.out.println("반환값"+duplicateIds);
+
+        return duplicateIds;
+    }
+
+    // 다른 컨트롤러 메서드와 더 이어질 수 있음
 }
