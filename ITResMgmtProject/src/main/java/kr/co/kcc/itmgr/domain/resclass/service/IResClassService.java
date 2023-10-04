@@ -22,7 +22,7 @@ public interface IResClassService {
 	int countOfAddItemList(AddItem addItem);
 	
 	List<AddItem> selectAddItemInResClass(); //부가정보 조회
-	int insertAddItemToResClass(ResClass resclass);
+	int insertAddItemToResClass(List<ResClass> resclass);
 	
 	int updateResClass(ResClass resclass);	//자원분류 업데이트
 	int deleteAddItemInResClass(ResClass resclass);	//매핑된 부가항목 삭제

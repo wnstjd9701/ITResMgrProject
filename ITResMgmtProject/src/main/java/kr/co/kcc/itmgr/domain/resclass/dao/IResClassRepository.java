@@ -28,9 +28,9 @@ public interface IResClassRepository {
 //	List<AddItem> selectAddItemInResClass(@Param("start")int start,@Param("end")int end); //부가정보 조회
 	
 	List<AddItem> selectAddItemInResClass(); //부가항목리스트 조회
-	int insertAddItemToResClass(@Param("resClass")ResClass resClass); //부가항목 매핑
+	int insertAddItemToResClass(List<ResClass> resClass); //부가항목 매핑
 	
 	int updateResClass(ResClass resclass);	//자원분류 업데이트
-	int deleteAddItemInResClass(@Param("resClass")ResClass resClass);	//매핑된 부가항목 삭제
+	int deleteAddItemInResClass(ResClass resClass);	//매핑된 부가항목 삭제
 
 }

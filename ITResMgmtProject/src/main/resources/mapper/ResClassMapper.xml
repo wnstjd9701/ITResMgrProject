@@ -100,13 +100,21 @@
 
 	
 	<insert id="insertAddItemToResClass"  parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
-			<foreach collection="resClass.addItemSn" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
-				INTO
-					RESCLASSASIDEINFOMAPPING
-						(res_class_id, add_item_sn, create_date, creater_id)
-					VALUES
-					   (#{resClass.resClassId}, #{item},SYSDATE,'wh467925')
-		    </foreach>
+			INSERT INTO resclassasideinfomapping(
+				res_class_id,
+				add_item_sn,
+				create_date,
+				creater_id
+			)
+			<foreach collection="list" item="resClass" separator="UNION ALL">
+				SELECT
+					#{resClass.resClassId},
+					#{resClass.addItemSn},
+					SYSDATE,
+					'wh467925'
+				FROM
+					DUAL
+			</foreach>
 	</insert>
 	
 	<select id="countOfAddItemList" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem" resultType="integer">
@@ -125,11 +133,9 @@
 	</update>
 	
 	<delete id="deleteAddItemInResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
-		<foreach collection="resClass.addItemSn" item="item" separator=" " open="DELETE" close="SELECT * FROM DUAL">
-				FROM RESCLASSASIDEINFOMAPPING
+		DELETE FROM resclassasideinfomapping
 			WHERE 
-				res_class_id = #{resClass.resClassId} AND add_item_sn = #{item}		
-		</foreach> 
+				res_class_id = #{resClassId} AND add_item_sn = #{addItemSn}		
 
 	</delete>
 	

@@ -43,7 +43,7 @@ public class ResClass {
 	
 	private String flag;
 	
-	private List<Integer> addItemSn;
+	private int addItemSn;
 	
 
 	

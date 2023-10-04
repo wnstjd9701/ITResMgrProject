@@ -162,15 +162,15 @@ public class ResClassController {
 	
 	@PostMapping("/resclass/additem")
 	@ResponseBody
-	public Map<String, Object> saveResClass(@RequestBody List<ResClass> resClassList, ResClass resClass){
+	public Map<String, Object> saveResClass(@RequestBody List<ResClass> resClassList){
+		System.out.println("아니여긴타나");
 		Stream<ResClass> streamResClass = resClassList.stream();
 		Map<String, List<ResClass>> groupedResClass = streamResClass.collect(Collectors.groupingBy(ResClass::getFlag));
 		if(groupedResClass.containsKey("C")) {
 			List<ResClass> insertList = groupedResClass.get("C");
 			logger.info("insertList:"+insertList);
-			resClass.setAddItemSn(resClass.getAddItemSn());
-			resClass.setResClassId(resClass.getResClassId());
-			int addItemResult = resClassService.insertAddItemToResClass(resClass);
+
+			int addItemResult = resClassService.insertAddItemToResClass(resClassList);
 		}
 		
 		else if(groupedResClass.containsKey("U")) {

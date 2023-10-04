@@ -55,36 +55,33 @@
     <div class="second-container">
         <div class="row">
             <div class="col-md-16">
-            	<form>
                 <table id="resClassDetailTable" class="table table-hover">
                     <tbody>
                     	<tr>
                     		<th scope="row">상태</th>
-                    		<td id="resClassFlagCell"></td>
+                    		<td id="resClassFlagCell" class="editable" data-type="text" data-column="resClassFlag"></td>
                     	</tr>
                         <tr>
                             <th scope="row">대 분 류</th>
-                            <td id="topUpperResClassNameCell"></td>
+                            <td id="topUpperResClassNameCell" class="editable" data-type="select" data-column="topUpperResClassName"></td>
                         </tr>
                         <tr>
                             <th scope="row">중 분 류</th>
-                            <td id="upperResClassNameCell"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">소 분 류</th>
-                            <td id="resClassNameCell"></td>
+                            <td id="upperResClassNameCell" class="editable" data-type="select" data-column="upperResClassName"></td>
                         </tr>
                         <tr>
                             <th scope="row">사용여부</th>
-                            <td id="useYNCell"></td>
+                            <td id="useYNCell" class="editable" data-type="select" data-column="useYN"></td>
                         </tr>
                         <tr>
                             <th scope="row">분류명</th>
-                            <td id="resClassName2Cell"></td>
+                            <td id="resClassNameCell" name="resClassName" class="editable" data-type="text" data-column="resClassName"></td>
+                        </tr>
+                        <tr>
+                        	<input type="hidden" id="resClassId" name="resClassId">
                         </tr>
                     </tbody>
                 </table>
-            	</form>
 				<div>
 				     ➕부 가 정 보
 				    <button style="margin-right: 5px; float: right;" type="button" id="deleteAddItemBtn">행삭제</button>
@@ -94,7 +91,6 @@
 				<div class="addInfoTableClass">
 				    <table class="table" id="addInfoTable">
 				        <thead class="addInfoTableHead">
-				        	<input type="hidden" id="resClassId" name="resClassId">
 				            <tr>
 				            	<th>상태</th>
 				                <th>선택</th>

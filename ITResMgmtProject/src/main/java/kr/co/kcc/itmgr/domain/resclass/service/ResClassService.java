@@ -60,7 +60,7 @@ public class ResClassService implements IResClassService {
 //	}
 
 	@Override
-	public int insertAddItemToResClass(ResClass resclass) {
+	public int insertAddItemToResClass(List<ResClass> resclass) {
 		 return resClassRepository.insertAddItemToResClass(resclass);
 		
 	}

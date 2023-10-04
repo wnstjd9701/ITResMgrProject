@@ -1,12 +1,21 @@
+function updateFlag(tableRow) {
+    var changeRow = $(tableRow).closest("tr");
+    var flag = changeRow.find("td:first").text();
+    if (flag === "C") {
+        return;
+    }
+    changeRow.find("td:first").text("U");
+    console.log("Flag updated to U for this row");
+}
+
 $(document).ready(function () {
     // 이전에 가져온 부가정보를 초기화할 함수
     function clearPreviousData() {
 		$("#resClassFlagCell").text("");
         $("#topUpperResClassNameCell").text("");
         $("#upperResClassNameCell").text("");
-        $("#resClassNameCell").text("");
         $("#useYNCell").text("");
-        $("#resClassName2Cell").text("");
+        $("#resClassNameCell").text("");
         $("#resClassId").val("");
         $('table#addInfoTable tbody').empty();
     }
@@ -34,9 +43,8 @@ $(document).ready(function () {
 				$("#resClassFlagCell").text(data.flag);
                 $("#topUpperResClassNameCell").text(data.topUpperResClassName);
                 $("#upperResClassNameCell").text(data.upperResClassName);
-                $("#resClassNameCell").text(data.resClassName);
                 $("#useYNCell").text(data.useYn);
-                $("#resClassName2Cell").text(data.resClassName);
+                $("#resClassNameCell").text(data.resClassName).val(data.resClassName);
                 $("#resClassId").val(data.resClassId);
                 // 부가정보가 null이 아닌 경우에만 for문을 실행
                 if (response && response[0] && response[0].addItemSn !== 0) {
@@ -64,16 +72,7 @@ $(document).ready(function () {
             }
         });
     });
-});
 
-$('.tree2 a').on('click', function() {
-    // 클릭한 항목에 selected 클래스 추가
-    $('.tree2 a').removeClass('selected');  // 모든 항목에서 selected 클래스 제거
-    $(this).addClass('selected');  // 클릭한 항목에 selected 클래스 추가
-});
-
-
-$(document).ready(function () {
     // "조회" 버튼 클릭 시
     $('#openAddItemModal').on('click', function() {
         // Check if any resource is selected in the menu tree
@@ -143,8 +142,107 @@ $('#check-additem').click(function () {
             $('#addItemModal').modal('hide');
         }
     });
-});			
 });	
+    $("#deleteAddItemBtn").click(function() {
+        $('table#addInfoTable input[type=checkbox]:checked').each(function() {
+            var row = $(this).closest("tr");
+            var flagCell = row.find("td:first");
+            if (flagCell.text() !== "C") {
+                flagCell.text("D");
+                console.log("Flag updated to D for this row");
+            }
+        });
+    });
+
+
+
+    // 두 번 클릭하여 내용 수정
+    $('#resClassDetailTable').on('dblclick', '.editable', function(event) {
+        event.stopPropagation(); // Prevent event propagation to the table
+
+        var originalContent = $(this).text();
+        var dataType = $(this).data('type');
+        var dataColumn = $(this).data('column');
+        console.log(originalContent);
+
+        if (dataType === 'text') {
+            // 텍스트 수정을 위한 입력 상자 생성
+            $(this).html('<input type="text" class="edit-input" value="' + originalContent + '" />');
+        }
+
+        // 입력 상자에서 포커스가 벗어나면 수정 내용을 적용
+        $('.edit-input').focus().blur(function() {
+            var newContent = $(this).val();
+            $(this).closest('td').html(newContent);
+        });
+    });
+
+//자원분류 저장(C/R/D)
+$("#resclass-save").click(() => {
+    var addItemList = [];
+
+$('.second-container input[type=checkbox]:checked').each(function() {
+    var addItemSn;
+    var useYn;
+    var resClassName;
+	var resClassId;
+    var flag = $(this).closest('tr').find('td:eq(0)').text(); // Assuming flag is in the first td
+	console.log(flag)
+
+    if (flag === 'D') {
+		console.log("타나");
+		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
+		addItemSn = $(this).closest('tr').find("input[name='addItemSn']").val();
+		console.log("선택한 resClassId"+resClassId);
+		console.log("선택한 addItemSn:"+addItemSn)
+    } else if (flag === 'C') {
+		console.log("타나");
+		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
+		addItemSn = $(this).closest('tr').find("input[name='addItemSn']").val();
+		console.log("선택한 resClassId"+resClassId);
+		console.log("선택한 addItemSn:"+addItemSn)
+    }else if(flag === 'U'){
+		console.log("여기타나")
+		resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+		console.log("선택한 resClassName:"+resClassName)
+	}
+
+    var resClassList = {
+        flag: flag,
+        resClassId: resClassId,
+        addItemSn: addItemSn,
+        useYn: useYn
+    };
+
+    addItemList.push(resClassList);
+	console.log("resClassList"+resClassList);
+	console.log("addItemList:"+addItemList)
+	});
+$.ajax({
+    method: "POST",
+    url: "/resclass/additem",
+    data: JSON.stringify(addItemList),
+    contentType: "application/json",
+    success: function(response) {
+		console.log("성공")
+    },
+		error: function(error) {
+                // 요청이 실패한 경우 처리
+                console.log('에러:', error);
+            }
+		});
+	});
+});
+
+
+
+$('.tree2 a').on('click', function() {
+    // 클릭한 항목에 selected 클래스 추가
+    $('.tree2 a').removeClass('selected');  // 모든 항목에서 selected 클래스 제거
+    $(this).addClass('selected');  // 클릭한 항목에 selected 클래스 추가
+});
+
+
 
 
 $(document).ready(function(){
@@ -164,82 +262,6 @@ $(document).ready(function(){
     });
 });
 
-
-$(document).ready(function(){
-    $("#deleteAddItemBtn").click(function() {
-        $('table#addInfoTable input[type=checkbox]:checked').each(function() {
-            var row = $(this).closest("tr");
-            var flagCell = row.find("td:first");
-            if (flagCell.text() !== "C") {
-                flagCell.text("D");
-                console.log("Flag updated to D for this row");
-            }
-        });
-    });
-
-    function updateFlag(tableRow){
-        var changeRow = $(tableRow).closest("tr");
-        var flag = changeRow.find("td:first").text();
-        if(flag === "C"){
-            return;
-        }
-        changeRow.find("td:first").text("U");
-        console.log("Flag updated to U for this row");
-    }
-
-    $("#resClassDetailTable").on("change", "input[type='text'],select", function(){
-        updateFlag(this);
-    });
-
-});
-$("#resclass-save").click(() => {
-    var addItemList = [];
-
-
-$('#addInfoTable input[type=checkbox]:checked').each(function() {
-    var resClassId;
-    var addItemSn;
-    var useYn;
-    var resClassName;
-
-    var flag = $(this).closest('tr').find('td:eq(0)').text().trim(); // Assuming flag is in the first td
-	console.log(flag)
-
-    if (flag === "D") {
-		console.log(타나);
-        resClassId = $(this).closest('.addInfoTableHead').find("input[name='resClassId']").val();
-        addItemSn = $(this).closest('tr').find("input[name='addItemSn']").text();
-		console.log(resClassId)
-		console.log(addItemSn)
-    } else if (flag === "U") {
-        resClassName = $(this).closest('tr').find("#add-item-name").text();
-        useYn = $(this).closest('tr').find("select option:selected").val();
-    }
-
-    var resClassList = {
-        flag: flag,
-        resClassId: resClassId,
-        addItemSn: addItemSn,
-        resClassName: resClassName,
-        useYn: useYn
-    };
-
-    addItemList.push(resClassList);
-	console.log(addItemList)
-});
-
-	
-
-    $.ajax({
-        method: "POST",
-        url: "/resclass/additem",
-        data: JSON.stringify(addItemList),
-        contentType: "application/json",
-        success: function(response) {
-            console.log(response);
-        }
-    });
-});
 
 
 
