@@ -1,10 +1,11 @@
 package kr.co.kcc.itmgr.domain.employee.controller;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
@@ -30,7 +29,7 @@ public class EmployeeController {
 	private final IEmployeeService employeeService;
 
 	//사원 기본 페이지
-	@RequestMapping(value = "/employee", method=RequestMethod.GET)
+	@GetMapping("/employee")
 	public String selectAllEmployee(Model model) {
 		List<Employee> employeeList = employeeService.selectAllEmployee();
 		model.addAttribute("employeeList", employeeList);
@@ -94,7 +93,7 @@ public class EmployeeController {
 
 
 	//검색
-	@RequestMapping(value = "/search/employee", method=RequestMethod.GET)
+	@GetMapping("/search/employee")
 	@ResponseBody
 	public List<Employee> searchEmployees(@RequestParam Map<String, String> searchData) {
 		List<Employee> employeeList = new ArrayList<>(); 
@@ -103,8 +102,6 @@ public class EmployeeController {
 			String employeeTypeCode = searchData.get("employeeTypeCode");
 			String employeeStatusCode = searchData.get("employeeStatusCode");
 			String searchText = searchData.get("searchText");
-			
-			System.out.println("employeeTypeCode" + employeeTypeCode);
 
 			employeeList = employeeService.selectSearchEmployee(employeeTypeCode, employeeStatusCode, searchText);
 
@@ -113,68 +110,36 @@ public class EmployeeController {
 		}
 		return employeeList;
 	}
-	
-	//기존의 사원ID값 가져오기
-//	@RequestMapping(value = "/select/employeeId{employeeIds}", method=RequestMethod.GET)
-//	@ResponseBody
-//	public Map<String, String> DuplicateCheck(@RequestParam Map<String, String> employeeIds) {
-//		Map<String, String> duplicateCheck = new HashMap<>(); 
-//
-//		try {
-//
-//
-//			duplicateCheck = employeeService.selectEmployeeId();
-//
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		return duplicateCheck;
-//	}
-	
-//	@RequestMapping(value = "/select/employeeId", method=RequestMethod.GET)
-//    @ResponseBody
-//    public List<String> getEmployeeIds() {
-//        List<String> employeeIds = employeeService.selectEmployeeId();
-//        
-//        
-//        return employeeIds;
-//    }
 
-	@RequestMapping(value = "/select/employeeId", method=RequestMethod.GET)
-	public List<String> selectEmployeeId() {
-		List<String> employeeIds = new ArrayList<>(); 
-		employeeIds = employeeService.selectEmployeeId();
 
-		System.out.println("-----------employeeIds-----------" + employeeIds);
-
-		return employeeIds;
-	}
-	
+	//사원ID 중복체크
 	@PostMapping("/checkDuplicateEmployeeIds")
-    public List<String> checkDuplicateEmployeeIds(@RequestBody List<String> empIds) {
-        List<String> duplicateIds = new ArrayList<>();
+	@ResponseBody
+	public List<String> checkDuplicateEmployeeIds(@RequestBody List<String> empIds) {
 
-        // 기존 DB에 저장된 사원 ID들을 가져옴
-        List<String> existingEmployeeIds = new ArrayList<>();
+		List<String> duplicateIds = new ArrayList<>();
 
-        List<Employee> employees = employeeService.selectAllEmployee();
-        for (Employee employee : employees) {
-            existingEmployeeIds.add(employee.getEmployeeId());
-        }
+		try {
+			// 기존 DB에 저장된 사원 ID들을 가져옴
+			List<String> existingEmployeeIds = new ArrayList<>();
 
-        System.out.println("기존id값" + existingEmployeeIds);
+			List<Employee> employees = employeeService.selectAllEmployee();
+			for (Employee employee : employees) {
+				existingEmployeeIds.add(employee.getEmployeeId());
+			}
 
-        // 새로운 사원 ID들과 기존 DB에 저장된 ID들을 비교하여 중복된 ID를 찾음
-        for (String empId : empIds) {
-            if (existingEmployeeIds.contains(empId)) {
-                duplicateIds.add(empId);
-            }
-        }
-        
-        System.out.println("반환값"+duplicateIds);
-
-        return duplicateIds;
-    }
-
-    // 다른 컨트롤러 메서드와 더 이어질 수 있음
+			// 중복된 ID 찾기
+			Set<String> duplicateIdSet = new HashSet<>();
+			for (String empId : empIds) {
+			    // 중복된 ID가 아니면서, 이미 검색된 중복 ID 목록에 포함되지 않은 경우에만 추가
+				if ((existingEmployeeIds.contains(empId) || duplicateIdSet.contains(empId)) && !duplicateIds.contains(empId)) {
+					duplicateIds.add(empId); // 중복된 ID로 판별되면 목록에 추가
+				}
+				duplicateIdSet.add(empId); // 중복을 방지하기 위해 추가한 중복된 ID를 저장
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return duplicateIds;
+	}
 }

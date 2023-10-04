@@ -93,13 +93,4 @@
 		WHERE c.code_group_id = cd.code_group_id AND c.code_group_id = 'EMS000'
 	]]>
 </select>
-
-<select id="selectEmployeeId" resultType = "kr.co.kcc.itmgr.domain.employee.model.Employee">
-	<![CDATA[
-		SELECT employee_id AS employeeId
-		FROM employeeinfo
-	]]>
-</select>
-
-
 </mapper>
