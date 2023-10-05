@@ -31,10 +31,25 @@
 		ORDER BY add_item_sn
 </select>
 
-<insert id="insertAddItem" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
-    INSERT INTO additem (add_item_sn, add_item_name, add_item_desc, use_yn, create_date, creater_id)
-    VALUES (add_item_sn_seq.NEXTVAL, #{addItemName}, #{addItemDesc}, 'Y', SYSDATE, '임시ID')
+<insert id="insertAddItemExcel" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+    INSERT INTO additem(add_item_sn, add_item_name, add_item_desc, use_yn, creater_id, create_date)
+    VALUES (add_item_sn_seq.NEXTVAL, #{addItemName}, #{addItemDesc}, 'Y', '임시ID', SYSDATE)
 </insert>
+
+<!-- <insert id="insertAddItem" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+	<foreach collection="list" item="addItem" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+    	INTO additem(add_item_sn, add_item_name, add_item_desc, use_yn, creater_id, create_date)
+    	VALUES (add_item_sn_seq.NEXTVAL, #{addItem.addItemName}, #{addItem.addItemDesc}, 'Y', '임시ID', SYSDATE)
+    </foreach>
+</insert> -->
+
+<insert id="insertAddItem" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+  <foreach collection="list" item="addItem" separator=" " open="BEGIN" close="END;">
+    INSERT INTO additem(add_item_sn, add_item_name, add_item_desc, use_yn, creater_id, create_date)
+    VALUES (add_item_sn_seq.NEXTVAL, #{addItem.addItemName}, #{addItem.addItemDesc}, 'Y', '임시ID', SYSDATE);
+  </foreach>
+</insert>
+
 
 <update id="deleteAddItemByUseYN" parameterType="int">
 	<![CDATA[

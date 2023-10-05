@@ -3,8 +3,11 @@ package kr.co.kcc.itmgr.domain.additem.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -77,12 +80,11 @@ public class AddItemController {
 			List<AddItem> insertAddItems = requestData.getInsertAddItems();
 			List<Integer> deletedAddItems = requestData.getDeletedAddItems();
 			List<AddItem> updateAddItems = requestData.getUpdateAddItems();
+	
 			
 			//Insert
 			if(insertAddItems != null && !insertAddItems.isEmpty()) {
-				for (AddItem addItem : insertAddItems) {
-					addItemService.insertAddItem(addItem);
-				}
+					addItemService.insertAddItem(insertAddItems);
 			}
 			
 			//Delete
@@ -105,7 +107,6 @@ public class AddItemController {
 		return addItemList;
 	}
 	
-
 	
 	//엑셀양식다운로드
 	@GetMapping("/excel/download")
@@ -177,13 +178,14 @@ public class AddItemController {
 				// 각 행에서 셀 값 읽어오기
 				String addItemName = row.getCell(0).getStringCellValue();
 				String addItemDesc = row.getCell(1).getStringCellValue();
-
 				// 데이터베이스에 저장하는 로직 추가
-				addItemService.insertAddItem(addItemName, addItemDesc);
+				addItemService.insertAddItemExcel(addItemName, addItemDesc);
 
 				rowIndex++;
+				
+				System.out.println("----------addItemName--------------"+addItemName);
+				System.out.println("--------------addItemDesc--------------"+addItemDesc);
 			}
-
 			workbook.close();
 			inputStream.close();
 
@@ -198,6 +200,41 @@ public class AddItemController {
 
 	
 	
+	
+	//행추가시 부가항목명 중복검사
+	@PostMapping("/checkDuplicateAddItemNames")
+	@ResponseBody
+	public List<String> checkDuplicateAddItemNames(@RequestBody List<String> addItemNames) {
+		List<String> duplicateNames = new ArrayList<>();
+		try {
+			// 기존 DB에 저장된 부가항목명들을 가져옴
+			List<String> existingAddItemNames = new ArrayList<>();
+			
+			
+			List<AddItem> addItems = addItemService.selectAllAddItem();
+			for(AddItem addItem : addItems) {
+				existingAddItemNames.add(addItem.getAddItemName());
+			}
+			
+			System.out.println("--------existingAddItemNames"+existingAddItemNames);
+			
+			//중복된 부가항목명 찾기
+			Set<String> duplicateNameSet = new HashSet<>();
+			for(String addItemName : addItemNames) {
+				if ((existingAddItemNames.contains(addItemName) || duplicateNameSet.contains(addItemName)) && !duplicateNames.contains(addItemName)) {
+					duplicateNames.add(addItemName); // 중복된 ID로 판별되면 목록에 추가
+				}
+				duplicateNameSet.add(addItemName); // 중복을 방지하기 위해 추가한 중복된 ID를 저장
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return duplicateNames;
+	}
+	
+	
+	
+
 	
 //	@PostMapping("/excel/upload")
 //	public ResponseEntity<String> excelUpload(@RequestParam("file") MultipartFile file) {

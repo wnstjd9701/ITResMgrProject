@@ -24,16 +24,22 @@ public class AddItemService implements IAddItemService{
 		return addItemRepository.selectSearchAddItem(useYN, searchText);
 	}
 
-	@Override
-	public void insertAddItem(AddItem addItem) {
-		addItemRepository.insertAddItem(addItem);
-	}
+//	@Override
+//	public void insertAddItem(AddItem addItem) {
+//		addItemRepository.insertAddItem(addItem);
+//	}
+	
 	
 	@Override
-	public void insertAddItem(String addItemName, String addItemDesc) {
-		addItemRepository.insertAddItem(addItemName, addItemDesc);
-		
+	public void insertAddItem(List<AddItem> insertAddItems) {
+		addItemRepository.insertAddItem(insertAddItems);
 	}
+
+//	@Override
+//	public void insertAddItem(String addItemName, String addItemDesc) {
+//		addItemRepository.insertAddItem(addItemName, addItemDesc);
+//		
+//	}
 
 	@Override
 	public void deleteAddItemByUseYN(int addItemSn) {
@@ -46,6 +52,15 @@ public class AddItemService implements IAddItemService{
 		addItemRepository.updateAddItemDesc(updateAddItems);
 		
 	}
+
+	@Override
+	public void insertAddItemExcel(String addItemName, String addItemDesc) {
+		addItemRepository.insertAddItemExcel(addItemName, addItemDesc);
+		
+	}
+
+
+
 
 
 
