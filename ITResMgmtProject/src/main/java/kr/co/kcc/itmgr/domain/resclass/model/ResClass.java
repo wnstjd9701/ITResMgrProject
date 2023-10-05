@@ -33,10 +33,10 @@ public class ResClass {
 	private String addItemUseYn;
 	
 	//페이징
+	private int totalPageBlock;
+	private int totalPage;
 	private int page;
-	private int limit;
-	private int listCount;
-	private int maxPage;
+	private int nowPageBlock;
 	private int startPage;
 	private int endPage;
 	

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
-import kr.co.kcc.itmgr.domain.resclass.model.ResClassAddItem;
 import kr.co.kcc.itmgr.domain.resclass.service.IResClassService;
 import lombok.RequiredArgsConstructor;
 
@@ -99,6 +99,7 @@ public class ResClassController {
 	  	
 	  	List<ResClass> selectResClassByLevel = resClassService.selectResClassByLevel();
 	  	model.addAttribute("selectResClassByLevel", selectResClassByLevel);
+
 		
 		return "resclass/resclass"; 
 	}
@@ -135,35 +136,44 @@ public class ResClassController {
 	 */
 	@GetMapping("/resclass/additem")
 	@ResponseBody
-	public Map<String, Object> selectAddItemInResClass(){
-		JSONArray result = new JSONArray();
-		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass();
+	public Map<String, Object> selectAddItemInResClass(int page){
+		int addItemCount = resClassService.countOfAddItemList();
+		
+		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass(page);
 		Map<String, Object> test = new HashMap<String, Object>();
+		//페이징
+		int totalPage=0;
+		if(addItemCount>0) {
+			totalPage=(int)Math.ceil(addItemCount/5.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
+		int nowPageBlock = (int)Math.ceil(1/5.0);
+		int startPage = (nowPageBlock-1)*5+1;
+		int endPage=0;
+		if(totalPage > nowPageBlock* 5) {
+			endPage = nowPageBlock*5;
+		}else {
+			endPage = totalPage;
+		}
+		Map<String,Object> page2 = new HashMap<String, Object>();
+		page2.put("totalPageCount", totalPage);
+		page2.put("nowPage", page);
+		page2.put("totalPageBlock", totalPageBlock);
+		page2.put("nowPageCount", nowPageBlock);
+		page2.put("startPage", startPage);
+		page2.put("endPage", endPage);
+		
 		test.put("test",selectAddItemInResClass);
+		test.put("page", page2);
+		
 		return test;
 	}
 
-	/*
-	 * Author: [조한나]
-	 * API No1-5. 부가항목 리스트 등록[동기]
-	 * Info : 자원분류에서 자원분류하나에 부가항목 등록
-	 */
-//	@PostMapping("/resclass/additeminsert")
-//	@ResponseBody
-//	public String insertAddItemToResClass(@RequestParam("resClassId")String resClassId, @RequestParam("addItemSn") List<Integer> addItemSn) {
-//
-//		ResClassAddItem resClassAddItem = new ResClassAddItem();
-//		resClassAddItem.setAddItemSn(addItemSn);
-//		resClassAddItem.setResClassId(resClassId);
-//
-//		resClassService.insertAddItemToResClass(resClass);
-//		return "redirect:/resclass";
-//	}
+
 	
 	@PostMapping("/resclass/additem")
 	@ResponseBody
 	public Map<String, Object> saveResClass(@RequestBody List<ResClass> resClassList){
-		System.out.println("아니여긴타나");
 		Stream<ResClass> streamResClass = resClassList.stream();
 		Map<String, List<ResClass>> groupedResClass = streamResClass.collect(Collectors.groupingBy(ResClass::getFlag));
 		if(groupedResClass.containsKey("C")) {
@@ -174,7 +184,9 @@ public class ResClassController {
 		}
 		
 		else if(groupedResClass.containsKey("U")) {
+			System.out.println("U타나나나나나나");
 			List<ResClass> updateResClassList = groupedResClass.get("U");
+			logger.info("updateResClassList:"+updateResClassList);
 			int updateRow = updateResClassList.stream()
 							.mapToInt(resClassService::updateResClass)
 							.sum();
@@ -182,7 +194,6 @@ public class ResClassController {
 		}
 		
 		else if (groupedResClass.containsKey("D")) {
-			System.out.println("여긴타나");
 		    List<ResClass> deleteList = groupedResClass.get("D");
 		    logger.info("deleteList:"+deleteList);
 		    int deleteRow = deleteList.stream()

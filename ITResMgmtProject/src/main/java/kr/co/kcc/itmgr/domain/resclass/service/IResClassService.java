@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
-import kr.co.kcc.itmgr.domain.resclass.model.ResClassAddItem;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClassDTO;
 
 public interface IResClassService {
@@ -19,9 +18,9 @@ public interface IResClassService {
 	
 	void insertResClass(ResClass resClass);
 	
-	int countOfAddItemList(AddItem addItem);
+	int countOfAddItemList();
 	
-	List<AddItem> selectAddItemInResClass(); //부가정보 조회
+	List<AddItem> selectAddItemInResClass(int page); //부가정보 조회
 	int insertAddItemToResClass(List<ResClass> resclass);
 	
 	int updateResClass(ResClass resclass);	//자원분류 업데이트

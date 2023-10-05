@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
-import kr.co.kcc.itmgr.domain.resclass.model.ResClassAddItem;
 
 
 @Repository
@@ -24,10 +23,10 @@ public interface IResClassRepository {
 	List<ResClass> selectResClassByLevel(); //lv별 자원분류조회
 	
 	void insertResClass(ResClass resClass);//자원분류 등록
-	int countOfAddItemList(AddItem addItem);
+	int countOfAddItemList();
 //	List<AddItem> selectAddItemInResClass(@Param("start")int start,@Param("end")int end); //부가정보 조회
 	
-	List<AddItem> selectAddItemInResClass(); //부가항목리스트 조회
+	List<AddItem> selectAddItemInResClass(@Param("start")int start, @Param("end")int end); //부가항목리스트 조회
 	int insertAddItemToResClass(List<ResClass> resClass); //부가항목 매핑
 	
 	int updateResClass(ResClass resclass);	//자원분류 업데이트

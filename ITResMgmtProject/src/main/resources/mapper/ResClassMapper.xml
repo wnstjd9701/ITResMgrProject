@@ -85,16 +85,21 @@
 		]]>
 	</select>
 	
-	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 		<![CDATA[
 			SELECT
-				add_item_sn	"addItemSn",
+				add_item_sn		"addItemSn",
 				add_item_name	"addItemName",
 				add_item_desc	"addItemDesc",
-				use_yn	"useYN"
-			FROM
-				ADDITEM
-			WHERE use_yn = 'Y'
+				use_yn	"addItemUseYn"
+			FROM (
+				SELECT add_item_sn, add_item_name, add_item_desc, use_yn, rownum AS rnum
+				FROM (
+					SELECT * FROM additem
+					WHERE use_yn = 'Y'
+					)
+				)
+			WHERE rnum BETWEEN #{start} AND #{end}
 		]]>
 	</select>
 
@@ -117,19 +122,17 @@
 			</foreach>
 	</insert>
 	
-	<select id="countOfAddItemList" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem" resultType="integer">
+	<select id="countOfAddItemList" resultType="integer">
 			SELECT COUNT(*) AS "addItemSn"
 			FROM ADDITEM
 	</select>
 	
 	<update id="updateResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
-		<![CDATA[
-			UPDATE
-				SET 
+			UPDATE RESCLASS
+			SET 
 				res_class_name	=	#{resClassName}, 
 				use_yn	=	#{useYn}
 			WHERE res_class_id	=	#{resClassId}
-		]]>
 	</update>
 	
 	<delete id="deleteAddItemInResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">

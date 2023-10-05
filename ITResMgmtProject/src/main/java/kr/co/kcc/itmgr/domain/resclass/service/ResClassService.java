@@ -66,13 +66,14 @@ public class ResClassService implements IResClassService {
 	}
 
 	@Override
-	public int countOfAddItemList(AddItem addItem) {
-		return resClassRepository.countOfAddItemList(addItem);
+	public int countOfAddItemList() {
+		return resClassRepository.countOfAddItemList();
 	}
 
 	@Override
-	public List<AddItem> selectAddItemInResClass() {
-		return resClassRepository.selectAddItemInResClass();
+	public List<AddItem> selectAddItemInResClass(int page) {
+		int start = (page-1)*10+1;
+		return resClassRepository.selectAddItemInResClass(start,start+9);
 	}
 
 	@Override

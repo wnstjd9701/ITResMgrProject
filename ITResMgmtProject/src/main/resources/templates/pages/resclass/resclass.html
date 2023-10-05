@@ -59,27 +59,25 @@
                     <tbody>
                     	<tr>
                     		<th scope="row">상태</th>
-                    		<td id="resClassFlagCell" class="editable" data-type="text" data-column="resClassFlag"></td>
+                    		<td id="resClassFlagCell"></td>
                     	</tr>
                         <tr>
                             <th scope="row">대 분 류</th>
-                            <td id="topUpperResClassNameCell" class="editable" data-type="select" data-column="topUpperResClassName"></td>
+                            <td id="topUpperResClassNameCell"></td>
                         </tr>
                         <tr>
                             <th scope="row">중 분 류</th>
-                            <td id="upperResClassNameCell" class="editable" data-type="select" data-column="upperResClassName"></td>
+                            <td id="upperResClassNameCell"></td>
                         </tr>
                         <tr>
                             <th scope="row">사용여부</th>
-                            <td id="useYNCell" class="editable" data-type="select" data-column="useYN"></td>
+                            <td id="useYNCell"></td>
                         </tr>
                         <tr>
                             <th scope="row">분류명</th>
-                            <td id="resClassNameCell" name="resClassName" class="editable" data-type="text" data-column="resClassName"></td>
+                            <td id="resClassNameCell"></td>
                         </tr>
-                        <tr>
-                        	<input type="hidden" id="resClassId" name="resClassId">
-                        </tr>
+
                     </tbody>
                 </table>
 				<div>
@@ -180,7 +178,6 @@
 					<h5 class="modal-title" id="addItemList">부가정보</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
-				<form>
 					<div class="modal-body">
 						<div class="mb-3">
 							<table class="table" id="add-item-table">
@@ -193,6 +190,7 @@
 								</thead>
 								<tbody>
 								</tbody>
+ 								<div id="pagination"></div> 
 							</table>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
@@ -201,7 +199,6 @@
 							</div>
 						</div>
 					</div>
-				</form>
 			</div>
 		</div>
 	</div>
