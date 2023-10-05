@@ -20,7 +20,7 @@
 }
 
 .place-list-container {
-	width: 50%;
+	width: 60%;
 	margin: 10px 0 0 10px;
 	padding: 0 0 0 10px;
 }
@@ -60,6 +60,7 @@ input[type="button"] {
 		<div class="place-map-container">
 			<div id="map"></div>
 			<div class="place-list-container">
+				<div><h2>설치 장소</h2></div>
 				<div>
 					<input type="button" class="group-do" value="지도 새로고침">
 				</div>
@@ -68,7 +69,6 @@ input[type="button"] {
         			<option th:each="doName : ${doNames}" th:value="${doName}" th:text="${doName}"></option>
     			</select>
 				<div class="place-table-container">
-					<div><h2>설치 장소</h2></div>
 					<table class="table table-striped place-table">
 						<thead class="fixed-header">
 							<tr>
@@ -134,7 +134,6 @@ input[type="button"] {
 	<script th:inline="javascript">
 var places = `[[${place}]]`;
 $(document).ready(function(){
-	
 	var mapContainer = document.getElementById('map'); // 지도를 표시할 div 요소
     var mapOption = {
         center: new kakao.maps.LatLng(36.5, 127.5), // 지도 중심 좌표
@@ -149,6 +148,7 @@ $(document).ready(function(){
     var allMarkers = [];
 	var regions = JSON.parse(places);
 	var clusterers = groupDo(regions);
+	
 	clusterEvent(clusterers);
 	markerClickEvent(allMarkers);
 	
@@ -158,10 +158,10 @@ $(document).ready(function(){
 	        	var markers = cluster._clusterer._markers;
 	        	var placeName = {};
 	        	placeName[groupName] = [];
+	        	
 	        	for(var i=0; i<markers.length; i++){
 	        		placeName[groupName].push(markers[i].Gb);
 	        	}
-	        	console.log(placeName[groupName]);
 	        	
 	        	var placeNameList = JSON.stringify(placeName[groupName]);
 
@@ -187,7 +187,6 @@ $(document).ready(function(){
 		for(var i = 0; i < allMarkers.length; i++) {
 	        for(var j = 0; j < allMarkers[i].length; j++) {
 	            var marker = allMarkers[i][j];
-	            marker.clicked = false;
 	            kakao.maps.event.addListener(marker, 'click', (function (marker) {
 	                return function () {
 	                		var placeName = marker.Gb;
@@ -208,7 +207,8 @@ $(document).ready(function(){
 			                    removable: true
 			                });
 			                // 마커 위에 인포윈도우를 표시합니다.
-			                infowindow.open(map, marker);	 
+			                infowindow.open(map, marker);
+			                
 			                var placeName = JSON.stringify(`${placeName}`);
 			                $.ajax({
 				        		   method: "POST", // POST 요청으로 변경
