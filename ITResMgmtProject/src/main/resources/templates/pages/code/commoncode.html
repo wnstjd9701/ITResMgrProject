@@ -57,8 +57,8 @@
 	width: 51vw;
 	padding: 10px;
 	border: 1px solid #ccc;
-			border-radius: 5px;
-			box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .table-container {
@@ -378,7 +378,11 @@ input[type="button"] {
 								for(var i=0; i<response.length; i++){
 									var newRow = $("<tr>");
 									var status = $("<td>").addClass("flag").text(response[i].flag);
-									var codeGroupId = $("<td>").addClass("codeGroupId code-group-id-text code-group-td").text(response[i].codeGroupId);
+									var codeGroupId = $("<td>").addClass("codeGroupId code-group-id-text code-group-td")
+										.text(response[i].codeGroupId)
+										.attr("data-code-group-id", response[i].codeGroupId)
+										.attr("id", "commonCode-group-id");
+									
 									var codeGroupName = $("<td>").append($("<input>").attr({
 										type: "text",
 										name: "codeGroupName",
@@ -389,6 +393,7 @@ input[type="button"] {
 
 									var selectElement = $("<select><option>Y</option><option>N</option></select>");
 									selectElement.val(response[i].useYn);
+									
 									var useYn = $("<td>").append(selectElement);
 									var searchDetailCode = $("<td>").append($("<input>").attr({
 										type: "button",
@@ -410,8 +415,9 @@ input[type="button"] {
 							}
 							
 							// 이벤트 위임
-							$(".commoncode-table-container").on("click", ".code-group-id-text", function() {
-							    var codeGroupId = $(this).text();
+							// 상세 코드 조회
+							$(".commoncode-table-container").on("click","input[type='button']", function() {
+							    var codeGroupId = $(this).data("code-group-id");
 							    console.log(codeGroupId);
 							    $.ajax({
 							    	method: "GET",
@@ -531,7 +537,7 @@ input[type="button"] {
 							$("#commonCodeDetailDeleteRowBtn").click(() => {
 								var commonCodeTable = $(".commoncodedetail-table");
 								var selectedRows = $("input[name='detailCheck']:checked").closest("tr"); // 선택된 체크박스의 부모 행을 가져옵니다.
-
+								
 							    if (selectedRows.length === 0) {
 							        alert("삭제할 행을 선택하세요.");
 							        return;

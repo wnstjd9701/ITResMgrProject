@@ -21,10 +21,16 @@ public class InstallPlaceService implements IInstallPlaceService {
 		return installPlaceRepository.selectAllPlace();
 	}
 	
+	// 모든 자원 정보 조회
+	@Override
+	public List<InstallRes> selectAllResInfo() {
+		return installPlaceRepository.selectAllResInfo();
+	}
+	
 	// 설치 장소 검색
 	@Override
-	public List<InstallPlace> selectInstallPlaceByName(String placeName) {
-		return installPlaceRepository.selectInstallPlaceByName(placeName);
+	public List<InstallPlace> searchInstallPlaceByName(String keyword) {
+		return installPlaceRepository.selectInstallPlaceByName(keyword);
 	}
 	
 	// 자원 정보 조회
@@ -63,5 +69,28 @@ public class InstallPlaceService implements IInstallPlaceService {
 		return installPlaceRepository.deleteInstallPlace(placesn);
 	}
 
+	// 해당 지역 설치 장소 조회
+	@Override
+	public List<InstallPlace> selectPlaceListByPlaceName(List<String> placeNames) {
+		return installPlaceRepository.selectPlaceListByPlaceName(placeNames);
+	}
 	
+	// 해당 지역 자원 정보 조회
+	@Override
+	public List<InstallRes> selectResInformationByCity(List<String> placeNames) {
+		return installPlaceRepository.selectResInformationByCity(placeNames);
+	}
+	
+	// 지역별 설치 장소 조회
+	@Override
+	public List<InstallPlace> selectPlaceByCity(String firstDoName, String secondDoName) {
+		return installPlaceRepository.selectPlaceByCity(firstDoName, secondDoName);
+	}
+
+	// 지역별 자원 정보 조회
+	@Override
+	public List<InstallRes> selectResInfoByCity(String firstDoName, String secondDoName) {
+		return installPlaceRepository.selectResInfoByCity(firstDoName, secondDoName);
+	}
+
 }
