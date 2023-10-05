@@ -198,7 +198,76 @@ public class AddItemController {
 	}
 	
 
-	
+	//엑셀업로드 부가항목명 중복체크
+	@PostMapping("/checkDuplicateAddItemNamesExcel")
+	@ResponseBody
+	public List<String> checkDuplicateAddItemNamesExcel(@RequestParam("file") MultipartFile file) {
+		List<String> duplicateNamesExcel  = new ArrayList<>(); 
+		 List<String> addItemNamesExcels = new ArrayList<>(); //엑셀파일의 부가항목명
+		 
+		try {
+			// 업로드된 엑셀 파일을 읽기 위해 MultipartFile.getInputStream()을 사용
+			InputStream inputStream = file.getInputStream();
+
+			// 엑셀 파일을 읽기 위해 Workbook을 생성
+			Workbook workbook = new XSSFWorkbook(inputStream);
+
+			// 엑셀 파일의 첫 번째 시트를 가져오기
+			Sheet sheet = workbook.getSheetAt(0);
+
+			// 엑셀 파일에서 데이터 읽기
+			int rowIndex = 0; // 행 인덱스 초기화
+
+			// 엑셀 파일에서 데이터를 읽어오기
+			for (Row row : sheet) {
+				if (rowIndex == 0) {
+					// 첫 번째 행은 '부가항목명', '부가항목설명'이므로 두번째 행부터 읽어옴
+					rowIndex++;
+					continue;
+				}
+
+				// 각 행에서 셀 값 읽어오기
+				String addItemName = row.getCell(0).getStringCellValue();
+				addItemNamesExcels.add(addItemName); //엑셀파일의 모든 부가정보명
+
+				rowIndex++;
+				
+			
+			}
+			System.out.println("----------엑셀의 부가항목이름들" + addItemNamesExcels);
+			
+			//기존 DB에 저장되어있는 부가항목명 가져오기
+			List<String> existingAddItemNames = new ArrayList<>(); 
+			
+			List<AddItem> addItems = addItemService.selectAllAddItem();
+			for(AddItem addItem : addItems) {
+				existingAddItemNames.add(addItem.getAddItemName());
+			}
+			
+			//중복된 부가항목명 찾기
+			Set<String> duplicateNameSet = new HashSet<>();
+			for (String addItemNameExcel : addItemNamesExcels) {
+				if((existingAddItemNames.contains(addItemNameExcel) || duplicateNameSet.contains(addItemNameExcel)) 
+						&& !duplicateNamesExcel.contains(addItemNameExcel)) {
+					duplicateNamesExcel.add(addItemNameExcel);
+				}
+				duplicateNameSet.add(addItemNameExcel);
+			}
+			
+			System.out.println("중복된 네임값들 " + duplicateNameSet);
+			
+			
+			
+			workbook.close();
+			inputStream.close();
+
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			// 업로드 실패 시 예외 처리
+		}
+		return duplicateNamesExcel;
+	}
 	
 	
 	//행추가시 부가항목명 중복검사
