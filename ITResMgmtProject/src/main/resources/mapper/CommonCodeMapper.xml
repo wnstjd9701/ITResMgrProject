@@ -45,6 +45,22 @@
 		    )
 	</select>
 	
+	<select id="checkIfDetailCodeNameExists" parameterType="String" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			dual
+		WHERE
+			EXISTS (
+				SELECT 
+					1
+				FROM
+					commoncodedetail
+				WHERE
+					code_group_id = #{codeGroupId} AND detail_code = #{detailCode}
+			)	
+	</select>
+	
 	<select id="selectCommonCodeBySearch" parameterType="String" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCode">
 		SELECT
 		    c.code_group_id        AS "codeGroupId",
