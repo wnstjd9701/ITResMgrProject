@@ -179,12 +179,11 @@ public class ResClassController {
 		if(groupedResClass.containsKey("C")) {
 			List<ResClass> insertList = groupedResClass.get("C");
 			logger.info("insertList:"+insertList);
-
-			int addItemResult = resClassService.insertAddItemToResClass(resClassList);
+			int addItemResult = resClassService.insertAddItemToResClass(insertList);
+			logger.info("addItemResult:"+addItemResult);
 		}
 		
 		else if(groupedResClass.containsKey("U")) {
-			System.out.println("U타나나나나나나");
 			List<ResClass> updateResClassList = groupedResClass.get("U");
 			logger.info("updateResClassList:"+updateResClassList);
 			int updateRow = updateResClassList.stream()
@@ -199,6 +198,7 @@ public class ResClassController {
 		    int deleteRow = deleteList.stream()
                     .mapToInt(resClassService::deleteAddItemInResClass)
                     .sum();
+		    logger.info("deleteRow"+deleteRow);
 		}
 		Map<String,Object> resClassAddItemMap = new HashMap<String, Object>();
 		return resClassAddItemMap;

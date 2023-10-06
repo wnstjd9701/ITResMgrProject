@@ -14,6 +14,7 @@
 			           res_class_name,
 			           level as lv 
 		        FROM RESCLASS
+		        WHERE use_yn = 'Y'
 		        START WITH upper_res_class_id IS NULL
 		        CONNECT BY PRIOR res_class_id = upper_res_class_id
 			) r

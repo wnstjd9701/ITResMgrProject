@@ -275,65 +275,67 @@ $('#check-additem').click(function () {
     });
 
 //자원분류 저장(C/U/D)
+//자원분류 저장(C/U/D)
 $("#resclass-save").click(() => {
     var addItemList = [];
-	$("#resClassDetailTable").each(function(){
-		
- 	var flag = $(this).closest('table').find('td:first').text();
-	var resClassName;
-	var resClassId;
-	var useYn;
-	if(flag ==='U'){
-		resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
-		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
-		useYn = $(this).closest('.second-container').find("select option:selected").val();
-		console.log("선택한 resClassName:"+resClassName)
-		console.log("선택한 resClassName:"+useYn)
-		console.log("선택한 resClassName:"+resClassId)
-	}
-	var resClassList = {
-		resClassName : resClassName,
-		resClassId : resClassId,
-		useYn : useYn
-	};
-	 addItemList.push(resClassList);
-	});
 
-	$('.second-container input[type=checkbox]:checked').each(function() {
+$('.second-container input[type=checkbox]:checked').each(function() {
     var addItemSn;
-    var useYn;
-    var resClassName;
 	var resClassId;
     var flag = $(this).closest('tr').find('td:eq(0)').text(); // Assuming flag is in the first td
-	console.log(flag)
-    if (flag === 'D') {
+
+    if (flag === 'C' || flag==='D') {
+		console.log("타나");
 		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
-		addItemSn = $(this).closest('second-container').find("input[name='addItemSn']").val();
+		addItemSn = $(this).closest('tr').find("input[name='addItemSn']").val();
 		console.log("선택한 resClassId"+resClassId);
 		console.log("선택한 addItemSn:"+addItemSn)
-    }else if (flag === 'C') {
-		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
-		addItemSn = $(this).closest('second-container').find("input[name='addItemSn']").val();
-    }
+    }else if(flag === 'E'){
+		return	
+	}
 
     var resClassList = {
         flag: flag,
         resClassId: resClassId,
-        addItemSn: addItemSn,
-		resClassName : resClassName,
-        useYn: useYn
+        addItemSn: addItemSn
     };
 
     addItemList.push(resClassList);
 	});
+	$("table#resClassDetailTable").each(function(){
+	var flag = $(this).closest('table').find('td:first').text();
+	var resClassName;
+	var resClassId;
+	var useYn;
+	if(flag === 'U'){
+		console.log("여기타나")
+		resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
+		console.log("선택한 resClassName:"+resClassName)
+	}
+		var useYn = $(this).closest('.second-container').find("select option:selected").val();
+	    var updatedResClassList = {
+        flag: flag,
+        resClassId: resClassId,
+        addItemSn: null, // For 'U', addItemSn can be null or any appropriate value
+        useYn: useYn,
+        resClassName: resClassName  // Add resClassName for update
+    };
+
+    addItemList.push(updatedResClassList);
+	});
+	if(addItemList.length < 1){
+			alert("저장할 내용이 없습니다.");
+			return ;
+		}
 $.ajax({
     method: "POST",
     url: "/resclass/additem",
     data: JSON.stringify(addItemList),
     contentType: "application/json",
     success: function(response) {
-		console.log("성공")
 		console.log(response)
+		console.log("성공")
     },
 		error: function(error) {
                 // 요청이 실패한 경우 처리
