@@ -1,4 +1,5 @@
 $(document).ready(function () {
+	const checkedAddItems = [];
     // 이전에 가져온 부가정보를 초기화할 함수
     function clearPreviousData() {
 		$("#resClassFlagCell").text("");
@@ -9,14 +10,9 @@ $(document).ready(function () {
         $("#resClassId").val("");
         $('table#addInfoTable tbody').empty();
     }
+	
 
-    // 클래스 "resClassDetail"를 가진 <a> 태그를 클릭할 때 실행되는 함수
-    $(".resClassDetail").click(function (event) {
-        event.preventDefault(); // 기본 링크 동작 방지
-
-        // 클릭한 <a> 태그의 텍스트 (부가항목명) 가져오기
-        var resClassName = $(this).text();
-
+function loadResourceDetails(resClassName) {
         // 이전에 가져온 부가정보 초기화
         clearPreviousData();
 
@@ -29,9 +25,9 @@ $(document).ready(function () {
                 $('#resClassDetailTable tbody').empty();
 				// JSON 응답을 JavaScript 객체로 파싱
                 // 응답 객체에서 필요한 데이터 추출
+                var data = response[0]; // 배열의 첫 번째 항목 사용
 				
 				addResClassTableRow += "</select></td>";
-                var data = response[0]; // 배열의 첫 번째 항목 사용
 			    // HTML 테이블 행들을 추가
 			    var addResClassTableRow = 
 			        "<tr>" +
@@ -95,16 +91,27 @@ $(document).ready(function () {
 					var newRow = "<tr><td colspan='4'>" + noDataText + "</td></tr>";
 					$('table#addInfoTable tbody').append(newRow);
                 }
+				 lastSelectedResource = data;
             },
             error: function (error) {
                 // 오류 발생 시 실행되는 코드
                 console.error("에러 발생: " + error);
             }
         });
-    });
+}
 
-	
+$(".first-container").on("click",".resClassDetail",function (event) {
+    event.preventDefault(); // 기본 링크 동작 방지
 
+    // 클릭한 <a> 태그의 텍스트 (부가항목명) 가져오기
+    var resClassName = $(this).text();
+	console.log(resClassName);
+    // 이전에 가져온 부가정보 초기화
+    clearPreviousData();
+
+    // 부가정보를 불러오기 위해 loadResourceDetails 함수 호출
+    loadResourceDetails(resClassName);
+});
 
 // "조회" 버튼 클릭 시
 $('#openAddItemModal').on('click', function() {
@@ -136,7 +143,7 @@ function paging(page) {
             var pagingHtml = pagingLine(response);  // 응답 객체 전달
             updateTable(response.test);
             console.log(response);
-            $('div#pagination').html(pagingHtml);  // 수정된 선택자
+            $('ul#pagination').html(pagingHtml);  // 수정된 선택자
             // 테이블의 기존 내용을 지우기
         },
         error: function (error) {
@@ -146,42 +153,82 @@ function paging(page) {
     });
 }
 
-$("#pagination").on("click", ".page-btn", function(){
-	console.log($(this).val())
-	const page = $(this).val();
-	paging(page);
-})
+$("#pagination").on("click", ".page-btn", function() {
+    // Loop through all checkboxes in the table
+    $('table#add-item-table input[type=checkbox]').each(function() {
+        if ($(this).is(':checked')) {
+            checkedAddItems.push($(this).val());
+        }
+    });
+    console.log("선택한 부가항목:" + checkedAddItems);
+    const page = $(this).val();
+    paging(page);
+});
 
 function pagingLine(data) {
-    // Extract values from the data object
+    var totalPage = data.page.totalPageCount;
+    var page = data.page.nowPage;
+    var totalPageBlock = data.page.totalPageBlock;
     var nowPageBlock = data.page.nowPageCount;
-    var totalPageCount = data.page.totalPage;
-    var nowPage = data.page.nowPage;  // Assuming this is correct, modify if needed
     var startPage = data.page.startPage;
     var endPage = data.page.endPage;
-    var totalPageBlock = data.page.totalPageBlock;
-	console.log(nowPage)
-    // Initialize the pagingLine variable
-    var pagingLine = "<ul>";
 
-    if (nowPage > 1) {
-        pagingLine += "<li>"+`<input type='button' class='page-btn' value=${startPage-1}>`+"⏩</li>";
+    var pagingLine = "<ul id='paging-line-ul' style='display: flex; justify-content: center; align-items: center; list-style: none; padding: 0;'>";
+
+    if (nowPageBlock > 1) {
+        pagingLine += `<li id='paging-line-li' style='margin-right: 10px;'><button class='page-btn' value=${startPage-1}>⏪</button></li>`;
     }
 
     for (var i = startPage; i <= endPage; i++) {
-        var isActive = i === nowPage ? "active" : "";
-        pagingLine += "<li class='" + isActive + "'>";
-        pagingLine += `<input type='button' class='page-btn' value=${i}>`;
-        pagingLine += "</li>";
+        var isActive = i === page ? "active" : "";
+        pagingLine += `<li id='paging-line-li' style='margin-right: 10px;'><button class='page-btn ${isActive}' value=${i}>${i}</button></li>`;
     }
 
     if (nowPageBlock < totalPageBlock) {
-        pagingLine += "<li>"+`<input type='button' class='page-btn' value=${endPage+1}>`+"⏩</li>";
+        pagingLine += `<li><button class='page-btn' value=${endPage+1}>⏩</button></li>`;
     }
 
     pagingLine += "</ul>";
+
+    // Add custom CSS styles
+    var customStyles = `
+        <style>
+            ul #paging-line-ul {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                list-style: none;
+                padding: 0;
+            }
+
+            ul li #paging-line-li {
+                margin-right: 10px;
+            }
+
+            ul li:last-child {
+                margin-right: 0;
+            }
+
+            ul li button {
+                border: none;
+                background: none;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+            ul li button:focus {
+                outline: none;
+            }
+        </style>
+    `;
+    pagingLine += customStyles;
+
     return pagingLine;
 }
+
+
+
+
 
 function updateFlag(tableRow) {
     var changeRow = $(tableRow).closest("table");
@@ -197,6 +244,8 @@ function updateFlag(tableRow) {
 $("#resClassDetailTable").on("change", "input[type='text'], select", function(){
 	updateFlag(this);
 });
+
+//부가항목 리스트 모달 눌렀을 때 목록 보여지는 것 
 function updateTable(addItem) {
     // Get all the already selected addItemSn values
     var selectedAddItemSn = $('table#addInfoTable input[name="addItemSn"]').map(function () {
@@ -218,29 +267,32 @@ function updateTable(addItem) {
     }
 }
 
-$('#check-additem').click(function () {
-    // 테이블 내의 각 체크박스를 순환
-    $('table#add-item-table input[type=checkbox]').each(function () {
-        if ($(this).is(':checked')) {
-            var row = $(this).closest('tr');  // 가장 가까운 행을 가져옴
-            var addItemSn = $(this).val();
-            var addItemName = row.find('td:eq(1)').text();  // addItemName에 해당하는 두 번째 td
-            var useYn = row.find('input[name="useYN"]').val();
-			var statusC = 'C';
-            // 새로운 행을 생성하고 각 정보를 삽입
-            var newRow = "<tr>" +
-				"<td>"+statusC+"</td>"+
-                "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'></td>" +
-                "<td>" + addItemName + "</td>" +
-                "<td>" + useYn + "</td>" +
-                "</tr>";
-
-            console.log(newRow);
-            $('table#addInfoTable').append(newRow);
-            $('#addItemModal').modal('hide');
-        }
-    });
-});	
+	//부가항목 저장 눌렀을 때 기능
+	$('#check-additem').click(function () {
+	    // 테이블 내의 각 체크박스를 순환
+	    $('table#add-item-table input[type=checkbox]').each(function () {
+	        if ($(this).is(':checked')) {
+	            var row = $(this).closest('tr');  // 가장 가까운 행을 가져옴
+	            var addItemSn = $(this).val();
+	            var addItemName = row.find('td:eq(1)').text();  // addItemName에 해당하는 두 번째 td
+	            var useYn = row.find('input[name="useYN"]').val();
+				var statusC = 'C';
+	            // 새로운 행을 생성하고 각 정보를 삽입
+	            var newRow = "<tr>" +
+					"<td>"+statusC+"</td>"+
+	                "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'></td>" +
+	                "<td>" + addItemName + "</td>" +
+	                "<td>" + useYn + "</td>" +
+	                "</tr>";
+	
+	            console.log(newRow);
+	            $('table#addInfoTable').append(newRow);
+	            $('#addItemModal').modal('hide');
+	        }
+	    });
+	});	
+	
+	//행삭제 시 flag D로 변경
     $("#deleteAddItemBtn").click(function() {
         $('table#addInfoTable input[type=checkbox]:checked').each(function() {
             var row = $(this).closest("tr");
@@ -253,28 +305,6 @@ $('#check-additem').click(function () {
     });
 
 
-
-    // 두 번 클릭하여 내용 수정
-    $('#resClassDetailTable').on('dblclick', '.editable', function(event) {
-        event.stopPropagation(); // Prevent event propagation to the table
-
-        var originalContent = $(this).text();
-        var dataType = $(this).data('type');
-        var dataColumn = $(this).data('column');
-
-        if (dataType === 'text') {
-            // 텍스트 수정을 위한 입력 상자 생성
-            $(this).html('<input type="text" class="edit-input" value="' + originalContent + '" />');
-        }
-
-        // 입력 상자에서 포커스가 벗어나면 수정 내용을 적용
-        $('.edit-input').focus().blur(function() {
-            var newContent = $(this).val();
-            $(this).closest('td').html(newContent);
-        });
-    });
-
-//자원분류 저장(C/U/D)
 //자원분류 저장(C/U/D)
 $("#resclass-save").click(() => {
     var addItemList = [];
@@ -282,13 +312,13 @@ $("#resclass-save").click(() => {
 	$('.second-container input[type=checkbox]:checked').each(function() {
     var addItemSn;
 	var resClassId;
+	var resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+	console.log("resClassName: " + resClassName);
     var flag = $(this).closest('tr').find('td:eq(0)').text(); // Assuming flag is in the first td
 
     if (flag === 'C' || flag==='D') {
 		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
 		addItemSn = $(this).closest('tr').find("input[name='addItemSn']").val();
-		console.log("선택한 resClassId"+resClassId);
-		console.log("선택한 addItemSn:"+addItemSn)
     }else if(flag === 'E'){
 		return	
 	}
@@ -296,7 +326,8 @@ $("#resclass-save").click(() => {
     var resClassList = {
         flag: flag,
         resClassId: resClassId,
-        addItemSn: addItemSn
+        addItemSn: addItemSn,
+		resClassName : resClassName
     };
 
     addItemList.push(resClassList);
@@ -308,10 +339,8 @@ $("#resclass-save").click(() => {
 		var resClassId;
 		var useYn;
 		if(flag === 'U'){
-			console.log("여기타나")
 			resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
 			resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
-			console.log("선택한 resClassName:"+resClassName)
 		}
 			var useYn = $(this).closest('.second-container').find("select option:selected").val();
 		    var updatedResClassList = {
@@ -333,10 +362,9 @@ $("#resclass-save").click(() => {
 	$.ajax({
     method: "POST",
     url: "/resclass/additem",
-    data: JSON.stringify(addItemList),
+    data:JSON.stringify(addItemList),	
     contentType: "application/json",
     success: function(response) {
-		console.log(response)
 		console.log("성공")
     },
 		error: function(error) {
@@ -346,6 +374,9 @@ $("#resclass-save").click(() => {
 		});
 	});
 });
+
+
+
 
 
 

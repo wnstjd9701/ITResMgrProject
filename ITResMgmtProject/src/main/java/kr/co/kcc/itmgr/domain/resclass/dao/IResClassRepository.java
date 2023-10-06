@@ -22,6 +22,8 @@ public interface IResClassRepository {
 	
 	List<ResClass> selectResClassByLevel(); //lv별 자원분류조회
 	
+	List<ResClass> selectResClassAndAddItemList();
+	
 	void insertResClass(ResClass resClass);//자원분류 등록
 	int countOfAddItemList();
 //	List<AddItem> selectAddItemInResClass(@Param("start")int start,@Param("end")int end); //부가정보 조회

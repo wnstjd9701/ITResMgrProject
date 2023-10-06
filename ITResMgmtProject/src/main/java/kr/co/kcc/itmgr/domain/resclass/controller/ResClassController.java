@@ -112,9 +112,7 @@ public class ResClassController {
 	@GetMapping("/resclassdetail")
 	@ResponseBody
 	public List<ResClass> selectResClassByResClassName(@RequestParam("resClassName")String resClassName){
-		List<ResClass> selectResClassByResClassName = resClassService.selectResClassByResClassName(resClassName);
-		
-		logger.info("sssss"+selectResClassByResClassName);
+		List<ResClass> selectResClassByResClassName = resClassService.selectResClassByResClassName(resClassName);	
 		return selectResClassByResClassName;
 	}
 	
@@ -147,7 +145,7 @@ public class ResClassController {
 			totalPage=(int)Math.ceil(addItemCount/5.0);
 		}
 		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
-		int nowPageBlock = (int)Math.ceil(1/5.0);
+		int nowPageBlock = (int)Math.ceil(page/5.0);
 		int startPage = (nowPageBlock-1)*5+1;
 		int endPage=0;
 		if(totalPage > nowPageBlock* 5) {
@@ -201,6 +199,9 @@ public class ResClassController {
 		    logger.info("deleteRow"+deleteRow);
 		}
 		Map<String,Object> resClassAddItemMap = new HashMap<String, Object>();
+		List<ResClass> resClassResult = resClassService.selectResClassByResClassName("BLADE서버");
+		resClassAddItemMap.put("resClassResult", resClassResult);
+		logger.info("resClassAddItemMap:"+resClassAddItemMap);
 		return resClassAddItemMap;
 	}
 }

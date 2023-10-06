@@ -15,7 +15,9 @@ public interface IResClassService {
 	List<ResClass> selectResClassByResClassName(String resClassName);//자원상세보기
 	
 	List<ResClass> selectResClassByLevel(); //lv별 자원분류조회
-	
+
+	List<ResClass> selectResClassAndAddItemList();
+
 	void insertResClass(ResClass resClass);
 	
 	int countOfAddItemList();

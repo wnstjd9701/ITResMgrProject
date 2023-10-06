@@ -72,7 +72,7 @@ public class ResClassService implements IResClassService {
 
 	@Override
 	public List<AddItem> selectAddItemInResClass(int page) {
-		int start = (page-1)*10+1;
+		int start = (page-1)*5+1;
 		return resClassRepository.selectAddItemInResClass(start,start+9);
 	}
 
@@ -120,6 +120,11 @@ public class ResClassService implements IResClassService {
 					return r;
 				})
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ResClass> selectResClassAndAddItemList() {
+		return resClassRepository.selectResClassAndAddItemList();
 	}
 
 
