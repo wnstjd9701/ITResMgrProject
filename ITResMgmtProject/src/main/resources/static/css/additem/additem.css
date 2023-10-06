@@ -1,19 +1,19 @@
 .table-container {
-	max-height: 950px;
+	max-height: 900px;
 	overflow-y: auto;
 	position: relative;
-	width: 145%;
+	width: 135%;
 }
 
 .table-container table {
 	width: 100%;
-	
 }
 
-.table-container thead {
+#addItemTable thead th {
 	position: sticky;
 	top: 0;
 	background-color: #fff;
+	z-index: 1; /* 다른 콘텐츠 위에 보이도록 z-index 설정 */
 }
 
 #addItemTable tr {
@@ -34,6 +34,8 @@
 	align-items: flex-start; /* 요소들을 수직 맞춤합니다. */
 	flex-direction: row;
 	white-space: nowrap;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 #p-addItemUseYN {
@@ -42,21 +44,22 @@
 }
 
 #p-addItemName {
-	margin-left: 10px; /* 부가항목명 줄의 왼쪽 마진을 조정합니다. */
+	margin-left: 10px; 
 	margin-right: 5px;
 }
 
 .addItemSerachLabel {
-	margin-right: 5px; /* 각 라디오 버튼과 레이블 사이의 간격 조정 */
+	margin-right: 5px;
 	margin-top: -2px;
 }
 
 .addItemSerachspan {
 	vertical-align: 3px;
+	margin-left:3px;
 }
 
 #addItemSearchText {
-	margin-right: 1000px;
+	margin-right: 900px;
 }
 
 #addItemsearchBtn {

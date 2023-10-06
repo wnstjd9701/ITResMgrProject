@@ -200,14 +200,19 @@ function addItemSaveAll() {
 
 //조회
 function addItemsearch() {
-	var searchAddItemUseYN = document.querySelector('input[name="searchUseYN"]:checked').value;
-	var searchAddItemText = document.getElementById('addItemSearchText').value;
+	var searchAddItemUseYN = document.querySelector('input[name="searchUseYN"]:checked');
 
-	var searchAddItemData = {
-		searchAddItemUseYN: searchAddItemUseYN,
-		searchAddItemText: searchAddItemText
-	};
+	if (!searchAddItemUseYN) {
+		alert("사용여부를 선택하세요.");
+		return;
+	} else {
+		var searchAddItemText = document.getElementById('addItemSearchText').value;
 
+		var searchAddItemData = {
+			searchAddItemUseYN: searchAddItemUseYN.value,
+			searchAddItemText: searchAddItemText
+		};
+	}
 	console.log("searchAddItemData", searchAddItemData);
 
 	$.ajax({
@@ -236,6 +241,7 @@ function addItemsearch() {
 
 					$('#addItemTable > tbody').append(addTableRow);
 				}
+				alert(response.length + "건이 조회되었습니다.");
 			}
 			return;
 		}
