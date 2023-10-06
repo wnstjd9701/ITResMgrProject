@@ -24,7 +24,7 @@
 		<button type="button" onClick="window.location.reload()"
 			class="btn btn-primary"
 			style="float: right; margin-left: 10px; background-color: navy;">조회</button>
-		<button type="button" class="btn btn-primary"
+		<button id="resclass-save" type="button" class="btn btn-primary"
 			style="float: right; margin-left: 10px; background-color: navy;">저장</button>
 		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 			data-bs-target="#resClassInsertModal"
@@ -57,6 +57,10 @@
             <div class="col-md-16">
                 <table id="resClassDetailTable" class="table table-hover">
                     <tbody>
+                    	<tr>
+                    		<th scope="row">상태</th>
+                    		<td id="resClassFlagCell"></td>
+                    	</tr>
                         <tr>
                             <th scope="row">대 분 류</th>
                             <td id="topUpperResClassNameCell"></td>
@@ -66,22 +70,19 @@
                             <td id="upperResClassNameCell"></td>
                         </tr>
                         <tr>
-                            <th scope="row">소 분 류</th>
-                            <td id="resClassNameCell"></td>
-                        </tr>
-                        <tr>
                             <th scope="row">사용여부</th>
                             <td id="useYNCell"></td>
                         </tr>
                         <tr>
                             <th scope="row">분류명</th>
-                            <td id="resClassName2Cell"></td>
+                            <td id="resClassNameCell"></td>
                         </tr>
+
                     </tbody>
                 </table>
 				<div>
 				     ➕부 가 정 보
-				    <button style="margin-right: 5px; float: right;" type="button">행삭제</button>
+				    <button style="margin-right: 5px; float: right;" type="button" id="deleteAddItemBtn">행삭제</button>
 				    <button style="margin-right: 5px;float: right;" type="button" id="openAddItemModal">행추가</button>
 				</div>
 				<br>
@@ -89,6 +90,7 @@
 				    <table class="table" id="addInfoTable">
 				        <thead class="addInfoTableHead">
 				            <tr>
+				            	<th>상태</th>
 				                <th>선택</th>
 				                <th>부가항목명</th>
 				                <th>사용여부</th>
@@ -96,15 +98,12 @@
 				        </thead>
 				        <tbody>
 				            <tr>
-				                <td id="add-item-sn"></td>
-				                <td id="add-item-name"></td>
-				                <td id="add-item-use-yn"></td>
 				            </tr>
 				        </tbody>
 				    </table>
 				</div>
 			</div>
-		</div>
+		</div>	
 	</div>
 
 
@@ -120,8 +119,6 @@
 				</div>
 				<div class="modal-body">
 					<!-- Content of the modal -->
-					<form id="resClassSave" name="resClassSave" method="post"
-						th:action="@{/resclass/insert}">
 						<label for="resClassLevel" class="form-label">자원분류</label> 
 						<select class="form-select" id="resClassLevel">
 							<option value="1">중분류</option>
@@ -168,7 +165,6 @@
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">취소</button>
 						</div>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -182,7 +178,6 @@
 					<h5 class="modal-title" id="addItemList">부가정보</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
-				<form>
 					<div class="modal-body">
 						<div class="mb-3">
 							<table class="table" id="add-item-table">
@@ -196,6 +191,7 @@
 								<tbody>
 								</tbody>
 							</table>
+ 								<ul id="pagination"></ul> 
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
 									data-bs-dismiss="modal">취소</button>
@@ -203,7 +199,6 @@
 							</div>
 						</div>
 					</div>
-				</form>
 			</div>
 		</div>
 	</div>

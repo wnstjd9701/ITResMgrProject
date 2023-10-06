@@ -6,15 +6,18 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-
+import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,16 +35,17 @@ public class ResClassController {
 	static final Logger logger = LoggerFactory.getLogger(ResClassController.class);
 	private final IResClassService resClassService;
 
-
+	/*
+	 * Author: [조한나]
+	 * API No1-1. 자원분류 메뉴트리
+	 * Info : 자원분류 메뉴트리 및 자원분류에 해당하는 자원의 수 
+	 */
 	@RequestMapping(value="/resclass" , method=RequestMethod.GET)
 	public String selectAllResClass(Model model,String upperResClassId) {
-
 		Map<String, Map<String, List<String>>> resClassMap = new LinkedHashMap<>();
-
 
 		List<ResClass> resClassList = resClassService.selectAllResClass();
 
-		
 		for(ResClass r : resClassList) {
 			if(r.getUpperResClassId()==null) {
 				String[] resClassName2s = r.getResClassName2().split(",");
@@ -72,7 +76,6 @@ public class ResClassController {
 		
 
 		model.addAttribute("resClassMap", resClassMap);
-		
 	
 		List<Map<Object, Object>> numberOfRes = resClassService.numberOfResByResClass();
 		Map<Object, Object> numOfRes = new HashMap<>();
@@ -96,38 +99,109 @@ public class ResClassController {
 	  	
 	  	List<ResClass> selectResClassByLevel = resClassService.selectResClassByLevel();
 	  	model.addAttribute("selectResClassByLevel", selectResClassByLevel);
+
 		
 		return "resclass/resclass"; 
 	}
 	
+	/*
+	 * Author: [조한나]
+	 * API No1-2. 자원분류 상세조회[비동기]
+	 * Info : 자원분류 트리메뉴에서 클릭시 그 자원에 대한 상세정보 및 부가항목
+	 */
 	@GetMapping("/resclassdetail")
 	@ResponseBody
 	public List<ResClass> selectResClassByResClassName(@RequestParam("resClassName")String resClassName){
-		List<ResClass> selectResClassByResClassName = resClassService.selectResClassByResClassName(resClassName);
-		logger.info("ddddd"+selectResClassByResClassName);
+		List<ResClass> selectResClassByResClassName = resClassService.selectResClassByResClassName(resClassName);	
 		return selectResClassByResClassName;
 	}
 	
+	/*
+	 * Author: [조한나]
+	 * API No1-3. 자원분류 신규등록[동기]
+	 * Info : 자원분류 INSERT
+	 */
 	@PostMapping("/resclass/insert")
 	public String insertResClassInsert(ResClass resClass, Model model) {
-		model.addAttribute("resClass", resClass);
 		resClassService.insertResClass(resClass);
-		return"resclass/resclass";
+		return"redirect:/resclass";
 	}
 	
+	/*
+	 * Author: [조한나]
+	 * API No1-4. 부가항목 리스트 조회[비동기]
+	 * Info : 자원분류에서 자원분류하나에 부가항목리스트 조회하는 모달
+	 */
 	@GetMapping("/resclass/additem")
 	@ResponseBody
-	public Map<String, Object> selectAddItemInResClass(){
-		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass();
+	public Map<String, Object> selectAddItemInResClass(int page){
+		int addItemCount = resClassService.countOfAddItemList();
+		
+		List<AddItem> selectAddItemInResClass = resClassService.selectAddItemInResClass(page);
 		Map<String, Object> test = new HashMap<String, Object>();
+		//페이징
+		int totalPage=0;
+		if(addItemCount>0) {
+			totalPage=(int)Math.ceil(addItemCount/5.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
+		int nowPageBlock = (int)Math.ceil(page/5.0);
+		int startPage = (nowPageBlock-1)*5+1;
+		int endPage=0;
+		if(totalPage > nowPageBlock* 5) {
+			endPage = nowPageBlock*5;
+		}else {
+			endPage = totalPage;
+		}
+		Map<String,Object> page2 = new HashMap<String, Object>();
+		page2.put("totalPageCount", totalPage);
+		page2.put("nowPage", page);
+		page2.put("totalPageBlock", totalPageBlock);
+		page2.put("nowPageCount", nowPageBlock);
+		page2.put("startPage", startPage);
+		page2.put("endPage", endPage);
+		
 		test.put("test",selectAddItemInResClass);
+		test.put("page", page2);
+		
 		return test;
 	}
 
+
 	
-	@GetMapping("/view")
-	public String view() {
-		return "resclass/view";
+	@PostMapping("/resclass/additem")
+	@ResponseBody
+	public Map<String, Object> saveResClass(@RequestBody List<ResClass> resClassList){
+		logger.info("resClassList: " + resClassList);
+		Stream<ResClass> streamResClass = resClassList.stream();
+		Map<String, List<ResClass>> groupedResClass = streamResClass.collect(Collectors.groupingBy(ResClass::getFlag));
+		if(groupedResClass.containsKey("C")) {
+			List<ResClass> insertList = groupedResClass.get("C");
+			logger.info("insertList:"+insertList);
+			int addItemResult = resClassService.insertAddItemToResClass(insertList);
+			logger.info("addItemResult:"+addItemResult);
+		}
+		if(groupedResClass.containsKey("U")) {
+			List<ResClass> updateResClassList = groupedResClass.get("U");
+			logger.info("updateResClassList:"+updateResClassList);
+			int updateRow = updateResClassList.stream()
+							.mapToInt(resClassService::updateResClass)
+							.sum();
+			logger.info("updateRow:" + updateRow);	
+		}
+		
+		if (groupedResClass.containsKey("D")) {
+		    List<ResClass> deleteList = groupedResClass.get("D");
+		    logger.info("deleteList:"+deleteList);
+		    int deleteRow = deleteList.stream()
+                    .mapToInt(resClassService::deleteAddItemInResClass)
+                    .sum();
+		    logger.info("deleteRow"+deleteRow);
+		}
+		Map<String,Object> resClassAddItemMap = new HashMap<String, Object>();
+		List<ResClass> resClassResult = resClassService.selectResClassByResClassName("BLADE서버");
+		resClassAddItemMap.put("resClassResult", resClassResult);
+		logger.info("resClassAddItemMap:"+resClassAddItemMap);
+		return resClassAddItemMap;
 	}
-	
 }
