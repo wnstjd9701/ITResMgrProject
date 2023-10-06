@@ -35,6 +35,12 @@ public class CommonCodeService implements ICommonCodeService{
 		return commonCodeRepository.checkIfCodeGroupIdExists(codeGroupId);
 	}
 
+	// 같은 코드 그룹 내에 상세 코드명 중복 체크
+	@Override
+	public int checkIfDetailCodeNameExists(String codeGroupId, String detailCode) {
+		return commonCodeRepository.checkIfDetailCodeNameExists(codeGroupId, detailCode);
+	}
+	
 	// 공통 코드 Flag 생성
 	@Override
 	public List<CommonCode> setFlagCommonCode(List<CommonCode> commonCode) {

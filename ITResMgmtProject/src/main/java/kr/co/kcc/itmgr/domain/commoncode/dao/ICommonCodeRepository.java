@@ -15,6 +15,7 @@ public interface ICommonCodeRepository {
 	List<CommonCodeDetail> selectAllCommonCodeDetail(); // 모든 상세 코드 가져오기
 	
 	int checkIfCodeGroupIdExists(String codeGroupId); // 코드 그룹 존재하는지 확인
+	int checkIfDetailCodeNameExists(String codeGroupId, String detailCode); // 같은 코드 그룹 내에 상세 코드명 중복 체크
 	
 	List<CommonCode> selectCommonCodeBySearch(String useYn, String keyword); // 공통 코드 검색
 	List<CommonCodeDetail> selectCommonCodeDetailBySearch(String useYn, String keyword); // 상세 코드 검색

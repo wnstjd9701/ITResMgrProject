@@ -1,14 +1,18 @@
 package kr.co.kcc.itmgr.domain.commoncode.controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.kcc.itmgr.domain.commoncode.model.CodeApiResponse;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCode;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.commoncode.service.ICommonCodeService;
@@ -26,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class CommonCodeController {
 
 	static final Logger logger = LoggerFactory.getLogger(CommonCodeController.class);
-
 	private final ICommonCodeService commonCodeService;
 
 	/*
@@ -77,6 +81,7 @@ public class CommonCodeController {
 	 */
 	@PostMapping("/commoncode")
 	@ResponseBody
+	@Transactional
 	public Map<String, Object> commonCodeSave(@RequestBody List<CommonCode> commonCodeList){
 		/*
 		 *  Flag에 따른 저장 로직
@@ -147,22 +152,69 @@ public class CommonCodeController {
 	 * Info : 저장 버튼 클릭시 C/U/D
 	 */
 	@PostMapping("/commoncodedetail")
-	@ResponseBody
-	public Map<String, Object> saveCommonCodeDetail(@RequestBody List<CommonCodeDetail> commonCodeDetailList){
+	public ResponseEntity<CodeApiResponse> saveCommonCodeDetail(@RequestBody List<CommonCodeDetail> commonCodeDetailList){
+		CodeApiResponse response = new CodeApiResponse();
 		Map<String, List<CommonCodeDetail>> groupedCommonCodeDetail = commonCodeDetailList.stream()
 				.collect(Collectors.groupingBy(CommonCodeDetail::getFlag)); // Flag가 Key값이 됨
 		
 		if (groupedCommonCodeDetail.containsKey("C")) {
 			List<CommonCodeDetail> insertList = groupedCommonCodeDetail.get("C");
+			Set<String> detailCodeSet = new HashSet<>(); // 중복 체크를 위한 Set
+			
+			for (CommonCodeDetail insertData : insertList) {
+		        String codeGroupId = insertData.getCodeGroupId();
+		        String detailCode = insertData.getDetailCode();
+		        logger.info("detailCode: " + detailCode + " codeGroupId: " + codeGroupId);
+		        
+		        int codeGroupResult = commonCodeService.checkIfCodeGroupIdExists(codeGroupId);
+		        int detailCodeNameResult = commonCodeService.checkIfDetailCodeNameExists(codeGroupId, detailCode);
+		        logger.info("detailCodeNameResult: " + detailCodeNameResult);
+		        if (codeGroupResult < 1) {
+		            response.setCode(400);
+		            response.setStatus("실패");
+		            response.setMessage(codeGroupId + ": 코드 그룹 ID가 존재하지 않습니다.");
+		            break; 
+		        }
+		        if (detailCodeSet.contains(detailCode) || detailCodeNameResult >= 1) {
+		            response.setCode(400);
+		            response.setStatus("실패");
+		            response.setMessage(detailCode + ": 같은 코드 그룹 내에 상세 코드가 중복되었습니다.");
+		            break;
+		        } else {
+		            detailCodeSet.add(detailCode); // Set에 'detailCode' 추가
+		        }
+		    }
+			
+			if(response.getCode() == 400) {
+				return ResponseEntity.ok().body(response);
+			}
+			
 			commonCodeService.insertCommonCodeDetail(insertList);
 		}
 		if(groupedCommonCodeDetail.containsKey("U")) {
 			List<CommonCodeDetail> updateList = groupedCommonCodeDetail.get("U");
+			for(CommonCodeDetail updateData : updateList) {
+				String codeGroupId = updateData.getCodeGroupId();
+				String detailCode = updateData.getDetailCode();
+				int detailCodeNameResult = commonCodeService.checkIfDetailCodeNameExists(codeGroupId, detailCode);
+				if(detailCodeNameResult >= 1) {
+					response.setCode(400);
+		            response.setStatus("실패");
+		            response.setMessage(detailCode + ": 같은 코드 그룹 내에 상세 코드가 중복되었습니다.");
+		            break;
+				}
+			}
+			
+			if(response.getCode() == 400) {
+				return ResponseEntity.ok().body(response);
+			}
+			
 			logger.info("updateList; " + updateList);
 			int updateRow = updateList.stream()
 	    	        .mapToInt(commonCodeService::updateCommonCodeDetail)
 	    	        .sum();
 		}
+		
 		if(groupedCommonCodeDetail.containsKey("D")) {
 			List<CommonCodeDetail> deleteList = groupedCommonCodeDetail.get("D");
 			logger.info("deleteList: " + deleteList);
@@ -178,6 +230,12 @@ public class CommonCodeController {
 		
 		commonCodeMap.put("commonCode", commonCodeResult);
 		commonCodeMap.put("commonCodeDetail", commonCodeDetailResult);
-		return commonCodeMap;
+		
+		response.setCode(200);
+		response.setStatus("성공");
+		response.setMessage("저장을 성공적으로 마쳤습니다.");
+		response.setData(commonCodeMap);
+		
+		return ResponseEntity.ok().body(response);
 	}
 }
