@@ -279,13 +279,12 @@ $('#check-additem').click(function () {
 $("#resclass-save").click(() => {
     var addItemList = [];
 
-$('.second-container input[type=checkbox]:checked').each(function() {
+	$('.second-container input[type=checkbox]:checked').each(function() {
     var addItemSn;
 	var resClassId;
     var flag = $(this).closest('tr').find('td:eq(0)').text(); // Assuming flag is in the first td
 
     if (flag === 'C' || flag==='D') {
-		console.log("타나");
 		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
 		addItemSn = $(this).closest('tr').find("input[name='addItemSn']").val();
 		console.log("선택한 resClassId"+resClassId);
@@ -302,33 +301,36 @@ $('.second-container input[type=checkbox]:checked').each(function() {
 
     addItemList.push(resClassList);
 	});
+	
 	$("table#resClassDetailTable").each(function(){
-	var flag = $(this).closest('table').find('td:first').text();
-	var resClassName;
-	var resClassId;
-	var useYn;
-	if(flag === 'U'){
-		console.log("여기타나")
-		resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
-		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
-		console.log("선택한 resClassName:"+resClassName)
-	}
-		var useYn = $(this).closest('.second-container').find("select option:selected").val();
-	    var updatedResClassList = {
-        flag: flag,
-        resClassId: resClassId,
-        addItemSn: null, // For 'U', addItemSn can be null or any appropriate value
-        useYn: useYn,
-        resClassName: resClassName  // Add resClassName for update
-    };
-
-    addItemList.push(updatedResClassList);
-	});
-	if(addItemList.length < 1){
-			alert("저장할 내용이 없습니다.");
-			return ;
+		var flag = $(this).closest('table').find('td:first').text();
+		var resClassName;
+		var resClassId;
+		var useYn;
+		if(flag === 'U'){
+			console.log("여기타나")
+			resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+			resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
+			console.log("선택한 resClassName:"+resClassName)
 		}
-$.ajax({
+			var useYn = $(this).closest('.second-container').find("select option:selected").val();
+		    var updatedResClassList = {
+	        flag: flag,
+	        resClassId: resClassId,
+	        addItemSn: null, // For 'U', addItemSn can be null or any appropriate value
+	        useYn: useYn,
+	        resClassName: resClassName  // Add resClassName for update
+	    };
+	
+	    addItemList.push(updatedResClassList);
+	});
+		
+	if(addItemList.length < 1){
+		alert("저장할 내용이 없습니다.");
+		return ;
+	}
+		
+	$.ajax({
     method: "POST",
     url: "/resclass/additem",
     data: JSON.stringify(addItemList),

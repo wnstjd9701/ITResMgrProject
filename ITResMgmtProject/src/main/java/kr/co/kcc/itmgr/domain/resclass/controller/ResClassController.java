@@ -174,6 +174,7 @@ public class ResClassController {
 	@PostMapping("/resclass/additem")
 	@ResponseBody
 	public Map<String, Object> saveResClass(@RequestBody List<ResClass> resClassList){
+		logger.info("resClassList: " + resClassList);
 		Stream<ResClass> streamResClass = resClassList.stream();
 		Map<String, List<ResClass>> groupedResClass = streamResClass.collect(Collectors.groupingBy(ResClass::getFlag));
 		if(groupedResClass.containsKey("C")) {
@@ -182,8 +183,7 @@ public class ResClassController {
 			int addItemResult = resClassService.insertAddItemToResClass(insertList);
 			logger.info("addItemResult:"+addItemResult);
 		}
-		
-		else if(groupedResClass.containsKey("U")) {
+		if(groupedResClass.containsKey("U")) {
 			List<ResClass> updateResClassList = groupedResClass.get("U");
 			logger.info("updateResClassList:"+updateResClassList);
 			int updateRow = updateResClassList.stream()
@@ -192,7 +192,7 @@ public class ResClassController {
 			logger.info("updateRow:" + updateRow);	
 		}
 		
-		else if (groupedResClass.containsKey("D")) {
+		if (groupedResClass.containsKey("D")) {
 		    List<ResClass> deleteList = groupedResClass.get("D");
 		    logger.info("deleteList:"+deleteList);
 		    int deleteRow = deleteList.stream()
