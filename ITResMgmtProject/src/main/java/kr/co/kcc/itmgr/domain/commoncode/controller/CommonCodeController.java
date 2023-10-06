@@ -30,8 +30,10 @@ public class CommonCodeController {
 	private final ICommonCodeService commonCodeService;
 
 	/*
-	 * API No2-1. 공통 코드 관리
-	 * Info : 공통 코드, 상세 코드 조회 API 
+	 * Author: [윤준성]
+	 * Method: GET
+	 * API No2-1. 공통 코드 페이지
+	 * Info : 공통 코드, 상세 코드 조회
 	 */
 	@GetMapping("/commoncode")
 	public String commonCode(Model model) {
@@ -44,8 +46,9 @@ public class CommonCodeController {
 	}
 	
 	/*
-	 * API No2-2. 공통 코드 그룹 존재 여부 체크
-	 * Info : 공통 코드 그룹 체크 API [비동기 처리]
+	 * Author: [윤준성]
+	 * API No2-2. 공통 코드 그룹 존재 여부 체크 [비동기]
+	 * Info : 공통 코드 그룹 체크 
 	 */
 	@GetMapping("/checkcodegroup")
 	@ResponseBody
@@ -55,8 +58,9 @@ public class CommonCodeController {
 	}
 	
 	/*
-	 * API No2-3. 공통 코드 검색
-	 * Info : 공통 코드 검색 [사용 여부, 코드 그룹명 및 코드 그룹 ID] / [비동기 처리]
+	 * Author: [윤준성]
+	 * API No2-3. 공통 코드 검색 [비동기]
+	 * Info : 공통 코드 검색 [사용 여부, 코드 그룹명 및 코드 그룹 ID]
 	 */
 	@GetMapping("/search/commoncode")
 	@ResponseBody
@@ -67,8 +71,9 @@ public class CommonCodeController {
 	}
 	
 	/*
-	 * API No2-4. 공통 코드 저장 버튼 클릭 시
-	 * Info : 저장 버튼 클릭 시 C/U/D [비동기 처리]
+	 * Author: [윤준성]
+	 * API No2-4. 공통 코드 저장 [비동기]
+	 * Info : 저장 버튼 클릭 시 C / U / D
 	 */
 	@PostMapping("/commoncode")
 	@ResponseBody
@@ -111,8 +116,9 @@ public class CommonCodeController {
 	}
 	
 	/*
-	 * API No2-5. 공통 코드에 대한 상세 코드 가져오기
-	 * Info : 공통 코드 클릭 시 상세 코드 정보 가져오기 [비동기 처리]
+	 * Author: [윤준성]
+	 * API No2-5. 공통 코드에 대한 상세 코드 조회 [비동기]
+	 * Info : 공통 코드 클릭 시 상세 코드 정보 조회 [코드 그룹 ID]
 	 */
 	@GetMapping("/commoncodedetail")
 	@ResponseBody 
@@ -123,8 +129,9 @@ public class CommonCodeController {
 	}
 	
 	/*
-	 * API No2-6. 상세 코드 검색
-	 * Info : 상세 코드 검색 [사용 여부, 상세 코드 및 상세 코드명] / [비동기 처리]
+	 * Author: [윤준성]
+	 * API No2-6. 상세 코드 검색 [비동기]
+	 * Info : 상세 코드 검색 [사용 여부, 상세 코드 및 상세 코드명]
 	 */
 	@GetMapping("/search/commoncodedetail")
 	@ResponseBody
@@ -135,8 +142,9 @@ public class CommonCodeController {
 	}
 	
 	/*
-	 * API No2-7. 상세 코드 저장
-	 * Info : 상세 코드 저장 [비동기 처리]
+	 * Author: [윤준성]
+	 * API No2-7. 상세 코드 저장 [비동기]
+	 * Info : 저장 버튼 클릭시 C/U/D
 	 */
 	@PostMapping("/commoncodedetail")
 	@ResponseBody
