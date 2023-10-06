@@ -7,32 +7,27 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum ErrorCode implements EnumModel {
 
-  // COMMON
-  INVALID_CODE(400, "C001", "Invalid Code"),
-  RESOURCE_NOT_FOUND(204, "C002", "Resource not found"),
-  EXPIRED_CODE(400, "C003", "Expired Code"),
-  
-  // AWS
-  AWS_ERROR(400, "A001", "aws client error");
+	INVALID_CODE_GROUP_ID(400, "InvalidParams", "같은 코드 그룹 내에 상세 코드가 중복되었습니다.");
+	
 
-  private int status;
-  private String code;
-  private String message;
-  private String detail;
+	private int status;
+	private String code;
+	private String message;
+	private String detail;
 
-  ErrorCode(int status, String code, String message) {
-    this.status = status;
-    this.code = code;
-    this.message = message;
-  }
+	ErrorCode(int status, String code, String message) {
+		this.status = status;
+		this.code = code;
+		this.message = message;
+	}
 
-  @Override
-  public String getKey() {
-    return this.code;
-  }
+	@Override
+	public String getKey() {
+		return this.code;
+	}
 
-  @Override
-  public String getValue() {
-    return this.message;
-  }
+	@Override
+	public String getValue() {
+		return this.message;
+	}
 }
