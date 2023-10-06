@@ -18,6 +18,11 @@ public class AddItemService implements IAddItemService{
 	public List<AddItem> selectAllAddItem() {
 		return addItemRepository.selectAllAddItem();
 	}
+	
+	@Override
+	public List<AddItem> selectUseYAddItem() {
+		return addItemRepository.selectUseYAddItem();
+	}
 
 	@Override
 	public List<AddItem> selectSearchAddItem(String useYN, String searchText) {
@@ -58,6 +63,8 @@ public class AddItemService implements IAddItemService{
 		addItemRepository.insertAddItemExcel(addItemName, addItemDesc);
 		
 	}
+
+
 
 
 

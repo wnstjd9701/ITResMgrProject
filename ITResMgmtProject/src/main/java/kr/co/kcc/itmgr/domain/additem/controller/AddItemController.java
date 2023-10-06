@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,15 +40,15 @@ public class AddItemController {
 
 	private final IAddItemService addItemService;
 
-	@RequestMapping(value="/additem", method=RequestMethod.GET)
+	@GetMapping("/additem")
 	public String selectAddItem(Model model) {
-		List<AddItem> addItemList = addItemService.selectAllAddItem();
+		List<AddItem> addItemList = addItemService.selectUseYAddItem();
 		model.addAttribute("addItemList", addItemList);
 		return "additem/additem";
 	}
 
 	//검색
-	@RequestMapping(value="/search/additem", method = RequestMethod.GET)
+	@GetMapping("/search/additem")
 	@ResponseBody
 	public List<AddItem> selectSearchAddItem(@RequestParam Map<String, String> searchAddItemData) {
 		List<AddItem> addItemList = new ArrayList<>(); 
@@ -71,7 +68,7 @@ public class AddItemController {
 	}  
 
 	//Insert, Delete, Update 저장
-	@RequestMapping(value="/save/additem", method = RequestMethod.POST)
+	@PostMapping("/save/additem")
 	@ResponseBody
 	public List<AddItem> saveAll(@RequestBody(required = false) AddItem requestData){
 		List<AddItem> addItemList = new ArrayList<>(); 
@@ -80,7 +77,6 @@ public class AddItemController {
 			List<AddItem> insertAddItems = requestData.getInsertAddItems();
 			List<Integer> deletedAddItems = requestData.getDeletedAddItems();
 			List<AddItem> updateAddItems = requestData.getUpdateAddItems();
-	
 			
 			//Insert
 			if(insertAddItems != null && !insertAddItems.isEmpty()) {
@@ -106,7 +102,6 @@ public class AddItemController {
 		}
 		return addItemList;
 	}
-	
 	
 	//엑셀양식다운로드
 	@GetMapping("/excel/download")
@@ -182,9 +177,6 @@ public class AddItemController {
 				addItemService.insertAddItemExcel(addItemName, addItemDesc);
 
 				rowIndex++;
-				
-				System.out.println("----------addItemName--------------"+addItemName);
-				System.out.println("--------------addItemDesc--------------"+addItemDesc);
 			}
 			workbook.close();
 			inputStream.close();
@@ -192,7 +184,6 @@ public class AddItemController {
 			addItemList = addItemService.selectAllAddItem();
 		} catch (Exception e) {
 			e.printStackTrace();
-			// 업로드 실패 시 예외 처리
 		}
 		return addItemList;
 	}
@@ -231,10 +222,8 @@ public class AddItemController {
 				addItemNamesExcels.add(addItemName); //엑셀파일의 모든 부가정보명
 
 				rowIndex++;
-				
-			
+
 			}
-			System.out.println("----------엑셀의 부가항목이름들" + addItemNamesExcels);
 			
 			//기존 DB에 저장되어있는 부가항목명 가져오기
 			List<String> existingAddItemNames = new ArrayList<>(); 
@@ -252,19 +241,11 @@ public class AddItemController {
 					duplicateNamesExcel.add(addItemNameExcel);
 				}
 				duplicateNameSet.add(addItemNameExcel);
-			}
-			
-			System.out.println("중복된 네임값들 " + duplicateNameSet);
-			
-			
-			
+			}	
 			workbook.close();
 			inputStream.close();
-
-		
 		} catch (Exception e) {
 			e.printStackTrace();
-			// 업로드 실패 시 예외 처리
 		}
 		return duplicateNamesExcel;
 	}
@@ -291,9 +272,9 @@ public class AddItemController {
 			Set<String> duplicateNameSet = new HashSet<>();
 			for(String addItemName : addItemNames) {
 				if ((existingAddItemNames.contains(addItemName) || duplicateNameSet.contains(addItemName)) && !duplicateNames.contains(addItemName)) {
-					duplicateNames.add(addItemName); // 중복된 ID로 판별되면 목록에 추가
+					duplicateNames.add(addItemName); // 중복된 부가항목명이면 판별되면 목록에 추가
 				}
-				duplicateNameSet.add(addItemName); // 중복을 방지하기 위해 추가한 중복된 ID를 저장
+				duplicateNameSet.add(addItemName); // 중복을 방지하기 위해 추가한 중복된 부가항목명을 저장
 			}
 		}catch(Exception e){
 			e.printStackTrace();

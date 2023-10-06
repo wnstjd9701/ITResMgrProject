@@ -1,19 +1,84 @@
 .table-container {
-    max-height: 1000px; 
-    overflow-y: auto; 
-    position: relative; 
+	max-height: 950px;
+	overflow-y: auto;
+	position: relative;
+	width: 145%;
 }
 
 .table-container table {
-    width: 100%;
+	width: 100%;
+	
 }
 
 .table-container thead {
-    position: sticky;
-    top: 0;
-    background-color: #fff;
+	position: sticky;
+	top: 0;
+	background-color: #fff;
 }
 
-#title{
-	font-size:20px;
+#addItemTable tr {
+	text-align: center;
+}
+
+#addItemTable td {
+	text-align: center;
+}
+
+#title {
+	font-size: 20px;
+}
+
+/* 부가정보 버튼 가로정렬 */
+.addItemSerach {
+	display: flex;
+	align-items: flex-start; /* 요소들을 수직 맞춤합니다. */
+	flex-direction: row;
+	white-space: nowrap;
+}
+
+#p-addItemUseYN {
+	margin-right: 5px;
+	align-self: flex-start; /* 사용여부 줄만 위쪽으로 맞춥니다. */
+}
+
+#p-addItemName {
+	margin-left: 10px; /* 부가항목명 줄의 왼쪽 마진을 조정합니다. */
+	margin-right: 5px;
+}
+
+.addItemSerachLabel {
+	margin-right: 5px; /* 각 라디오 버튼과 레이블 사이의 간격 조정 */
+	margin-top: -2px;
+}
+
+.addItemSerachspan {
+	vertical-align: 3px;
+}
+
+#addItemSearchText {
+	margin-right: 1000px;
+}
+
+#addItemsearchBtn {
+	margin-right: 5px;
+}
+
+#ExcelDownBtn {
+	margin-right: 5px;
+}
+
+#ExcelUploadBtn {
+	margin-right: 5px;
+}
+
+#addItemAddRowBtn {
+	margin-right: 5px;
+}
+
+#addItemHideRowBtn {
+	margin-right: 5px;
+}
+
+#addItemSaveBtn {
+	
 }
