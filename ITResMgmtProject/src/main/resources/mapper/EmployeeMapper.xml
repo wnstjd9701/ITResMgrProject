@@ -41,7 +41,6 @@
 		ORDER BY employee_name
 </select>
 
-
 <insert id="insertEmployee" parameterType="kr.co.kcc.itmgr.domain.employee.model.Employee">
 		<foreach collection="list" item="employee" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
 		INTO employeeinfo
@@ -53,11 +52,10 @@
 				#{employee.employeeTypeCode},
 				SYSDATE,
 				'임시생성자ID',
-				'임시비밀번호',
+				#{employee.employeePwd},
 				'Y')
 		</foreach>
 </insert>
-
 
 <update id="deleteEmployeeByUseYN" parameterType="String">
 	<![CDATA[
@@ -95,7 +93,4 @@
 		WHERE c.code_group_id = cd.code_group_id AND c.code_group_id = 'EMS000'
 	]]>
 </select>
-
-
-
 </mapper>
