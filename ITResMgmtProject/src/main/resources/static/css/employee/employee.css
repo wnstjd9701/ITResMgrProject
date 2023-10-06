@@ -1,12 +1,23 @@
 #searchBar {
     display: flex;
-    align-items: center; /* 내부 요소들을 수직 가운데 정렬 */
+   	align-items: flex-start; /* 요소들을 수직 맞춤합니다. */
+	flex-direction: row;
     white-space: nowrap;
 }
-#p1, #p2, #p3{
-	margin-top : 10px;
+
+
+#searchEmpType{
 	margin-left:5px;
-	margin-right:5px;
+	margin-right:10px;
+}
+
+#searchEmpStatus{
+	margin-left:5px;
+	margin-right:10px;
+}
+
+#searchEmpText{
+	margin-left:5px;
 }
 
 #searchButton{

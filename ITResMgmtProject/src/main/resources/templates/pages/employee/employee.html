@@ -10,9 +10,11 @@
 </head>
 <body>
 	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-	<div class="container" style="margin-left: 270px;" id="searchBar">
+	<div class="container" style="margin-left: 270px;" >
 		<p id="title">사원정보</p>
-		<p id="p1">사원유형</p>
+		
+		<div id="searchBar">
+		<p id="searchEmpType">사원유형</p>
 		<select id="searchEmpTypeList" name="searchEmpTypeList">
 			<option value=''>전체</option>
 			<th:block th:each="commonCode: ${commonCodeTypeList}">
@@ -21,7 +23,7 @@
 			</th:block>
 		</select>
 
-		<p id="p2">사원상태</p>
+		<p id="searchEmpStatus">사원상태</p>
 		<select id='searchEmpStatusList' name='searchEmpStatusList'>
 			<option value=''>전체</option>
 			<th:block th:each="commonCode2: ${commonCodeStatusList}">
@@ -29,19 +31,12 @@
 			</th:block>
 		</select>
 
-		<p id="p3">사원ID 및 사원명</p>
+		<p id="searchEmpText">사원ID 및 사원명</p>
 		<input id="searchText" type="text" placeholder="사원ID 및 사원명 입력">
-
-			<div style="text-align: right;">
-<!-- 				<input id="searchButton" type="button" value="조회" onclick="searchList()" class="chechBtn"/> 
-				<input type="button" value="행추가" onclick="addRow()" class="addRowBtn"/> 
-				<input type="button" value="행삭제" onclick="hideRow()" class="hideRowBtn"/> 
-				<input type="submit" id="i_submit" onclick="saveList()" value="저장" class="saveBtn"/> -->
 				<button type="button" id="searchButton" onclick="searchList()" class="chechBtn">조회</button>
 				<button type="button" onclick="addRow()" class="addRowBtn">행추가</button>
 				<button type="button" onclick="hideRow()" class="hideRowBtn">행삭제</button>
 				<button type="button"  id="i_submit" onclick="saveList()" class="saveBtn">저장</button>
-
 			</div>
 	</div>
 

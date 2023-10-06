@@ -48,7 +48,7 @@ function addRow() {
 	newCellEmpStatus.appendChild(empStatusSelect);
 
 	const newCellEmpPwd = newRow.insertCell(6);
-	newCellEmpPwd.innerHTML = "<input type='text' id='empPwd" + rowCount + "' + placeholder='사원비밀번호를 입력하세요'>";
+	newCellEmpPwd.innerHTML = "<input type='text' id='empPwd" + rowCount + "' + placeholder='사원비밀번호를 입력하세요' size=22>";
 
 	rowCount++;
 
