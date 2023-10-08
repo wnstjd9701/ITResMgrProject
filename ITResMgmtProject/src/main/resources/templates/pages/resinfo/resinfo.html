@@ -2,18 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
-<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
 
+<link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
 </head>
 <body>
-	<div class="" style=" float:right; width:20%;">
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<main id="main" class="main">
+	<div style=" float:right;">
 		<button id="search_btn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;margin-left:10px; background-color:navy; border:navy;">조회</button>
 		<button id="newResInfoBtn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;  background-color:navy; border:navy;">신규</button>	
 	</div>
-	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-	<div class="container" style="margin-top:50px; margin-left:270px; max-width:85%;">
+	<div>
 		<span>대 분 류</span>
 		<select id="topUpperResClassName" name="topUpperResClassName">
 		    <!-- "전체" 옵션 추가 -->
@@ -39,6 +39,7 @@
 			<input type="text" name="installPlaceName"></input>
 		<span>제조회사명</span>
 			<input type="text" name="manufactureCompanyName"></input>
+			<br>
 		<span>관리ID</span>
 			<input type="text" name="mgmtId"></input>
 		<span>모니터링 여부</span> 
@@ -48,7 +49,7 @@
 	<!-- 검색창 끝 -->
 	
 	<!-- 자원 리스트 -->
-	<div class="container" style="margin-left:250px; max-width:86%; max-height:100%;">
+	<div>
 	<span>
 		<table class="table table-striped">
 			<thead style="text-align: center;">
@@ -78,6 +79,7 @@
 		</table>
 	</span>
 	</div>
+	</main>
 	<!-- 자원리스트 끝 -->
 
 	<!-- 모달창 -->
@@ -253,6 +255,8 @@
  	</div>
  	<!-- 설치장소 리스트 모달창 끝 -->
 <script type="text/javascript" th:src="@{/js/resinfo/resinfo.js}"></script>
+  <!-- Template Main JS File -->
+<script th:src="@{/assets/js/main.js}"></script>	
 <script>
 
 $(document).ready(function(){

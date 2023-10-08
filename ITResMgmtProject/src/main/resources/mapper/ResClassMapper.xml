@@ -68,7 +68,7 @@
 				RESCLASS
 				(upper_res_class_id, res_class_id, res_class_name, use_yn, create_date, creater_id, update_date, updater_id)
 			VALUES
-				(#{upperResClassId}, #{resClassId}, #{resClassName}, #{useYn}, SYSDATE, 'wh467925', SYSDATE, 'wh467925')
+				(#{upperResClassId}, #{resClassId}, #{resClassName}, 'Y', SYSDATE, 'wh467925', SYSDATE, 'wh467925')
 		]]>
 	</insert>
 	

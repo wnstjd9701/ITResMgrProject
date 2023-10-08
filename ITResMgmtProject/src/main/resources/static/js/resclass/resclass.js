@@ -80,7 +80,6 @@ function loadResourceDetails(resClassName) {
 								"<td class='flag'>" + response[i].flag + "</td>" +
                                 "<td><input type='checkbox' name='addItemSn' value='" + response[i].addItemSn + "'>" + "</td>" +
                                 "<td>" + response[i].addItemName + "</td>" +
-                                "<td>" + response[i].addItemUseYn + "</td>" +
                                 "</tr>";
                             $('table#addInfoTable tbody').append(addTableRow);
                         }
@@ -282,7 +281,6 @@ function updateTable(addItem) {
 					"<td>"+statusC+"</td>"+
 	                "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'></td>" +
 	                "<td>" + addItemName + "</td>" +
-	                "<td>" + useYn + "</td>" +
 	                "</tr>";
 	
 	            console.log(newRow);

@@ -2,25 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
-<link th:href="@{/css/resclass/menutree.css}" rel="stylesheet" />
 <link th:href="@{/css/resclass/resclass.css}" rel="stylesheet" />
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-	integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
-	crossorigin="anonymous">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-	crossorigin="anonymous"></script>
-<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
 </head>
 <body>
-	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-	<div class="container"
-		style="margin: 50px 0 50px 270px; width: 1150px;">
+
+  <main id="main" class="main">
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<div>
 		<button type="button" onClick="window.location.reload()"
 			class="btn btn-primary"
 			style="float: right; margin-left: 10px; background-color: navy;">조회</button>
@@ -31,7 +20,7 @@
 			style="float: right; background-color: navy;">신규</button>
 	</div>
 
-<div class="container" style="display: flex; clear: both;">
+<div style="display: flex; clear: both;">
     <!-- 첫 번째 컨테이너 -->
     <div class="first-container">
         <div class="col-md-12">
@@ -93,7 +82,6 @@
 				            	<th>상태</th>
 				                <th>선택</th>
 				                <th>부가항목명</th>
-				                <th>사용여부</th>
 				            </tr>
 				        </thead>
 				        <tbody>
@@ -105,7 +93,7 @@
 			</div>
 		</div>	
 	</div>
-
+</main>
 
 	<!-- 자원분류 등록 모달창 -->
 	<div class="modal fade" id="resClassInsertModal" tabindex="-1"
@@ -118,6 +106,7 @@
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
+					<form id="resClassSave" name="resClassSave" method="post" th:action="@{/resclass/insert}">
 					<!-- Content of the modal -->
 						<label for="resClassLevel" class="form-label">자원분류</label> 
 						<select class="form-select" id="resClassLevel">
@@ -151,19 +140,12 @@
 									<td><input type="text" class="form-control"
 										id="resClassName" name="resClassName"></td>
 								</tr>
-								<tr>
-									<th scope="row">사용여부</th>
-									<td><select class="form-select" name="useYn">
-											<option value="Y">Y</option>
-											<option value="N">N</option>
-									</select></td>
-								</tr>
 							</tbody>
 						</table>
-						<div class="modal-footer">
 							<button type="submit">저장</button>
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+						</form>
+						<div class="modal-footer">
 						</div>
 				</div>
 			</div>
@@ -202,11 +184,11 @@
 			</div>
 		</div>
 	</div>
-</div>
 
 
 <script type="text/javascript" th:src="@{/js/resclass/menutree.js}"></script>
 <script type="text/javascript" th:src="@{/js/resclass/resclass.js}"></script>
-
+  <!-- Template Main JS File -->
+<script th:src="@{/assets/js/main.js}"></script>
 </body>
 </html>
