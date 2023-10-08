@@ -3,22 +3,27 @@
 <head>
 <meta charset="utf-8">
 <link th:href="@{/css/resclass/resclass.css}" rel="stylesheet" />
+<link th:href="@{/css/resclass/menutree.css}" rel="stylesheet" />
 <div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
 </head>
 <body>
 
-  <main id="main" class="main">
 	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
-	<div>
-		<button type="button" onClick="window.location.reload()"
-			class="btn btn-primary"
-			style="float: right; margin-left: 10px; background-color: navy;">조회</button>
-		<button id="resclass-save" type="button" class="btn btn-primary"
-			style="float: right; margin-left: 10px; background-color: navy;">저장</button>
+	<main id="main" class="main">
+	 <div class="pagetitle">
+      	<button type="button" onClick="window.location.reload()" class="btn btn-primary" style="background-color: navy; border:navy;">조회</button>
+		<button id="resclass-save" type="button" class="btn btn-primary" style="background-color: navy; border:navy;">저장</button>
 		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-			data-bs-target="#resClassInsertModal"
-			style="float: right; background-color: navy;">신규</button>
-	</div>
+			data-bs-target="#resClassInsertModal" style="background-color: navy; border:navy;">신규</button>
+      <h1>IT자원분류</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+          <li class="breadcrumb-item active">IT자원분류</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
 
 <div style="display: flex; clear: both;">
     <!-- 첫 번째 컨테이너 -->

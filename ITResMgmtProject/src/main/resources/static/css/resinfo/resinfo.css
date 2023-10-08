@@ -100,3 +100,23 @@ select, input[type="text"] {
     left: 50%;
     transform: translateX(-50%);
 }
+
+/* 테이블 스타일 */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table tr th, .table tr td {
+  padding: 10px;
+  text-align: center;
+}
+
+.table tr th {
+  background-color: #7289AB;
+  color:white;
+}
+.table tr td {
+  background-color: #FCFCFC;
+}
