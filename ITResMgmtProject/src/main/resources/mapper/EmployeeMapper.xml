@@ -5,6 +5,7 @@
 <select id="selectAllEmployee" resultType = "kr.co.kcc.itmgr.domain.employee.model.Employee">
 	<![CDATA[
 		SELECT	e.employee_id AS employeeId, 
+				LPAD('●', 10, '●') AS employeePwd,
 				e.employee_name AS employeeName,
 				(SELECT c.detail_code_name
 					FROM commoncodedetail c 
@@ -20,6 +21,7 @@
 
 <select id="selectSearchEmployee" resultType = "kr.co.kcc.itmgr.domain.employee.model.Employee">
 		SELECT	e.employee_id AS employeeId,
+				e.employee_pwd AS employeePwd,
     			e.employee_name AS employeeName,
     			(SELECT c.detail_code_name
      				FROM commoncodedetail c

@@ -31,8 +31,8 @@
 			</th:block>
 		</select>
 
-		<p id="searchEmpText">사원ID 및 사원명</p>
-		<input id="searchText" type="text" placeholder="사원ID 및 사원명 입력">
+		<p id="searchEmpText">사원</p>
+		<input id="searchText" type="text" placeholder="ID 및 명 입력">
 				<button type="button" id="searchButton" onclick="searchList()" class="chechBtn">조회</button>
 				<button type="button" onclick="addRow()" class="addRowBtn">행추가</button>
 				<button type="button" onclick="hideRow()" class="hideRowBtn">행삭제</button>
@@ -48,17 +48,19 @@
 					<th>선택</th>
 					<th>상태</th>
 					<th>사원ID</th>
+					<th>사원비밀번호</th>
 					<th>사원명</th>
 					<th>사원유형</th>
 					<th>사원상태</th>
-					<th>비고</th>
+					
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="employeeList : ${employeeList}" id="empList">
 					<td><input type="checkbox" name="empCheckbox"></td>
-					<td><span name="empStatus">E</span></td>
+					<td><span name="empStatus">S</span></td>
 					<td th:text="${employeeList.employeeId}" name="employeeId"></td>
+					<td th:text="${employeeList.employeePwd}" name="employeePwd"></td>
 					<td th:text="${employeeList.employeeName}" name="employeeName"
 						contenteditable="true" onclick="handleClick(this)"></td>
 					<td onclick="handleClick(this)" name="employeeType"><span
@@ -78,7 +80,6 @@
 									th:text="${commonCode2.value}"></option>
 							</th:block>
 					</select></td>
-					<td></td>
 				</tr>
 			</tbody>
 		</table>

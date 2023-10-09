@@ -1,3 +1,5 @@
+
+
 #searchBar {
     display: flex;
    	align-items: flex-start; /* 요소들을 수직 맞춤합니다. */
@@ -18,7 +20,13 @@
 
 #searchEmpText{
 	margin-left:5px;
+	margin-right:5px;
 }
+
+#searchText::placeholder {
+  text-align: center; /* 가운데 정렬 스타일 적용 */
+}
+
 
 #searchButton{
 	margin-left:450px;
