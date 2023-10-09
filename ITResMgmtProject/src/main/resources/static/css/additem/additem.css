@@ -1,8 +1,12 @@
 .table-container {
-	max-height: 900px;
+	max-height: 800px;
 	overflow-y: auto;
 	position: relative;
-	width: 135%;
+	width: 120%;
+}
+
+#addItemSearchText::placeholder {
+  text-align: center; /* 가운데 정렬 스타일 적용 */
 }
 
 .table-container table {
@@ -59,7 +63,7 @@
 }
 
 #addItemSearchText {
-	margin-right: 900px;
+	margin-right: 700px;
 }
 
 #addItemsearchBtn {

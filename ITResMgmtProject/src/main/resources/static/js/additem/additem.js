@@ -25,6 +25,9 @@ function addItemAddRow() {
 	newCellUseYN.innerHTML = "<span>Y</span>";
 
 	rowCount++;
+
+	const tableContainer = document.querySelector(".table-container");
+	tableContainer.scrollTop = tableContainer.scrollHeight; // 맨 아래로 스크롤 이동
 }
 
 
@@ -84,7 +87,7 @@ function addItemSaveAll() {
 	const newAddItemNames = [];
 	for (let i = 0; i < rowCount; i++) {
 		const newAddItemName = document.getElementById('insertName' + i).value;
-		if (newAddItemName !== null && newAddItemName !== '') { // empId가 null 또는 빈 문자열이 아닌 경우에만 배열에 추가
+		if (newAddItemName !== null && newAddItemName !== '') {
 			newAddItemNames.push(newAddItemName);
 		}
 	}
@@ -96,107 +99,123 @@ function addItemSaveAll() {
 		data: JSON.stringify(newAddItemNames),
 		success: function(response) {
 			const duplicateNames = response;
-			
+			var confirmation = confirm("저장하시겠습니까?");
+
 			if (duplicateNames.length > 0) {
 				alert("중복된 부가항목명 : " + duplicateNames.join(", ") + "입니다. 다시 입력해 주세요.");
 				return;
 			} else {
 				//Insert
-				if (rowCount > 0) {
-					var insertAddItems = new Array();
-					for (var i = 0; i < rowCount; i++) {
-						var addItemName = document.getElementById('insertName' + i).value;
-						console.log("addItemName", addItemName);
-						var addItemDesc = document.getElementById('addItemDesc' + i).value;
+				if (confirmation) {
+					if (rowCount > 0) {
+						var insertAddItems = new Array();
+						for (var i = 0; i < rowCount; i++) {
+							var addItemName = document.getElementById('insertName' + i).value;
+							console.log("addItemName", addItemName);
+							var addItemDesc = document.getElementById('addItemDesc' + i).value;
 
-						if (addItemName) {
-							var addItemValue = {
-								addItemName: addItemName,
-								addItemDesc: addItemDesc
+							if (validation(addItemName)) {
+								var addItemValue = {
+									addItemName: addItemName,
+									addItemDesc: addItemDesc
+								};
+								insertAddItems.push(addItemValue);
+							} else {
+								alert("입력칸 모두 작성해 주세요");
+								return rowCount;
+							}
+						}
+					}
+
+					//Delete
+					var deletedAddItems = [];
+
+					var deleteStatus = document.getElementsByName("status");
+
+					for (var i = 0; i < deleteStatus.length; i++) {
+						var deleteStatusValue = deleteStatus[i].textContent;
+						if (deleteStatusValue === "D") {
+							// 해당 숨겨진 필드의 부모 행을 찾아서 addItemSn 값을 가져오기
+							var row = deleteStatus[i].closest("tr");
+							var addItemSn = row.querySelector('[name="addItemSn"]').textContent;
+							deletedAddItems.push(addItemSn);
+						}
+					}
+
+					//Update
+					var updateStatus = document.getElementsByName("status");
+					var updateAddItems = [];
+					for (var i = 0; i < updateStatus.length; i++) {
+						var updateStatusValue = updateStatus[i].textContent;
+						if (updateStatusValue === 'U') {
+							var row = updateStatus[i].closest("tr");
+							var updateAddItemSn = row.querySelector('[name="addItemSn"]').textContent;
+							var updateAddItemDesc = row.querySelector('[name="addItemDesc"]').textContent;
+
+							var updateAddItem = {
+								addItemSn: updateAddItemSn,
+								addItemDesc: updateAddItemDesc
 							};
-							insertAddItems.push(addItemValue);
-						} else {
-							alert("입력칸 모두 작성해 주세요");
-							return rowCount;
+							updateAddItems.push(updateAddItem);
 						}
 					}
-				}
 
-				//Delete
-				var deletedAddItems = [];
+					var requestData = {
+						insertAddItems: insertAddItems,
+						deletedAddItems: deletedAddItems,
+						updateAddItems: updateAddItems
+					};
 
-				var deleteStatus = document.getElementsByName("status");
+					console.log("requestData", requestData);
 
-				for (var i = 0; i < deleteStatus.length; i++) {
-					var deleteStatusValue = deleteStatus[i].textContent;
-					if (deleteStatusValue === "D") {
-						// 해당 숨겨진 필드의 부모 행을 찾아서 addItemSn 값을 가져오기
-						var row = deleteStatus[i].closest("tr");
-						var addItemSn = row.querySelector('[name="addItemSn"]').textContent;
-						deletedAddItems.push(addItemSn);
-					}
-				}
+					$.ajax({
+						url: '/save/additem',
+						type: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify(requestData),
+						success: function(response) {
+							rowCount = 0;
+							console.log("response", response)
 
-				//Update
-				var updateStatus = document.getElementsByName("status");
-				var updateAddItems = [];
-				for (var i = 0; i < updateStatus.length; i++) {
-					var updateStatusValue = updateStatus[i].textContent;
-					if (updateStatusValue === 'U') {
-						var row = updateStatus[i].closest("tr");
-						var updateAddItemSn = row.querySelector('[name="addItemSn"]').textContent;
-						var updateAddItemDesc = row.querySelector('[name="addItemDesc"]').textContent;
+							$('#addItemTable > tbody').empty();
 
-						var updateAddItem = {
-							addItemSn: updateAddItemSn,
-							addItemDesc: updateAddItemDesc
-						};
-						updateAddItems.push(updateAddItem);
-					}
-				}
+							for (var i = 0; i < response.length; i++) {
+								var addTableRow = "<tr>" +
+									"<td><input type='checkbox' name='checkBox'></td>" +
+									"<td name='addItemStatus'><span name='status'>S</span></td>" +
+									"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
+									"<td name='addItemName'>" + response[i].addItemName + "</td>" +
+									"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
+									"<td name='useYN'>Y</td>" +
+									"</tr>";
 
-				var requestData = {
-					insertAddItems: insertAddItems,
-					deletedAddItems: deletedAddItems,
-					updateAddItems: updateAddItems
-				};
-
-				console.log("requestData", requestData);
-
-				$.ajax({
-					url: '/save/additem',
-					type: 'POST',
-					contentType: 'application/json',
-					data: JSON.stringify(requestData),
-					success: function(response) {
-						rowCount = 0;
-						console.log("response", response)
-
-						$('#addItemTable > tbody').empty();
-
-						for (var i = 0; i < response.length; i++) {
-							var addTableRow = "<tr>" +
-								"<td><input type='checkbox' name='checkBox'></td>" +
-								"<td name='addItemStatus'><span name='status'>E</span></td>" +
-								"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
-								"<td name='addItemName'>" + response[i].addItemName + "</td>" +
-								"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
-								"<td name='useYN'>Y</td>" +
-								"</tr>";
-
-							$('#addItemTable > tbody').append(addTableRow);
+								$('#addItemTable > tbody').append(addTableRow);
+							}
+							return;
+						},
+						error: function(xhr, status, error) {
+							alert("오류가 발생했습니다. 다시 시도해주세요.");
 						}
-						return;
-					},
-					error: function(xhr, status, error) {
-						// 오류 발생 시 처리할 내용을 여기에 작성
-						alert("오류가 발생했습니다. 다시 시도해주세요.");
-					}
-				});
+					});
+				}
 			}
 		}
 	})
+	// "취소"를 클릭했을 때 아무 동작도 하지 않음
 }
+
+
+//insert 유효성검사
+function validation(addItemName) {
+	var pattern_spc = /^[^~!@#$%^&*_+|<>?:{}]+$/; // 특수문자
+
+	if (!pattern_spc.test(addItemName)) {
+		alert("부가항목명은 1글자 이상, 괄호를 제외한 특수문자는 사용할 수 없습니다.");
+		return false;
+	}
+	return true;
+}
+
 
 //조회
 function addItemsearch() {
@@ -232,12 +251,12 @@ function addItemsearch() {
 				for (var i = 0; i < response.length; i++) {
 					var addTableRow = "<tr>" +
 						"<td><input type='checkbox' name='checkBox'></td>" +
-						"<td><span name='status'>E</span></td>" +
+						"<td name='addItemStatus'><span name='status'>S</span></td>" +
 						"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 						"<td name='addItemName'>" + response[i].addItemName + "</td>" +
-						"<td name='addItemDesc'>" + response[i].addItemDesc + "</td>" +
-						"<td name='useYN'>" + response[i].useYN + "</td>" +
-						+ "</tr>";
+						"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
+						"<td name='useYN'>Y</td>" +
+						"</tr>";
 
 					$('#addItemTable > tbody').append(addTableRow);
 				}
@@ -260,63 +279,69 @@ function handleFileSelect(event) {
 	const fileInput = event.target;
 	const file = fileInput.files[0];
 	if (file) {
-		const formData = new FormData();
-		formData.append('file', file);
+		// 사용자에게 "파일 업로드 하시겠습니까?" 알림 창 표시
+		if (confirm("파일을 업로드 하시겠습니까?")) {
+			const formData = new FormData();
+			formData.append('file', file);
 
-		$.ajax({
-			url: '/checkDuplicateAddItemNamesExcel',
-			type: 'POST',
-			contentType: false,
-			processData: false,
-			data: formData,
-			success: function(response) {
+			$.ajax({
+				url: '/checkDuplicateAddItemNamesExcel',
+				type: 'POST',
+				contentType: false,
+				processData: false,
+				data: formData,
+				success: function(response) {
+					const duplicateNamesExcel = response;
 
-				const duplicateNamesExcel = response;
+					if (duplicateNamesExcel.length > 0) {
+						// 중복된 ID가 있으면 사용자에게 알림을 표시
+						alert("중복된 부가항목명 " + duplicateNamesExcel.join(", ") + "입니다. 다시 입력해 주세요.");
+						fileInput.value = '';
+						return;
+					} else {
+						$.ajax({
+							url: '/excel/upload',
+							type: 'POST',
+							contentType: false,
+							processData: false,
+							data: formData,
+							success: function(response) {
+								alert("엑셀 업로드가 완료되었습니다.");
+								rowCount = 0;
+								console.log("response", response)
 
-				if (duplicateNamesExcel.length > 0) {
-					// 중복된 ID가 있으면 사용자에게 알림을 표시
-					alert("중복된 부가항목명 " + duplicateNamesExcel.join(", ") + "입니다. 다시 입력해 주세요.");
-					return;
-				} else {
-					$.ajax({
-						url: '/excel/upload',
-						type: 'POST',
-						contentType: false,
-						processData: false,
-						data: formData,
-						success: function(response) {
-							alert("엑셀 업로드가 완료되었습니다.");
-							rowCount = 0;
-							console.log("response", response)
+								$('#addItemTable > tbody').empty();
 
-							$('#addItemTable > tbody').empty();
+								if (response.length === 0) {
+									$('#addItemTable > tbody').append(noResultRow);
+								} else {
+									for (var i = 0; i < response.length; i++) {
+										var addTableRow = "<tr>" +
+											"<td><input type='checkbox' name='checkBox'></td>" +
+											"<td name='addItemStatus'><span name='status'>S</span></td>" +
+											"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
+											"<td name='addItemName'>" + response[i].addItemName + "</td>" +
+											"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
+											"<td name='useYN'>Y</td>" +
+											"</tr>";
 
-							if (response.length === 0) {
-								$('#addItemTable > tbody').append(noResultRow);
-							} else {
-								for (var i = 0; i < response.length; i++) {
-									var addTableRow = "<tr>" +
-										"<td><input type='checkbox' name='checkBox'></td>" +
-										"<td><span name='status'>E</span></td>" +
-										"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
-										"<td name='addItemName'>" + response[i].addItemName + "</td>" +
-										"<td name='addItemDesc'>" + response[i].addItemDesc + "</td>" +
-										"<td name='useYN'>" + response[i].useYN + "</td>" +
-										"</tr>";
-
-									$('#addItemTable > tbody').append(addTableRow);
+										$('#addItemTable > tbody').append(addTableRow);
+									}
 								}
+							},
+							error: function() {
+								alert("엑셀 업로드에 실패했습니다. 파일을 다시 선택해주세요.");
 							}
-						},
-						error: function() {
-							alert("엑셀 업로드에 실패했습니다. 파일을 다시 선택해주세요.");
-						}
-					});
+						});
+					}
+				},
+				error: function() {
+					alert("엑셀 업로드에 실패했습니다. 파일을 다시 선택해주세요.");
 				}
-			},
-			error: function() {
-				alert("엑셀 업로드에 실패했습니다. 파일을 다시 선택해주세요.");
-			}
-		});
+			});
+		} else {
+			// 사용자가 "취소"를 선택한 경우, 함수를 다시 호출하여 파일 선택 화면으로 돌아갈 수 있도록 함
+			fileInput.value = ''; // 파일 입력 필드를 초기화하여 사용자가 새로운 파일을 선택할 수 있도록 함
+		}
 	}
 }

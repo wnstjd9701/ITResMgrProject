@@ -20,8 +20,8 @@
 				type="radio" value="" /><span class="addItemSerachspan">미사용포함</span></label>
 			<label class="addItemSerachLabel"><input name="searchUseYN"
 				type="radio" value="Y" /><span class="addItemSerachspan">Y</span></label>
-			<p id="p-addItemName">부가항목명</p>
-			<input id="addItemSearchText" type="text" placeholder="부가항목명 입력">
+			<p id="p-addItemName">부가항목</p>
+			<input id="addItemSearchText" type="text" placeholder="명 입력">
 			<button id="addItemsearchBtn" type="button" onclick="addItemsearch()">조회</button>
 
 			<form action="/excel/download" method="get">
@@ -58,7 +58,7 @@
 				<tbody id="addItem-table-body" class="table-container">
 					<tr th:each="addItemList : ${addItemList}">
 						<td><input type="checkbox" name="checkBox"></td>
-						<td name="addItemStatus"><span name="status">E</span></td>
+						<td name="addItemStatus"><span name="status">S</span></td>
 						<td name="addItemSn" th:text="${addItemList.addItemSn}"></td>
 						<td name="addItemName" th:text="${addItemList.addItemName}"></td>
 						<td onclick="handleClick(this)" name="addItemDesc"
