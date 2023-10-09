@@ -30,10 +30,10 @@
     <div class="first-container">
         <div class="col-md-12">
             <ul th:each="res:${resClassMap}" class="tree2">
-                [[${res.key}]]
+                [[${res.key}]](<span id="number3" th:text="${numOfRes3.get('__${res.key}__')}" />)
                 <li></li>
                 <ul>
-                    <li th:each="rv:${res.value}">[[${rv.key}]](<span id="resultNumOfRes"></span>)
+                    <li th:each="rv:${res.value}">[[${rv.key}]](<span id="number2" th:text="${numOfRes2.get('__${rv.key}__')}" />)
                         <ul>
                             <li th:each="name:${rv.value}" th:value="${name}">
                                 <a href="#" class="resClassDetail">[[${name}]]</a>(<span id="number" th:text="${numOfRes.get('__${name}__')}" />)

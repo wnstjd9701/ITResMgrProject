@@ -37,6 +37,36 @@
 
 	</select>
 	
+	<select id="numberOfResByResClass2" resultType="map">
+		<![CDATA[
+            select rcaa.upper_res_class_id  "upperResClassId",
+            rca.res_class_name  "resClassName",
+            rcaa.mappingNumberOfRes "mappingNumberOfRes"
+            from resclass rca
+            inner join
+            (SELECT rc.upper_res_class_id,
+            COUNT(*) AS mappingNumberOfRes 
+            FROM RESINFO r
+            JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+            GROUP BY rc.upper_res_class_id)rcaa on rcaa.upper_res_class_id=rca.res_class_id
+		]]>
+	</select>
+	
+	<select id="numberOfResByResClass3" resultType="map">
+		<![CDATA[
+			SELECT rs.upper_res_class_id    "upperResClassId",
+            rs.res_class_name   "resClassName",
+            SUM(r.aa)  "mappingNumberOfRes"
+				FROM resclass rs
+				INNER JOIN (
+				    SELECT rc.upper_res_class_id, COUNT(*) AS aa
+				    FROM resinfo r
+				    JOIN resclass rc ON r.res_class_id = rc.res_class_id
+				    GROUP BY rc.upper_res_class_id
+				) r ON rs.res_class_id = r.upper_res_class_id
+				GROUP BY rs.upper_res_class_id, rs.res_class_name
+		]]>
+	</select>
 	<select id="selectResClassByResClassName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 		<![CDATA[
 			SELECT

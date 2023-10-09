@@ -127,6 +127,16 @@ public class ResClassService implements IResClassService {
 		return resClassRepository.selectResClassAndAddItemList();
 	}
 
+	@Override
+	public List<Map<Object, Object>> numberOfResByResClass2() {
+		return resClassRepository.numberOfResByResClass2();
+	}
+
+	@Override
+	public List<Map<Object, Object>> numberOfResByResClass3() {
+		return resClassRepository.numberOfResByResClass3();
+	}
+
 
 
 }
