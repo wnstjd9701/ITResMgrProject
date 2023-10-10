@@ -87,7 +87,7 @@ function loadResourceDetails(resClassName) {
                 } else {
 					// 부가정보가 존재하지 않을 때 텍스트를 삽입합니다
 					var noDataText = "부가정보가 존재하지 않습니다.";
-					var newRow = "<tr><td colspan='4'>" + noDataText + "</td></tr>";
+					var newRow = "<tr><td colspan='4' id='noDataText'>" + noDataText + "</td></tr>";
 					$('table#addInfoTable tbody').append(newRow);
                 }
 				 lastSelectedResource = data;
@@ -269,7 +269,7 @@ function updateTable(addItem) {
 	//부가항목 저장 눌렀을 때 기능
 	$('#check-additem').click(function () {
 	    // 테이블 내의 각 체크박스를 순환
-	    $('table#add-item-table input[type=checkbox]').each(function () {
+		$('table#add-item-table input[type=checkbox]').each(function () {
 	        if ($(this).is(':checked')) {
 	            var row = $(this).closest('tr');  // 가장 가까운 행을 가져옴
 	            var addItemSn = $(this).val();
@@ -282,12 +282,22 @@ function updateTable(addItem) {
 	                "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'></td>" +
 	                "<td>" + addItemName + "</td>" +
 	                "</tr>";
-	
-	            console.log(newRow);
 	            $('table#addInfoTable').append(newRow);
 	            $('#addItemModal').modal('hide');
-	        }
-	    });
+	        	const noDataTextElement = document.getElementById('noDataText');
+				const noDataText = noDataTextElement.innerText;
+				if(noDataText==="부가정보가 존재하지 않습니다."){		
+					 $('table#addInfoTable tbody').find('td').remove();
+				var newRow = "<tr>" +
+					"<td>"+statusC+"</td>"+
+	                "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'></td>" +
+	                "<td>" + addItemName + "</td>" +
+	                "</tr>";
+	            $('table#addInfoTable').append(newRow);
+	            $('#addItemModal').modal('hide');
+				}
+				}
+	    	});
 	});	
 	
 	//행삭제 시 flag D로 변경
@@ -311,7 +321,6 @@ $("#resclass-save").click(() => {
     var addItemSn;
 	var resClassId;
 	var resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
-	console.log("resClassName: " + resClassName);
     var flag = $(this).closest('tr').find('td:eq(0)').text(); // Assuming flag is in the first td
 
     if (flag === 'C' || flag==='D') {
@@ -339,7 +348,9 @@ $("#resclass-save").click(() => {
 		if(flag === 'U'){
 			resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
 			resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
-		}
+		}else if(flag === 'E'){
+		return	
+	}
 			var useYn = $(this).closest('.second-container').find("select option:selected").val();
 		    var updatedResClassList = {
 	        flag: flag,
@@ -363,6 +374,8 @@ $("#resclass-save").click(() => {
     data:JSON.stringify(addItemList),	
     contentType: "application/json",
     success: function(response) {
+		//성공 후 loadResourceDetails함수 실행
+		loadResourceDetails(response.resClassResult[0].resClassName);
 		console.log("성공")
     },
 		error: function(error) {

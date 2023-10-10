@@ -43,7 +43,6 @@ public class ResClassController {
 		Map<String, Map<String, List<String>>> resClassMap = new LinkedHashMap<>();
 
 		List<ResClass> resClassList = resClassService.selectAllResClass();
-
 		for(ResClass r : resClassList) {
 			if(r.getUpperResClassId()==null) {
 				String[] resClassName2s = r.getResClassName2().split(",");
@@ -77,23 +76,36 @@ public class ResClassController {
 	
 		List<Map<Object, Object>> numberOfRes = resClassService.numberOfResByResClass();
 		Map<Object, Object> numOfRes = new HashMap<>();
-		Map<Object, Object> numOfRes2 = new HashMap<>();
 
 		  for(int i = 0; i < numberOfRes.size(); i++) {
 			    Object key = (String) numberOfRes.get(i).get("resClassName");
 			    int value = Integer.parseInt(String.valueOf(numberOfRes.get(i).get("mappingNumberOfRes")));
 			    numOfRes.put(key, value);
 			  }
+			List<Map<Object, Object>> numberOfRes2 = resClassService.numberOfResByResClass2();
+			Map<Object, Object> numOfRes2 = new HashMap<>();
+
+			  for(int i = 0; i < numberOfRes2.size(); i++) {
+				    Object key = (String) numberOfRes2.get(i).get("resClassName");
+				    int value = Integer.parseInt(String.valueOf(numberOfRes2.get(i).get("mappingNumberOfRes")));
+				    numOfRes2.put(key, value);
+				  }
+				List<Map<Object, Object>> numberOfRes3 = resClassService.numberOfResByResClass3();
+				Map<Object, Object> numOfRes3 = new HashMap<>();
+
+				  for(int i = 0; i < numberOfRes3.size(); i++) {
+					    Object key = (String) numberOfRes3.get(i).get("resClassName");
+					    int value = Integer.parseInt(String.valueOf(numberOfRes3.get(i).get("mappingNumberOfRes")));
+					    numOfRes3.put(key, value);
+					  }
+				  
 		
-		  for(int i = 0; i < numberOfRes.size(); i++) {
-			    Object key = (String) numberOfRes.get(i).get("upperResClassId");
-			    int value = Integer.parseInt(String.valueOf(numberOfRes.get(i).get("mappingNumberOfRes")));
-			    numOfRes2.put(key, value);
-			  }
-			 
 		  
 		model.addAttribute("numOfRes", numOfRes);
-	  	model.addAttribute("numOfRes2", numOfRes2);
+		model.addAttribute("numOfRes2", numOfRes2);
+		model.addAttribute("numOfRes3", numOfRes3);
+	logger.info("numberOfRes2:"+numberOfRes2);
+	logger.info("numberOfRes3:"+numberOfRes3);
 	  	
 	  	List<ResClass> selectResClassByLevel = resClassService.selectResClassByLevel();
 	  	model.addAttribute("selectResClassByLevel", selectResClassByLevel);
