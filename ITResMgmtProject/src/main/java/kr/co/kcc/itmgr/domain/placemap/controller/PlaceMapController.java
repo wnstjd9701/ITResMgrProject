@@ -41,7 +41,7 @@ public class PlaceMapController {
     public ModelAndView selectPlaceMap() {
         ModelAndView modelAndView = new ModelAndView("/place/placemap"); // 뷰 이름 설정
 
-        List<InstallPlace> installPlace = installPlaceService.selectAllPlace();
+        List<InstallPlace> installPlace = installPlaceService.selectAllPlace(1);
         // stream을 사용하여 각 InstallPlace 객체에 getDoName 메서드 적용
         List<InstallPlace> place = installPlace.stream()
                 .map(placeMapService::getDoName) // 각 객체에 getDoName 메서드 적용
@@ -66,7 +66,7 @@ public class PlaceMapController {
 	@PostMapping("/place/map/detail")
 	public ResponseEntity<InstallPlace> selectInstallPlaceByName(@RequestBody Map<String, String> requestBody) {
 	    String placeName = requestBody.get("placeName");
-	    List<InstallPlace> places = installPlaceService.searchInstallPlaceByName(placeName);
+	    List<InstallPlace> places = installPlaceService.searchInstallPlaceByName(placeName, 1, 5);
 
 	    if (places != null && !places.isEmpty()) {
 	        InstallPlace place = places.get(0);
@@ -130,7 +130,7 @@ public class PlaceMapController {
 	@GetMapping("/place/map/city")
 	public ResponseEntity<Map<String, Object>> selectPlaceByCity(@RequestParam("doName") String doName){
 		if(doName.equals("ALL")) {
-			List<InstallPlace> place = installPlaceService.selectAllPlace();
+			List<InstallPlace> place = installPlaceService.selectAllPlace(1);
 			List<InstallRes> resInfo = installPlaceService.selectAllResInfo();
 			
 			Map<String, Object> placeMap = new HashMap<String, Object>();

@@ -124,6 +124,7 @@ input[type="button"] {
 </style>
 </head>
 <th:block layout:fragment="content">
+<main id="main" class="main">
 	<div id="commonCode">
 		<div class="container commoncode-container">
 			<!-- <div>
@@ -242,6 +243,7 @@ input[type="button"] {
 			</div>
 		</div>
 	</div>
+	</main>
 	<script th:inline="javascript">
 		$(document)
 				.ready(
@@ -806,4 +808,5 @@ input[type="button"] {
 							}
 				});
 	</script>
+	<script th:src="@{/assets/js/main.js}"></script>
 </html>
