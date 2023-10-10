@@ -7,7 +7,7 @@ import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallRes;
 
 public interface IInstallPlaceService {
-	List<InstallPlace> selectAllPlace(int start); // 모든 설치 장소 조회
+	List<InstallPlace> selectAllPlace(int start); // 모든 설치 장소 조회[페이징 수정]
 	int selectInstallPlaceCount(); // 설치 장소 개수 조회
 	
 	List<InstallRes> selectAllResInfo(); // 모든 자원 정보 조회

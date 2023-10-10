@@ -40,10 +40,11 @@ public class PlaceMapController {
 	@GetMapping("/place/map")
     public ModelAndView selectPlaceMap() {
         ModelAndView modelAndView = new ModelAndView("/place/placemap"); // 뷰 이름 설정
-
+        List<InstallPlace> placeList = placeMapService.selectInstallPlaceList();
+        
         List<InstallPlace> installPlace = installPlaceService.selectAllPlace(1);
         // stream을 사용하여 각 InstallPlace 객체에 getDoName 메서드 적용
-        List<InstallPlace> place = installPlace.stream()
+        List<InstallPlace> place = placeList.stream()
                 .map(placeMapService::getDoName) // 각 객체에 getDoName 메서드 적용
                 .collect(Collectors.toList());
         
@@ -52,7 +53,8 @@ public class PlaceMapController {
         log.info("place" + place);
         log.info("DoName: " + doNames);
         
-        modelAndView.addObject("place", place); 
+        modelAndView.addObject("place", placeList);
+        modelAndView.addObject("placePaging", installPlace);
         modelAndView.addObject("doNames", doNames);
         
         return modelAndView;

@@ -5,14 +5,19 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.global.common.DoName;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class PlaceMapService implements IPlaceMapService {
-
+	
+	private final IInstallPlaceRepository installPlaceRepository;
+	
 	public InstallPlace getDoName(InstallPlace place) {
 		String address = place.getInstallPlaceAddress();
 
@@ -62,5 +67,11 @@ public class PlaceMapService implements IPlaceMapService {
 			}
 		}
 		return selectedDoName;
+	}
+	
+	// 모든 설치 장소 조회
+	@Override
+	public List<InstallPlace> selectInstallPlaceList() {
+		return installPlaceRepository.selectInstallPlaceList();
 	}
 }

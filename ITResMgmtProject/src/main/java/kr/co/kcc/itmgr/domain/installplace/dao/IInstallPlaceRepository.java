@@ -11,6 +11,8 @@ import kr.co.kcc.itmgr.domain.installplace.model.InstallRes;
 @Repository
 @Mapper
 public interface IInstallPlaceRepository {
+	List<InstallPlace> selectInstallPlaceList(); // 모든 설치 장소 조회[지도]
+	
 	List<InstallPlace> selectAllPlace(int start, int end); // 모든 설치 장소 조회
 	int selectInstallPlaceCount(); // 설치 장소 개수 조회
 	

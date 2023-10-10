@@ -41,7 +41,7 @@ public class InstallPlaceController {
 	public String selectInstallPlace(Model model) {
 		int installPlaceCount = installPlaceService.selectInstallPlaceCount();
 		int page = 1;
-		List<InstallPlace> installPlace = installPlaceService.selectAllPlace(1);
+		List<InstallPlace> installPlace = installPlaceService.selectAllPlace(page);
 		
 		int totalPage=0;
 		if(installPlaceCount > 0) {
@@ -97,39 +97,57 @@ public class InstallPlaceController {
 			return ResponseEntity.ok().body(installPlace);
 		}else {
 			List<InstallPlace> installPlace = installPlaceService.searchInstallPlaceByName(searchType, startPage, startPage + 4);
+			if(page > 1) {
+				int count = 0;
+				for(InstallPlace place : installPlace) {
+					place.setRn(startPage + count);
+					count++;
+				}
+			}
+			logger.info("installPlace: " + installPlace);
 			return ResponseEntity.ok().body(installPlace);
 		}
 	}
 	
-	@GetMapping("/installPlace/next/{startNum}")
-	public ResponseEntity<Map<String, Object>> installPlaceNextPaging(@PathVariable("startNum") int startNum,
+	/*
+	 * @Author: [윤준성]
+	 * @API No.3-8. 설치 장소 다음 페이징 처리 [비동기]
+	 * @Info: 다음 5개 페이지 검색
+	 */
+	@GetMapping("/installplace/next/{nextStartPage}")
+	public ResponseEntity<Map<String, Object>> installPlaceNextPaging(@PathVariable("nextStartPage") int nextStartPage,
 	        @RequestParam("searchType") String searchType) {
-	    logger.info("page: " + startNum + " searchType: " + searchType);
-
-	    int pageSize = 5; // 한 페이지에 표시할 항목 수
-	    int totalCount = installPlaceService.selectInstallPlaceCount();
-
-	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-	    int currentPageBlock = (int) Math.ceil((double) startNum / pageSize);
-
-	    int startPage = (currentPageBlock - 1) * pageSize + 1;
-	    int endPage = Math.min(currentPageBlock * pageSize, totalPages);
-
-	    Map<String, Object> paging = new HashMap<>();
-	    paging.put("totalPageCount", totalPages);
-	    paging.put("nowPage", startNum);
-	    paging.put("totalPageBlock", currentPageBlock);
-	    paging.put("nowPageCount", currentPageBlock);
-	    paging.put("startPage", startPage);
-	    paging.put("endPage", endPage);
+	    logger.info("page: " + nextStartPage + " searchType: " + searchType);
 
 	    List<InstallPlace> installPlace;
-
+	    int totalCount = 0;
 	    if (searchType.equals("ALL")) {
-	        installPlace = installPlaceService.selectAllPlace(startNum);
+	    	totalCount = installPlaceService.selectInstallPlaceCount();
+	    	installPlace = installPlaceService.selectAllPlace((nextStartPage-1)*5 + 1);
+	    	int count = 1;
+	    	for(InstallPlace place : installPlace) {
+	    		place.setRn(((nextStartPage - 1) * 5) + count);
+	    		count++;
+	    	}
 	    } else {
-	        installPlace = installPlaceService.searchInstallPlaceByName(searchType, startNum, startNum + 4);
+	    	totalCount = installPlaceService.selectInstallPlaceSearchCount(searchType);
+	    	installPlace = installPlaceService.searchInstallPlaceByName(searchType, (nextStartPage-1)*5 + 1, (nextStartPage-1)*5 + 5);
 	    }
+
+	    int pageSize = 5; 
+	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+	    int currentPageBlock = (int) Math.ceil((double) nextStartPage / pageSize);
+	    
+	    int startPage = (currentPageBlock - 1) * pageSize + 1;
+	    int endPage = Math.min(currentPageBlock * pageSize, totalPages);
+	    
+	    Map<String, Object> paging = new HashMap<>();
+	    paging.put("totalPageCount", totalPages);
+	    paging.put("nowPage", nextStartPage);
+	    paging.put("totalPageBlock", currentPageBlock);
+	    paging.put("startPage", startPage);
+	    paging.put("endPage", endPage);
+	    logger.info("Paging: " + paging);
 
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("installPlace", installPlace);
@@ -137,6 +155,18 @@ public class InstallPlaceController {
 
 	    return ResponseEntity.ok().body(result);
 	}
+	
+	/*
+	 * @Author: [윤준성]
+	 * @API No.3-9. 설치 장소 이전 페이징 처리 [비동기]
+	 * @Info: 이전 5개 페이지 검색
+	 */
+	/*
+	 * @GetMapping("/installplace/prev/{endPage}") public
+	 * ResponseEntity<Map<String,Object>> installPlacePrevPaging(){
+	 * 
+	 * }
+	 */
 	
 	/*
 	 * @Author: [윤준성]

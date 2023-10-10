@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository">
+	<select id="selectInstallPlaceList">
+		SELECT
+		    i.install_place_sn,
+		    i.install_place_name,
+		    i.install_place_postno,
+		    i.install_place_address,
+		    i.install_place_detail_address,
+		    i.longitude,
+		    i.latitude,
+		    r."resCount",
+		    ROWNUM AS rNum
+		FROM
+		    installplace i
+		    LEFT JOIN (
+		        SELECT
+		            i.install_place_sn AS "install_place_sn",
+		            COUNT(r.res_sn)    AS "resCount"
+		        FROM
+		            installplace i
+		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		        GROUP BY
+		            i.install_place_sn
+		    )            r ON i.install_place_sn = r."install_place_sn"
+		ORDER BY
+		    i.install_place_name
+	</select>
 	<select id="selectAllPlace">
 		SELECT
 		    i.install_place_sn             AS "installPlaceSn",
@@ -41,6 +67,7 @@
 		    ) i
 		WHERE
 		    rNum BETWEEN #{start} AND #{end}
+		ORDER BY i.install_place_name desc
 	</select>
 	
 	<select id="selectInstallPlaceCount">
@@ -91,7 +118,7 @@
                 i.longitude                    AS "longitude",
                 i.latitude                     AS "latitude",
                 r."resCount"                   AS "resCount",
-                ROW_NUMBER() OVER (ORDER BY i.install_place_name) AS rnum
+                ROW_NUMBER() OVER (ORDER BY i.install_place_name) AS rn
             FROM
                 installplace i
                 LEFT JOIN (
@@ -107,9 +134,9 @@
             <where>
             	i.install_place_name LIKE '%' || #{keyword} || '%'
             </where> 
-            ORDER BY i.install_place_address
+            ORDER BY rn, i.install_place_name
         ) i
-        WHERE rnum BETWEEN #{start} AND #{end}
+        WHERE rn BETWEEN #{start} AND #{end}
 	</select>
 	
 	<select id="selectInstallPlaceSearchCount">

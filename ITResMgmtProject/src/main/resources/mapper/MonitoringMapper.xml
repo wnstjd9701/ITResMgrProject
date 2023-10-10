@@ -42,7 +42,7 @@
 			            PRIOR res_class_id = upper_res_class_id
 			    ) rc ON r.res_class_id = rc.res_class_id
 			WHERE
-			    r.monitoring_yn = 'Y' AND r.use_yn = 'Y'
+			    r.monitoring_yn = 'Y' AND r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' 
 		]]>
 	</select>
 	

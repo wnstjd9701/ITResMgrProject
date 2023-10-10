@@ -253,7 +253,7 @@ input[type="button"] {
 					<nav aria-label="Page navigation example" class="paging-nav">
 						<ul class="pagination justify-content-center">
 							<li class="page-item">
-								<button class="page-link prev-page-link" aria-label="Previous"> 
+								<button class="page-link prev-page-link" aria-label="Previous" value="0"> 
 									<span aria-hidden="true">&laquo;</span>
 									<span class="sr-only">Previous</span>
 								</button>
@@ -263,7 +263,7 @@ input[type="button"] {
 								<button class="page-link page-link-val" th:text="${pageNum}">1</button>
 							</li>
 							<li class="page-item">
-								<button class="page-link next-page-link" aria-label="Next"> 
+								<button class="page-link next-page-link" aria-label="Next" value="6"> 
 									<span aria-hidden="true">&raquo;</span> 
 									<span class="sr-only">Next</span>
 								</button>
@@ -302,7 +302,6 @@ input[type="button"] {
 				</div>
 				<!-- 자원 정보 -->
 				<div class="resinfo-container">
-					<h2>자원 정보</h2>
 					<div class="resinfo-table-container">
 						<table class="resinfo-table table table-striped">
 							<thead>
@@ -355,32 +354,22 @@ $(document).ready(function(){
 		})
 	})
 	
-	/* function installPlacePaging(paging) {
-        var pagination = $(".pagination");
-        pagination.empty();
-        
-        pagination.append("<li class='page-item'><button class='page-link prev-page-link' aria-label='Previous'>&laquo;</button></li>");
-        for (var pageNum = paging.startPage; pageNum <= paging.endPage; pageNum++) {
-            pagination.append("<li class='page-item'><button class='page-link page-link-val'>" + pageNum + "</button></li>");
-        }
-        pagination.append("<li class='page-item'><button class='page-link next-page-link' aria-label='Next'>&raquo;</button></li>");
-
-    } */
 	function installPlacePaging(paging) {
 	    var pagination = $(".pagination");
 	    pagination.empty();
 	    
-	    pagination.append("<li class='page-item'><button class='page-link prev-page-link' aria-label='Previous'>&laquo;</button></li>");
+	    pagination.append(`<li class='page-item'><button class='page-link prev-page-link' value="${paging.startPage - 1}" aria-label='Previous'>&laquo;</button></li>`);
 	    
 	    for (var pageNum = paging.startPage; pageNum <= paging.endPage; pageNum++) {
 	        pagination.append("<li class='page-item'><button class='page-link page-link-val'>" + pageNum + "</button></li>");
 	    }
 	    
-	    pagination.append("<li class='page-item'><button class='page-link next-page-link' aria-label='Next'>&raquo;</button></li>");
+	    pagination.append(`<li class='page-item'><button class='page-link next-page-link' value="${paging.endPage + 1}" aria-label='Next'>&raquo;</button></li>`);
 
 	    // 이전 페이지가 없는 경우 이전 버튼 비활성화
-	    if (paging.startPage === 1) {
+	    if (paging.startPage === 1 || $(".prev-page-link").val() === 0) {
 	        pagination.find(".prev-page-link").prop("disabled", true);
+	        console.log(paging.startPage);
 	    }
 	    
 	    // 다음 페이지가 없는 경우 다음 버튼 비활성화
@@ -413,43 +402,34 @@ $(document).ready(function(){
 	});
 	// 이전 페이지 클릭
 	$(".pagination").on("click", ".prev-page-link", function(){
-		var currentPageButton = $(this).closest("li").next().find(".page-link-val");
-	    var currentPage = parseInt(currentPageButton.text());
-	    if(currentPage <= 5 || currentPage <= 1){
-	    	return;
-	    }
+		var prevPage = $(this).val();
+		console.log(prevPage);
 	    
 	});
 	
 	// 다음 페이지 클릭
 	$(".pagination").on("click", ".next-page-link", function () {
-	    var currentPageButton = $(this).closest("li").prev().find(".page-link-val");
-	    var currentPage = parseInt(currentPageButton.text());
-
-	    var nextPage = currentPage + 1; // 다음 페이지 번호 계산
-	    var startNum = (nextPage - 1) * 5 + 1; // 시작 번호 계산
-
-	    var searchType = $(".search-type").val();
-
-	    if (searchType === "" || searchType === "undefined") {
-	        searchType = "ALL";
-	    }
-
-	    $.ajax({
-	        method: "GET",
-	        url: "/installPlace/next/" + startNum,
-	        data: {
-	            searchType: searchType
-	        },
-	        success: function (response) {
-	            console.log(response);
-	            updateInstallPlace(response.installPlace);
-	            installPlacePaging(response.paging);
-	        },
-	        error: function (xhr, status, err) {
-	            console.log(err);
-	        }
-	    });
+		var nextStartPage = $(this).val();
+		console.log(nextStartPage);
+		var searchType = $(".search-type").val();
+		if(searchType === "" || searchType === "undefined"){
+			searchType = "ALL"
+		}
+		$.ajax({
+			method: "GET",
+			url: "/installplace/next/" + nextStartPage,
+			data: {
+				searchType: searchType
+			},
+			success: function(response){
+				console.log(response);
+				updateInstallPlace(response.installPlace);
+				installPlacePaging(response.paging);
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
+		})
 	});
 	
 	function removePlaceTable(){
@@ -786,10 +766,14 @@ $(document).ready(function(){
 						return;
 					}
 					alert(`${response.message}`);
+					var placesn = installPlaceJSON.installPlaceSn
+					
+					console.log(placesn);
 					
 					updateInstallPlace(response.data);
 					installPlacePaging(response.paging);
 					$(".search-type").val("");
+					$("#flag").val(`${placesn}`);
 				},
 				error: function(xhr, status, err){
 					alert(err);
@@ -813,6 +797,7 @@ $(document).ready(function(){
 					alert(`${response.message}`);
 					updateInstallPlace(response.data);
 					installPlacePaging(response.paging);
+					$("#flag").val("");
 				},
 				error: function(xhr, status, err){
 					alert(err);
@@ -858,6 +843,7 @@ $(document).ready(function(){
     			alert("주소 삭제 완료");
     			console.log(response);
     			updateInstallPlace(response);
+    			removePlaceDetail();
     			unCheckbox();
     		},
     		error: function(xhr, status, err){
