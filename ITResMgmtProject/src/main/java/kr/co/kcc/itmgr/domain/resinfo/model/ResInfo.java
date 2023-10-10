@@ -17,8 +17,8 @@ public class ResInfo {
 	private String modelName;
 	private String mgmtDeptName;
 	private String managerName;
-	private String introdutionDate;
-	private int introdutionPrice;
+	private String introductionDate;
+	private int introductionPrice;
 	private String purchaseCompanyName;
 	private String useYn;
 	private String monitoringYn;
@@ -41,4 +41,5 @@ public class ResInfo {
 	private String installPlaceName;
 	private int level;
 	private String upperResClassId;
+	
 }

@@ -1,0 +1,108 @@
+.table-container {
+	max-height: 700px;
+	overflow-y: auto;
+	position: relative;
+	width: 100%;
+}
+
+.table-container table {
+	width: 100%;
+	table-layout: fixed;
+}
+
+#addItemSearchText::placeholder {
+  text-align: center; /* 가운데 정렬 스타일 적용 */
+}
+
+#addItemTable thead th {
+	position: sticky;
+	top: 0;
+	background-color: #7289AB; 
+	color : white;
+	z-index: 1;
+}
+
+#addItemTable tr {
+	text-align: center;
+}
+
+#addItemTable td {
+	text-align: center;
+}
+
+.col-checkbox {
+    width: 20px;
+}
+
+.col-status {
+    width: 30px;
+}
+
+.col-sn {
+    width: 30px;
+}
+
+.col-name {
+    width: 100px;
+}
+
+.col-desc {
+    width: 200px;
+}
+
+.col-useYN {
+    width: 50px;
+}
+
+#p-addItemUseYN {
+	margin-right: 5px;
+	align-self: flex-start; /* 사용여부 줄만 위쪽으로 맞춥니다. */
+}
+
+#p-addItemName {
+	margin-left: 13px; 
+	margin-right: 5px;
+}
+
+.addItemSerachLabel {
+	margin-right: 5px;
+	margin-top: -2px;
+}
+
+
+#addItemSearchText {
+	margin-right: 300px;
+}
+
+@media screen and (min-width: 768px) { 
+  .modal.modal-center:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.btn {
+	float: right; 
+	margin-left: 10px;
+}
+
+.addItemSerach {
+	display: flex;
+	align-items: flex-start; /* 요소들을 수직 맞춤합니다. */
+	flex-direction: row;
+	white-space: nowrap;
+	margin-top: 20px;
+}
+
+.addItemSerachLabel{
+	margin-top:1px;
+}
+
+#addItemSearchText{
+	margin-top:-3px;	
+}
+.addItemSerachspan{
+	margin-left:2px;
+}

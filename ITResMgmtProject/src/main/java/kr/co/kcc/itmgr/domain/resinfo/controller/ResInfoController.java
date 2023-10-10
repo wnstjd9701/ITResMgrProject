@@ -7,10 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
+import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resclass.controller.ResClassController;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 import kr.co.kcc.itmgr.domain.resinfo.service.IResInfoService;
@@ -29,6 +31,10 @@ public class ResInfoController {
 		model.addAttribute("selectAllResInfo", selectAllResInfo);
 		List<ResInfo> searchResInfoByResClass = resInfoService.searchResInfoByResClass();
 		model.addAttribute("search", searchResInfoByResClass);
+		List<CommonCodeDetail> selectResStatusCode = resInfoService.selectResStatusCode("RES000");
+		model.addAttribute("selectResStatusCode", selectResStatusCode);
+		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace();
+		model.addAttribute("selectResInstallPlace", selectResInstallPlace);
 		return "resinfo/resinfo";
 	}
 	
@@ -37,5 +43,12 @@ public class ResInfoController {
 	public List<ResInfo> searchResInfo(ResInfo resInfo) {
 		List<ResInfo> searchResInfo = resInfoService.searchResInfo(resInfo);
 		return searchResInfo;
+	}
+	
+	@PostMapping("/resinfo/insert")
+	public String insertResInfo(ResInfo resInfo, Model model) {
+		model.addAttribute("resInfo", resInfo);
+		resInfoService.insertResInfo(resInfo);
+		return "resinfo/resinfo";
 	}
 }

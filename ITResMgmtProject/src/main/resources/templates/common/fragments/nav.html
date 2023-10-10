@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<style>
-</style>
 </head>
 <body>
 	<!-- Sidebar Start -->
@@ -56,19 +54,24 @@
 							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
 							class="hide-menu">ETC</span></li>
 						<li class="sidebar-item"><a class="sidebar-link"
-							th:href="@{/}" aria-expanded="false"> <span> <i
+							th:href="@{/ipinfo}" aria-expanded="false"> <span> <i
 									class="ti ti-mood-happy"></i>
 							</span> <span class="hide-menu">IP정보</span>
 						</a></li>
 						<li class="sidebar-item"><a class="sidebar-link"
-							th:href="@{/}" aria-expanded="false"> <span> <i
+							th:href="@{/additem}" aria-expanded="false"> <span> <i
 									class="ti ti-mood-happy"></i>
 							</span> <span class="hide-menu">부가정보항목</span>
 						</a></li>
 						<li class="sidebar-item"><a class="sidebar-link"
-							th:href="@{/}" aria-expanded="false"> <span> <i
+							th:href="@{/installplace}" aria-expanded="false"> <span> <i
 									class="ti ti-mood-happy"></i>
 							</span> <span class="hide-menu">설치장소</span>
+						</a></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/place/map}" aria-expanded="false"> <span> <i
+									class="ti ti-mood-happy"></i>
+							</span> <span class="hide-menu">지역별 설치 장소 현황</span>
 						</a></li>
 						<li class="sidebar-item"><a class="sidebar-link"
 							th:href="@{/commoncode}" aria-expanded="false"> <span> <i
