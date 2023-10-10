@@ -86,16 +86,16 @@ public class ResClassService implements IResClassService {
 		return resClassRepository.deleteAddItemInResClass(resclass);
 	}
 	
-	// 부가항목 Flag 생성
-	@Override
-	public List<AddItem> setFlagAddItemList(List<AddItem> addItem) {
-		return addItem.stream()
-				.map(r -> {
-					r.setFlag("E");
-					return r;
-				})
-				.collect(Collectors.toList());
-	}
+//	// 부가항목 Flag 생성
+//	@Override
+//	public List<AddItem> setFlagAddItemList(List<AddItem> addItem) {
+//		return addItem.stream()
+//				.map(r -> {
+//					r.setFlag("E");
+//					return r;
+//				})
+//				.collect(Collectors.toList());
+//	}
 	
 	// 자원분류 Flag 생성
 	@Override
@@ -136,6 +136,7 @@ public class ResClassService implements IResClassService {
 	public List<Map<Object, Object>> numberOfResByResClass3() {
 		return resClassRepository.numberOfResByResClass3();
 	}
+
 
 
 

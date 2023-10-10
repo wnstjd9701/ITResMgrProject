@@ -1,60 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{../common/fragments/head}"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <head>
+<meta charset="utf-8">
 <link rel="stylesheet" type="text/css"
 	th:href="@{../css/additem/additem.css}">
-<meta charset="UTF-8">
-
+<link href="../assets/css/style.css" rel="stylesheet">
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
 </head>
 <body>
-	
-	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-	<div class="" style="margin-left: 270px;" id="addItemSearchBar">
-		<p>사용여부</p>
-			<label><input name="searchUseYN" type="radio" value=""/>미사용포함</label>
-			<label><input name="searchUseYN" type="radio" value="Y"/>Y</label>
-		<p>부가항목명</p>
-		<input id="addItemSearchText" type="text" placeholder="부가항목명 입력">
-		<input id="addItemsearchButton" type="button" value="검색" onclick="addItemsearch()"/>
-		<div style="margin-left: 850px;">
-			<input id="addItemsDownButton" type="button" value="엑셀다운로드"/>
-			<input id="addItemAddRow" type="button" value="행추가" onclick="addItemAddRow()"/>
-			<input id="addItemHideRow" type="button" value="행삭제" onclick="addItemHideRow()"/>
-			<input id="addItemSave" type="button" value="저장" onclick="addItemSaveAll()"/>
+
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<main id="main" class="main">
+		<div class="pagetitle">
+			<button id="addItemSaveBtn" type="button" onclick="addItemSaveAll()"
+				class="btn btn-primary" style="background-color: navy; border:navy;">저장</button>
+			<button id="addItemHideRowBtn" type="button"
+				onclick="addItemHideRow()" class="btn btn-primary">행삭제</button>
+
+			<button id="addItemAddRowBtn" type="button" onclick="addItemAddRow()"
+				class="btn btn-primary"
+				>행추가</button>
+
+			<form id="uploadForm" enctype="multipart/form-data">
+				<input type="file" id="fileInput" name="file" accept=".xlsx, .xls"
+					style="display: none;">
+				<button type="button" id="ExcelUploadBtn" onclick="uploadFile()"
+					class="btn btn-primary"
+					style="background-color: green; border: green;">엑셀업로드</button>
+			</form>
+
+			<form action="/excel/download" method="get">
+				<button type="submit" id="ExcelDownBtn" class="btn btn-primary"
+					style="background-color: green; border: green;">엑셀양식다운로드</button>
+			</form>
+
+			<button id="addItemsearchBtn" type="button" onclick="addItemsearch()"
+				class="btn btn-primary" style="background-color: gray; border:gray;">조회</button>
+
+			<h1>부가정보</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+					<li class="breadcrumb-item active">부가정보</li>
+				</ol>
+			</nav>
 		</div>
-	</div>
-	
-	<div class="container" style="margin-left: 270px;">
-		<table id="addItemTable" class="table table-striped">
-			<thead>
-				<tr>
-					<th>선택</th>
-					<th>일련번호</th>
-					<th>부가항목명</th>
-					<th>부가항목설명</th>
-					<th>사용여부</th>
-				</tr>
-			</thead>
-			<tbody id="addItem-table-body">
-				<tr th:each="addItemList : ${addItemList}">
-					<td><input type="checkbox" name="checkBox"></td>
-					<td name="addItemSn" th:text="${addItemList.addItemSn}"></td>
-					<td name="addItemName" th:text="${addItemList.addItemName}"></td>
-					<td name="addItemDesc" th:text="${addItemList.addItemDesc}"></td>
-					<td name="useYN" th:text="${addItemList.useYN}"></td>
-					<td><input type="hidden" name="hiddenBox"></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-
-
-
-
-
+		<!-- End Page Title -->
+		
+			<div class="addItemSerach">
+				<p id="p-addItemUseYN">사용여부</p>
+				<label class="addItemSerachLabel"><input name="searchUseYN"
+					type="radio" value="" /><span class="addItemSerachspan">미사용포함</span></label>
+				<label class="addItemSerachLabel"><input name="searchUseYN"
+					type="radio" value="Y" /><span class="addItemSerachspan">Y</span></label>
+				<p id="p-addItemName">부가항목</p>
+				<input id="addItemSearchText" type="text" placeholder="명 입력">
+			</div>
+		
+			<div class="table-container">
+				<table id="addItemTable" class="table table-hover">
+					<thead>
+						<tr>
+							<th class="col-checkbox" >선택</th>
+							<th class="col-status">상태</th>
+							<th class="col-sn">일련번호</th>
+							<th class="col-name">부가항목명</th>
+							<th class="col-desc">부가항목설명</th>
+							<th class="col-useYN">사용여부</th>
+						</tr>
+					</thead>
+					<tbody id="addItem-table-body" class="table-container">
+						<tr th:each="addItemList : ${addItemList}">
+							<td><input type="checkbox" name="checkBox"></td>
+							<td name="addItemStatus"><span name="status">S</span></td>
+							<td name="addItemSn" th:text="${addItemList.addItemSn}"></td>
+							<td name="addItemName" th:text="${addItemList.addItemName}"></td>
+							<td onclick="handleClick(this)" name="addItemDesc"
+								th:text="${addItemList.addItemDesc}" style="width: 180px;"></td>
+							<td name="useYN" th:text="${addItemList.useYN}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>	
+	</main>
 	<script src="js/additem/additem.js"></script>
+	<script th:src="@{/assets/js/main.js}"></script>
 </body>
 </html>
