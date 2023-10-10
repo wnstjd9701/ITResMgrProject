@@ -100,18 +100,7 @@ $(document).ready(function () {
     });
 });
 
-// 모달창 생성
-var modal = document.querySelector('.modal');
-var newResInfoBtn = document.querySelector('button#newResInfoBtn');
-var closeBtn = modal.querySelector("#closeModal")
 
-newResInfoBtn.addEventListener("click", ()=>{
-    modal.style.display="flex";
-});
-
-closeBtn.addEventListener("click", e => {
-    modal.style.display = "none"
-});
 
 // 모달창에서 table별 클릭이동
 function showTable(tableName) {
@@ -129,12 +118,25 @@ function showTable(tableName) {
     }).addClass('active');
 }
 
-var modal2 = document.querySelector('.installPlaceModal');
-var installPlaceSearchBtn = document.querySelector('button#installPlaceSearchBtn');
-var closeBtn2 = modal.querySelector("#closeModal2")
-installPlaceSearchBtn.addEventListener("click", ()=>{
-    modal2.style.display="flex";
+// 설치장소 찾기 버튼 클릭 시
+$('#installPlaceSearchBtn').on('click', function() {
+	$('#install-place-choose-modal').modal('show');
+	
+//부가항목 저장 눌렀을 때 기능
+	$('#choose-install-place-btn').click(function () {
+	    // 테이블 내의 각 체크박스를 순환
+		var checkedInstallPlace = $('table#install-place-list-table input[type=checkbox]:checked');
+				var tr = checkedInstallPlace.parent().parent();
+				console.log(tr);
+				var td= tr.children();
+				var installPlaceSn = td.eq(0).children().eq(0).val();
+				var installPlaceName = td.eq(1).text();
+				console.log(installPlaceSn+','+installPlaceName)
+				$('input[name=installPlaceName]').val(installPlaceName)
+				$('input[name=installPlaceSn]').val(installPlaceSn)
+				
+				
+	            $('#install-place-choose-modal').modal('hide');
+	});	
 });
-closeBtn2.addEventListener("click", e => {
-    modal2.style.display = "none"
-});
+
