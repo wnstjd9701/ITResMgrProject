@@ -1,4 +1,4 @@
-.modal{
+/* .modal{
     position:absolute;
     display:none;
     
@@ -11,7 +11,7 @@
     width:100%;
     height:100%;
 }
-
+ */
 .installPlaceModal{
     position:absolute;
     display:none;
@@ -102,21 +102,96 @@ select, input[type="text"] {
 }
 
 /* 테이블 스타일 */
-.table {
+.res-info-list-table  {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.table tr th, .table tr td {
+.res-info-list-table tr th, .res-info-list-table tr td {
   padding: 10px;
   text-align: center;
+}
+
+.res-info-list-table tr th {
+  background-color: #7289AB;
+  color:white;
+}
+.res-info-list-table tr td {
+  background-color: #FCFCFC;
+}
+
+.table{
+	font-size:12px;
 }
 
 .table tr th {
   background-color: #7289AB;
   color:white;
 }
-.table tr td {
-  background-color: #FCFCFC;
+
+#installPlaceSearchBtn, #res-class-search-btn {
+  font-size: 12px; /* 원하는 크기로 조정하세요 */
+padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
+  background-color:navy;
+  border : navy;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-container button {
+  margin: 0 5px;
+}
+
+/* CSS for the Save button */
+#res-info-save-btn {
+  color: white;
+  padding: 6px 12px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 5px;
+  background-color: navy;
+}
+
+/* CSS for the Close button */
+#res-info-close-btn {
+  color: white;
+  padding: 6px 12px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 5px;
+  background-color: navy;
+}
+
+/* Optional: Add hover effect */
+#res-info-save-btn:hover {
+  background-color: darkblue;
+}
+
+
+
+.nav-tabs .nav-item .nav-link {
+  color: gray;
+  font-weight: bold;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  background-color: navy;
+  color: white;
+}
+
+/* CSS for styling the content tables */
+.table-content {
+  margin-top: 20px;
+}
+
+.table-content table {
+  width: 100%;
+  border: 1px solid navy;
+}
+
+.table-content table tbody tr td {
+  padding: 10px;
 }
