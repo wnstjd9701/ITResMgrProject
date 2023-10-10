@@ -1,23 +1,25 @@
 .table-container {
-	max-height: 800px;
+	max-height: 700px;
 	overflow-y: auto;
 	position: relative;
-	width: 120%;
+	width: 100%;
+}
+
+.table-container table {
+	width: 100%;
+	table-layout: fixed;
 }
 
 #addItemSearchText::placeholder {
   text-align: center; /* 가운데 정렬 스타일 적용 */
 }
 
-.table-container table {
-	width: 100%;
-}
-
 #addItemTable thead th {
 	position: sticky;
 	top: 0;
-	background-color: #fff;
-	z-index: 1; /* 다른 콘텐츠 위에 보이도록 z-index 설정 */
+	background-color: #7289AB; 
+	color : white;
+	z-index: 1;
 }
 
 #addItemTable tr {
@@ -28,18 +30,28 @@
 	text-align: center;
 }
 
-#title {
-	font-size: 20px;
+.col-checkbox {
+    width: 20px;
 }
 
-/* 부가정보 버튼 가로정렬 */
-.addItemSerach {
-	display: flex;
-	align-items: flex-start; /* 요소들을 수직 맞춤합니다. */
-	flex-direction: row;
-	white-space: nowrap;
-	margin-top: 20px;
-	margin-bottom: 20px;
+.col-status {
+    width: 30px;
+}
+
+.col-sn {
+    width: 30px;
+}
+
+.col-name {
+    width: 100px;
+}
+
+.col-desc {
+    width: 200px;
+}
+
+.col-useYN {
+    width: 50px;
 }
 
 #p-addItemUseYN {
@@ -48,7 +60,7 @@
 }
 
 #p-addItemName {
-	margin-left: 10px; 
+	margin-left: 13px; 
 	margin-right: 5px;
 }
 
@@ -57,35 +69,40 @@
 	margin-top: -2px;
 }
 
-.addItemSerachspan {
-	vertical-align: 3px;
-	margin-left:3px;
-}
 
 #addItemSearchText {
-	margin-right: 700px;
+	margin-right: 300px;
 }
 
-#addItemsearchBtn {
-	margin-right: 5px;
+@media screen and (min-width: 768px) { 
+  .modal.modal-center:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
 }
 
-#ExcelDownBtn {
-	margin-right: 5px;
+.btn {
+	float: right; 
+	margin-left: 10px;
 }
 
-#ExcelUploadBtn {
-	margin-right: 5px;
+.addItemSerach {
+	display: flex;
+	align-items: flex-start; /* 요소들을 수직 맞춤합니다. */
+	flex-direction: row;
+	white-space: nowrap;
+	margin-top: 20px;
 }
 
-#addItemAddRowBtn {
-	margin-right: 5px;
+.addItemSerachLabel{
+	margin-top:1px;
 }
 
-#addItemHideRowBtn {
-	margin-right: 5px;
+#addItemSearchText{
+	margin-top:-3px;	
 }
-
-#addItemSaveBtn {
-	
+.addItemSerachspan{
+	margin-left:2px;
 }

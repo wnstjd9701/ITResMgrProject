@@ -19,7 +19,7 @@ function addItemAddRow() {
 	newCellName.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='15' placeholder='반드시 입력해주세요.'>";
 
 	var newCellDesc = newRow.insertCell(4);
-	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "' size='40'>";
+	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "'>";
 
 	var newCellUseYN = newRow.insertCell(5);
 	newCellUseYN.innerHTML = "<span>Y</span>";
