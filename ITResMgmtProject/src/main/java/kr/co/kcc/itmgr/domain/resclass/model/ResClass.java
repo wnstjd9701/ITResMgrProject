@@ -2,6 +2,7 @@ package kr.co.kcc.itmgr.domain.resclass.model;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 
@@ -26,6 +27,23 @@ public class ResClass {
 	private String upperResClassName;
 	private String bottomResClassName;
 	
+	//AddItem 매핑
+	private String addItemName;
+	private String addItemDesc;
+	private String addItemUseYn;
+	
+	//페이징
+	private int totalPageBlock;
+	private int totalPage;
+	private int page;
+	private int nowPageBlock;
+	private int startPage;
+	private int endPage;
+	
+	
+	private String flag;
+	
+	private int addItemSn;
 	
 
 	

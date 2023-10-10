@@ -34,3 +34,61 @@ table th{
   text-align: left;
   vertical-align: middle; 
 }
+
+.btn {
+	float: right; 
+	margin-left: 10px;
+}
+
+.second-container{
+    padding: 20px;
+    background-color: white;
+    width: 65%; 
+    padding-bottom: 20px; 
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+.first-container{
+    padding: 20px;
+    background-color: white;
+    width: 35%; 
+    padding-bottom: 20px; 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+/* 자원분류 테이블 */
+#resClassDetailTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#resClassDetailTable th, #resClassDetailTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+#resClassDetailTable th {
+  background-color: #7289AB;
+  color:white;
+}
+/* 부가항목 테이블 스타일 */
+#addInfoTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#addInfoTable th, #addInfoTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+#addInfoTable th {
+  background-color: #7289AB;
+  color:white;
+}
+
+.addInfoTableHead th {
+  font-weight: bold;
+}

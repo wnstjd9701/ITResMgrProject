@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="../common/layout/default">
+<head>
+<meta charset="UTF-8">
+<style>
+.place-map-container {
+	margin: 20px 20px 0 10px;
+	display: flex;
+	width: 80vw;
+}
+
+#map {
+	width: 45%;
+	height: 90vh;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.place-list-container {
+	width: 60%;
+	margin: 10px 0 0 10px;
+	padding: 0 0 0 10px;
+}
+
+.place-table {
+	font-size: 12px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+input[type="button"] {
+	padding: 2px 2px;
+	background-color: #007BFF;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.fixed-header {
+	position: sticky;
+	top: 0;
+	background-color: white;
+	z-index: 1;
+}
+.place-table-container, .resinfo-table-container{
+	max-height: 40em; /* 원하는 높이로 조절 */
+	overflow-y: auto; /* 세로 스크롤 표시 */
+	height: 60%;
+}
+</style>
+</head>
+<th:block layout:fragment="content">
+	<div class="container">
+		<div class="place-map-container">
+			<div id="map"></div>
+			<div class="place-list-container">
+				<div><h2>설치 장소</h2></div>
+				<div>
+					<input type="button" class="group-do" value="지도 새로고침">
+				</div>
+				<select id="doNameSelect" class="form-select">
+        			<option value="ALL">전체</option>
+        			<option th:each="doName : ${doNames}" th:value="${doName}" th:text="${doName}"></option>
+    			</select>
+				<div class="place-table-container">
+					<table class="table table-striped place-table">
+						<thead class="fixed-header">
+							<tr>
+								<th>번호</th>
+								<th>설치 장소명</th>
+								<th>우편번호</th>
+								<th>주소</th>
+								<th>상세 주소</th>
+								<th>장비 개수</th>
+								<th>상세 보기</th>
+							</tr>
+						</thead>
+						<tbody class="place-table-body">
+							<tr th:each="place, i : ${place}">
+								<td class="place-count" th:text="${i.count}"></td>
+								<td class="place-name" th:text="${place.installPlaceName}"></td>
+								<td class="place-name" th:text="${place.installPlacePostno}"></td>
+								<td class="place-address" th:text="${place.installPlaceAddress}"></td>
+								<td th:if="${place.installPlaceDetailAddress != null}"
+									class="place-detail-address"
+									th:text="${place.installPlaceDetailAddress}"></td>
+								<td th:if="${place.installPlaceDetailAddress == null}"
+									class="place-detail-address">-</td>
+								<td class="place-res-count" th:text="${place.resCount}"></td>
+								<td><input name="search" type="button" value="조회"
+									class="place-detail-btn"> <input name="placesn"
+									class="place-sn" type="hidden"
+									th:value="${place.installPlaceSn}"> <input
+									type="hidden" class="latitude" th:value="${place.latitude}">
+									<input type="hidden" class="longitude"
+									th:value="${place.longitude}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="resinfo-table-container">
+					<div><h2>자원 정보</h2></div>
+					<table class="table table-striped place-table">
+						<thead class="fixed-header">
+							<tr>
+								<th>자원명</th>
+								<th>IP</th>
+								<th>IP 종류</th>
+								<th>자원 상태</th>
+								<th>자원 분류</th>
+								<th>랙 정보</th>
+								<th>관리 부서</th>
+							</tr>
+						</thead>
+						<tbody class="resinfo-table-body">
+							<tr>
+								<th colspan="7">장소명을 클릭하세요.</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=28bed2e7a81023c99f56920a94503f99&libraries=services,clusterer"></script>
+	<script th:inline="javascript">
+var places = `[[${place}]]`;
+$(document).ready(function(){
+	var mapContainer = document.getElementById('map'); // 지도를 표시할 div 요소
+    var mapOption = {
+        center: new kakao.maps.LatLng(36.5, 127.5), // 지도 중심 좌표
+        level: 12 // 지도 확대 레벨
+    };
+    // 지도를 생성합니다.
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+ // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+    var zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    
+    var allMarkers = [];
+	var regions = JSON.parse(places);
+	var clusterers = groupDo(regions);
+	
+	clusterEvent(clusterers);
+	markerClickEvent(allMarkers);
+	
+	function clusterEvent(clusterers){
+		for (var groupName in clusterers) {
+	        kakao.maps.event.addListener(clusterers[groupName], 'clusterclick', function(cluster) {
+	        	var markers = cluster._clusterer._markers;
+	        	var placeName = {};
+	        	placeName[groupName] = [];
+	        	
+	        	for(var i=0; i<markers.length; i++){
+	        		placeName[groupName].push(markers[i].Gb);
+	        	}
+	        	
+	        	var placeNameList = JSON.stringify(placeName[groupName]);
+
+	        	$.ajax({
+	        		   method: "POST", // POST 요청으로 변경
+	        		   url: "/place/city/resinfo",
+	        		   contentType: "application/json", // JSON 데이터 전송을 명시
+	        		   data: placeNameList, // JSON 데이터를 요청 바디에 직접 전송
+	        		   success: function(response) {
+							console.log(response);
+		        		    updateInstallPlaceList(response.place);
+							updateResInfo(response.resInfo);
+	        		   },
+	        		   error: function(xhr, status, err) {
+	        		       alert(err);
+	        		   }
+	        	});
+	        });
+	    }
+	}
+	
+	function markerClickEvent(allMarkers){
+		for(var i = 0; i < allMarkers.length; i++) {
+	        for(var j = 0; j < allMarkers[i].length; j++) {
+	            var marker = allMarkers[i][j];
+	            kakao.maps.event.addListener(marker, 'click', (function (marker) {
+	                return function () {
+	                		var placeName = marker.Gb;
+			                var position = marker.getPosition();
+			                var lat = position.getLat();
+			                var lng = position.getLng();
+			                var url = 'https://map.kakao.com/link/map/' + placeName + ',' + lat + ',' + lng;
+			                var findUrl = 'https://map.kakao.com/link/to/' + placeName + ',' + lat + ',' + lng;
+			                
+			                var iwContent = `<div style="padding:5px;">${placeName}<br><a href=${url} style="color:blue" target="_blank">큰지도보기</a> <a href=${findUrl} style="color:blue" target="_blank">길찾기</a></div>`;
+		
+			                var iwPosition = new kakao.maps.LatLng(33.450701, 126.570667);
+		
+			                // 인포윈도우를 생성합니다
+			                var infowindow = new kakao.maps.InfoWindow({
+			                    position: iwPosition,
+			                    content: iwContent,
+			                    removable: true
+			                });
+			                // 마커 위에 인포윈도우를 표시합니다.
+			                infowindow.open(map, marker);
+			                
+			                var placeName = JSON.stringify(`${placeName}`);
+			                $.ajax({
+				        		   method: "POST", // POST 요청으로 변경
+				        		   url: "/place/map/resinfo",
+				        		   contentType: "application/json", // JSON 데이터 전송을 명시
+				        		   data: placeName, 
+				        		   success: function(response) {
+				        		       console.log(response);
+				        		       updateInstallPlace(response.place);
+				        		       updateResInfo(response.resInfo);
+				        		   },
+				        		   error: function(xhr, status, err) {
+				        		       alert(err);
+				        		   }
+				        	});
+	                };
+	            })(marker));
+	        }
+	    }
+	} 
+	
+	function updateInstallPlaceList(place) {
+	    $(".place-table-body tr").remove();
+	    if(place.length < 1 || place[0] === null){
+        	const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "해당 지역에 설치 장소가 없습니다." + "</td>" + "</tr>";
+        	$(".place-table-body").append(result);
+        	return;
+        }
+	    // 테이블의 tbody 요소 선택
+	    var placeBody = $(".place-table-body");
+	    
+	    // 각 place 객체에 대해 새로운 행을 생성하고 추가
+	    for (var i = 0; i < place.length; i++) {
+	    	 // 데이터가 null인 경우 대체 문자열 지정
+		    var installPlaceName = place[i].installPlaceName || "-";
+		    var installPlacePostno = place[i].installPlacePostno || "-";
+		    var installPlaceAddress = place[i].installPlaceAddress || "-";
+		    var installPlaceDetailAddress = place[i].installPlaceDetailAddress || "-";
+		    var resCount = place[i].resCount || "0";
+		    var installPlaceSn = place[i].installPlaceSn || "-";
+		    var latitude = place[i].latitude || "0";
+		    var longitude = place[i].longitude || "0";
+		    
+	        var newRow = '<tr>' +
+	            '<td class="place-count">' + (i + 1) + '</td>' +
+	            '<td class="place-name">' + installPlaceName + '</td>' +
+	            '<td class="place-name">' + installPlacePostno + '</td>' +
+	            '<td class="place-address">' + installPlaceAddress + '</td>' +
+	            '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
+	            '<td class="place-res-count">' + resCount + '</td>' +
+	            '<td>' +
+	            '<input name="search" type="button" value="조회" class="place-detail-btn">' +
+	            '<input name="placesn" class="place-sn" type="hidden" value="' + installPlaceSn + '">' +
+	            '<input type="hidden" class="latitude" value="' + latitude + '">' +
+	            '<input type="hidden" class="longitude" value="' + longitude + '">' +
+	            '</td>' +
+	            '</tr>';
+	        
+	        placeBody.append(newRow);
+	    }
+	}
+	
+	function updateInstallPlace(place) {
+	    // 테이블의 tbody 요소 선택
+	    var placeBody = $(".place-table-body");
+
+	    // 기존 행을 모두 제거
+	    placeBody.empty();
+	    var installPlaceName = place.installPlaceName || "-";
+	    var installPlacePostno = place.installPlacePostno || "-";
+	    var installPlaceAddress = place.installPlaceAddress || "-";
+	    var installPlaceDetailAddress = place.installPlaceDetailAddress || "-";
+	    var resCount = place.resCount || "0";
+	    var installPlaceSn = place.installPlaceSn || "-";
+	    var latitude = place.latitude || "-";
+	    var longitude = place.longitude || "-";
+
+	    // 새로운 행을 생성
+	    var newRow = '<tr>' +
+	        '<td class="place-count">1</td>' +
+	        '<td class="place-name">' + installPlaceName + '</td>' +
+	        '<td class="place-name">' + installPlacePostno + '</td>' +
+	        '<td class="place-address">' + installPlaceAddress + '</td>' +
+	        '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
+	        '<td class="place-res-count">' + resCount + '</td>' +
+	        '<td>' +
+	        '<input name="search" type="button" value="조회" class="place-detail-btn">' +
+	        '<input name="placesn" class="place-sn" type="hidden" value="' + installPlaceSn + '">' +
+	        '<input type="hidden" class="latitude" value="' + latitude + '">' +
+	        '<input type="hidden" class="longitude" value="' + longitude + '">' +
+	        '</td>' +
+	        '</tr>';
+
+	    // 새로운 행을 추가
+	    placeBody.append(newRow);
+	}
+	
+	// 자원 정보 업데이트
+	function updateResInfo(resInfo){
+		$(".resinfo-table-body tr").remove();
+		
+		if(resInfo.length < 1 || resInfo[0] === null){
+        	const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "매핑된 자원이 없습니다." + "</td>" + "</tr>";
+        	$(".resinfo-table-body").append(result);
+        	return;
+        }
+        
+        for(var i = 0; i < resInfo.length; i++){
+        	var newRow = $("<tr>");
+        	var ip;
+        	var ipTypeCodeName;
+        	const resName = $("<td>").text(resInfo[i].resName).attr({
+                class: "res-name",
+                "data-install-place-sn": resInfo[i].installPlaceSn
+            });
+        	if(resInfo[i].ip === null){
+        		ip = $("<td>").text("-").attr({
+        			class: "ip",
+        			"data-ip-sn": ""
+        		})
+        	}else{
+	            ip = $("<td>").text(resInfo[i].ip).attr({
+	                class: "ip",
+	                "data-ip-sn": resInfo[i].ipSn
+	            });
+	        }
+        	if(resInfo[i].ipTypeCodeName === null){
+            	ipTypeCodeName = $("<td>").text("-").addClass("ip-type-code-name");
+        	}else{
+            	ipTypeCodeName = $("<td>").text(resInfo[i].ipTypeCodeName).addClass("ip-type-code-name");
+        	}
+            const resStatusCodeName = $("<td>").text(resInfo[i].resStatusCodeName).addClass("res-status-code-name");
+            const resClassName = $("<td>").text(resInfo[i].resClassName).addClass("res-class-name");
+            const rackInfo = $("<td>").text(resInfo[i].rackInfo).addClass("rack-info");
+            const mgmtDeptName = $("<td>").text(resInfo[i].mgmtDeptName).addClass("mgmt-dept-name");
+
+            newRow.append(resName);
+            newRow.append(ip);
+            newRow.append(ipTypeCodeName);
+            newRow.append(resStatusCodeName);
+            newRow.append(resClassName);
+            newRow.append(rackInfo);
+            newRow.append(mgmtDeptName);
+        	$(".resinfo-table-body").append(newRow);
+        }
+	}
+	$(".group-do").click(() => {
+		var moveLatLon = new kakao.maps.LatLng(36.5, 127.5);
+		map.setCenter(moveLatLon);
+		map.setLevel(12);
+	})
+	
+	
+	function groupDo(regions){
+
+        // 지역을 그룹화할 객체를 생성합니다.
+        var groupedRegions = {};
+        // 지역 정보를 그룹화합니다.
+        regions.forEach(function (region) {
+            if (!groupedRegions[region.doName]) {
+                groupedRegions[region.doName] = [];
+            }
+            groupedRegions[region.doName].push(region);
+        });
+        
+        var clusterers = {};
+        var infowindows = [];
+        for (var groupName in groupedRegions) {
+        	// 도 별로 그룹핑
+            var group = groupedRegions[groupName];
+            var resCount = 0;
+			var clusterSize = 1;
+			for (var i = 0; i < group.length; i++) {
+	            resCount += group[i].resCount;
+	        }
+			
+			clusterers[groupName] = new kakao.maps.MarkerClusterer({
+                map: map,
+                averageCenter: true,
+                clickable: true,
+                minLevel: 5,
+                minClusterSize: clusterSize,
+                texts: [groupName + ' 자원'],
+                calculator: [1, 2, 3]
+            });
+
+            var markers = [];
+            var positions = [];
+            for (var i = 0; i < group.length; i++) {
+                var marker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(group[i].latitude, group[i].longitude),
+                    title: group[i].installPlaceName,
+                    clickable: true
+                });
+                markers.push(marker);
+                
+                var content = '<div>' + group[i].installPlaceName + '</div>';
+                var infowindow = new kakao.maps.InfoWindow({
+			        content: content // 인포윈도우에 표시할 내용
+    			});
+                infowindows.push(infowindow);
+                kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+            }
+            allMarkers.push(markers);
+            clusterers[groupName].addMarkers(markers);
+        }
+        return clusterers;
+	}
+	
+	// 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+	function makeOverListener(map, marker, infowindow) {
+	    return function() {
+	        infowindow.open(map, marker);
+	    };
+	}
+
+	// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+	function makeOutListener(infowindow) {
+	    return function() {
+	        infowindow.close();
+	    };
+	}
+	
+    $(".place-list-container").on("click", ".place-detail-btn", function(){
+    	var clickedRow = $(this).closest("tr");
+    	
+        var placeName = clickedRow.find(".place-name").text();
+        var placeAddress = clickedRow.find(".place-address").text();
+		var latitude = clickedRow.find(".latitude").val();
+		var longitude = clickedRow.find(".longitude").val();
+		
+        panTo(latitude, longitude);
+    });
+    
+    function panTo(latitude, longitude) {
+        // 이동할 위도 경도 위치를 생성합니다 
+        var moveLatLon = new kakao.maps.LatLng(latitude, longitude);
+        // 지도 중심을 부드럽게 이동시킵니다
+        // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+        map.setLevel(3);
+        map.panTo(moveLatLon);            
+    }
+    $("#doNameSelect").change(function(){
+    	var doName = $(this).val();
+        $.ajax({
+            method: "GET",
+            url: "/place/map/city",
+            data: {
+                doName: doName 
+            },
+            success: function(response){
+            	updateInstallPlaceList(response.place);
+ 		    	updateResInfo(response.resInfo);         
+            },
+            error: function(xhr, status, err){
+            	console.log(err);
+            }
+        });
+    });
+});
+	</script>
+</th:block>
+</html>

@@ -14,4 +14,5 @@ public class InstallRes {
 	private String ip;
 	private String ipDesc;
 	private String ipTypeCodeName;
+	private int resCount;
 }

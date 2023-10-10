@@ -7,6 +7,7 @@
 <style>
 .container {
 	margin-left: 12vw;
+	font-size: 12px;
 }
 
 .page-title-container {
@@ -31,7 +32,8 @@
 	margin-left: 10em;
 }
 
-.place-list-table-container{
+.place-list-table-container {
+	font-size: 12px;
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -40,10 +42,6 @@
 
 .address-container, .resinfo-container {
 	margin-top: 20px; /* 주소 입력창과의 간격 조정 */
-}
-
-.place-name:hover {
-	cursor: pointer;
 }
 
 .address-container, .place-list-container {
@@ -65,7 +63,8 @@
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
-.place-list-container h2{
+
+.place-list-container h2 {
 	font-size: 16px;
 }
 
@@ -92,11 +91,11 @@
 
 .zip-code-container {
 	display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-content: stretch;
-    justify-content: flex-start;
-    align-items: center;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: stretch;
+	justify-content: flex-start;
+	align-items: center;
 }
 /* Style the "주소 찾기" button */
 .find-postcode-btn {
@@ -157,6 +156,32 @@
 	border: 1px solid #ccc;
 	border-radius: 5px;
 }
+.table {
+	font-size: 12px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+.fixed-header {
+	position: sticky;
+	top: 0;
+	background-color: white;
+	z-index: 1;
+}
+.place-table-container, .resinfo-table-container{
+	max-height: 30em; /* 원하는 높이로 조절 */
+	overflow-y: auto; /* 세로 스크롤 표시 */
+	height: 60%;
+}
+input[type="button"] {
+	padding: 2px 2px;
+	background-color: #007BFF;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	font-size: 12px;
+	cursor: pointer;
+}
 </style>
 <script
 	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -170,63 +195,77 @@
 				<h2>설치 장소 관리</h2>
 			</div>
 			<div class="place-list-table-container">
-				<div class="place-list-container"><h2>설치 장소</h2></div>
 				<div class="search-container">
-				    <input class="place-name-text" type="text" placeholder="장소명을 입력하세요">
-				    <input id="search-btn" type="button" value="검색">
+					<div class="common-btn">
+						<input id="search-btn" type="button" value="조회">
+						<input type="button" id="new-address" value="신규"> 
+						<input type="button" id="edit-address" value="저장">
+					</div>
+					<span>설치 장소명</span>
+					<input class="place-name-text" type="text" placeholder="장소명을 입력하세요">
 				</div>
-				<div style="text-align:left;">
-				    <input type="button" id="delete-address" value="행삭제">
-				 </div>
-				<table class="table table-striped table-hover">
-					<thead>
-						<tr>
-							<th scope="col">번호</th>
-							<th scope="col">선택</th>
-							<th scope="col">설치 장소명</th>
-							<th scope="col">주소</th>
-							<th scope="col">상세 주소</th>
-							<th scope="col">자원 수</th>
-						</tr>
-					</thead>
-					<tbody class="place-table-body">
-						<tr th:each="installPlace, i : ${installPlace}">
-							<td class="place-count" th:text="${i.count}"></td>
-							<td><input type="checkbox" name="${installPlace.installPlaceSn" class="place-sn"
-								th:value="${installPlace.installPlaceSn}"></td>
-							<td class="place-name" th:text="${installPlace.installPlaceName}"></td>
-							<td class="place-address"
-								th:text="${installPlace.installPlaceAddress}"></td>
-							<td class="place-detail-address"
-								th:text="${installPlace.installPlaceDetailAddress}"></td>
-							<td class="place-res-count" th:text="${installPlace.resCount}"></td>
-						</tr>
-					</tbody>
-				</table>
+				<div style="text-align: left;">
+					<div><input type="button" id="delete-address" value="행삭제"></div>
+				</div>
+				<div class="place-table-container">
+					<table class="table table-striped table-hover">
+						<thead class="fixed-header">
+							<tr>
+								<th scope="col">번호</th>
+								<th scope="col">선택</th>
+								<th scope="col">설치 장소명</th>
+								<th scope="col">주소</th>
+								<th scope="col">상세 주소</th>
+								<th scope="col">자원 수</th>
+								<th scope="col">자원 조회</th>
+							</tr>
+						</thead>
+						<tbody class="place-table-body">
+							<tr th:each="installPlace, i : ${installPlace}">
+								<td class="place-count" th:text="${i.count}"></td>
+								<td><input type="checkbox"
+									name="installPlaceSn" class="place-sn"
+									th:value="${installPlace.installPlaceSn}"></td>
+								<td class="place-name" th:text="${installPlace.installPlaceName}"></td>
+								<td class="place-address"
+									th:text="${installPlace.installPlaceAddress}"></td>
+								<td th:if="${installPlace.installPlaceDetailAddress == null}" class="place-detail-address"
+									>-</td>
+								<td th:if="${installPlace.installPlaceDetailAddress != null}" class="place-detail-address"
+									th:text="${installPlace.installPlaceDetailAddress}"></td>
+								<td class="place-res-count" th:text="${installPlace.resCount}"></td>
+								<td><input type="button" class="resinfo-btn" value="자원 조회" th:data-place-name="${installPlace.installPlaceName}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<!-- 상세 장소 및 설치 장소 등록 -->
 			<div class="address-map-container">
 				<div class="address-container">
-					<h2>상세 주소</h2>
 					<form id="place-address-form">
 						<div>
-							<span>설치 장소명</span> 
-							<input type="hidden" name="flag" id="flag" value="">
-							<input type="hidden" name="installPlaceSn" id="install-place-sn" value="">
-							<input type="text" name="installPlaceName" id="detail-place-name" class="address-input-box input-box detail-place-name" placeholder="설치 장소명">
+							<span>설치 장소명</span> <input type="hidden" name="flag" id="flag"
+								value=""> <input type="hidden" name="installPlaceSn"
+								id="install-place-sn" value=""> <input type="text"
+								name="installPlaceName" id="detail-place-name"
+								class="address-input-box input-box detail-place-name"
+								placeholder="설치 장소명">
 						</div>
 						<span>상세 주소</span>
 						<div class="zip-code-container">
-							<input type="text" name="installPlacePostno" id="zip-code" class="address-input-box input-box" placeholder="우편번호" readonly>
+							<input type="text" name="installPlacePostno" id="zip-code"
+								class="address-input-box input-box" placeholder="우편번호" readonly>
 							<input type="button" class="find-postcode-btn" value="주소 찾기">
 						</div>
 						<input type="hidden" name="latitude" id="latitude" value="">
 						<input type="hidden" name="longitude" id="longitude" value="">
-						<input type="text" name="installPlaceAddress" id="road-name-address" class="address-input-box input-box" placeholder="도로명주소" readonly>
-						<input type="text" name="installPlaceDetailAddress" id="detail-address" class="address-input-box input-box" placeholder="상세주소">
+						<input type="text" name="installPlaceAddress"
+							id="road-name-address" class="address-input-box input-box"
+							placeholder="도로명주소" readonly> <input type="text"
+							name="installPlaceDetailAddress" id="detail-address"
+							class="address-input-box input-box" placeholder="상세주소">
 						<div id="map" class="map"></div>
-						<input type="button" id="new-address" value="신규">
-						<input type="button" id="edit-address" value="저장">
 					</form>
 				</div>
 				<!-- 자원 정보 -->
@@ -304,7 +343,10 @@ $(document).ready(function(){
 	            }));
 	            const placeName = $("<td>").addClass("place-name").text(place[i].installPlaceName);
 	            const placeAddress = $("<td>").addClass("place-address").text(place[i].installPlaceAddress);
-	            const placeDetailAddress = $("<td>").addClass("place-detail-address").text(place[i].installPlaceDetailAddress);
+	            
+	            const installPlaceDetailAddress = place[i].installPlaceDetailAddress || "-";
+	            const placeDetailAddress = $("<td>").addClass("place-detail-address").text(installPlaceDetailAddress);
+	            
 	            const placeResCount = $("<td>").addClass("place-res-count").text(place[i].resCount);
 				
 	            newRow.append(placeCount);
@@ -319,14 +361,20 @@ $(document).ready(function(){
 	    }
 	    return;
 	}
+	$(".place-sn").on("change", function() {
+		console.log($(this));
+	    if ($(this).prop("checked")) {
+	        $(".place-sn").not(this).prop("checked", false);
+	    }
+	});
 	
 	// 설치장소명으로 매핑된 자원, 상세 주소 조회
-	$(".place-list-table-container").on("click", ".place-name", function(){
-	    const placeName = $(this).text();
-
+	$(".place-list-table-container").on("click", "input[type='button']", function(){
+		unCheckbox();
+	    const placeName = $(this).data("place-name");
 	    $.ajax({
 	        method: "GET",
-	        url: "installplace/resinfo",
+	        url: "/installplace/resinfo",
 	        data: {
 	            placeName: placeName
 	        },
@@ -521,20 +569,17 @@ $(document).ready(function(){
 	// 신규 버튼 클릭 시 상세 주소 칸 초기화
 	$("#new-address").click(() => {
 		removePlaceDetail();
+		removeResInfo();
+		const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
+		$(".resinfo-table-body").append(result);
 	});
 	
 	// 상세 주소 지우기
 	function removePlaceDetail(){
 		$("#place-address-form")
 			.find("input")
-		    .not("[type='button']") // class가 find-postcode-btn인 요소를 제외합니다.
+		    .not("[type='button']") 
 		    .val('');		
-		/* $("#flag").val("");
-		$("#install-place-sn").val("");
-		$("#detail-place-name").val("");
-		$("#zip-code").val("");
-		$("#road-name-address").val("");
-		$("#detail-address").val(""); */
 		$("#map").empty();
 		$("#map").removeAttr("style");
 	}
@@ -571,13 +616,6 @@ $(document).ready(function(){
 		var installPlaceSn = installPlaceJSON.installPlaceSn;
 		var installPlaceName = installPlaceJSON.installPlaceName;
 		
-		// 장소명이 중복되는 지 체크 , 비동기 요청이 끝날 때 까지 기다리고 값을 가져온 후 다음으로 넘어감
-		var result = await checkPlaceName(installPlaceSn, installPlaceName);
-		if(result > 1){
-			alert("장소명이 이미 존재합니다.");
-			return;	
-		}
-		
 		// 신규일 경우
 		if(flag === ""){
 			$.ajax({
@@ -586,22 +624,19 @@ $(document).ready(function(){
 				data: installPlace,
 				contentType: "application/json",
 				success: function(response){
-					console.log(response);		
-					alert("성공");
-					// 수정 완료 후 장소 테이블 업데이트
-					updateInstallPlace(response);
-					// 상세 주소 비우기
-					removePlaceDetail();
-					removeResInfo();
-					const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
-			    	$(".resinfo-table-body").append(result);
+					console.log(response);
+					if(response.code === 400){
+						alert(`${response.message}`);
+						return;
+					}
+					alert(`${response.message}`);
+					console.log(response.data);		
+					updateInstallPlace(response.data);
 				},
 				error: function(xhr, status, err){
 					alert(err);
 				}
 			})
-			// 신규 등록 후 장소 테이블 업데이트
-			// 상세 주소 비우기
 		}
 		else{ // 수정일 경우
 			console.log(installPlaceJSON.installPlaceSn);
@@ -614,14 +649,12 @@ $(document).ready(function(){
 				contentType: "application/json",
 				success: function(response){
 					console.log(response);
-					alert("성공");
-					// 수정 완료 후 장소 테이블 업데이트
-					updateInstallPlace(response);
-					// 상세 주소 비우기
-					removePlaceDetail();
-					removeResInfo();
-					const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "장소명을 클릭하세요." + "</td>" + "</tr>";
-			    	$(".resinfo-table-body").append(result);
+					if(response.code === 400){
+						alert(`${response.message}`);
+						return;
+					}
+					alert(`${response.message}`);
+					updateInstallPlace(response.data);
 				},
 				error: function(xhr, status, err){
 					alert(err);
@@ -630,27 +663,51 @@ $(document).ready(function(){
 		}
 	}
 	
-	// 장소명이 존재하는 지 체크
-	async function checkPlaceName(installPlaceSn, installPlaceName) {
-    return new Promise(function(resolve, reject) {
-        $.ajax({
-            method: "GET",
-            url: "/check/name",
-            data: {
-                placeSn: installPlaceSn,
-                placeName: installPlaceName
-            },
-            success: function(response) {
-                console.log(response);
-                resolve(response); // 비동기 작업이 완료되면 결과를 resolve로 반환
-            },
-            error: function(xhr, status, err) {
-                alert("Error: " + err);
-                reject(err); // 오류가 발생한 경우 reject로 오류를 반환
-            }
-        });
+	function unCheckbox(){
+		const checkedCheckboxes = $(".place-sn:checked"); // 체크된 체크박스 선택
+	    const checkedValues = checkedCheckboxes.map(function() {
+	        return this.value;
+	    }).get(); // 체크된 체크박스의 값을 배열로 추출
+
+	    // 체크된 체크박스 해제
+	    checkedCheckboxes.prop("checked", false);
+	}
+	
+	$("#delete-address").click(() => {
+		const checkedCheckbox = $(".place-sn:checked");
+	    
+	    if (checkedCheckbox.length === 0) {
+	        alert("삭제할 주소를 선택하세요.");
+	        return;
+	    }
+
+	    const placesn = checkedCheckbox.eq(0).val(); // 첫 번째 체크된 요소의 값만 가져오기
+
+	    const resCount = checkedCheckbox.closest('tr').find('.place-res-count').text();
+
+	    if (resCount !== '0') {
+	        alert("자원이 존재하므로 삭제가 불가능합니다.");
+	        return;
+	    }
+	    
+    	$.ajax({
+    		method: "POST",
+    		url: "/delete/place",
+    		data: {
+    			placesn:placesn
+    		},
+    		success: function(response){
+    			alert("주소 삭제 완료");
+    			console.log(response);
+    			updateInstallPlace(response);
+    			unCheckbox();
+    		},
+    		error: function(xhr, status, err){
+    			alert(err)
+    		}
+    		
+    	})
     });
-}
 })
 </script>
 </th:block>
