@@ -2,14 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
 <div th:replace="~{../common/fragments/head :: fragment-head}"></div>
+
 </head>
 <body>
+	<div class="" style=" float:right; width:20%;">
+		<button id="search_btn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;margin-left:10px; background-color:navy; border:navy;">조회</button>
+		<button id="newResInfoBtn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;  background-color:navy; border:navy;">신규</button>	
+	</div>
 	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
 	<div class="container" style="margin-top:50px; margin-left:270px; max-width:85%;">
-	
-		<button id="search_btn" type="button" class="btn btn-primary" style="float:right; margin-left:10px; background-color:navy; border:navy;">조회</button>
-		<button type="button" class="btn btn-primary" style="float:right;  background-color:navy; border:navy;">신규</button>	
 		<span>대 분 류</span>
 		<select id="topUpperResClassName" name="topUpperResClassName">
 		    <!-- "전체" 옵션 추가 -->
@@ -33,7 +37,6 @@
 			<input type="text" name="resName"></input>
 		<span>설치장소</span>
 			<input type="text" name="installPlaceName"></input>
-		<br>
 		<span>제조회사명</span>
 			<input type="text" name="manufactureCompanyName"></input>
 		<span>관리ID</span>
@@ -42,8 +45,10 @@
 			<label> <input type="radio" name="monitoringYn" value="Y" checked="checked"/> 모니터링 자원 </label>		
 			<label> <input type="radio"name="monitoringYn" value="A" /> 전체 </label> 
 	</div>
-
-	<div class="container" style="margin-left:250px; max-width:86%;">
+	<!-- 검색창 끝 -->
+	
+	<!-- 자원 리스트 -->
+	<div class="container" style="margin-left:250px; max-width:86%; max-height:100%;">
 	<span>
 		<table class="table table-striped">
 			<thead style="text-align: center;">
@@ -73,108 +78,193 @@
 		</table>
 	</span>
 	</div>
+	<!-- 자원리스트 끝 -->
 
+	<!-- 모달창 -->
+    <div class="modal">
+    <!-- 자원정보 입력 -->
+    	<form id="resInfoSave" name="resInfoSave" method="post" th:action="@{/resinfo/insert}">
+        <div class="modal-body" style="margin-top:20px;">
+					<div class="col-md-16">
+					 	<button type="button" id="closeModal">✖️</button>
+						<table id="resInfoDetailTable" class="table table-hover">
+						 <tbody>
+							    <tr>
+							      <th scope="row">자원분류명</th>
+							      	<td>
+							      	<select name="resClassId">
+							      		<option th:each="search:${search}" th:if="${search.level}==3" th:value="${search.resClassId}" th:text="${search.resClassName}">
+							      		</option>
+							      	</select>
+							      	</td>
+							      <th scope="row">관리ID</th>
+							      	<td><input type="text" name="mgmtId"></input>
+							      	</td>
+							      <th scope="row">관리부서명</th>
+							      	<td><input type="text" name="mgmtDeptName"></input>
+							      	</td>
+							      <th scope="row">자원시리얼아이디</th>
+							      	<td><input type="text" name="resSerialId"></input>
+							      	</td>	
+							    </tr>
+							    <tr>
+							      <th scope="row">자원명</th>
+							      	<td>
+							      	<input type="text" name="resName"></input>
+							      	</td>
+							      <th scope="row">자원상태</th>
+							      	<td>
+							      	<select name="resStatusCode">
+							      		<option th:each="selectResStatusCode:${selectResStatusCode}" th:value="${selectResStatusCode.resStatusCode}" th:text="${selectResStatusCode.detailCodeName}">
+							      		</option>
+							      	</select>
+							      	</td>
+							      <th scope="row">담당자명</th>
+							      	<td><input type="text" name="managerName"></input>
+							      	</td>
+							    </tr>
+							  	<tr>
+							      <th scope="row">자원시리얼번호</th>
+							      	<td>
+							      	<input type="text" name="resSn"></input>
+							      	</td>
+							      <th scope="row">제조회사명</th>
+							      	<td><input type="text" name="manufactureCompanyName"></input>
+							      	</td>
+							      <th scope="row">모델명</th>
+							      	<td><input type="text" name="modelName"></input>
+							      	</td>
+							    </tr>
+							    <tr>
+							      <th scope="row">설치장소</th>
+							      	<td>
+							      	<input type="text" id="install-place-input" name="installPlaceName">
+							      	<input type="hidden" id="install-place-sn-input" name="installPlaceSn">
+							      	 <button type="button" class="btn btn-primary" id="installPlaceSearchBtn">찾기</button>
+							      	</td>
+							      <th scope="row">랙정보</th>
+							      	<td><input type="text" name="rackInfo"></input>
+							      	</td>
+							    </tr>
+							  	<tr>
+							      <th scope="row">도입일자</th>
+							      	<td>
+							      	<input type="text" name="introductionDate" placeholder="YYYYMMDD"></input>
+							      	</td>
+							      <th scope="row">폐기일자</th>
+							      	<td><input type="text" name="expirationDate" placeholder="YYYYMMDD"></input>
+							      	</td>
+							      <th scope="row">추가정보</th>
+							      	<td><input type="text" name="addInfo"></input>
+							      	</td>
+							    </tr>
+							    <tr>
+							      <th scope="row">도입가격</th>
+							      	<td>
+							      	<input type="text" name="introdutionPrice"></input>
+							      	</td>
+							      <th scope="row">사용여부</th>
+							      	<td>
+							      		<label> <input type="radio" name="useYn" value="Y" checked="checked"/> Y </label>		
+										<label> <input type="radio"name="useYn" value="N" /> N </label> 
+							      	</td>
+							    </tr>
+							    <tr>
+							      <th scope="row">구매처명</th>
+							      	<td>
+							      	<input type="text" name="purchaseCompanyName"></input>
+							      	</td>
+							      <th scope="row">모니터링여부</th>
+							      	<td>
+										<label> <input type="radio" name="monitoringYn" value="Y" checked="checked"/> Y </label>		
+										<label> <input type="radio"name="monitoringYn" value="N" /> N </label> 
+							      	</td>
+							      <th scope="row"></th>
+							      	<td>
+							      	<input type="hidden" name="createrId"></input>
+							      	</td>
+							      	<td>
+							      	<input type="hidden" name="updaterId"></input>
+							      	</td>
+							    </tr>
+						    </tbody>
+						    <button type="submit">등록</button>
+						</table>
+    				</div>
+			    	</form>
+    <!-- 자원정보입력칸 끝 -->
+    			
+    <!-- 매핑된 부가정보 및 ip목록 -->
+				<div class="">
+				    <ul class="nav nav-tabs">
+				        <li class="nav-item">
+				            <a class="nav-link" href="#" onclick="showTable('additionalInfo')">부가정보</a>
+				        </li>
+				        <li class="nav-item">
+				            <a class="nav-link" href="#" onclick="showTable('ipList')">IP 목록</a>
+				        </li>
+				    </ul>
+				
+				    <div class="addTable">
+				        <table id="additionalInfoTable" class="table table-hover">
+				            <tbody>
+				                <tr>
+				                    <td>Content for 부가정보 table</td>
+				                </tr>
+				            </tbody>
+				        </table>
+				
+				        <table id="ipListTable" class="table table-hover">
+				            <tbody>
+				                <tr>
+				                    <td>Content for IP 목록 table</td>
+				                </tr>
+				            </tbody>
+				        </table>
+				    </div>
+				</div>
+	<!-- 매핑된 부가정보 및 ip목록 끝 -->
+    		</div>
+    <!-- 모달 끝 -->
+    <!-- 설치장소 리스트 모달창 -->
+ 	<div class="installPlaceModal" id="install-place-modal">
+ 	<button type="button" id="closeModal2">✖️</button>
+ 	<!-- 설치장소 리스트 테이블 -->
+ 	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>선택</th>
+				<th>설치장소명</th>
+				<th>우편번호</th>
+				<th>주소</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="selectResInstallPlace:${selectResInstallPlace}">
+				<td><input type="checkbox" id="place-sn"name="checkInstallPlace" th:value="${selectResInstallPlace.installPlaceSn}"></td>
+				<td id="place-name" th:text=${selectResInstallPlace.installPlaceName}></td>
+				<td th:text=${selectResInstallPlace.installPlacePostno}></td>
+				<td th:text=${selectResInstallPlace.installPlaceAddress}></td>
+			</tr>	
+		</tbody>
+ 	</table>
+ 	<!-- 설치장소 리스트 테이블 끝 -->
+	<button id="save_btn" type="button" class="btn btn-primary" style="background-color:navy; border:navy;">저장</button>
+ 	</div>
+ 	<!-- 설치장소 리스트 모달창 끝 -->
+<script type="text/javascript" th:src="@{/js/resinfo/resinfo.js}"></script>
 <script>
-$(document).ready(function () {
-    // 대분류 선택 시
-    $('#topUpperResClassName').change(function () {
-        var selectedMainCategoryId = $(this).val();
 
-        // 중분류와 소분류 select 요소의 옵션 초기화
-        $('#upperResClassName, #resClassName').find('option').show();
-
-        if (selectedMainCategoryId !== '') {
-            // "전체"가 아닌 경우 중분류와 소분류 select 요소 필터링
-            $('#upperResClassName option').each(function () {
-                var upperResClassId = $(this).data('upper-res-class-id');
-                if (upperResClassId !== selectedMainCategoryId) {
-                    $(this).hide();
-                }
-            });
-        }
-
-        // 소분류 select 요소 초기화
-        $('#upperResClassName, #resClassName').val('');
-    });
-
-    // 중분류 선택 시
-    $('#upperResClassName').change(function () {
-        var selectedMiddleCategoryId = $(this).val();
-
-        // 소분류 select 요소 필터링
-        $('#resClassName option').each(function () {
-            var upperResClassId = $(this).data('upper-res-class-id');
-            if (upperResClassId !== selectedMiddleCategoryId) {
-                $(this).hide();
-            }
-        });
-
-        // 소분류 select 요소 초기화
-        $('#resClassName').val('');
-    });
-});
-
-
-$(document).ready(function () {
-    // "조회" 버튼 클릭 시
-    $('#search_btn').on('click', function() {
-        // 대/중/소분류 값을 가져옴
-        var topUpperResClassName = $("#topUpperResClassName option:selected").text();
-        var upperResClassName = $("#upperResClassName option:selected").text();
-        var resClassName = $("#resClassName option:selected").text();
-        var resName = $("input[name='resName']").val();
-        var installPlaceName = $("input[name='installPlaceName']").val();
-        var manufactureCompanyName = $("input[name='manufactureCompanyName']").val();
-        var mgmtId = $("input[name='mgmtId']").val();
-        // 선택된 라디오 버튼 값 가져오기 (사용 여부)
-        var monitoringYn = $("input[name='monitoringYn']:checked").val();
-
-        //Ajax 요청을 보냄
-        $.ajax({
-            type: 'GET', // 또는 'GET', 요청 방식 선택
-            url: '/resinfo/search', // Controller의 URL
-            data: {
-                "topUpperResClassName" : topUpperResClassName,
-                "upperResClassName" : upperResClassName,
-                "resClassName" : resClassName,
-                "resName" : resName,
-                "installPlaceName" : installPlaceName,
-                "manufactureCompanyName" : manufactureCompanyName,
-                "mgmtId" : mgmtId,
-                "monitoringYn" : monitoringYn
-            },
-            success: function(response) {
-                $('tbody#resInfoTable > tr').remove();
-                if (response.length === 0) {
-                    alert('검색된 결과가 없습니다.');
-                    addTableRow = "<tr>" + "<td colspan='8' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
-                    $('tbody#resInfoTable').append(addTableRow);
-                    return;
-                }
-                // 성공적으로 요청이 완료되면 이곳에서 처리
-                for (var i = 0; i < response.length; i++) {
-                    // table 행 추가
-                    addTableRow = "<tr>" +
-                        "<td>" + response[i].topUpperResClassName + "</td>" +
-                        "<td>" + response[i].upperResClassName + "</td>" +
-                        "<td>" + response[i].resClassName + "</td>" +
-                        "<td>" + response[i].resName + "</td>" +
-                        "<td>" + response[i].installPlaceName + "</td>" +
-                        "<td>" + response[i].manufactureCompanyName + "</td>" +
-                        "<td>" + response[i].mgmtId + "</td>" +
-                        "<td>" + response[i].monitoringYn + "</td>" +
-                        "</tr>";
-
-                    $('tbody#resInfoTable').append(addTableRow);
-                }
-            },
-            error: function(error) {
-                // 요청이 실패한 경우 처리
-                console.log('에러:', error);
-            }
-        });
-    });
-});
+$(document).ready(function(){
+	$("#save_btn").click(() => {
+		const placeSn = $("#place-sn").val();
+		const placeName = $("#place-name").text();
+		
+		$("#install-place-input").val(placeName);
+		$("#install-place-sn-input").val(placeSn)
+		
+	})
+})
 </script>
 </body>
 </html>

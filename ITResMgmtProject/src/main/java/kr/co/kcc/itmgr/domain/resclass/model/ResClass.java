@@ -25,6 +25,8 @@ public class ResClass {
 	private String topUpperResClassName;
 	private String upperResClassName;
 	private String bottomResClassName;
+	
+	
 
 	
 }
