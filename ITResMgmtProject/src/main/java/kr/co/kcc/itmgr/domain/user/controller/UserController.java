@@ -15,13 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 	private final IUserService userService;
 	
-	@GetMapping("/login")
+	@GetMapping("/signin")
 	public String userLogin() {
 		// TypeCode를 가져온다.
-		return "/login";
+		return "/signin";
 	}
 	
-	@PostMapping("/login/user")
+	@PostMapping("/signin/user")
 	public String loginCheck(Employee user) {
 		log.info("user: " + user);
 		return "redirect:/";

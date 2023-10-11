@@ -40,7 +40,7 @@ public class PlaceMapController {
 	 */
 	@GetMapping("/place/map")
     public ModelAndView selectPlaceMap() {
-        ModelAndView modelAndView = new ModelAndView("/place/placemap"); // 뷰 이름 설정
+        ModelAndView modelAndView = new ModelAndView("place/placemap"); // 뷰 이름 설정
         List<InstallPlace> placeList = placeMapService.selectInstallPlaceList();
         
         List<InstallPlace> installPlace = installPlaceService.selectAllPlace(1);

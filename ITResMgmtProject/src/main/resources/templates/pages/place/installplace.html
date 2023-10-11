@@ -5,13 +5,18 @@
 <head>
 <meta charset="UTF-8">
 <style>
-.container {
-	margin-left: 12vw;
+.containers {
+	margin-left: 250px;
 	font-size: 12px;
 }
-
+h1{
+	font-size: 24px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #012970;
+}
 .page-title-container {
-	margin: auto;
+	margin: 80px 0 0 0;
 	padding: 20px 0 10px 0;
 	text-align: left;
 }
@@ -196,11 +201,17 @@ input[type="button"] {
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=28bed2e7a81023c99f56920a94503f99&libraries=services"></script>
 </head>
 <th:block layout:fragment="content">
-	<div class="container">
+	<div class="containers">
+	<div style="margin: 90px 0 0 120px;">
+			<h1>설치 장소</h1>
+		    <nav>
+		      <ol class="breadcrumb">
+		        <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+		        <li class="breadcrumb-item active">설치 장소 / 설치 장소 관리</li>
+		      </ol>
+		    </nav>
+	</div>
 		<div class="place place-container" id="place-list">
-			<div class="page-title-container">
-				<h2>설치 장소 관리</h2>
-			</div>
 			<div class="place-list-table-container">
 				<div class="search-container">
 					<div class="common-btn">
