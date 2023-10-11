@@ -27,6 +27,7 @@
 		ORDER BY
 		    i.install_place_name
 	</select>
+	
 	<select id="selectAllPlace">
 		SELECT
 		    i.install_place_sn             AS "installPlaceSn",
@@ -282,33 +283,38 @@
 		    install_place_sn = #{placesn}
 	</delete>
 	
-	<select id="selectPlaceListByPlaceName" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+	<select id="selectPlaceListByPlaceName" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
 		SELECT
-		    i.install_place_sn             AS "installPlaceSn",
-		    i.install_place_name           AS "installPlaceName",
-		    i.install_place_postno         AS "installPlacePostno",
-		    i.install_place_address        AS "installPlaceAddress",
-		    i.install_place_detail_address AS "installPlaceDetailAddress",
-		    i.longitude                    AS "longitude",
-		    i.latitude                     AS "latitude",
-		    r."resCount"                   AS "resCount"
-		FROM
-		    installplace i
-		    LEFT JOIN (
-		        SELECT
-		            i.install_place_sn AS "install_place_sn",
-		            COUNT(r.res_sn)    AS "resCount"
-		        FROM
-		            installplace i
-		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
-		        GROUP BY
-		            i.install_place_sn
-		    )            r ON i.install_place_sn = r."install_place_sn"
-		WHERE
-		    i.install_place_name IN 
-				<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
-            		#{placeName}
-        		</foreach>
+		    * FROM (SELECT
+				    i.install_place_sn             AS "installPlaceSn",
+				    i.install_place_name           AS "installPlaceName",
+				    i.install_place_postno         AS "installPlacePostno",
+				    i.install_place_address        AS "installPlaceAddress",
+				    i.install_place_detail_address AS "installPlaceDetailAddress",
+				    i.longitude                    AS "longitude",
+				    i.latitude                     AS "latitude",
+				    r."resCount"                   AS "resCount",
+		            ROW_NUMBER() OVER (ORDER BY i.install_place_name) AS rn
+				FROM
+				    installplace i
+				    LEFT JOIN (
+				        SELECT
+				            i.install_place_sn AS "install_place_sn",
+				            COUNT(r.res_sn)    AS "resCount"
+				        FROM
+				            installplace i
+				            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+				        GROUP BY
+				            i.install_place_sn
+				    )            r ON i.install_place_sn = r."install_place_sn"
+		     	<where>
+				   i.install_place_name IN 
+					<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+			        		#{placeName}
+		    	   	</foreach>
+			 ) i
+		     WHERE rn between #{start} and #{end}
+       	</where>
 	</select>
 	
 	<select id="selectResInformationByCity" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
@@ -349,29 +355,41 @@
 	
 	<select id="selectPlaceByCity" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
 		SELECT
-		    i.install_place_sn             AS "installPlaceSn",
-		    i.install_place_name           AS "installPlaceName",
-		    i.install_place_postno         AS "installPlacePostno",
-		    i.install_place_address        AS "installPlaceAddress",
-		    i.install_place_detail_address AS "installPlaceDetailAddress",
-		    i.longitude                    AS "longitude",
-		    i.latitude                     AS "latitude",
-		    r."resCount"                   AS "resCount"
+		    *
 		FROM
-		    installplace i
-		    LEFT JOIN (
+		    (
 		        SELECT
-		            i.install_place_sn AS "install_place_sn",
-		            COUNT(r.res_sn)    AS "resCount"
+		            i.install_place_sn             AS "installPlaceSn",
+		            i.install_place_name           AS "installPlaceName",
+		            i.install_place_postno         AS "installPlacePostno",
+		            i.install_place_address        AS "installPlaceAddress",
+		            i.install_place_detail_address AS "installPlaceDetailAddress",
+		            i.longitude                    AS "longitude",
+		            i.latitude                     AS "latitude",
+		            r."resCount"                   AS "resCount",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    i.install_place_sn
+		            )                              AS rn
 		        FROM
 		            installplace i
-		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
-		        GROUP BY
-		            i.install_place_sn
-		    )            r ON i.install_place_sn = r."install_place_sn"
-		<where>
-            (i.install_place_address LIKE '%' || #{firstDoName} || '%' OR i.install_place_address LIKE '%' || #{secondDoName} || '%')
-		</where>
+		            LEFT JOIN (
+		                SELECT
+		                    i.install_place_sn AS "install_place_sn",
+		                    COUNT(r.res_sn)    AS "resCount"
+		                FROM
+		                    installplace i
+		                    LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		                GROUP BY
+		                    i.install_place_sn
+		            )            r ON i.install_place_sn = r."install_place_sn"
+				<where>
+            		(i.install_place_address LIKE #{firstDoName} || '%' OR i.install_place_address LIKE #{secondDoName} || '%')
+				</where>
+		    ) i
+		WHERE
+		    rn BETWEEN #{start} AND #{end}
 	</select>
 	
 	<select id="selectResInfoByCity" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
@@ -406,4 +424,45 @@
 		</where>
 	</select>
 	
+	<select id="selectPlaceCountByCity">
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace i
+		    LEFT JOIN (
+		        SELECT
+		            i.install_place_sn AS "install_place_sn",
+		            COUNT(r.res_sn)    AS "resCount"
+		        FROM
+		            installplace i
+		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		        GROUP BY
+		            i.install_place_sn
+		    )            r ON i.install_place_sn = r."install_place_sn"
+		<where>
+           	(i.install_place_address LIKE #{firstDoName} || '%' OR i.install_place_address LIKE #{secondDoName} || '%')
+		</where>
+	</select>
+	
+	<select id="selectPlaceCountByPlaceName">
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace i
+		    LEFT JOIN (
+		        SELECT
+		            i.install_place_sn AS "install_place_sn",
+		            COUNT(r.res_sn)    AS "resCount"
+		        FROM
+		            installplace i
+		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		        GROUP BY
+		            i.install_place_sn
+		    )            r ON i.install_place_sn = r."install_place_sn"
+		WHERE
+		    i.install_place_name IN 
+				<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+            		#{placeName}
+        		</foreach>
+	</select>
 </mapper>

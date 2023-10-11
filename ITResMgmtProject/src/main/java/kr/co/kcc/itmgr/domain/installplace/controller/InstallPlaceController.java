@@ -86,24 +86,24 @@ public class InstallPlaceController {
 		int startPage = (page - 1) * 5 + 1;
 		if(searchType.equals("ALL")) {
 			List<InstallPlace> installPlace = installPlaceService.selectAllPlace(startPage);
-			if(page > 1) {
-				int count = 0;
-				for(InstallPlace place : installPlace) {
-					place.setRn(startPage + count);
-					count++;
-				}
+			
+			int count = 0;
+			for(InstallPlace place : installPlace) {
+				place.setRn(startPage + count);
+				count++;
 			}
+			
 			logger.info("installPlace: " + installPlace);
 			return ResponseEntity.ok().body(installPlace);
 		}else {
 			List<InstallPlace> installPlace = installPlaceService.searchInstallPlaceByName(searchType, startPage, startPage + 4);
-			if(page > 1) {
-				int count = 0;
-				for(InstallPlace place : installPlace) {
-					place.setRn(startPage + count);
-					count++;
-				}
+			
+			int count = 0;
+			for(InstallPlace place : installPlace) {
+				place.setRn(startPage + count);
+				count++;
 			}
+			
 			logger.info("installPlace: " + installPlace);
 			return ResponseEntity.ok().body(installPlace);
 		}
@@ -161,12 +161,42 @@ public class InstallPlaceController {
 	 * @API No.3-9. 설치 장소 이전 페이징 처리 [비동기]
 	 * @Info: 이전 5개 페이지 검색
 	 */
-	/*
-	 * @GetMapping("/installplace/prev/{endPage}") public
-	 * ResponseEntity<Map<String,Object>> installPlacePrevPaging(){
-	 * 
-	 * }
-	 */
+	
+	@GetMapping("/installplace/prev/{prevEndPage}")
+	public ResponseEntity<Map<String,Object>> installPlacePrevPaging(@PathVariable("prevEndPage") int prevEndPage,
+			@RequestParam("searchType") String searchType){
+		int pageSize = 5;
+		int startPage = prevEndPage - 4;
+		int pageStartNum = (startPage - 1) * pageSize + 1;
+		
+		List<InstallPlace> installPlace;
+		int totalCount = 0;
+		if(searchType.equals("ALL")) {
+			totalCount = installPlaceService.selectInstallPlaceCount();
+			installPlace = installPlaceService.selectAllPlace(pageStartNum);
+		}else {
+			totalCount = installPlaceService.selectInstallPlaceSearchCount(searchType);
+			installPlace = installPlaceService.searchInstallPlaceByName(searchType, pageStartNum, pageStartNum + 4);
+		}
+		
+		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+	    int currentPageBlock = (int) Math.ceil((double) startPage / pageSize);
+	    
+	    Map<String, Object> paging = new HashMap<>();
+	    paging.put("totalPageCount", totalPages);
+	    paging.put("nowPage", startPage);
+	    paging.put("totalPageBlock", currentPageBlock);
+	    paging.put("startPage", startPage);
+	    paging.put("endPage", prevEndPage);
+	    logger.info("Paging: " + paging);
+	    
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("installPlace", installPlace);
+	    result.put("paging", paging);
+
+	    return ResponseEntity.ok().body(result);
+	}
+	
 	
 	/*
 	 * @Author: [윤준성]

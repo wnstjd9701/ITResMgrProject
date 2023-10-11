@@ -4,7 +4,6 @@
 	layout:decorate="../common/layout/default">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
 <style>
 /* 테이블 스타일 */
 .table {
@@ -32,13 +31,10 @@
 
 #commonCode {
 	display: flex;
-	margin: 10px;
 }
 
 .commoncode-container {
 	font-size: 13px;
-	margin: 30px 10px 0 280px;
-	width: 45vw;
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -46,8 +42,6 @@
 }
 .commoncodedetail-container {
 	font-size: 13px;
-	margin: 30px 0 0 10px;
-	width: 51vw;
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -122,9 +116,17 @@ input[type="button"] {
 	cursor: pointer;
 }
 </style>
+<link th:href="@{/css/resclass/menutree.css}" rel="stylesheet" />
 </head>
 <th:block layout:fragment="content">
 <main id="main" class="main">
+	<h1>공통 코드</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+          <li class="breadcrumb-item active">공통 코드</li>
+        </ol>
+      </nav>
 	<div id="commonCode">
 		<div class="container commoncode-container">
 			<!-- <div>
@@ -133,9 +135,7 @@ input[type="button"] {
 					🔵 생성
 					🔴 삭제
 				</div> -->
-
-			<h2>공통 코드</h2>
-			<p>* 공통 코드 관리</p>
+			<h3>공통 코드</h3>
 			<div class="common-btn-container">
 				<input id="searchCommonCodeBtn" type="button" value="조회"> <input id="commonCodeSaveBtn" type="button" value="저장">
 			</div>
@@ -145,8 +145,8 @@ input[type="button"] {
 						<option value="A">전체</option>
 						<option value="Y">Y</option>
 						<option value="N">N</option>
-					</select> <span>코드 그룹명 및 ID</span> <input name="commonCodeKeyword"
-						type="text" placeholder="공통 코드 및 그룹 ID 입력">
+					</select> <span>코드 그룹</span> <input name="commonCodeKeyword"
+						type="text" placeholder="ID 및 그룹명">
 				</div>
 			</div>
 			<div class="row-btn">
@@ -190,7 +190,6 @@ input[type="button"] {
 		</div>
 		<div class="container commoncodedetail-container">
 			<h2>상세 코드</h2>
-			<p>* 상세 코드 관리</p>
 			<div class="common-btn-container">
 				<input id="searchCommonCodeDetailBtn" type="button" value="조회">
 				<input id="commonCodeDetailSaveBtn" type="button" value="저장">
@@ -201,8 +200,8 @@ input[type="button"] {
 						<option value="A" selected>전체</option>
 						<option value="Y">Y</option>
 						<option value="N">N</option>
-					</select> <span>상세 코드 및 코드명</span> <input name="commonCodeDetailKeyword"
-						type="text" placeholder="상세 코드 및 코드명 입력">
+					</select> <span>코드 그룹</span> <input name="commonCodeDetailKeyword"
+						type="text" placeholder="ID 및 그룹명">
 				</div>
 			</div>
 			<div class="row-btn">
@@ -216,7 +215,7 @@ input[type="button"] {
 							<th>상태</th>
 							<th>선택</th>
 							<th>코드 그룹 ID</th>
-							<th>상세 코드</th>
+							<th>상세 코드 ID</th>
 							<th>상세 코드명</th>
 							<th>사용 여부</th>
 						</tr>

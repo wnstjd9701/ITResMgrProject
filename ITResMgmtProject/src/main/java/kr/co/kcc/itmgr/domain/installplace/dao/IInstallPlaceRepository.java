@@ -32,9 +32,12 @@ public interface IInstallPlaceRepository {
 	boolean deleteInstallPlace(int placesn); // 설치 장소 삭제
 	
 	//-----------------------------------------------------------------------------------------------------------------------
-	List<InstallPlace> selectPlaceListByPlaceName(List<String> placeNames); // 해당 지역 설치 장소 조회 
+	int selectPlaceCountByCity(String firstDoName, String secondDoName); // 해당 지역 설치 장소 개수 조회
+	int selectPlaceCountByPlaceName(List<String> placeNames); // 이름으로 해당 지역 장소 개수 조회
+	
+	List<InstallPlace> selectPlaceListByPlaceName(List<String> placeNames, int start, int end); // 해당 지역 설치 장소 조회 
 	List<InstallRes> selectResInformationByCity(List<String> placeNames); // 해당 지역 자원 정보 조회
 	
-	List<InstallPlace> selectPlaceByCity(String firstDoName, String secondDoName); // 해당 도시 설치 장소 조회
+	List<InstallPlace> selectPlaceByCity(String firstDoName, String secondDoName, int start, int end); // 해당 도시 설치 장소 조회
 	List<InstallRes> selectResInfoByCity(String firstDoName, String secondDoName); // 해당 도시 자원 정보 조회
 }
