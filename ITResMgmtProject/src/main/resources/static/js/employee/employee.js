@@ -13,15 +13,15 @@ function addRow() {
 	newCellStatus.innerHTML = "<span name='empStatus'>I</span>";
 
 	const newCellEmpId = newRow.insertCell(2);
-	newCellEmpId.innerHTML = "<input type='text' id='empId" + rowCount + "'>";
+	newCellEmpId.innerHTML = "<input type='text' style='text-align:center;' id='empId" + rowCount + "'>";
 
 	const newCellEmpPwd = newRow.insertCell(3);
-	newCellEmpPwd.innerHTML = "<input type='password' id='empPwd" + rowCount + "'>";
+	newCellEmpPwd.innerHTML = "<input type='password' style='text-align:center;' id='empPwd" + rowCount + "'>";
 
 
 
 	const newCellEmpName = newRow.insertCell(4);
-	newCellEmpName.innerHTML = "<input type='text' id='empName" + rowCount + "'>";
+	newCellEmpName.innerHTML = "<input type='text' style='width:100px; text-align:center;' id='empName" + rowCount + "'>";
 
 	//<select>에서 전체옵션 뺀 나머지 옵션
 	const newCellEmpType = newRow.insertCell(5);
@@ -174,6 +174,7 @@ function saveList() {
 							// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
 							var row = hiddenFields[i].closest("tr");
 							var updateEmpId = row.querySelector('[name="employeeId"]').textContent;
+							var updateEmpPwd = row.querySelector('[name="employeePwd"]').textContent;
 							var updateEmpName = row.querySelector('[name="employeeName"]').textContent;
 							var updateEmpType = null;
 							var updateEmpStatus = null;
@@ -213,21 +214,18 @@ function saveList() {
 									break;
 								}
 							}
-
-							if (updateValidation(updateEmpName)) {
+							if (updateValidation(updateEmpName, updateEmpPwd)) {
 								var updateEmployee = {
 									employeeId: updateEmpId,
+									employeePwd: updateEmpPwd,
 									employeeName: updateEmpName,
 									employeeTypeCode: updateEmpType,
 									employeeStatusCode: updateEmpStatus
 								};
-
 								updatedEmployeeInfo.push(updateEmployee);
 							} else {
 								return;
 							}
-
-
 						}
 					}
 					console.log("updatedEmployeeInfo", updatedEmployeeInfo)
@@ -251,15 +249,7 @@ function saveList() {
 						contentType: 'application/json',
 						data: JSON.stringify(requestData),
 						success: function(response) {
-
 							console.log("response", response);
-
-							//Insert 오류나고 Update나 Delete 동시실행시 response가 0일때 테이블 데이터 유지
-							//				if (response.length === 0) {
-							//					console.log("rowCount", rowCount);
-							//					return;
-							//				} else{
-							//정상 실행 시
 							rowCount = 0;
 
 							var empTypeSelect = document.querySelector("select[name='empTypeList']");
@@ -272,7 +262,7 @@ function saveList() {
 									"<td><input type='checkbox' name='empCheckbox'></td>" +
 									"<td><span name='empStatus'>S</span></td>" +
 									"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-									"<td name='employeePwd'>" + response[i].employeePwd + "</td>" +
+									"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
 									"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>";
 
 								//사원유형 <td>
@@ -316,36 +306,50 @@ function validation(empId, empName, empPwd) {
 
 	console.log("empId", empId, "empName", empName, "empPwd", empPwd);
 
+
 	// 사원ID 유효성 검사
-	if (!/^\S{5,}$/.test(empId)) {
-		alert("사원ID는 5글자 이상, 공백 및 특수문자는 사용할 수 없습니다.");
+	var pattern_id = /^[^~!@#$%^&*_+|<>?:{}()-,.=\p{Script=Hangul}\s]/u;
+	var pattern_length = /^.{5,}$/;
+	var pattern_whitespace = /^\S*$/;
+
+	if (!pattern_length.test(empId) || !pattern_id.test(empId) || !pattern_whitespace.test(empId)) {
+		alert("사원ID는 5글자 이상이며, 특수문자, 공백, 한글을 사용할 수 없습니다.");
 		return false;
 	}
 
+
 	// 사원비밀번호 유효성 검사
-	if (!/^\S{6,}$/.test(empPwd)) {
+	var pattern_pwd = /^(?=.*[!@#$%^&*_+|<>?:{}()-,.=])[^\s]{6,}$/;
+
+	if (!pattern_pwd.test(empPwd)) {
 		alert("사원비밀번호는 특수문자 포함 6글자 이상, 공백은 사용할 수 없습니다.");
 		return false;
 	}
 
 	// 사원명 유효성 검사
-	if (!/^[^\d\s!@#$%^&*(),.?":{}|<>]{2,}$/.test(empName)) {
+	var pattern_name = /^[a-zA-Z가-힣]{2,}$/;
+
+	if (!pattern_name.test(empName)) {
 		alert("사원명은 2글자 이상, 숫자, 공백, 특수문자는 사용할 수 없습니다.");
 		return false;
 	}
 	return true;
 }
 
-function updateValidation(updateEmpName) {
+function updateValidation(updateEmpName, updateEmpPwd) {
 	// 사원명 유효성 검사
 	if (!/^[^\d\s!@#$%^&*(),.?":{}|<>]{2,}$/.test(updateEmpName)) {
 		alert("수정된 사원명은 2글자 이상, 숫자, 공백, 특수문자는 사용할 수 없습니다.");
 		return false;
 	}
+
+	if (!/^(?=.*[!@#$%^&*_+|<>?:{}()-,.=])[^\s]{6,}$/.test(updateEmpPwd)) {
+		alert("사원비밀번호는 특수문자 포함 6글자 이상, 공백은 사용할 수 없습니다.");
+		return false;
+	}
+
 	return true;
 }
-
-
 
 
 const cells = document.querySelectorAll('td[name="employeeName"], td[name="employeeType"], td[name="employeeStatus"]');
@@ -357,19 +361,92 @@ cells.forEach((cell) => {
 });
 
 function handleClick(element) {
-	const hiddenBox = element.closest('tr').querySelector("span[name='empStatus']");
+	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
 
-	if (hiddenBox.textContent === 'D') {
+	if (empStatusSpan.textContent === 'D') {
 		return;
 	} else {
-		hiddenBox.textContent = 'U';
-	}
+		empStatusSpan.textContent = 'U';
 
-	// 클릭한 셀이 'employeeType' 또는 'employeeStatus'인 경우에만 showSelectBox 함수 실행
-	if (element.getAttribute('name') === 'employeeType' || element.getAttribute('name') === 'employeeStatus') {
-		showSelectBox(element);
+		// 클릭한 셀이 'employeeType' 또는 'employeeStatus'인 경우에만 showSelectBox 함수 실행
+		if (element.getAttribute('name') === 'employeeType' || element.getAttribute('name') === 'employeeStatus') {
+			showSelectBox(element);
+		}
 	}
 }
+
+//사원명 클릭했을 때 input박스 생성
+function showNameField(element) {
+	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
+	empStatusSpan.textContent = 'U';
+
+	const updateName = document.createElement('input');
+	updateName.type = 'text';
+	updateName.value = element.textContent;
+	updateName.classList.add('edit-field');
+
+	//스팬을 입력 필드로 대체
+	element.textContent = '';
+	updateName.style.width = '100px'
+	updateName.style.textAlign = 'center'; // 텍스트를 가운데 정렬
+	element.appendChild(updateName);
+
+	updateName.focus();
+
+	//입력 필드가 포커스를 잃을 때
+	updateName.addEventListener('blur', function() {
+		//입력 필드에서 새로운 값 가져오기
+		const updateNameValue = updateName.value;
+		element.textContent = updateNameValue;
+	});
+}
+
+//사원비밀번호 가져오기
+function showPasswordField(element) {
+	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
+	empStatusSpan.textContent = 'U';
+
+	const employeeId = element.closest('tr').querySelector("td[name='employeeId']").textContent;
+	console.log('선택된 사원의 ID: ' + employeeId);
+
+	const updatePwd = document.createElement('input');
+	updatePwd.type = 'text';
+
+	$.ajax({
+		url: '/findEmployeePwd',
+		type: 'Post',
+		data: { employeeId: employeeId },
+		success: function(response) {
+
+			// JSON 응답에서 employeePwd 필드의 값을 추출
+			var employeePwd = response.employeePwd;
+			console.log("employeePwd: " + employeePwd);
+
+			updatePwd.value = employeePwd;
+		},
+		error: function(request, status, error) {
+			alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+		}
+	});
+
+	updatePwd.classList.add('edit-field');
+	// 스팬을 입력 필드로 대체
+	element.textContent = '';
+	updatePwd.style.width = '170px';
+	updatePwd.style.textAlign = 'center'; // 텍스트를 가운데 정렬
+	element.appendChild(updatePwd);
+
+	updatePwd.focus();
+
+	// 입력 필드가 포커스를 잃을 때
+	updatePwd.addEventListener('blur', function() {
+		// 입력 필드에서 새로운 값 가져오기
+		const updateNameValue = updatePwd.value;
+		element.textContent = updateNameValue;
+	});
+}
+
+
 
 function showSelectBox(listItem) {
 	const textElement = listItem.querySelector(".text");
@@ -433,6 +510,8 @@ function searchList() {
 			if (response.length === 0) {
 				// 검색 결과가 없는 경우
 				var noResultRow = "<tr><td colspan='7'>검색결과가 없습니다</td></tr>";
+				var empTypeSelect = document.querySelector("select[name='empTypeList']");
+				var empStatusSelect = document.querySelector("select[name='empStatusList']");
 				$('#empTable > tbody').append(noResultRow);
 			} else {
 				// 검색 결과가 있는 경우
@@ -441,7 +520,7 @@ function searchList() {
 						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td><span name='empStatus'>S</span></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-						"<td name='employeePwd'>" + response[i].employeePwd + "</td>" +
+						"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
 						"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>";
 
 					//사원유형 <td>

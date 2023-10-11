@@ -13,14 +13,25 @@
 	margin-right:10px;
 }
 
+#searchEmpTypeList{
+	margin-right:10px;
+}
+
 #searchEmpStatus{
 	margin-left:5px;
 	margin-right:10px;
 }
 
+#searchEmpStatusList{
+	margin-right:10px;
+}
 #searchEmpText{
 	margin-left:5px;
 	margin-right:5px;
+}
+
+#searchText{
+	margin-top:-4px;
 }
 
 #searchText::placeholder {
@@ -28,33 +39,63 @@
 }
 
 
-#searchButton{
-	margin-left:450px;
-}
 
 /* 테이블 컨테이너에 스타일링 추가 */
 .table-container {
-    max-height: 1000px; 
+    max-height: 700px; 
     overflow-y: auto; 
     position: relative; 
 }
 
 .table-container table {
     width: 100%;
+     text-align: center;
+     table-layout: fixed;
 }
 
-.table-container thead {
+.table-container thead th {
     position: sticky;
     top: 0;
-    background-color: #fff;
+    background-color: #7289AB; 
+	color : white;
+	z-index: 1;
 }
 
-#title{
-	font-size:20px;
-	
+.btn {
+	float: right; 
+	margin-left: 10px;
 }
 
-.saveBtn{
+.col-empCheckBox{
+	width:5%;
+}
+
+.col-Status{
+	 width: 5%;
+}
+
+.col-empId{
+	width:20%;
+}
+
+.col-empPwd{
+	width:20%;
+}
+
+.col-empName{
+	width:20%;
+}
+
+.col-empType{
+	width:15%;
+}
+
+.col-empStatus{
+	width:15%;
+}
+
+
+/* .saveBtn{
 	background-color: navy;
     color: white;
 }
@@ -74,4 +115,4 @@
 .chechBtn{
 	background-color: lightgray;
 	border: 2px solid lightgray;
-}
+} */
