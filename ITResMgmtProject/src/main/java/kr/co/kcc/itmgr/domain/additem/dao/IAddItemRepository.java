@@ -34,10 +34,4 @@ public interface IAddItemRepository {
 
 	//부가정보 엑셀파일 등록
 	void insertAddItemExcel(String addItemName, String addItemDesc);
-
-
-
-
-
-
 }

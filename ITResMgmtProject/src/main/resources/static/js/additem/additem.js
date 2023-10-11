@@ -16,10 +16,10 @@ function addItemAddRow() {
 	/*	newCellSn.innerHTML = "<input type='text' id='addItemSn" + rowCount + "' size='5'>";*/
 
 	var newCellName = newRow.insertCell(3);
-	newCellName.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='15' placeholder='반드시 입력해주세요.'>";
+	newCellName.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='17' placeholder='반드시 입력해주세요.' style='text-align: center;'>";
 
 	var newCellDesc = newRow.insertCell(4);
-	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "'>";
+	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "' size='30'>";
 
 	var newCellUseYN = newRow.insertCell(5);
 	newCellUseYN.innerHTML = "<span>Y</span>";
@@ -29,8 +29,6 @@ function addItemAddRow() {
 	const tableContainer = document.querySelector(".table-container");
 	tableContainer.scrollTop = tableContainer.scrollHeight; // 맨 아래로 스크롤 이동
 }
-
-
 
 //행삭제 버튼 (행숨김)
 function addItemHideRow() {
@@ -121,7 +119,7 @@ function addItemSaveAll() {
 								};
 								insertAddItems.push(addItemValue);
 							} else {
-								alert("입력칸 모두 작성해 주세요");
+								alert("부가항목명 모두 작성해 주세요");
 								return rowCount;
 							}
 						}
@@ -186,7 +184,7 @@ function addItemSaveAll() {
 									"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 									"<td name='addItemName'>" + response[i].addItemName + "</td>" +
 									"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
-									"<td name='useYN'>Y</td>" +
+									"<td name='useYN'>" + response[i].useYN + "</td>" +
 									"</tr>";
 
 								$('#addItemTable > tbody').append(addTableRow);
@@ -219,19 +217,15 @@ function validation(addItemName) {
 
 //조회
 function addItemsearch() {
-	var searchAddItemUseYN = document.querySelector('input[name="searchUseYN"]:checked');
 
-	if (!searchAddItemUseYN) {
-		alert("사용여부를 선택하세요.");
-		return;
-	} else {
-		var searchAddItemText = document.getElementById('addItemSearchText').value;
+	var searchAddItemUseYN = document.getElementById('searchUseYN').value;
+	var searchAddItemText = document.getElementById('addItemSearchText').value;
 
-		var searchAddItemData = {
-			searchAddItemUseYN: searchAddItemUseYN.value,
-			searchAddItemText: searchAddItemText
-		};
-	}
+	var searchAddItemData = {
+		searchAddItemUseYN: searchAddItemUseYN,
+		searchAddItemText: searchAddItemText
+	};
+
 	console.log("searchAddItemData", searchAddItemData);
 
 	$.ajax({
@@ -255,7 +249,7 @@ function addItemsearch() {
 						"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 						"<td name='addItemName'>" + response[i].addItemName + "</td>" +
 						"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
-						"<td name='useYN'>Y</td>" +
+						"<td name='useYN'>" + response[i].useYN + "</td>" +
 						"</tr>";
 
 					$('#addItemTable > tbody').append(addTableRow);
@@ -266,6 +260,7 @@ function addItemsearch() {
 		}
 	});
 }
+
 
 function uploadFile() {
 	// 파일 선택 필드를 클릭하여 파일 선택 대화 상자 열기
@@ -295,7 +290,7 @@ function handleFileSelect(event) {
 
 					if (duplicateNamesExcel.length > 0) {
 						// 중복된 ID가 있으면 사용자에게 알림을 표시
-						alert("중복된 부가항목명 " + duplicateNamesExcel.join(", ") + "입니다. 다시 입력해 주세요.");
+						alert("중복된 부가항목명 [" + duplicateNamesExcel.join(", ") + "] 입니다. 다시 입력해 주세요.");
 						fileInput.value = '';
 						return;
 					} else {
