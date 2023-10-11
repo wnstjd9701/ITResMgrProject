@@ -6,9 +6,7 @@
 <meta charset="UTF-8">
 <style>
 .place-map-container {
-	margin: 20px 20px 0 10px;
 	display: flex;
-	width: 80vw;
 }
 
 #map {
@@ -42,25 +40,14 @@ input[type="button"] {
 	cursor: pointer;
 }
 
-.fixed-header {
-	position: sticky;
-	top: 0;
-	background-color: white;
-	z-index: 1;
-}
-.place-table-container, .resinfo-table-container{
-	max-height: 40em; /* 원하는 높이로 조절 */
-	overflow-y: auto; /* 세로 스크롤 표시 */
-	height: 60%;
-}
 </style>
 </head>
 <th:block layout:fragment="content">
+	<main id="main" class="main">
 	<div class="container">
 		<div class="place-map-container">
 			<div id="map"></div>
 			<div class="place-list-container">
-				<div><h2>설치 장소</h2></div>
 				<div>
 					<input type="button" class="group-do" value="지도 새로고침">
 				</div>
@@ -82,10 +69,10 @@ input[type="button"] {
 							</tr>
 						</thead>
 						<tbody class="place-table-body">
-							<tr th:each="place, i : ${place}">
+							<tr th:each="place, i : ${placePaging}">
 								<td class="place-count" th:text="${i.count}"></td>
 								<td class="place-name" th:text="${place.installPlaceName}"></td>
-								<td class="place-name" th:text="${place.installPlacePostno}"></td>
+								<td class="place-postno" th:text="${place.installPlacePostno}"></td>
 								<td class="place-address" th:text="${place.installPlaceAddress}"></td>
 								<td th:if="${place.installPlaceDetailAddress != null}"
 									class="place-detail-address"
@@ -103,9 +90,29 @@ input[type="button"] {
 							</tr>
 						</tbody>
 					</table>
+					<input type="hidden" class="search-type" value="">
+					<nav aria-label="Page navigation example" class="paging-nav">
+						<ul class="pagination justify-content-center">
+							<li class="page-item">
+								<button class="page-link prev-page-link" aria-label="Previous" value="0"> 
+									<span aria-hidden="true">&laquo;</span>
+									<span class="sr-only">Previous</span>
+								</button>
+							</li>
+							<li class="page-item"
+								th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+								<button class="page-link page-link-val" th:text="${pageNum}">1</button>
+							</li>
+							<li class="page-item">
+								<button class="page-link next-page-link" aria-label="Next" value="6"> 
+									<span aria-hidden="true">&raquo;</span> 
+									<span class="sr-only">Next</span>
+								</button>
+							</li>
+						</ul>
+					</nav>
 				</div>
 				<div class="resinfo-table-container">
-					<div><h2>자원 정보</h2></div>
 					<table class="table table-striped place-table">
 						<thead class="fixed-header">
 							<tr>
@@ -128,11 +135,11 @@ input[type="button"] {
 			</div>
 		</div>
 	</div>
-
+</main>
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=28bed2e7a81023c99f56920a94503f99&libraries=services,clusterer"></script>
 	<script th:inline="javascript">
-var places = `[[${place}]]`;
+var places = `[[${placeList}]]`;
 $(document).ready(function(){
 	var mapContainer = document.getElementById('map'); // 지도를 표시할 div 요소
     var mapOption = {
@@ -141,7 +148,6 @@ $(document).ready(function(){
     };
     // 지도를 생성합니다.
     var map = new kakao.maps.Map(mapContainer, mapOption);
- // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
     var zoomControl = new kakao.maps.ZoomControl();
     map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
     
@@ -155,13 +161,15 @@ $(document).ready(function(){
 	function clusterEvent(clusterers){
 		for (var groupName in clusterers) {
 	        kakao.maps.event.addListener(clusterers[groupName], 'clusterclick', function(cluster) {
+	        	var doName = cluster._model.texts;
 	        	var markers = cluster._clusterer._markers;
 	        	var placeName = {};
 	        	placeName[groupName] = [];
-	        	
 	        	for(var i=0; i<markers.length; i++){
 	        		placeName[groupName].push(markers[i].Gb);
 	        	}
+	        	var selectValue = doName[0].split(" ")[0];
+	        	console.log(selectValue);
 	        	
 	        	var placeNameList = JSON.stringify(placeName[groupName]);
 
@@ -171,9 +179,10 @@ $(document).ready(function(){
 	        		   contentType: "application/json", // JSON 데이터 전송을 명시
 	        		   data: placeNameList, // JSON 데이터를 요청 바디에 직접 전송
 	        		   success: function(response) {
-							console.log(response);
 		        		    updateInstallPlaceList(response.place);
 							updateResInfo(response.resInfo);
+							installPlacePaging(response.paging);
+							$("#doNameSelect").val(`${selectValue}`);
 	        		   },
 	        		   error: function(xhr, status, err) {
 	        		       alert(err);
@@ -219,6 +228,7 @@ $(document).ready(function(){
 				        		       console.log(response);
 				        		       updateInstallPlace(response.place);
 				        		       updateResInfo(response.resInfo);
+				        		       
 				        		   },
 				        		   error: function(xhr, status, err) {
 				        		       alert(err);
@@ -253,9 +263,9 @@ $(document).ready(function(){
 		    var longitude = place[i].longitude || "0";
 		    
 	        var newRow = '<tr>' +
-	            '<td class="place-count">' + (i + 1) + '</td>' +
+	            '<td class="place-count">' + (place[i].rn) + '</td>' +
 	            '<td class="place-name">' + installPlaceName + '</td>' +
-	            '<td class="place-name">' + installPlacePostno + '</td>' +
+	            '<td class="place-postno">' + installPlacePostno + '</td>' +
 	            '<td class="place-address">' + installPlaceAddress + '</td>' +
 	            '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
 	            '<td class="place-res-count">' + resCount + '</td>' +
@@ -288,9 +298,9 @@ $(document).ready(function(){
 
 	    // 새로운 행을 생성
 	    var newRow = '<tr>' +
-	        '<td class="place-count">1</td>' +
+	        '<td class="place-count">' + 1 + '</td>' +
 	        '<td class="place-name">' + installPlaceName + '</td>' +
-	        '<td class="place-name">' + installPlacePostno + '</td>' +
+	        '<td class="place-postno">' + installPlacePostno + '</td>' +
 	        '<td class="place-address">' + installPlaceAddress + '</td>' +
 	        '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
 	        '<td class="place-res-count">' + resCount + '</td>' +
@@ -361,10 +371,7 @@ $(document).ready(function(){
 		map.setLevel(12);
 	})
 	
-	
 	function groupDo(regions){
-
-        // 지역을 그룹화할 객체를 생성합니다.
         var groupedRegions = {};
         // 지역 정보를 그룹화합니다.
         regions.forEach(function (region) {
@@ -433,14 +440,97 @@ $(document).ready(function(){
 	    };
 	}
 	
+	function pagingClick(startPage){
+		var searchType =  $("#doNameSelect").val();
+		if(searchType === "" || searchType === "undefined"){
+			searchType = "ALL"
+		}
+		$.ajax({
+			method: "GET",
+			url: "/place/map/paging/" + startPage,
+			data: {
+				searchType: searchType
+			},
+			success: function(response){
+				console.log(response);
+				updateInstallPlaceList(response.place);
+				installPlacePaging(response.paging);
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
+		});
+	}
+	// 페이지 클릭
+	$(".pagination").on("click", ".page-link-val", function(){
+		var page = $(this).text();
+		pagingClick(page);
+	});
+	// 이전 페이지 클릭
+	$(".pagination").on("click", ".prev-page-link", function(){
+		var prevStartPage = $(this).val() - 4;
+		pagingClick(prevStartPage);
+	})
+	// 다음 페이지 클릭
+	$(".pagination").on("click", ".next-page-link", function () {
+		var nextStartPage = $(this).val();
+		pagingClick(nextStartPage);
+	}); 
+	
+	function installPlacePaging(paging) {
+	    var pagination = $(".pagination");
+	    
+		if(paging.endPage === 0){
+			pagination.empty();
+			return;
+		}
+	    pagination.empty();
+	    
+	    pagination.append(`<li class='page-item'><button class='page-link prev-page-link' value="${paging.startPage - 1}" aria-label='Previous'>&laquo;</button></li>`);
+	    
+	    for (var pageNum = paging.startPage; pageNum <= paging.endPage; pageNum++) {
+	        pagination.append("<li class='page-item'><button class='page-link page-link-val'>" + pageNum + "</button></li>");
+	    }
+	    
+	    pagination.append(`<li class='page-item'><button class='page-link next-page-link' value="${paging.endPage + 1}" aria-label='Next'>&raquo;</button></li>`);
+
+	    // 이전 페이지가 없는 경우 이전 버튼 비활성화
+	    if (paging.startPage === 1 || $(".prev-page-link").val() === 0) {
+	        pagination.find(".prev-page-link").prop("disabled", true);
+	        console.log(paging.startPage);
+	    }
+	    
+	    // 다음 페이지가 없는 경우 다음 버튼 비활성화
+	    if (paging.endPage === paging.totalPageCount) {
+	        pagination.find(".next-page-link").prop("disabled", true);
+	    }
+	}
+	
+	
     $(".place-list-container").on("click", ".place-detail-btn", function(){
     	var clickedRow = $(this).closest("tr");
-    	
+    	console.log(clickedRow.find(".place-name").text());
         var placeName = clickedRow.find(".place-name").text();
         var placeAddress = clickedRow.find(".place-address").text();
 		var latitude = clickedRow.find(".latitude").val();
 		var longitude = clickedRow.find(".longitude").val();
-		
+		console.log(placeName);
+		$.ajax({
+	  		method: "POST", // POST 요청으로 변경
+	  		url: "/place/map/resinfo",
+	  		contentType: "application/json", // JSON 데이터 전송을 명시
+	  		data: placeName, 
+	  		success: function(response) {
+	  		    console.log(response);
+	  		    updateInstallPlace(response.place);
+	  		    updateResInfo(response.resInfo);
+	  		    $(".pagination").empty();
+	  		    
+	  		},
+	  		error: function(xhr, status, err) {
+	  		    alert(err);
+	  		}
+  		});
         panTo(latitude, longitude);
     });
     
@@ -463,6 +553,8 @@ $(document).ready(function(){
             success: function(response){
             	updateInstallPlaceList(response.place);
  		    	updateResInfo(response.resInfo);         
+ 		    	console.log(response.paging);
+ 		    	installPlacePaging(response.paging);
             },
             error: function(xhr, status, err){
             	console.log(err);

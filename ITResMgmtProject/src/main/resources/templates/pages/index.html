@@ -4,7 +4,7 @@
 <title>Bootstrap Example</title>
 <head>
 <meta charset="utf-8">
-<div th:replace="~{../common/fragments/head :: fragment-head}"></div>
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
 <style>
 .title-container {
 	margin: 15px;
@@ -27,10 +27,11 @@
 </style>
 </head>
 <body>
-	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<main id="main" class="main">
 	<div class="container">
 		<div class="title-container">
-			<h2>설치 장소</h2>
+			<h2>모니터링ㅎ</h2>
 		</div>
 		<div class="search-container">
 			<div class="search-info">
@@ -111,6 +112,7 @@
 			</form>
 		</div>
 	</div>
+	</main>
 	<div th:replace="~{../common/fragments/footer.html :: fragment-footer}"></div>
 	<script>
 	$(document).ready(function () {
