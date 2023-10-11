@@ -402,9 +402,28 @@ $(document).ready(function(){
 	});
 	// 이전 페이지 클릭
 	$(".pagination").on("click", ".prev-page-link", function(){
-		var prevPage = $(this).val();
-		console.log(prevPage);
-	    
+		var prevEndPage = $(this).val();
+		console.log(prevEndPage);
+		var searchType = $(".search-type").val();
+		if(searchType === "" || searchType === "undefined"){
+			searchType = "ALL"
+		}
+		console.log(searchType);
+		$.ajax({
+			method: "GET",
+			url: "/installplace/prev/" + prevEndPage,
+			data: {
+				searchType: searchType
+			},
+			success: function(response){
+				console.log(response);
+				updateInstallPlace(response.installPlace);
+				installPlacePaging(response.paging);
+			},
+			error: function(xhr, status, err){
+				console.log(err)
+			}
+		})
 	});
 	
 	// 다음 페이지 클릭

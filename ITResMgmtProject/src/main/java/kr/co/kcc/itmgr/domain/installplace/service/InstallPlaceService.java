@@ -102,8 +102,8 @@ public class InstallPlaceService implements IInstallPlaceService {
 
 	// 해당 지역 설치 장소 조회
 	@Override
-	public List<InstallPlace> selectPlaceListByPlaceName(List<String> placeNames) {
-		return installPlaceRepository.selectPlaceListByPlaceName(placeNames);
+	public List<InstallPlace> selectPlaceListByPlaceName(List<String> placeNames, int start, int end) {
+		return installPlaceRepository.selectPlaceListByPlaceName(placeNames, start, end);
 	}
 	
 	// 해당 지역 자원 정보 조회
@@ -114,14 +114,26 @@ public class InstallPlaceService implements IInstallPlaceService {
 	
 	// 지역별 설치 장소 조회
 	@Override
-	public List<InstallPlace> selectPlaceByCity(String firstDoName, String secondDoName) {
-		return installPlaceRepository.selectPlaceByCity(firstDoName, secondDoName);
+	public List<InstallPlace> selectPlaceByCity(String firstDoName, String secondDoName, int start, int end) {
+		return installPlaceRepository.selectPlaceByCity(firstDoName, secondDoName, start, start + 4);
 	}
 
 	// 지역별 자원 정보 조회
 	@Override
 	public List<InstallRes> selectResInfoByCity(String firstDoName, String secondDoName) {
 		return installPlaceRepository.selectResInfoByCity(firstDoName, secondDoName);
+	}
+	
+	// 모든 해당 지역 장소 개수 조회 
+	@Override
+	public int selectPlaceCountByCity(String firstDoName, String secondDoName) {
+		return installPlaceRepository.selectPlaceCountByCity(firstDoName, secondDoName);
+	}
+	
+	// 이름으로 해당 지역 장소 개수 조회
+	@Override
+	public int selectPlaceCountByPlaceName(List<String> placeNames) {
+		return installPlaceRepository.selectPlaceCountByPlaceName(placeNames);
 	}
 
 }
