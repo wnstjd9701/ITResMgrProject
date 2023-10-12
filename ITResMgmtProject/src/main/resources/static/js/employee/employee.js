@@ -375,6 +375,39 @@ function handleClick(element) {
 	}
 }
 
+function showSelectBox(listItem) {
+	const textElement = listItem.querySelector(".text");
+	textElement.style.display = "none";
+
+	const selectElement = listItem.querySelector(".select");
+	selectElement.style.display = "inline-block";
+
+	selectElement.focus();
+
+	// 현재 선택한 text 값
+	const selectedText = textElement.textContent;
+
+	// select 요소 내의 모든 option 요소를 가져옵니다.
+	const options = Array.from(selectElement.options);
+
+	// 선택한 셀의 값을 기반으로 해당 값을 가진 옵션을 찾아 선택합니다.
+	for (let i = 0; i < options.length; i++) {
+		if (options[i].textContent === selectedText) {
+			selectElement.selectedIndex = i;
+			break; // 찾았으므로 루프 종료
+		}
+	}
+
+	selectElement.addEventListener("change", function() {
+		textElement.innerText = selectElement.options[selectElement.selectedIndex].textContent;
+	});
+
+	selectElement.addEventListener("blur", function() {
+		textElement.style.display = "inline-block";
+		selectElement.style.display = "none";
+	});
+}
+
 //사원명 클릭했을 때 input박스 생성
 function showNameField(element) {
 	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
@@ -448,38 +481,7 @@ function showPasswordField(element) {
 
 
 
-function showSelectBox(listItem) {
-	const textElement = listItem.querySelector(".text");
-	textElement.style.display = "none";
 
-	const selectElement = listItem.querySelector(".select");
-	selectElement.style.display = "inline-block";
-
-	selectElement.focus();
-
-	// 현재 선택한 text 값
-	const selectedText = textElement.textContent;
-
-	// select 요소 내의 모든 option 요소를 가져옵니다.
-	const options = Array.from(selectElement.options);
-
-	// 선택한 셀의 값을 기반으로 해당 값을 가진 옵션을 찾아 선택합니다.
-	for (let i = 0; i < options.length; i++) {
-		if (options[i].textContent === selectedText) {
-			selectElement.selectedIndex = i;
-			break; // 찾았으므로 루프 종료
-		}
-	}
-
-	selectElement.addEventListener("change", function() {
-		textElement.innerText = selectElement.options[selectElement.selectedIndex].textContent;
-	});
-
-	selectElement.addEventListener("blur", function() {
-		textElement.style.display = "inline-block";
-		selectElement.style.display = "none";
-	});
-}
 
 //조회
 function searchList() {
@@ -497,12 +499,11 @@ function searchList() {
 		url: '/search/employee?' + $.param(searchData),
 		type: 'GET',
 		success: function(response) {
-			console.log("response", response)
+			//console.log("response", response)
 
 			var empTypeSelect = document.querySelector("select[name='empTypeList']");
 			var empStatusSelect = document.querySelector("select[name='empStatusList']");
 
-			console.log("empTypeSelect", empTypeSelect);
 
 
 			$('#empTable > tbody').empty();
@@ -510,8 +511,6 @@ function searchList() {
 			if (response.length === 0) {
 				// 검색 결과가 없는 경우
 				var noResultRow = "<tr><td colspan='7'>검색결과가 없습니다</td></tr>";
-				var empTypeSelect = document.querySelector("select[name='empTypeList']");
-				var empStatusSelect = document.querySelector("select[name='empStatusList']");
 				$('#empTable > tbody').append(noResultRow);
 			} else {
 				// 검색 결과가 있는 경우
@@ -528,7 +527,7 @@ function searchList() {
 						"<span class='text' name='empType'>" + response[i].employeeType + "</span>";
 
 					employeeTypeCell += empTypeSelect.outerHTML; // 'empTypeSelect'를 새 셀에 추가합니다..
-					console.log("찐 employeeTypeCell", employeeTypeCell);
+					//console.log("찐 employeeTypeCell", employeeTypeCell);
 					employeeTypeCell += "</td>";
 
 					//사원상태 <td>
@@ -541,6 +540,38 @@ function searchList() {
 					addTableRow += employeeTypeCell + employeeStatusCell + "</tr>";
 
 					$('#empTable > tbody').append(addTableRow);
+					
+/*									var addTableRow = "<tr>" +
+						"<td><input type='checkbox' name='empCheckbox'></td>" +
+						"<td><span name='empStatus'>S</span></td>" +
+						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
+						"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
+						"<td name='employeeName' onclick='showNameField(this)'>" + response[i].employeeName + "</td>";
+ 						
+					
+					
+					
+					var employeeTypeCell2 = "<td onclick='handleClick(this)' name='employeeType'>" +
+						"<span class='text' name='empType'>" + response[i].employeeType + "</span>";
+						 
+						var empTypeSelect2 = document.querySelector("select[name='searchEmpTypeList']");
+						console.log("empTypeSelect2",empTypeSelect2);
+						
+						
+						//select 옵션 가지고 오기
+							employeeTypeCell2 += empTypeSelect2.outerHTML; // 'empTypeSelect'를 새 셀에 추가합니다..
+					//console.log("찐 employeeTypeCell", employeeTypeCell);
+					employeeTypeCell2 += "</td>" ;
+
+
+						addTableRow += employeeTypeCell2+ "</tr>";
+						
+						
+	
+
+					$('#empTable > tbody').append(addTableRow);*/
+					
+					
 				}
 				alert(response.length + "건이 조회되었습니다.");
 			}

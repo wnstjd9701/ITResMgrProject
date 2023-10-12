@@ -51,7 +51,7 @@
     width: 100%;
      text-align: center;
      table-layout: fixed;
-}
+} 
 
 .table-container thead th {
     position: sticky;
@@ -93,26 +93,3 @@
 .col-empStatus{
 	width:15%;
 }
-
-
-/* .saveBtn{
-	background-color: navy;
-    color: white;
-}
-
-.addRowBtn{
-    background-color: skyblue;
-    color: white;
-	border: 2px solid skyblue;
-}
-
-.hideRowBtn{
-    background-color: skyblue;
-    color: white;
-    border: 2px solid skyblue;
-}
-
-.chechBtn{
-	background-color: lightgray;
-	border: 2px solid lightgray;
-} */
