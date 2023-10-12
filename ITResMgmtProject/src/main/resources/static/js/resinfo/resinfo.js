@@ -235,13 +235,13 @@ $(document).ready(function () {
     // 세 번째 테이블에서 항목 선택 시
     $('#res-class-list-table3 tbody').on('click', 'td', function () {
         selectedThirdTableValue = $(this).attr('value');
-        selectedThirdTableValue2 = $('td.selected-name2').attr('value');
+        selectedThirdTableValue2 = $('span.selected-name2').attr('value');
 		console.log(selectedThirdTableValue2)
     });
 
     // 확인 버튼 클릭 시 선택한 자원 분류 가져오기
     $('#choose-res-class-btn').on('click', function () {
-        console.log('선택한 자원 분류 value: ' + selectedThirdTableValue);
+        console.log('선택한 자원 분류 value: ' + selectedThirdTableValue2);
         $('input[name=resClassName]').val(selectedThirdTableValue);
         $('input[name=resClassId]').val(selectedThirdTableValue2);
 		$('#res-class-choose-modal').modal('hide');

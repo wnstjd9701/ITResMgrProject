@@ -129,7 +129,7 @@
 	
 	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 		<![CDATA[
-			SELECT
+			SELECT /* selectAddItemInResClass */
 				add_item_sn		"addItemSn",
 				add_item_name	"addItemName",
 				add_item_desc	"addItemDesc",
@@ -144,8 +144,13 @@
 			WHERE rnum BETWEEN #{start} AND #{end}
 		]]>
 	</select>
-
 	
+	<select id="countOfAddItemList" resultType="integer">
+			SELECT COUNT(*) AS "addItemSn"
+			FROM ADDITEM
+			WHERE use_yn = 'Y'
+	</select>
+
 	<insert id="insertAddItemToResClass"  parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 			INSERT INTO resclassasideinfomapping(
 				res_class_id,
@@ -164,11 +169,7 @@
 			</foreach>
 	</insert>
 	
-	<select id="countOfAddItemList" resultType="integer">
-			SELECT COUNT(*) AS "addItemSn"
-			FROM ADDITEM
-			WHERE use_yn = 'Y'
-	</select>
+
 	
 	<update id="updateResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 			UPDATE RESCLASS
