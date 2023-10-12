@@ -105,6 +105,7 @@ public class ResClassController {
 		model.addAttribute("numOfRes2", numOfRes2);
 		model.addAttribute("numOfRes3", numOfRes3);
 
+
 		List<ResClass> selectResClassByLevel = resClassService.selectResClassByLevel();
 	  	model.addAttribute("selectResClassByLevel", selectResClassByLevel);
 		

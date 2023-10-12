@@ -75,6 +75,7 @@
 				rc.upper_res_class_id, rc.res_class_id) r ON rs.res_class_id = r.upper_res_class_id
 				GROUP BY rs.upper_res_class_id ) rr ON rc.res_class_id = rr.upper_res_class_id
 				GROUP BY rc.res_class_name, rc.res_class_id
+
 		]]>
 	</select>
 	<select id="selectResClassByResClassName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
