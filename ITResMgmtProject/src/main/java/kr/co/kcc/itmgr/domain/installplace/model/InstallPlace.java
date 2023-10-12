@@ -14,10 +14,13 @@ public class InstallPlace {
 	private double longitude;
 	private double latitude;
 	
-	private Timestamp create_date;
-	private String creater_id;
-	private Timestamp update_date;
-	private String updater_id;
+	private Timestamp createDate;
+	private String createrId;
+	private Timestamp updateDate;
+	private String updaterId;
+	
+	// 페이징 rnum
+	private int rn;
 	
 	// 자원 매핑 개수
 	private int resCount;

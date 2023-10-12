@@ -195,3 +195,8 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 .table-content table tbody tr td {
   padding: 10px;
 }
+
+.selected {
+    background-color: #ffeeba; /* 선택한 td의 배경색을 변경하세요 */
+}
+
