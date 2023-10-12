@@ -235,7 +235,7 @@ $(document).ready(function () {
     // 세 번째 테이블에서 항목 선택 시
     $('#res-class-list-table3 tbody').on('click', 'td', function () {
         selectedThirdTableValue = $(this).attr('value');
-        selectedThirdTableValue2 = $('span.selected-name2').attr('value');
+		selectedThirdTableValue2 = $(this).closest('div').find('.selected-name2').val();
 		console.log(selectedThirdTableValue2)
     });
 

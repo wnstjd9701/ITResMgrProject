@@ -17,7 +17,7 @@ public interface IResInfoRepository {
 	List<ResInfo> searchResInfoByResClass(); //자원분류 조회
 	List<ResInfo> searchResInfo(ResInfo resInfo); //검색결과조회
 	
-	List<ResClass> selectAllResClass(); //자원분류리스트 조회
+	List<ResClass> selectAllResClass(String resClassName); //자원분류리스트 조회
 	
 	void insertResInfo(ResInfo resInfo); //자원입력
 	void updateResInfo(ResInfo resInfo); //자원수정
