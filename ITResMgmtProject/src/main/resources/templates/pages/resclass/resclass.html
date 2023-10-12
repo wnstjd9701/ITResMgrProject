@@ -118,18 +118,29 @@
 							<option value="1">중분류</option>
 							<option value="2">소분류</option>
 						</select>
-
+							 <div id="subCategoryRow" style="display: none;">
+						<br>
+		                        <label for="resClassLevel2" class="form-label">대분류 선택</label>
+		                        <br>
+		                            <label class="form-check-label" for="hardwareRadio">
+		                                <input type="radio" class="form-check-input" id="hardwareRadio" name="category" value="hardware"> 하드웨어
+		                            </label>
+		                            <label class="form-check-label" for="softwareRadio">
+		                                <input type="radio" class="form-check-input" id="softwareRadio" name="category"  value="software"> 소프트웨어
+		                            </label>
+		                    </div>
+		                    <br>
 						<div class="mb-3">
 							<label for="resClassByLevel" class="form-label">상위분류명</label> 
 							<select class="form-select" id="resClassByLevel" name="upperResClassId">
 								<option data-level="1" th:each="level:${selectResClassByLevel}"
 									th:if="${level.level}==1" th:text="${level.resClassName}"
 									th:value="${level.resClassId}"></option>
-								<option data-level="2" th:each="level:${selectResClassByLevel}"
-									th:if="${level.level}==2 and ${level.upperResClassId}=='SW_000000'" th:text="' 소프트웨어 > ' + ${level.resClassName}"
+								<option data-level="2" id="upper-res-class-id-hardware" th:each="level:${selectResClassByLevel}"
+									th:if="${level.level}==2 and ${level.upperResClassId}=='HW_000000'" th:text="${level.resClassName}"
 									th:value="${level.resClassId}"></option>
-								<option data-level="2" th:each="level:${selectResClassByLevel}"
-									th:if="${level.level}==2 and ${level.upperResClassId}=='HW_000000'" th:text="' 하드웨어 > ' + ${level.resClassName}"
+								<option data-level="3" id="upper-res-class-id-software" th:each="level:${selectResClassByLevel}"
+									th:if="${level.level}==2 and ${level.upperResClassId}=='SW_000000'" th:text="${level.resClassName}"
 									th:value="${level.resClassId}"></option>
 							</select>
 						</div>
@@ -189,6 +200,30 @@
 			</div>
 		</div>
 	</div>
+	<!-- 부가리스트 모달창 끝 -->
+	
+	<!-- 확인모달 -->
+		<div class="modal fade" id="check-modal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" ></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+					<div class="modal-body">
+						<div class="mb-3">
+								변경 완료 되었습니다.
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">확인</button>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+	
 
 <script type="text/javascript" th:src="@{/js/resclass/menutree.js}"></script>
 <script type="text/javascript" th:src="@{/js/resclass/resclass.js}"></script>
