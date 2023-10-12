@@ -99,12 +99,12 @@ function loadResourceDetails(resClassName) {
         });
 }
 
+//메뉴트리에서 자원분류 클릭했을 때 자원분류상세 보여지는 기능
 $(".first-container").on("click",".resClassDetail",function (event) {
     event.preventDefault(); // 기본 링크 동작 방지
 
     // 클릭한 <a> 태그의 텍스트 (부가항목명) 가져오기
     var resClassName = $(this).text();
-	console.log(resClassName);
     // 이전에 가져온 부가정보 초기화
     clearPreviousData();
 
@@ -116,7 +116,6 @@ $(".first-container").on("click",".resClassDetail",function (event) {
 $('#openAddItemModal').on('click', function() {
     // Check if any resource is selected in the menu tree
     var selectedResource = $('.tree2 a.selected');
-	console.log(selectedResource)
     if (selectedResource.length === 0) {
         // If no resource is selected, show an alert
         alert("먼저, 자원을 선택해주세요.");
@@ -126,10 +125,8 @@ $('#openAddItemModal').on('click', function() {
 	paging(1);
 });
 
-//부가항목리스트
-
+//부가항목리스트 모달 
 function paging(page) {
-    console.log("페이징!");
     $.ajax({
         type: 'GET',
         url: '/resclass/additem',
@@ -141,7 +138,6 @@ function paging(page) {
             // 성공적으로 요청이 완료되면 이곳에서 처리
             var pagingHtml = pagingLine(response);  // 응답 객체 전달
             updateTable(response.test);
-            console.log(response);
             $('ul#pagination').html(pagingHtml);  // 수정된 선택자
             // 테이블의 기존 내용을 지우기
         },
@@ -152,6 +148,7 @@ function paging(page) {
     });
 }
 
+//페이지 누르면 이동하는 기능
 $("#pagination").on("click", ".page-btn", function() {
     // Loop through all checkboxes in the table
     $('table#add-item-table input[type=checkbox]').each(function() {
@@ -159,11 +156,11 @@ $("#pagination").on("click", ".page-btn", function() {
             checkedAddItems.push($(this).val());
         }
     });
-    console.log("선택한 부가항목:" + checkedAddItems);
     const page = $(this).val();
     paging(page);
 });
 
+//부가항목 리스트 모달 페이징처리
 function pagingLine(data) {
     var totalPage = data.page.totalPageCount;
     var page = data.page.nowPage;
@@ -228,7 +225,7 @@ function pagingLine(data) {
 
 
 
-
+//flag 변경해주는 기능
 function updateFlag(tableRow) {
     var changeRow = $(tableRow).closest("table");
     var flagCell = changeRow.find("td:first");
@@ -237,7 +234,6 @@ function updateFlag(tableRow) {
         return;
     }
     changeRow.find("td:first").text('U');
-    console.log("Flag updated to U for this row");
 }
 // 공통 코드 행 내의 입력 필드에 대한 change 이벤트 처리
 $("#resClassDetailTable").on("change", "input[type='text'], select", function(){
@@ -307,7 +303,6 @@ function updateTable(addItem) {
             var flagCell = row.find("td:first");
             if (flagCell.text() !== "C") {
                 flagCell.text("D");
-                console.log("Flag updated to D for this row");
             }
         });
     });
@@ -376,7 +371,7 @@ $("#resclass-save").click(() => {
     success: function(response) {
 		//성공 후 loadResourceDetails함수 실행
 		loadResourceDetails(response.resClassResult[0].resClassName);
-		console.log("성공")
+		$('#check-modal').modal('show');
     },
 		error: function(error) {
                 // 요청이 실패한 경우 처리
@@ -398,25 +393,41 @@ $('.tree2 a').on('click', function() {
 });
 
 
-
-
-$(document).ready(function(){
-    $("#resClassLevel").change(function(){
-        const selectedValue = $(this).val();
+//자원분류 등록 시 상위분류 선택하는 기능
+$(document).ready(function () {
+    function updateOptions() {
+        const selectedValue = $("#resClassLevel").val();
 
         // 숨기기
         $("#resClassByLevel option").hide();
 
         if (selectedValue === "1") {
             // 선택안함에 해당하는 옵션만 표시
-        	 $("#resClassByLevel option[data-level='1']").show();
+            $("#resClassByLevel option[data-level='1']").show();
+            $("#subCategoryRow").hide();  // 소분류 선택 시 숨기기
         } else if (selectedValue === "2") {
             // 대분류에 해당하는 옵션만 표시
+            if ($("#hardwareRadio").is(':checked')) {
+                // 하드웨어 선택 시
             $("#resClassByLevel option[data-level='2']").show();
+            } else if ($("#softwareRadio").is(':checked')) {
+            $("#resClassByLevel option[data-level='3']").show();
+                // 소프트웨어 선택 시
+            }
+            $("#subCategoryRow").show();  // 소분류 선택 시 보이기
         }
+    }
+
+    // resClassLevel 변경 이벤트 핸들러
+    $("#resClassLevel").change(function () {
+        updateOptions();
+    });
+
+    // 라디오 버튼 변경 이벤트 핸들러
+    $("input[name='category']").change(function () {
+        updateOptions();
     });
 });
-
 
 
 
