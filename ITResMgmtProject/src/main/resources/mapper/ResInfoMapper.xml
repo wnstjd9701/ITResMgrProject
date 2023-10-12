@@ -166,11 +166,13 @@
 			    r.use_yn    "useYn",
 			    r.monitoring_yn "monitoringYn",
 			    r.rack_info "rackInfo",
-			    r.expiration_date   "expirdationDate",
-			    r.add_info  "addInfo"
+			    r.expiration_date   "expirationDate",
+			    r.add_info  "addInfo",
+                i.install_place_name "installPlaceName"
 			    FROM RESINFO r
 			    LEFT OUTER JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
 			    LEFT OUTER JOIN COMMONCODEDETAIL c ON r.res_status_code =  c.detail_code
+                LEFT OUTER JOIN INSTALLPLACE i ON r.install_place_sn = i.install_place_sn
 			    WHERE r.res_name = #{resName}
 		]]>
 	</select>

@@ -13,6 +13,26 @@ $(document).ready(function () {
             success: function(response) {
 				$('#resinfo-detail-modal input[name="resClassName"]').val(response.resClassName);
             	$('#resinfo-detail-modal input[name="resName"]').val(response.resName);
+            	$('#resinfo-detail-modal input[name="mgmtId"]').val(response.mgmtId);
+            	$('#resinfo-detail-modal input[name="mgmtDeptName"]').val(response.mgmtDeptName);
+            	$('#resinfo-detail-modal input[name="resSerialId"]').val(response.resSerialId);
+            	$('#resinfo-detail-modal input[name="resStatusCode"]').val(response.resStatusCode);
+            	$('#resinfo-detail-modal input[name="managerName"]').val(response.managerName);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="manufactureCompanyName"]').val(response.manufactureCompanyName);
+            	$('#resinfo-detail-modal input[name="modelName"]').val(response.modelName);
+            	$('#resinfo-detail-modal input[name="installPlaceName"]').val(response.installPlaceName);
+            	$('#resinfo-detail-modal input[name="rackInfo"]').val(response.rackInfo);
+            	$('#resinfo-detail-modal input[name="introductionDate"]').val(response.introductionDate);
+            	$('#resinfo-detail-modal input[name="expirationDate"]').val(response.expirationDate);
+            	$('#resinfo-detail-modal input[name="addInfo"]').val(response.addInfo);
+            	$('#resinfo-detail-modal input[name="introdutionPrice"]').val(response.introdutionPrice);
+            	$('#resinfo-detail-modal input[name="useYn"]').val(response.useYn);
+            	$('#resinfo-detail-modal input[name="purchaseCompanyName"]').val(response.purchaseCompanyName);
+            	$('#resinfo-detail-modal input[name="monitoringYn"]').val(response.monitoringYn);
 				$('#resinfo-detail-modal').modal('show');
 				
 				
