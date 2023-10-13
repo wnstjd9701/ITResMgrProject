@@ -42,28 +42,7 @@ public class InstallPlaceController {
 		int installPlaceCount = installPlaceService.selectInstallPlaceCount();
 		int page = 1;
 		List<InstallPlace> installPlace = installPlaceService.selectAllPlace(page);
-		
-		int totalPage=0;
-		if(installPlaceCount > 0) {
-			totalPage=(int)Math.ceil(installPlaceCount / 5.0);
-		}
-		int totalPageBlock = (int)(Math.ceil(totalPage / 5.0));
-		int nowPageBlock = (int)Math.ceil(page / 5.0);
-		int startPage = (nowPageBlock - 1) * 5 + 1;
-		int endPage=0;
-		if(totalPage > nowPageBlock * 5) {
-			endPage = nowPageBlock * 5;
-		}else {
-			endPage = totalPage;
-		}
-		
-		Map<String,Object> paging = new HashMap<String, Object>();
-		paging.put("totalPageCount", totalPage);
-		paging.put("nowPage", page);
-		paging.put("totalPageBlock", totalPageBlock);
-		paging.put("nowPageCount", nowPageBlock);
-		paging.put("startPage", startPage);
-		paging.put("endPage", endPage);
+		Map<String,Object> paging = installPlaceService.placePaging(page, installPlaceCount);
 		
 		logger.info("paging: " + paging);
 		logger.info("installPlace: " + installPlace);
@@ -134,19 +113,7 @@ public class InstallPlaceController {
 	    	installPlace = installPlaceService.searchInstallPlaceByName(searchType, (nextStartPage-1)*5 + 1, (nextStartPage-1)*5 + 5);
 	    }
 
-	    int pageSize = 5; 
-	    int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-	    int currentPageBlock = (int) Math.ceil((double) nextStartPage / pageSize);
-	    
-	    int startPage = (currentPageBlock - 1) * pageSize + 1;
-	    int endPage = Math.min(currentPageBlock * pageSize, totalPages);
-	    
-	    Map<String, Object> paging = new HashMap<>();
-	    paging.put("totalPageCount", totalPages);
-	    paging.put("nowPage", nextStartPage);
-	    paging.put("totalPageBlock", currentPageBlock);
-	    paging.put("startPage", startPage);
-	    paging.put("endPage", endPage);
+	    Map<String, Object> paging = installPlaceService.placePaging(nextStartPage, totalCount);
 	    logger.info("Paging: " + paging);
 
 	    Map<String, Object> result = new HashMap<>();
@@ -161,7 +128,6 @@ public class InstallPlaceController {
 	 * @API No.3-9. 설치 장소 이전 페이징 처리 [비동기]
 	 * @Info: 이전 5개 페이지 검색
 	 */
-	
 	@GetMapping("/installplace/prev/{prevEndPage}")
 	public ResponseEntity<Map<String,Object>> installPlacePrevPaging(@PathVariable("prevEndPage") int prevEndPage,
 			@RequestParam("searchType") String searchType){
@@ -179,15 +145,7 @@ public class InstallPlaceController {
 			installPlace = installPlaceService.searchInstallPlaceByName(searchType, pageStartNum, pageStartNum + 4);
 		}
 		
-		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-	    int currentPageBlock = (int) Math.ceil((double) startPage / pageSize);
-	    
-	    Map<String, Object> paging = new HashMap<>();
-	    paging.put("totalPageCount", totalPages);
-	    paging.put("nowPage", startPage);
-	    paging.put("totalPageBlock", currentPageBlock);
-	    paging.put("startPage", startPage);
-	    paging.put("endPage", prevEndPage);
+		Map<String, Object> paging = installPlaceService.placePaging(startPage, totalCount);
 	    logger.info("Paging: " + paging);
 	    
 	    Map<String, Object> result = new HashMap<>();
@@ -197,7 +155,28 @@ public class InstallPlaceController {
 	    return ResponseEntity.ok().body(result);
 	}
 	
-	
+	/*
+	 * @Author: [윤준성]
+	 * @API No.3-9. 설치 장소 자원 페이징 처리
+	 * @Info: 해당 설치 장소에 해당하는 자원 페이징 처리
+	 */
+	@GetMapping("/installplace/resinfo/{page}")
+	public ResponseEntity<Map<String,Object>> resInfoPaging(@PathVariable("page") int page, 
+			@RequestParam("resSearchType") String resSearchType){
+		int startNum = (page - 1) * 5 + 1;
+		int endNum = startNum + 4;
+		
+		List<InstallRes> resInfo = installPlaceService.selectResInformationByInstallPlaceName(resSearchType, startNum, endNum);
+		
+		int totalCount = resInfo.size();
+		Map<String,Object> paging = installPlaceService.placePaging(page, totalCount);
+		
+		Map<String,Object> result = new HashMap<String, Object>();
+		result.put("resInfo", resInfo);
+		result.put("paging", paging);
+		
+		return ResponseEntity.ok().body(result);
+	}
 	/*
 	 * @Author: [윤준성]
 	 * @API No.3-2. 설치 장소 검색 [비동기]
@@ -209,27 +188,8 @@ public class InstallPlaceController {
 		int searchCount = installPlaceService.selectInstallPlaceSearchCount(keyword);
 		int page = 1;
 		
-		int totalPage=0;
-		if(searchCount > 0) {
-			totalPage=(int)Math.ceil(searchCount / 5.0);
-		}
-		int totalPageBlock = (int)(Math.ceil(totalPage / 5.0));
-		int nowPageBlock = (int)Math.ceil(page / 5.0);
-		int startPage = (nowPageBlock - 1) * 5 + 1;
-		int endPage=0;
-		if(totalPage > nowPageBlock * 5) {
-			endPage = nowPageBlock * 5;
-		}else {
-			endPage = totalPage;
-		}
+		Map<String,Object> paging = installPlaceService.placePaging(page, searchCount);
 		
-		Map<String,Object> paging = new HashMap<String, Object>();
-		paging.put("totalPageCount", totalPage);
-		paging.put("nowPage", 1);
-		paging.put("totalPageBlock", totalPageBlock);
-		paging.put("nowPageCount", nowPageBlock);
-		paging.put("startPage", startPage);
-		paging.put("endPage", endPage);
 		int start = 1;
 		int end = start + 4;
 		
@@ -251,12 +211,18 @@ public class InstallPlaceController {
 	@GetMapping("/installplace/resinfo")
 	@ResponseBody
 	public Map<String, Object> selectResInformationByInstallPlaceName(String placeName){
-		List<InstallRes> resInfo = installPlaceService.selectResInformationByInstallPlaceName(placeName);
+		int start = 1;
+		int end = 5;
+		List<InstallRes> resInfo = installPlaceService.selectResInformationByInstallPlaceName(placeName, start, end);
 		InstallPlace installPlace = installPlaceService.selectInstallPlaceDetail(placeName);
-
+		
+		int totalResCount = installPlace.getResCount();
+		Map<String,Object> paging = installPlaceService.placePaging(1, totalResCount);
+		
 		Map<String, Object> placeMap = new HashMap<String, Object>();
 		placeMap.put("resInfo", resInfo);
 		placeMap.put("installPlace", installPlace);
+		placeMap.put("paging", paging);
 		return placeMap;
 	}
 
@@ -282,28 +248,7 @@ public class InstallPlaceController {
 		int page = 1;
 		int installPlaceCount = installPlaceService.selectInstallPlaceCount();
 		List<InstallPlace> newInstallPlace = installPlaceService.selectAllPlace(page);
-		
-		int totalPage=0;
-		if(installPlaceCount > 0) {
-			totalPage=(int)Math.ceil(installPlaceCount / 5.0);
-		}
-		int totalPageBlock = (int)(Math.ceil(totalPage / 5.0));
-		int nowPageBlock = (int)Math.ceil(page / 5.0);
-		int startPage = (nowPageBlock - 1) * 5 + 1;
-		int endPage=0;
-		if(totalPage > nowPageBlock * 5) {
-			endPage = nowPageBlock * 5;
-		}else {
-			endPage = totalPage;
-		}
-		
-		Map<String,Object> paging = new HashMap<String, Object>();
-		paging.put("totalPageCount", totalPage);
-		paging.put("nowPage", 1);
-		paging.put("totalPageBlock", totalPageBlock);
-		paging.put("nowPageCount", nowPageBlock);
-		paging.put("startPage", startPage);
-		paging.put("endPage", endPage);
+		Map<String,Object> paging = installPlaceService.placePaging(page, installPlaceCount);
 		
 		response.setStatus("success");
         response.setCode(200); 
@@ -350,27 +295,7 @@ public class InstallPlaceController {
 		List<InstallPlace> newInstallPlace = installPlaceService.selectAllPlace(page);
 		int installPlaceCount = installPlaceService.selectInstallPlaceCount();
 		
-		int totalPage=0;
-		if(installPlaceCount > 0) {
-			totalPage=(int)Math.ceil(installPlaceCount / 5.0);
-		}
-		int totalPageBlock = (int)(Math.ceil(totalPage / 5.0));
-		int nowPageBlock = (int)Math.ceil(page / 5.0);
-		int startPage = (nowPageBlock - 1) * 5 + 1;
-		int endPage=0;
-		if(totalPage > nowPageBlock * 5) {
-			endPage = nowPageBlock * 5;
-		}else {
-			endPage = totalPage;
-		}
-		
-		Map<String,Object> paging = new HashMap<String, Object>();
-		paging.put("totalPageCount", totalPage);
-		paging.put("nowPage", 1);
-		paging.put("totalPageBlock", totalPageBlock);
-		paging.put("nowPageCount", nowPageBlock);
-		paging.put("startPage", startPage);
-		paging.put("endPage", endPage);
+		Map<String,Object> paging = installPlaceService.placePaging(page, installPlaceCount);
 		
 		response.setStatus("success");
         response.setCode(200); 
@@ -386,15 +311,21 @@ public class InstallPlaceController {
 	 *  @Info: 기존 주소 삭제 
 	 */
 	@PostMapping("/delete/place")
-	public ResponseEntity<Object> deleteInstallPlace(@RequestParam("placesn") int placesn) {
+	public ResponseEntity<Map<String,Object>> deleteInstallPlace(@RequestParam("placesn") int placesn) {
 		logger.info("placesn: " + placesn);
-		boolean result = installPlaceService.deleteInstallPlace(placesn);
+		boolean res = installPlaceService.deleteInstallPlace(placesn);
 
-		if (result) {
+		Map<String,Object> result = new HashMap<String, Object>();
+		if (res) {
+			int page = 1;
 			List<InstallPlace> newInstallPlace = installPlaceService.selectAllPlace(1);
-			return ResponseEntity.ok(newInstallPlace); // 성공 시 200 OK와 데이터 반환
+			int installPlaceCount = installPlaceService.selectInstallPlaceCount();
+			Map<String,Object> paging = installPlaceService.placePaging(page, installPlaceCount);
+			result.put("installPlace", newInstallPlace);
+			result.put("paging", paging);
+			return ResponseEntity.ok().body(result); // 성공 시 200 OK와 데이터 반환
 		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail"); // 실패 시 500 Internal Server Error와 실패 메시지 반환
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 실패 시 500 Internal Server Error와 실패 메시지 반환
 		}
 	}
 }
