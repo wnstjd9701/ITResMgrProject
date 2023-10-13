@@ -46,16 +46,19 @@ public class PlaceMapService implements IPlaceMapService {
 		return null;
 	}
 
-	public List<String> getDoValues() {
-		List<String> doNames = new ArrayList<>();
+	public Map<String, Integer> getDoCountValues() {
+		Map<String, Integer> doNamesCount= new HashMap<String, Integer>();
 
 		for (DoName doName : DoName.values()) {
 			String[] parts = doName.getDoName().split(",");
 			if (parts.length > 0) {
-				doNames.add(parts[0]);
+				String firstDoName = parts[0];
+				String secondDoName = parts[1];
+				int resCount = installPlaceRepository.selectResInfoCountByCity(firstDoName, secondDoName);
+				doNamesCount.put(parts[0], resCount);
 			}
 		}
-		return doNames;
+		return doNamesCount;
 	}
 
 	public DoName getDoValuesByDoName(String doName) {
@@ -80,7 +83,6 @@ public class PlaceMapService implements IPlaceMapService {
 	// 설치 장소 페이징 처리
 	@Override
 	public Map<String, Object> placeMapPaging(int page, int totalCount) {
-		
 		int totalPage=0;
 		if(totalCount > 0) {
 			totalPage=(int)Math.ceil(totalCount / 5.0);
