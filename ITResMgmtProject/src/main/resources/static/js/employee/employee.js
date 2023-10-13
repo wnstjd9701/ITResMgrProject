@@ -15,6 +15,7 @@ function addRow() {
 	const newCellEmpId = newRow.insertCell(2);
 	newCellEmpId.innerHTML = "<input type='text' style='text-align:center;' id='empId" + rowCount + "'>";
 
+
 	const newCellEmpPwd = newRow.insertCell(3);
 	newCellEmpPwd.innerHTML = "<input type='password' style='text-align:center;' id='empPwd" + rowCount + "'>";
 
@@ -83,7 +84,7 @@ function hideRow() {
 
 
 //저장버튼
-function saveList() {
+/*function saveList() {
 	// 새로 추가될 행의 사원 ID들을 배열에 저장
 	const newEmpIds = [];
 	for (let i = 0; i < rowCount; i++) {
@@ -299,11 +300,320 @@ function saveList() {
 			alert("에러 발생: " + error);
 		}
 	});
-}
+}*/
+
+/*function saveList() {
+	// 새로 추가될 행의 사원 ID들을 배열에 저장
+	const newEmpIds = [];
+	for (let i = 0; i < rowCount; i++) {
+		const empId = document.getElementById('empId' + i).value;
+		if (empId !== null && empId !== '') { // empId가 null 또는 빈 문자열이 아닌 경우에만 배열에 추가
+			newEmpIds.push(empId);
+		}
+	}
+	console.log("newEmpIds", newEmpIds);
+	
+	
+	
+	$.ajax({
+		url: '/checkDuplicateEmployeeIds',
+		type: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(newEmpIds), // 새로 추가될 행의 사원 ID 배열
+		success: function(response) {
+			const duplicateIds = response;
+			
+
+
+			if (duplicateIds.length > 0) {
+				// 중복된 ID가 있으면 사용자에게 알림을 표시합니다.
+				alert("중복된 사원ID " + duplicateIds.join(", ") + "입니다. 다시 입력해 주세요.");
+				document.getElementById('empId'+(rowCount-1)).focus();
+				return;
+			} else {
+				//Insert
+					if (rowCount > 0) {
+						var employee = new Array();
+						for (var i = 0; i < rowCount; i++) {
+							var empId = document.getElementById('empId' + i).value;
+							var empName = document.getElementById('empName' + i).value;
+
+							var empTypeSelect = document.getElementById('empTypeCode' + i);
+							var empTypeCode = empTypeSelect.value;
+
+							var empStatusSelect = document.getElementById('empTypeStatus' + i);
+							var empStatusCode = empStatusSelect.value;
+
+							var empPwd = document.getElementById('empPwd' + i).value;
+
+							if (empId && empName && empStatusCode && empTypeCode && empPwd) {
+								if (validation(empId, empName, empPwd)) {
+									var empValue = {
+										employeeId: empId,
+										employeeName: empName,
+										employeeStatusCode: empStatusCode,
+										employeeTypeCode: empTypeCode,
+										employeePwd: empPwd
+									};	
+								}
+								employee.push(empValue);
+							} else {
+								alert("입력칸 모두 작성해 주세요");
+								return rowCount;
+							}
+						}
+						console.log("insert의 employee", employee);
+						console.log("insert의 employee길이", employee.length);
+					}//insert
+					
+					//Delete
+					var deletedEmployeeIds = [];
+
+					var hiddenFields = document.getElementsByName("empStatus");
+
+					for (var i = 0; i < hiddenFields.length; i++) {
+						var hiddenValue = hiddenFields[i].textContent;
+						if (hiddenValue === "D") {
+							// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
+							var row = hiddenFields[i].closest("tr");
+							var employeeId = row.querySelector('[name="employeeId"]').textContent;
+							console.log("employeeId : ", employeeId);
+							deletedEmployeeIds.push(employeeId);
+						}
+					}//delete
+
+					//Update
+					var hiddenFields = document.getElementsByName("empStatus");
+					var updatedEmployeeInfo = [];
+					for (var i = 0; i < hiddenFields.length; i++) {
+						var hiddenValue = hiddenFields[i].textContent;
+						if (hiddenValue === "U") {
+							// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
+							var row = hiddenFields[i].closest("tr");
+							var updateEmpId = row.querySelector('[name="employeeId"]').textContent;
+							var updateEmpPwd = row.querySelector('[name="employeePwd"]').textContent;
+							var updateEmpName = row.querySelector('[name="employeeName"]').textContent;
+							var updateEmpType = null;
+							var updateEmpStatus = null;
+
+							//name="empType"인 <span> text와 일치하는 <select><option> value값 가져오기
+							//span text값 가지고오기
+							var empTypeElement = row.querySelector('span.text[name="empType"]');
+							var empTypetext = empTypeElement.textContent;
+
+							//empTypeList <select> 가지고 오기	
+							var selectElement = row.querySelector('select[name="empTypeList"]');
+
+							//empTypeList <select>의 <option> 가지고 오기
+							for (var j = 0; j < selectElement.options.length; j++) {
+								var option = selectElement.options[j];
+								//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
+								if (empTypetext === option.textContent) {
+									updateEmpType = option.value;
+									break;
+								}
+							}
+
+							//name="empStatus"인 <span> text와 일치하는 <select><option> value값 가져오기
+							//span text값 가지고오기
+							var empStatusElement = row.querySelector('span.text[name="empStatus"]');
+							var empStatustext = empStatusElement.textContent;
+
+							//empTypeList <select> 가지고 오기	
+							var typeSelectElement = row.querySelector('select[name="empStatusList"]');
+
+							//empTypeList <select>의 <option> 가지고 오기
+							for (var k = 0; k < typeSelectElement.options.length; k++) {
+								var tpyeOption = typeSelectElement.options[k];
+								//console.log("Option " + i + ": " + option.value + " - " + option.textContent);
+								if (empStatustext === tpyeOption.textContent) {
+									updateEmpStatus = tpyeOption.value;
+									break;
+								}
+							}
+							if (updateValidation(updateEmpName, updateEmpPwd)) {
+								var updateEmployee = {
+									employeeId: updateEmpId,
+									employeePwd: updateEmpPwd,
+									employeeName: updateEmpName,
+									employeeTypeCode: updateEmpType,
+									employeeStatusCode: updateEmpStatus
+								};
+								updatedEmployeeInfo.push(updateEmployee);
+							} else {
+								return;
+							}
+						}
+					}//update
+					console.log("updatedEmployeeInfo", updatedEmployeeInfo);
+					
+					if ((rowCount === 0 || (rowCount > 0 && employee.length > 0)) && (deletedEmployeeIds.length >= 0 || updatedEmployeeInfo.length >= 0)) {
+						var requestData = {
+							employee: employee,
+							deletedEmployeeIds: deletedEmployeeIds,
+							updatedEmployeeInfo: updatedEmployeeInfo
+						};
+					}
+					else {
+						return;
+					}
+					$.ajax({
+						url: '/save/employee',
+						type: 'POST',
+						contentType: 'application/json',
+						data: JSON.stringify(requestData),
+						success: function(response) {
+							
+							console.log("response", response);
+							rowCount = 0;
+
+							var empTypeSelect = document.querySelector("select[name='empTypeList']");
+							var empStatusSelect = document.querySelector("select[name='empStatusList']");
+
+							$('#empTable > tbody').empty();
+
+							for (var i = 0; i < response.length; i++) {
+								var addTableRow = "<tr>" +
+									"<td><input type='checkbox' name='empCheckbox'></td>" +
+									"<td><span name='empStatus'>S</span></td>" +
+									"<td name='employeeId'>" + response[i].employeeId + "</td>" +
+									"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
+									"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>";
+
+								//사원유형 <td>
+								var employeeTypeCell = "<td name='employeeType' onclick='handleClick(this)'>" +
+									"<span class='text' name='empType'>" + response[i].employeeType + "</span>";
+
+								employeeTypeCell += empTypeSelect.outerHTML; // 'empTypeSelect'를 새 셀에 추가합니다..
+								employeeTypeCell += "</td>";
+
+								//사원상태 <td>
+								var employeeStatusCell = "<td name='employeeStatus' onclick='handleClick(this)'>" +
+									"<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>";
+
+								employeeStatusCell += empStatusSelect.outerHTML; // 'empStatusSelect'를 새 셀에 추가합니다.
+								employeeStatusCell += "</td>";
+
+								addTableRow += employeeTypeCell + employeeStatusCell + "</tr>";
+
+								$('#empTable > tbody').append(addTableRow);
+							}
+							alert("저장되었습니다.");
+							return;
+							//}
+						},
+
+						error: function(request, error) {
+							alert("메시지:" + request.responseText + "\n" + "에러:" + error);
+						}
+					});
+					
+
+					
+					
+
+
+				
+				
+			}//중복id if문
+			
+			
+			
+			
+		},//중복 success
+		error: function(request, error) { //중복 error
+			// 서버 요청 중 에러가 발생한 경우에 대한 처리
+			alert("에러 발생: " + error);
+		}
+		}); ///checkDuplicateEmployeeIds
+	
+	
+}*/
+function saveList() {
+	var insertEmp = new Array();
+
+	//1. 입력칸 모두 작성할 것
+	if (rowCount > 0) {
+		for (let i = 0; i < rowCount; i++) {
+			var insertEmpId = document.getElementById('empId' + i).value;
+			var insertEmpPwd = document.getElementById('empPwd' + i).value;
+			var insertEmpName = document.getElementById('empName' + i).value;
+			var insertEmpTypeCode = document.getElementById('empTypeCode' + i).value;
+			var insertEmpStatusCode = document.getElementById('empTypeStatus' + i).value;
+
+			if (insertEmpId && insertEmpName && insertEmpPwd) {
+				var insertEmpVal = {
+					employeeId: insertEmpId,
+					employeeName: insertEmpName,
+					employeeStatusCode: insertEmpStatusCode,
+					employeeTypeCode: insertEmpTypeCode,
+					employeePwd: insertEmpPwd
+				};
+				insertEmp.push(insertEmpVal);
+			} else {
+				alert("입력칸 모두 작성해 주세요");
+				insertEmp.length = 0; //employee 배열 비우기
+				return rowCount;
+			}
+		}
+		//2. 입력칸 모두 입력했을 시 ID중복 검사
+		if (insertEmp.length > 0) {
+			console.log("성공");
+				var deplicateIdCheck = [];
+			for (let i = 0; i < insertEmp.length; i++) {
+				var insertEmpIdData = insertEmp[i].employeeId;
+				deplicateIdCheck.push(insertEmpIdData);
+			}
+
+			console.log("중복체크 위해 insertId값 모두 담기", deplicateIdCheck);
+			$.ajax({
+				url: '/checkDuplicateEmployeeIds',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify(deplicateIdCheck),
+				success: function(response) { //중복된 ID값만 넘어옴
+					
+					const duplicateIds = response;
+
+					if (duplicateIds.length > 0) {
+						// 중복된 ID가 있으면 사용자에게 알림을 표시하고, focus주기
+						for (let i = 0; i < duplicateIds.length; i++) {
+							for (let j = 0; j < rowCount; j++) {
+								const empIdInput = document.getElementById('empId' + j);
+								if (empIdInput.value === duplicateIds[i]) {
+									alert("중복된 사원ID [" + duplicateIds + "] 입니다. 다시 입력해 주세요.");
+									empIdInput.focus();
+									return;
+								}
+							}
+						}
+						return;
+					}
+				},
+				error: function(request, error) {
+					alert("메시지:" + request.responseText + "\n" + "에러:" + error);
+				}
+			});
+
+			//3. 유효성검사
+			//insertEmp로 유효성검사 하면 됨
+			console.log("중복+입력값 모두 있는 insert 리스트들",insertEmp);
+			//여기서 ID, NAME, PWD 뽑아서 유효성 검사 돌리기
+			insertEmp
+			//validation(empId, empName, empPwd);
+
+
+
+		}//2. 중복검사 완료
+		console.log("insertEmp", insertEmp);
+	}//rowCount>0 일때
+}//saveList()
+
 
 
 //유효성 검사
 function validation(empId, empName, empPwd) {
+	console.log("유효성rowCount", rowCount);
 
 	console.log("empId", empId, "empName", empName, "empPwd", empPwd);
 
@@ -315,6 +625,7 @@ function validation(empId, empName, empPwd) {
 
 	if (!pattern_length.test(empId) || !pattern_id.test(empId) || !pattern_whitespace.test(empId)) {
 		alert("사원ID는 5글자 이상이며, 특수문자, 공백, 한글을 사용할 수 없습니다.");
+		document.getElementById('empId' + (rowCount - 1)).focus();
 		return false;
 	}
 
@@ -324,6 +635,7 @@ function validation(empId, empName, empPwd) {
 
 	if (!pattern_pwd.test(empPwd)) {
 		alert("사원비밀번호는 특수문자 포함 6글자 이상, 공백은 사용할 수 없습니다.");
+		document.getElementById('empPwd' + (rowCount - 1)).focus();
 		return false;
 	}
 
@@ -332,10 +644,48 @@ function validation(empId, empName, empPwd) {
 
 	if (!pattern_name.test(empName)) {
 		alert("사원명은 2글자 이상, 숫자, 공백, 특수문자는 사용할 수 없습니다.");
+		document.getElementById('empName' + (rowCount - 1)).focus();
 		return false;
 	}
 	return true;
 }
+
+
+/*function validation(empId, empName, empPwd) {
+	console.log("empId", empId, "empName", empName, "empPwd", empPwd);
+
+	// 사원ID 유효성 검사
+	var pattern_id = /^[^~!@#$%^&*_+|<>?:{}()-,.=\p{Script=Hangul}\s]/u;
+	var pattern_length = /^.{5,}$/;
+	var pattern_whitespace = /^\S*$/;
+	
+	// 사원비밀번호 유효성 검사
+	var pattern_pwd = /^(?=.*[!@#$%^&*_+|<>?:{}()-,.=])[^\s]{6,}$/;
+	
+	// 사원명 유효성 검사
+	var pattern_name = /^[a-zA-Z가-힣]{2,}$/;
+	
+	
+	
+
+	if (!pattern_length.test(empId) || !pattern_id.test(empId) || !pattern_whitespace.test(empId)) {
+		alert("사원ID는 5글자 이상이며, 특수문자, 공백, 한글을 사용할 수 없습니다.");
+		document.getElementById('empId' + (rowCount - 1)).focus();
+		//return false;
+		return;
+	} else if (!pattern_pwd.test(empPwd)) {
+		alert("사원비밀번호는 특수문자 포함 6글자 이상, 공백은 사용할 수 없습니다.");
+		document.getElementById('empPwd' + (rowCount - 1)).focus();
+		//return false;
+		return;
+	} else if (!pattern_name.test(empName)) {
+		alert("사원명은 2글자 이상, 숫자, 공백, 특수문자는 사용할 수 없습니다.");
+		document.getElementById('empName' + (rowCount - 1)).focus();
+		//return false;
+		return;
+	}
+	return true;
+}*/
 
 
 
@@ -585,4 +935,3 @@ function searchList() {
 		}
 	});
 }
-
