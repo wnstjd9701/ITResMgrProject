@@ -142,4 +142,19 @@ public class EmployeeController {
 		}
 		return duplicateIds;
 	}
+	
+	//사원비밀번호 가져오기
+	@PostMapping("/findEmployeePwd")
+	@ResponseBody
+	public Employee findEmployeePwd(@RequestParam String employeeId) {
+		 Employee employeePwd = new Employee();
+
+		try {
+			employeePwd = employeeService.selectEmployeePwd(employeeId);
+			System.out.println("-------employeePwd------------"+employeePwd);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return employeePwd;
+	}
 }

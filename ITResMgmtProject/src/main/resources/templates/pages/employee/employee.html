@@ -1,89 +1,111 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{../common/fragments/head}"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <head>
 <link rel="stylesheet" type="text/css"
 	th:href="@{../css/employee/employee.css}">
 <meta charset="UTF-8">
-
+<link href="../assets/css/style.css" rel="stylesheet">
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
+<title>사원정보</title>
 </head>
 <body>
-	<div th:replace="~{../common/fragments/nav.html :: fragment-nav}"></div>
-	<div class="container" style="margin-left: 270px;" >
-		<p id="title">사원정보</p>
-		
-		<div id="searchBar">
-		<p id="searchEmpType">사원유형</p>
-		<select id="searchEmpTypeList" name="searchEmpTypeList">
-			<option value=''>전체</option>
-			<th:block th:each="commonCode: ${commonCodeTypeList}">
-				<option name="commonCodeTypeOption" th:value="${commonCode.key}"
-					th:text="${commonCode.value}"></option>
-			</th:block>
-		</select>
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<main id="main" class="main">
+		<div class="pagetitle">
+			<button type="button" id="i_submit" onclick="saveList()"
+				class="btn btn-primary"
+				style="background-color: navy; border: navy;">저장</button>
+			<button type="button" onclick="hideRow()" class="btn btn-primary">행삭제</button>
+			<button type="button" onclick="addRow()" class="btn btn-primary">행추가</button>
+			<button type="button" id="searchButton" onclick="searchList()"
+				class="btn btn-primary"
+				style="background-color: gray; border: gray;">조회</button>
 
-		<p id="searchEmpStatus">사원상태</p>
-		<select id='searchEmpStatusList' name='searchEmpStatusList'>
-			<option value=''>전체</option>
-			<th:block th:each="commonCode2: ${commonCodeStatusList}">
-				<option th:value="${commonCode2.key}" th:text="${commonCode2.value}"></option>
-			</th:block>
-		</select>
-
-		<p id="searchEmpText">사원ID 및 사원명</p>
-		<input id="searchText" type="text" placeholder="사원ID 및 사원명 입력">
-				<button type="button" id="searchButton" onclick="searchList()" class="chechBtn">조회</button>
-				<button type="button" onclick="addRow()" class="addRowBtn">행추가</button>
-				<button type="button" onclick="hideRow()" class="hideRowBtn">행삭제</button>
-				<button type="button"  id="i_submit" onclick="saveList()" class="saveBtn">저장</button>
-			</div>
-	</div>
-
-	<div class="container" id="employeeTable" style="margin-left: 270px;">
-	<div class="table-container">
-		<table id="empTable" class="table table-striped">
-			<thead>
-				<tr>
-					<th>선택</th>
-					<th>상태</th>
-					<th>사원ID</th>
-					<th>사원명</th>
-					<th>사원유형</th>
-					<th>사원상태</th>
-					<th>비고</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="employeeList : ${employeeList}" id="empList">
-					<td><input type="checkbox" name="empCheckbox"></td>
-					<td><span name="empStatus">E</span></td>
-					<td th:text="${employeeList.employeeId}" name="employeeId"></td>
-					<td th:text="${employeeList.employeeName}" name="employeeName"
-						contenteditable="true" onclick="handleClick(this)"></td>
-					<td onclick="handleClick(this)" name="employeeType"><span
-						class="text" th:text="${employeeList.employeeType}" name="empType"></span>
-						<select name="empTypeList" class="select" style="display: none;">
-							<th:block th:each="commonCode: ${commonCodeTypeList}">
-								<option th:value="${commonCode.key}"
-									th:text="${commonCode.value}"></option>
-							</th:block>
-					</select></td>
-					<td  onclick="handleClick(this)" name="employeeStatus"><span
-						class="text" th:text="${employeeList.employeeStatus}"
-						name="empStatus"></span> <select name='empStatusList'
-						class="select" style="display: none;">
-							<th:block th:each="commonCode2: ${commonCodeStatusList}">
-								<option th:value="${commonCode2.key}"
-									th:text="${commonCode2.value}"></option>
-							</th:block>
-					</select></td>
-					<td></td>
-				</tr>
-			</tbody>
-		</table>
+			<h1>사원정보</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+					<li class="breadcrumb-item active">사원정보</li>
+				</ol>
+			</nav>
 		</div>
-	</div>
+		<!-- End Page Title -->
+
+		<div id="searchBar">
+			<p id="searchEmpType">사원유형</p>
+			<select id="searchEmpTypeList" name="searchEmpTypeList">
+				<option value=''>전체</option>
+				<th:block th:each="commonCode: ${commonCodeTypeList}">
+					<option name="commonCodeTypeOption" th:value="${commonCode.key}"
+						th:text="${commonCode.value}"></option>
+				</th:block>
+			</select>
+
+			<p id="searchEmpStatus">사원상태</p>
+			<select id='searchEmpStatusList' name='searchEmpStatusList'>
+				<option value=''>전체</option>
+				<th:block th:each="commonCode2: ${commonCodeStatusList}">
+					<option th:value="${commonCode2.key}"
+						th:text="${commonCode2.value}"></option>
+				</th:block>
+			</select>
+
+			<p id="searchEmpText">사원</p>
+			<input id="searchText" type="text" placeholder="ID 및 명 입력">
+		</div>
+
+		
+			<div class="table-container">
+				<!-- <table id="empTable" class="table table-hover"> -->
+					<table id="empTable" class="table">
+					<thead>
+						<tr>
+							<th class="col-empCheckBox">선택</th>
+							<th class="col-Status">상태</th>
+							<th class="col-empId">사원ID</th>
+							<th class="col-empPwd">사원비밀번호</th>
+							<th class="col-empName">사원명</th>
+							<th class="col-empType">사원유형</th>
+							<th class="col-empStatus">사원상태</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="employeeList : ${employeeList}" id="empList">
+							<td><input type="checkbox" name="empCheckbox"></td>
+							<td><span name="empStatus">S</span></td>
+							<td th:text="${employeeList.employeeId}" name="employeeId"></td>
+							<!-- 	<td th:text="${employeeList.employeePwd}" name="employeePwd" onclick="showPasswordField(this)"></td> -->
+							<td name="employeePwd" onclick="showPasswordField(this)">**********</td>
+
+							<td th:text="${employeeList.employeeName}" name="employeeName"
+								onclick="showNameField(this)"></td>
+							<td onclick="handleClick(this)" name="employeeType"><span
+								class="text" th:text="${employeeList.employeeType}"
+								name="empType"></span> <select name="empTypeList" class="select"
+								style="display: none;">
+									<th:block th:each="commonCode: ${commonCodeTypeList}">
+										<option th:value="${commonCode.key}"
+											th:text="${commonCode.value}"></option>
+									</th:block>
+							</select></td>
+							<td onclick="handleClick(this)" name="employeeStatus"><span
+								class="text" th:text="${employeeList.employeeStatus}"
+								name="empStatus"></span> <select name='empStatusList'
+								class="select" style="display: none;">
+									<th:block th:each="commonCode2: ${commonCodeStatusList}">
+										<option th:value="${commonCode2.key}"
+											th:text="${commonCode2.value}"></option>
+									</th:block>
+							</select></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+	
+	</main>
 	<script src="js/employee/employee.js"></script>
+	<script th:src="@{/assets/js/main.js}"></script>
 </body>
 </html>
