@@ -7,19 +7,21 @@
 	<select id="selectAllResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
 		<![CDATA[
 			SELECT c.res_class_name "resClassName",
-			       listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
-			       c.upper_res_class_id	"upperResClassId"
+			listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
+			c.upper_res_class_id	"upperResClassId",
+			r.res_class_id   "resClassId"
 			FROM (
-			    SELECT upper_res_class_id, 
-			           res_class_name,
-			           level as lv 
-		        FROM RESCLASS
-		        WHERE use_yn = 'Y'
-		        START WITH upper_res_class_id IS NULL
-		        CONNECT BY PRIOR res_class_id = upper_res_class_id
+			SELECT upper_res_class_id, 
+			res_class_name,
+			res_class_id,
+			level as lv 
+			FROM RESCLASS
+			WHERE use_yn = 'Y'
+			START WITH upper_res_class_id IS NULL
+			CONNECT BY PRIOR res_class_id = upper_res_class_id
 			) r
 			JOIN RESCLASS c ON r.upper_res_class_id = c.res_class_id
-			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id
+			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id,r.res_class_id
 			ORDER BY r.lv , c.res_class_name DESC
 		]]>
 
@@ -54,17 +56,28 @@
 	
 	<select id="numberOfResByResClass3" resultType="map">
 		<![CDATA[
-			SELECT rs.upper_res_class_id    "upperResClassId",
-            rs.res_class_name   "resClassName",
-            SUM(r.aa)  "mappingNumberOfRes"
+				SELECT
+				rc.res_class_id	"upperResClassId",
+				rc.res_class_name	"resClassName", 
+				SUM(rr.aa) 	"mappingNumberOfRes"
+				FROM resclass rc
+				INNER JOIN (
+				SELECT 
+				rs.upper_res_class_id, 
+				SUM(r.aa) AS aa
 				FROM resclass rs
 				INNER JOIN (
-				    SELECT rc.upper_res_class_id, COUNT(*) AS aa
-				    FROM resinfo r
-				    JOIN resclass rc ON r.res_class_id = rc.res_class_id
-				    GROUP BY rc.upper_res_class_id
-				) r ON rs.res_class_id = r.upper_res_class_id
-				GROUP BY rs.upper_res_class_id, rs.res_class_name
+				SELECT 
+				rc.upper_res_class_id, 
+				rc.res_class_id,
+				COUNT(*) AS aa
+				FROM RESINFO r
+				JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+				GROUP BY 
+				rc.upper_res_class_id, rc.res_class_id) r ON rs.res_class_id = r.upper_res_class_id
+				GROUP BY rs.upper_res_class_id ) rr ON rc.res_class_id = rr.upper_res_class_id
+				GROUP BY rc.res_class_name, rc.res_class_id
+
 		]]>
 	</select>
 	<select id="selectResClassByResClassName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
@@ -118,7 +131,7 @@
 	
 	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 		<![CDATA[
-			SELECT
+			SELECT /* selectAddItemInResClass */
 				add_item_sn		"addItemSn",
 				add_item_name	"addItemName",
 				add_item_desc	"addItemDesc",
@@ -133,8 +146,13 @@
 			WHERE rnum BETWEEN #{start} AND #{end}
 		]]>
 	</select>
-
 	
+	<select id="countOfAddItemList" resultType="integer">
+			SELECT COUNT(*) AS "addItemSn"
+			FROM ADDITEM
+			WHERE use_yn = 'Y'
+	</select>
+
 	<insert id="insertAddItemToResClass"  parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 			INSERT INTO resclassasideinfomapping(
 				res_class_id,
@@ -153,11 +171,7 @@
 			</foreach>
 	</insert>
 	
-	<select id="countOfAddItemList" resultType="integer">
-			SELECT COUNT(*) AS "addItemSn"
-			FROM ADDITEM
-			WHERE use_yn = 'Y'
-	</select>
+
 	
 	<update id="updateResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 			UPDATE RESCLASS

@@ -715,7 +715,7 @@
   const getSelector = element => {
     let selector = element.getAttribute('data-bs-target');
     if (!selector || selector === '#') {
-      let hrefAttribute = element.getAttribute('href');
+      let hrefAttribute = element.getAttribute('th:href');
 
       // The only valid content that could double as a selector are IDs or classes,
       // so everything starting with `#` or `.`. If a "real" URL is used as the selector,
@@ -4762,7 +4762,7 @@
   const DefaultAllowlist = {
     // Global attributes allowed on any supplied element below.
     '*': ['class', 'dir', 'id', 'lang', 'role', ARIA_ATTRIBUTE_PATTERN],
-    a: ['target', 'href', 'title', 'rel'],
+    a: ['target', 'th:href', 'title', 'rel'],
     area: [],
     b: [],
     br: [],
@@ -4794,7 +4794,7 @@
   };
   // js-docs-end allow-list
 
-  const uriAttributes = new Set(['background', 'cite', 'href', 'itemtype', 'longdesc', 'poster', 'src', 'xlink:href']);
+  const uriAttributes = new Set(['background', 'cite', 'th:href', 'itemtype', 'longdesc', 'poster', 'src', 'xlink:href']);
 
   /**
    * A pattern that recognizes URLs that are safe wrt. XSS in URL navigation
@@ -5594,7 +5594,7 @@
   const CLASS_NAME_DROPDOWN_ITEM = 'dropdown-item';
   const CLASS_NAME_ACTIVE$1 = 'active';
   const SELECTOR_DATA_SPY = '[data-bs-spy="scroll"]';
-  const SELECTOR_TARGET_LINKS = '[href]';
+  const SELECTOR_TARGET_LINKS = '[th:href]';
   const SELECTOR_NAV_LIST_GROUP = '.nav, .list-group';
   const SELECTOR_NAV_LINKS = '.nav-link';
   const SELECTOR_NAV_ITEMS = '.nav-item';
