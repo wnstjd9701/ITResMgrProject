@@ -531,6 +531,12 @@ input[type="button"] {
 								if(resultText.startsWith("검색")){
 									removeCommonCodeDetailRow();
 								}
+								console.log($("#commonCodeDetail-table-body td:first").attr("colspan"));
+								const colspan = $("#commonCodeDetail-table-body td:first").attr("colspan");
+								if(colspan === "6"){
+									$("#commonCodeDetail-table-body tr").remove();
+									console.log("A");
+								}
 								// 새로운 행 생성
 								var newRow = $("<tr>");
 								var status = $("<td>").text("C");
@@ -653,9 +659,11 @@ input[type="button"] {
 							$("#commonCodeDetailSaveBtn").click(() => {
 								var commonCodeDetailList = [];
 								var shouldContinue = true;
-								
+								console.log($("#commonCodeDetail-table-body tr"));
 								$("#commonCodeDetail-table-body tr").each(function(){
+									console.log("SHOULDCONTINUDE: " + shouldContinue);
 									if (!shouldContinue) {
+										console.log("?:",shouldContinue);
 							            return false; // 반복 종료
 							        }
 									
@@ -680,15 +688,14 @@ input[type="button"] {
 							            }
 									    
 									    if(!pattern.test(detailCode)){
-									    	alert(`${detailCode}를 영어와 숫자 6자리로 입력해주세요.`);
-									    	shouldContinude = false;
+									    	alert(`${detailCode}를 영어[대문자]와 숫자 6자리로 입력해주세요.`);
+									    	shouldContinue = false;
 									    	return false;
 									    }
-									    
 									}else if(flag == 'C'){
 										detailCodeGroupId = $(this).find("input[name='detailCodeGroupId']").val();
 										detailCode = $(this).find("input[name='detailCode']").val();
-										
+										console.log("detailCode: ",detailCode);
 										var pattern = /^[A-Z]{3}[0-9]{3}$/;
 									    if(!pattern.test(detailCodeGroupId)){
 									    	alert(`코드 그룹 ID :${detailCodeGroupId} \n정확한 코드 그룹을 입력해주세요.`);
@@ -697,19 +704,19 @@ input[type="button"] {
 									    }
 									    
 									    if (detailCode.length > 6 || detailCode.length < 6) {
-							                alert(`${detailCode}: 상세 코드를 영어와 숫자 6자리로 입력하세요.`);
+							                alert(`${detailCode}: 상세 코드를 영어[대문자]와 숫자 6자리로 입력하세요.`);
 							                shouldContinue = false; 
 							                return false;
 							            }
 									    
 									    if(!pattern.test(detailCode)){
-									    	alert(`${detailCode}: 상세 코드를 영어와 숫자 6자리로 입력하세요.`);
-									    	shouldContinude = false;
+									    	alert(`${detailCode}: 상세 코드를 영어[대문자]와 숫자 6자리로 입력하세요.`);
+									    	shouldContinue = false;
 									    	return false;
 									    }
 									}
 									var detailCodeName = $(this).find("input[name='detailCodeName']").val();
-									console.log(detailCodeName);
+									
 									if(detailCodeName === undefined || detailCodeName === ""){
 										alert("상세 코드명을 입력하세요.");
 										shouldContinue = false;
@@ -728,12 +735,11 @@ input[type="button"] {
 									 	commonCodeDetailList.push(commonCodeDetail);
 									}
 								});
-								
+								console.log(shouldContinue);
 								if(!shouldContinue){
 									return;
 								}
 								if(commonCodeDetailList.length < 1){
-									alert("저장할 내용이 없습니다.");
 									return ;
 								}
 								
