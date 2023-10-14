@@ -35,8 +35,8 @@ public class InstallPlaceService implements IInstallPlaceService {
 	
 	// 모든 자원 정보 조회
 	@Override
-	public List<InstallRes> selectAllResInfo() {
-		return installPlaceRepository.selectAllResInfo();
+	public List<InstallRes> selectAllResInfo(int start, int end) {
+		return installPlaceRepository.selectAllResInfo(start, end);
 	}
 
 	// 설치 장소 개수 조회
@@ -54,8 +54,8 @@ public class InstallPlaceService implements IInstallPlaceService {
 	
 	// 자원 정보 조회
 	@Override
-	public List<InstallRes> selectResInformationByInstallPlaceName(String placeName) {
-		return installPlaceRepository.selectResInformationByInstallPlaceName(placeName);
+	public List<InstallRes> selectResInformationByInstallPlaceName(String placeName, int start, int end) {
+		return installPlaceRepository.selectResInformationByInstallPlaceName(placeName, start, end);
 	}
 
 	// 설치 장소 상세 정보 조회
@@ -108,8 +108,8 @@ public class InstallPlaceService implements IInstallPlaceService {
 	
 	// 해당 지역 자원 정보 조회
 	@Override
-	public List<InstallRes> selectResInformationByCity(List<String> placeNames) {
-		return installPlaceRepository.selectResInformationByCity(placeNames);
+	public List<InstallRes> selectResInformationByCity(List<String> placeNames, int start, int end) {
+		return installPlaceRepository.selectResInformationByCity(placeNames, start, end);
 	}
 	
 	// 지역별 설치 장소 조회
@@ -120,8 +120,8 @@ public class InstallPlaceService implements IInstallPlaceService {
 
 	// 지역별 자원 정보 조회
 	@Override
-	public List<InstallRes> selectResInfoByCity(String firstDoName, String secondDoName) {
-		return installPlaceRepository.selectResInfoByCity(firstDoName, secondDoName);
+	public List<InstallRes> selectResInfoByCity(String firstDoName, String secondDoName, int start, int end) {
+		return installPlaceRepository.selectResInfoByCity(firstDoName, secondDoName, start, end);
 	}
 	
 	// 모든 해당 지역 장소 개수 조회 
@@ -134,6 +134,55 @@ public class InstallPlaceService implements IInstallPlaceService {
 	@Override
 	public int selectPlaceCountByPlaceName(List<String> placeNames) {
 		return installPlaceRepository.selectPlaceCountByPlaceName(placeNames);
+	}
+
+	// 페이징 로직
+	@Override
+	public Map<String, Object> placePaging(int page, int totalCount) {
+		int totalPage = 0;
+		if(totalCount > 0) {
+			totalPage=(int)Math.ceil(totalCount / 5.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage / 5.0));
+		int nowPageBlock = (int)Math.ceil(page / 5.0);
+		int startPage = (nowPageBlock - 1) * 5 + 1;
+		int endPage=0;
+		if(totalPage > nowPageBlock * 5) {
+			endPage = nowPageBlock * 5;
+		}else {
+			endPage = totalPage;
+		}
+		
+		Map<String,Object> paging = new HashMap<String, Object>();
+		paging.put("totalPageCount", totalPage);
+		paging.put("nowPage", page);
+		paging.put("totalPageBlock", totalPageBlock);
+		paging.put("nowPageCount", nowPageBlock);
+		paging.put("startPage", startPage);
+		paging.put("endPage", endPage);
+		return paging;
+	}
+	
+	// 이름으로 특정 장소 자원 개수 조회
+	@Override
+	public int selectResInfoCountByPlaceName(String place) {
+		return installPlaceRepository.selectResInfoCountByPlaceName(place);
+	}
+	
+	// 해당 지역 자원 개수
+	@Override
+	public int selectResInfoCountByCity(String firstDoName, String secondDoName) {
+		return installPlaceRepository.selectResInfoCountByCity(firstDoName, secondDoName);
+	}
+
+	// 이름으로 해당 지역 자원 개수 조회
+	public int selectResCountByCity(List<String> placeNames) {
+		return installPlaceRepository.selectResCountByCity(placeNames);
+	}
+
+	@Override
+	public int selectResCount() {
+		return installPlaceRepository.selectResCount();
 	}
 
 }

@@ -1,5 +1,6 @@
 package kr.co.kcc.itmgr.domain.placemap.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -49,10 +51,11 @@ public class PlaceMapController {
                 .map(placeMapService::getDoName) // 각 객체에 getDoName 메서드 적용
                 .collect(Collectors.toList());
         
-        List<String> doNames = placeMapService.getDoValues();
+        Map<String, Integer> doNames = placeMapService.getDoCountValues();
         
         int totalCount = installPlaceService.selectInstallPlaceCount();
         Map<String, Object> paging = placeMapService.placeMapPaging(1, totalCount);
+        int totalResCount = installPlaceService.selectResCount();
         
         log.info("place" + place);
         log.info("DoName: " + doNames);
@@ -61,7 +64,7 @@ public class PlaceMapController {
         modelAndView.addObject("placePaging", installPlace);
         modelAndView.addObject("paging", paging);
         modelAndView.addObject("doNames", doNames);
-        
+        modelAndView.addObject("totalResCount", totalResCount);
         return modelAndView;
     }
 	
@@ -126,8 +129,52 @@ public class PlaceMapController {
 	
 	/*
 	 * @Author: [윤준성]
+	 * @API No.4-8. 자원 페이지 클릭
+	 * @Info: 자원 페이징 처리
+	 */
+	@GetMapping("/place/map/resinfo/paging/{page}")
+	public ResponseEntity<Map<String,Object>> selectResInfoByPage(@PathVariable("page") int page, 
+			@RequestParam("resSearchType") String resSearchType){
+		int startNumber = (page - 1) * 5 + 1;
+		int totalCount = 0;
+		List<InstallRes> resInfo = null;
+		Map<String,Object> resInfoPaging = null;
+		// 전체일 경우
+		if(resSearchType.equals("ALL")) {
+			totalCount = installPlaceService.selectResCount();
+			resInfo = installPlaceService.selectAllResInfo(startNumber, startNumber + 4);
+			resInfoPaging = placeMapService.placeMapPaging(page, totalCount);
+		}else {
+			DoName doName = placeMapService.getDoValuesByDoName(resSearchType);
+			log.info("doName: " + doName);
+			
+			if (doName != null) { // 도시 별 페이징
+				log.info("도시 이름: " + doName.getDoName());
+				String firstDoName = doName.getDoName().split(",")[0];
+	        	String secondDoName = doName.getDoName().split(",")[1];
+	        	
+	        	resInfo = installPlaceService.selectResInfoByCity(firstDoName, secondDoName, startNumber, startNumber + 4);
+	            totalCount = installPlaceService.selectResInfoCountByCity(firstDoName, secondDoName);
+				resInfoPaging = placeMapService.placeMapPaging(page, totalCount);
+			} else { // 특정 장소에 해당하는 자원 페이징 
+				String placeName = resSearchType;
+				totalCount = installPlaceService.selectResInfoCountByPlaceName(resSearchType);
+				log.info("totalCount: " + resSearchType);
+				resInfo = installPlaceService.selectResInformationByInstallPlaceName(placeName, startNumber, startNumber + 4);
+				resInfoPaging = placeMapService.placeMapPaging(page, totalCount);
+				log.info("resInfoPaging: "+resInfoPaging);
+			}
+		}
+		Map<String,Object> result = new HashMap<String, Object>();
+		result.put("resInfo", resInfo);
+		result.put("resInfoPaging", resInfoPaging);
+		return ResponseEntity.ok().body(result);
+	}
+	
+	/*
+	 * @Author: [윤준성]
 	 * @API No.4-2. 특정 설치 장소 [비동기]
-	 * @Info: 상세 주소 수정
+	 * @Info: 특정 설치 장소
 	 */
 	@PostMapping("/place/map/detail")
 	public ResponseEntity<InstallPlace> selectInstallPlaceByName(@RequestBody Map<String, String> requestBody) {
@@ -149,34 +196,34 @@ public class PlaceMapController {
 	 * @API No.4-4. 지역별 자원 조회 
 	 * @Info: 지역에 따른 설치 장소에 있는 자원 조회 / 클러스터 클릭
 	 */
-	@PostMapping("/place/city/resinfo")
-	public ResponseEntity<Map<String, Object>> selectResInfoByCity(@RequestBody List<String> placeNameList){
-		int totalCount = installPlaceService.selectPlaceCountByPlaceName(placeNameList);
-		log.info("totlaCount: " + totalCount);
-		int page = 1;
-		int start = 1;
-		
-		Map<String, Object> paging = placeMapService.placeMapPaging(page, totalCount);
-		
-		List<InstallPlace> place = installPlaceService.selectPlaceListByPlaceName(placeNameList, start, start + 4);
-		List<InstallRes> resInfo = installPlaceService.selectResInformationByCity(placeNameList);
-		
-		int count = 0;
-		for(InstallPlace p : place) {
-			p.setRn(start + count);
-			count++;
-		}
-		Map<String, Object> placeMap = new HashMap<String, Object>();
-		
-		log.info("place: " + place);
-		log.info("resinfo: " + resInfo);
-		
-		placeMap.put("resInfo", resInfo);
-		placeMap.put("place", place);
-		placeMap.put("paging", paging);
-		
-		return ResponseEntity.ok().body(placeMap);
-	}
+	/*
+	 * @PostMapping("/place/city/resinfo") public ResponseEntity<Map<String,
+	 * Object>> selectResInfoByCity(@RequestBody String doName){ int page = 1; int
+	 * start = 1; int end = start + 4;
+	 * 
+	 * int totalCount =
+	 * installPlaceService.selectPlaceCountByPlaceName(placeNameList);
+	 * List<InstallPlace> place =
+	 * installPlaceService.selectPlaceListByPlaceName(placeNameList, start, end);
+	 * Map<String, Object> paging = placeMapService.placeMapPaging(page,
+	 * totalCount);
+	 * 
+	 * int resInfoCount = installPlaceService.selectResCountByCity(placeNameList);
+	 * List<InstallRes> resInfo =
+	 * installPlaceService.selectResInformationByCity(placeNameList, start, end);
+	 * Map<String, Object> resInfoPaging = placeMapService.placeMapPaging(page,
+	 * resInfoCount); log.info("resPaging: " + resInfoPaging);
+	 * 
+	 * int count = 0; for(InstallPlace p : place) { p.setRn(start + count); count++;
+	 * } Map<String, Object> placeMap = new HashMap<String, Object>();
+	 * 
+	 * log.info("place: " + place); log.info("resinfo: " + resInfo);
+	 * 
+	 * placeMap.put("resInfo", resInfo); placeMap.put("place", place);
+	 * placeMap.put("paging", paging); placeMap.put("resInfoPaging", resInfoPaging);
+	 * 
+	 * return ResponseEntity.ok().body(placeMap); }
+	 */
 	
 	/*
 	 * @Author: [윤준성]
@@ -190,11 +237,22 @@ public class PlaceMapController {
 		
 		Map<String, Object> placeMap = new HashMap<String, Object>();
 		
-		List<InstallRes> resInfo = installPlaceService.selectResInformationByInstallPlaceName(placeName);
+		int start = 1;
+		int end = 5;
 		InstallPlace place = installPlaceService.selectInstallPlaceDetail(placeName);
+		Map<String,Object> paging = placeMapService.placeMapPaging(start, start);
+		int resInfoCount = place.getResCount();
+		
+		log.info("resCount; " + resInfoCount);
+		List<InstallRes> resInfo = installPlaceService.selectResInformationByInstallPlaceName(placeName, start, end);
+		Map<String,Object> resInfoPaging = placeMapService.placeMapPaging(start, resInfoCount);
+		
+		
 		log.info("resInfo: " + resInfo);
-		placeMap.put("resInfo", resInfo);
 		placeMap.put("place", place);
+		placeMap.put("paging", paging);
+		placeMap.put("resInfo", resInfo);
+		placeMap.put("resInfoPaging", resInfoPaging);
 		
 		return ResponseEntity.ok().body(placeMap);
 	}
@@ -202,17 +260,22 @@ public class PlaceMapController {
 	/*
 	 * @Author: [윤준성]
 	 * @API No.4-6. 도시 별 설치 장소 조회
-	 * @Info: 도시 별 설치 장소 조회
+	 * @Info: 도시 별 설치 장소 조회 / Selectbox 클릭 / 클러스터 클릭
 	 */
 	@GetMapping("/place/map/city")
 	public ResponseEntity<Map<String, Object>> selectPlaceByCity(@RequestParam("doName") String doName){
 		int totalCount = 0;
+		int start = 1;
+		int end = start + 4;
 		if(doName.equals("ALL")) {
-			totalCount = installPlaceService.selectInstallPlaceCount();
-			Map<String, Object> paging = placeMapService.placeMapPaging(1, totalCount);
 			
-			List<InstallPlace> place = installPlaceService.selectAllPlace(1);
-			List<InstallRes> resInfo = installPlaceService.selectAllResInfo();
+			totalCount = installPlaceService.selectInstallPlaceCount();
+			Map<String, Object> paging = placeMapService.placeMapPaging(start, totalCount);
+			List<InstallPlace> place = installPlaceService.selectAllPlace(start);
+			
+			List<InstallRes> resInfo = installPlaceService.selectAllResInfo(start, end);
+			int resInfoCount = installPlaceService.selectResCount();
+			Map<String, Object> resInfoPaging = placeMapService.placeMapPaging(start, resInfoCount);
 			
 			int count = 0;
 			for(InstallPlace p : place) {
@@ -224,20 +287,25 @@ public class PlaceMapController {
 			placeMap.put("resInfo", resInfo);
 			placeMap.put("place", place);
 			placeMap.put("paging", paging);
+			placeMap.put("resInfoPaging", resInfoPaging);
 			
 			return ResponseEntity.ok().body(placeMap);
 		}
 		
 		DoName selectedDoName = placeMapService.getDoValuesByDoName(doName);
         if (selectedDoName != null) {
+        	log.info("제주도?: " + selectedDoName);
         	String firstDoName = selectedDoName.getDoName().split(",")[0];
         	String secondDoName = selectedDoName.getDoName().split(",")[1];
-        	
         	totalCount = installPlaceService.selectPlaceCountByCity(firstDoName, secondDoName);
         	Map<String, Object> paging = placeMapService.placeMapPaging(1, totalCount);
         	
-        	List<InstallPlace> place = installPlaceService.selectPlaceByCity(firstDoName, secondDoName, 1, 5);
-            List<InstallRes> resInfo = installPlaceService.selectResInfoByCity(firstDoName, secondDoName);
+        	List<InstallPlace> place = installPlaceService.selectPlaceByCity(firstDoName, secondDoName, start, end);
+        	
+            List<InstallRes> resInfo = installPlaceService.selectResInfoByCity(firstDoName, secondDoName, start, end);
+            int resInfoCount = installPlaceService.selectResInfoCountByCity(firstDoName, secondDoName);
+            
+			Map<String, Object> resInfoPaging = placeMapService.placeMapPaging(1, resInfoCount);
             
             int count = 0;
 			for(InstallPlace p : place) {
@@ -249,6 +317,7 @@ public class PlaceMapController {
             placeMap.put("resInfo", resInfo);
             placeMap.put("paging", paging);
     		placeMap.put("place", place);
+    		placeMap.put("resInfoPaging", resInfoPaging);
     		
             return ResponseEntity.ok().body(placeMap);
         } else {
