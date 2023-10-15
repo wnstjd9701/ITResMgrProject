@@ -14,7 +14,7 @@ public interface IResInfoService {
 	
 	List<ResClass> selectAllResClass(); //자원분류리스트 조회
 	
-	ResInfo insertResInfo(ResInfo resInfo); //자원입력
+	void insertResInfo(ResInfo resInfo); //자원입력
 	
 	List<CommonCodeDetail> selectResStatusCode(String codeGroupId); //자원상태코드 리스트 불러오기
 	List<InstallPlace> selectResInstallPlace(); //자원설치장소 리스트 불러오기

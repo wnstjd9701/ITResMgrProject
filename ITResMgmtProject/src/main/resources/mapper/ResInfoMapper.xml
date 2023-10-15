@@ -129,7 +129,8 @@
 			    c.res_class_name AS "resClassName",
 			    LISTAGG(r.res_class_name, ',') WITHIN GROUP (ORDER BY r.res_class_name DESC) AS "resClassName2",
 			    TO_CHAR(r.lv) AS "level",
-			    c.upper_res_class_id AS "upperResClassId",
+			    (SELECT aa.res_class_name FROM resclass aa
+                    WHERE aa.res_class_id=c.upper_res_class_id) AS "upperResClassName",
 			    r.res_class_id AS "resClassId"
 			FROM (
 			    SELECT

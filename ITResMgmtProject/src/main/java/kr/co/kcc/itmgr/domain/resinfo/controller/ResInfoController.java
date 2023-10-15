@@ -46,27 +46,53 @@ public class ResInfoController {
 		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace();
 		model.addAttribute("selectResInstallPlace", selectResInstallPlace);
 		List<ResClass> resClassList = resInfoService.selectAllResClass();
-		Map<String, List<Map<String, List<Map<String, String>>>>> resClassMap = new LinkedHashMap<>();
+		
+		Map<String,List<Map<String,List<Map<String,String>>>>> lev1 = new HashMap<String, List<Map<String,List<Map<String,String>>>>>();
 		// 데이터를 반복하면서 맵에 추가
         for (ResClass r : resClassList) {
-            if (r.getUpperResClassId() == null) {
-                // 상위 클래스 ID가 null이면 하드웨어 또는 보안 항목
-                String value = r.getResClassName2(); // 하드웨어 또는 보안 항목 이름
-                // Create a new List<Map<String, List<Map<String, String>>>> and populate it
-                List<Map<String, List<Map<String, String>>>> tempMapList = new ArrayList<>();
-                Map<String, List<Map<String, String>>> innerMap = new LinkedHashMap<>();
-                List<Map<String, String>> innerList = new ArrayList<>();
-                Map<String, String> innerMapEntry = new HashMap<>();
-                innerMapEntry.put("key", "key"); // Modify with appropriate key name
-                innerList.add(innerMapEntry);
-                innerMap.put(value, innerList); // Modify with appropriate inner key name
-                tempMapList.add(innerMap);
+        	List<Map<String,List<Map<String,String>>>> lev2List = new ArrayList<Map<String,List<Map<String,String>>>>();
+            if (r.getUpperResClassName() == null) {
+            	if(!lev1.containsKey(r.getResClassName())) {
+            		Map<String,List<Map<String,String>>> lev2= new HashMap<String, List<Map<String,String>>>();
+            		List<Map<String,String>> lev3List=new ArrayList<Map<String,String>>(); 
+            		lev2.put(r.getResClassName2(), lev3List);
+            		lev2List.add(lev2);
+            		
+            		lev1.put(r.getResClassName(), lev2List);
+            	}else {
+            		Map<String,List<Map<String,String>>> lev2= new HashMap<String, List<Map<String,String>>>();
+            		List<Map<String,String>> lev3List=new ArrayList<Map<String,String>>(); 
+            		
+            		lev2.put(r.getResClassName2(), lev3List);
+            		lev2List=lev1.get(r.getResClassName());
+            		
+            		lev2List.add(lev2);
+            		lev1.put(r.getResClassName(), lev2List);
+            	}
+            }else {
+            	Map<String,List<Map<String,String>>> lev2=new HashMap<String, List<Map<String,String>>>();
+            	List<Map<String,String>> lev3List= new ArrayList<Map<String,String>>();
+            	Map<String,String> lev3 = new HashMap<String, String>();
 
-                System.out.println(tempMapList);
-                resClassMap.put(r.getResClassName(), tempMapList);
+            	lev2List=lev1.get(r.getUpperResClassName());
+            	for(int i=0;i<lev2List.size();i++) {
+            		if(lev2List.get(i).containsKey(r.getResClassName())) {
+            			lev2=lev2List.get(i);
+            			lev3List=lev2List.get(i).get(r.getResClassName());
+            			lev2List.remove(i);
+            			break;
+            		}
+            	}
+            	lev3.put(r.getResClassName2(), r.getResClassId());
+            	lev3List.add(lev3);
+            	lev2.put(r.getResClassName(), lev3List);
+            	
+            	lev2List.add(lev2);
+            	lev1.put(r.getUpperResClassName(), lev2List);
             }
         }
-        System.out.println(resClassMap);
+        logger.info("resClassList: "+lev1.toString());
+        model.addAttribute("resClassList", lev1);
 
         // 결과 출력
         return "resinfo/resinfo";
@@ -76,7 +102,6 @@ public class ResInfoController {
 	@GetMapping("/resinfo/additem")
 	@ResponseBody
 	public List<ResInfo> selectMappingAddItem(@RequestParam("resSerialId") String resSerialId){
-		System.out.println("asdasdasdasdasdasdasdas"+resSerialId);
 		List<ResInfo> selectMappingAddItem = resInfoService.selectMappingAddItem(resSerialId);
 		return selectMappingAddItem;
 	}
@@ -90,9 +115,27 @@ public class ResInfoController {
 	
 	@PostMapping("/resinfo/insert")
 	@ResponseBody
-	public ResInfo insertResInfo(@RequestBody ResInfo resInfo) {
-		ResInfo insertResInfo = resInfoService.insertResInfo(resInfo);
-		return insertResInfo;
+	public void insertResInfo(@RequestBody ResInfo resInfo) {
+		resInfo.setResClassId(resInfo.getResClassId());
+		resInfo.setMgmtId(resInfo.getMgmtId());
+		resInfo.setMgmtDeptName(resInfo.getMgmtDeptName());
+		resInfo.setResName(resInfo.getResName());
+		resInfo.setResStatusCode(resInfo.getResStatusCode());
+		resInfo.setManagerName(resInfo.getManagerName());
+		resInfo.setResSerialId(resInfo.getResSerialId());
+		resInfo.setManufactureCompanyName(resInfo.getManufactureCompanyName());
+		resInfo.setModelName(resInfo.getModelName());
+		resInfo.setInstallPlaceSn(resInfo.getInstallPlaceSn());
+		resInfo.setRackInfo(resInfo.getRackInfo());
+		resInfo.setResSn(resInfo.getResSn());
+		resInfo.setIntroductionDate(resInfo.getIntroductionDate());
+		resInfo.setExpirationDate(resInfo.getExpirationDate());
+		resInfo.setIntroductionPrice(resInfo.getIntroductionPrice());
+		resInfo.setUseYn(resInfo.getUseYn());
+		resInfo.setMonitoringYn(resInfo.getMonitoringYn());
+		resInfo.setPurchaseCompanyName(resInfo.getPurchaseCompanyName());
+		resInfo.setAddInfo(resInfo.getAddInfo());
+		resInfoService.insertResInfo(resInfo);
 	}
 	
 	@GetMapping("/resinfo/detail")

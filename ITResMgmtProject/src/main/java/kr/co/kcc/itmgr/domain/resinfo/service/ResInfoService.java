@@ -33,8 +33,8 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public ResInfo insertResInfo(ResInfo resInfo) {
-		return resInfoRepository.insertResInfo(resInfo);
+	public void insertResInfo(ResInfo resInfo) {
+		resInfoRepository.insertResInfo(resInfo);
 		
 	}
 

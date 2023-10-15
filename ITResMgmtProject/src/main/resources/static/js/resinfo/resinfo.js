@@ -1,15 +1,60 @@
 // 검색창에서 select박스 계층형으로 보이게
 $(document).ready(function () {
+	
 	$('#newResInfoBtn').on('click',function(){
+		
 		clearModalContent()
 		$('#resinfo-detail-modal').modal('show');
+		
 		$('#res-info-save-btn').on('click',function(){
+		  var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
+		  var mgmtId = $('#resinfo-detail-modal input[name=mgmtId]').val();
+		  var mgmtDeptName = $('#resinfo-detail-modal input[name="mgmtDeptName"]').val();
+		  var resName = $('#resinfo-detail-modal input[name="resName"]').val();
+		  var resStatusCode = $('#resinfo-detail-modal select[name="resStatusCode"]').val();
+		  var managerName = $('#resinfo-detail-modal input[name="managerName"]').val();
+		  var resSn = $('#resinfo-detail-modal input[name="resSn"]').val();
+		  var manufactureCompanyName = $('#resinfo-detail-modal input[name="manufactureCompanyName"]').val();
+		  var modelName = $('#resinfo-detail-modal input[name="modelName"]').val();
+		  var installPlaceSn = $('#resinfo-detail-modal #install-place-sn-input').val();
+		  var rackInfo = $('#resinfo-detail-modal input[name="rackInfo"]').val();
+		  var resSerialId = $('#resinfo-detail-modal input[name="resSerialId"]').val();
+		  var introductionDate = $('#resinfo-detail-modal input[name="introductionDate"]').val();
+		  var expirationDate = $('#resinfo-detail-modal input[name="expirationDate"]').val();
+		  var introdutionPrice = $('#resinfo-detail-modal input[name="introdutionPrice"]').val();
+		  var useYn = 'Y';
+/*		  var monitoringYn = $('#resinfo-detail-modal input[name="monitoringYn"]:checked').val();*/
+		  var monitoringYn = 'Y';
+		  var purchaseCompanyName = $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val();
+		  var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
 		$.ajax({
             type: 'POST', // 또는 'GET', 요청 방식 선택
             url: '/resinfo/insert', // Controller의 URL
- 			data:JSON.stringify(resInfo),
+ 			data: JSON.stringify({
+				'resClassId' : resClassId,
+				'mgmtId' : mgmtId,
+				'mgmtDeptName' : mgmtDeptName,
+				'resName' : resName,
+				'resStatusCode' : resStatusCode,
+				'managerName' : managerName,
+				'resSerialId' : resSerialId,
+				'manufactureCompanyName' : manufactureCompanyName,
+				'modelName' : modelName,
+				'installPlaceSn' : installPlaceSn,
+				'rackInfo' : rackInfo,
+				'resSn' : resSn,
+				'introductionDate' : introductionDate,
+				'expirationDate' : expirationDate,
+				'introdutionPrice' : introdutionPrice,
+				'useYn' : useYn,
+				'monitoringYn' : monitoringYn,
+				'purchaseCompanyName' : purchaseCompanyName,
+				'addInfo' : addInfo
+			}),
+			contentType: "application/json",
             success: function(response) {
 				alert("저장되었습니다.")
+				console.log(response)
             },
             error: function(error) {
                 // 요청이 실패한 경우 처리
@@ -36,9 +81,6 @@ $(document).ready(function () {
             	$('#resinfo-detail-modal input[name="resSerialId"]').val(response.resSerialId);
             	$('#resinfo-detail-modal input[name="resStatusCode"]').val(response.resStatusCode);
             	$('#resinfo-detail-modal input[name="managerName"]').val(response.managerName);
-            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
-            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
-            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
             	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
             	$('#resinfo-detail-modal input[name="manufactureCompanyName"]').val(response.manufactureCompanyName);
             	$('#resinfo-detail-modal input[name="modelName"]').val(response.modelName);

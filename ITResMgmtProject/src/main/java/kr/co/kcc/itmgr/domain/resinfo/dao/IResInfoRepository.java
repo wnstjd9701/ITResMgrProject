@@ -19,7 +19,7 @@ public interface IResInfoRepository {
 	
 	List<ResClass> selectAllResClass(); //자원분류리스트 조회
 	
-	ResInfo insertResInfo(ResInfo resInfo); //자원입력
+	void insertResInfo(ResInfo resInfo); //자원입력
 	void updateResInfo(ResInfo resInfo); //자원수정
 	
 	List<CommonCodeDetail> selectResStatusCode(String codeGroupId); //자원상태코드 리스트 불러오기

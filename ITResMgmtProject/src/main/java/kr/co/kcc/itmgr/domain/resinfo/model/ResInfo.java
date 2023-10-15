@@ -30,7 +30,7 @@ public class ResInfo {
 	private Timestamp updateDate;
 	private String updaterId;
 	private int installPlaceSn;
-	
+
 	
 	//추가컬럼
 	private String resClassName;
