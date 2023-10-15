@@ -127,7 +127,8 @@ $('#openAddItemModal').on('click', function() {
 
 //부가항목리스트 모달 
 function paging(page) {
-    $.ajax({
+	
+	$.ajax({
         type: 'GET',
         url: '/resclass/additem',
         contentType: "application/json",
@@ -315,7 +316,8 @@ $("#resclass-save").click(() => {
 	$('.second-container input[type=checkbox]:checked').each(function() {
     var addItemSn;
 	var resClassId;
-	var resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+	//var resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+	var resClassName = $("input[name='resClassName']").val();
     var flag = $(this).closest('tr').find('td:eq(0)').text(); // Assuming flag is in the first td
 
     if (flag === 'C' || flag==='D') {
@@ -379,6 +381,7 @@ $("#resclass-save").click(() => {
             }
 		});
 	});
+
 });
 
 
