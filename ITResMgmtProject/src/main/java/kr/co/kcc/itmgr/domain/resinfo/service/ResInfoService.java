@@ -18,8 +18,9 @@ public class ResInfoService implements IResInfoService {
 	private final IResInfoRepository resInfoRepository;
 	
 	@Override
-	public List<ResInfo> selectAllResInfo() {
-		return resInfoRepository.selectAllResInfo();
+	public List<ResInfo> selectAllResInfo(int page) {
+		int start = (page-1)*10+1;
+		return resInfoRepository.selectAllResInfo(start,start+9);
 	}
 
 	@Override
@@ -61,6 +62,11 @@ public class ResInfoService implements IResInfoService {
 	@Override
 	public List<ResInfo> selectMappingAddItem(String resSerialId) {
 		return resInfoRepository.selectMappingAddItem(resSerialId);
+	}
+
+	@Override
+	public int countOfResInfo() {
+		return resInfoRepository.countOfResInfo();
 	}
 
 }
