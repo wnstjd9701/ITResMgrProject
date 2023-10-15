@@ -8,7 +8,9 @@ import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 
 public interface IResInfoService {
-	List<ResInfo> selectAllResInfo();
+	List<ResInfo> selectAllResInfo(int page);
+	int countOfResInfo();//자원갯수
+	
 	List<ResInfo> searchResInfoByResClass();
 	List<ResInfo> searchResInfo(ResInfo resInfo); //검색결과조회
 	

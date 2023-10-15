@@ -3,6 +3,7 @@ package kr.co.kcc.itmgr.domain.resinfo.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
@@ -13,7 +14,10 @@ import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 @Repository
 @Mapper
 public interface IResInfoRepository {
-	List<ResInfo> selectAllResInfo(); //자원정보 모두 찾아오기
+	
+	List<ResInfo> selectAllResInfo(@Param("start")int start, @Param("end")int end); //자원정보 모두 찾아오기
+	int countOfResInfo();//자원갯수
+	
 	List<ResInfo> searchResInfoByResClass(); //자원분류 조회
 	List<ResInfo> searchResInfo(ResInfo resInfo); //검색결과조회
 	

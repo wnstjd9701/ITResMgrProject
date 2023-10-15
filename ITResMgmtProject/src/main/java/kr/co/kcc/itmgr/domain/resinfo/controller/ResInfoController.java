@@ -1,9 +1,7 @@
 package kr.co.kcc.itmgr.domain.resinfo.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,12 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resclass.controller.ResClassController;
@@ -33,20 +33,44 @@ public class ResInfoController {
 	private final IResInfoService resInfoService;
 	static final Logger logger = LoggerFactory.getLogger(ResClassController.class);
 
-	@RequestMapping(value="/resinfo")
-	public String selectAllResInfo(Model model) {
-		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo();
+	@RequestMapping(value="/resinfo/{page}")
+	public String selectAllResInfo(Model model,@PathVariable int page,HttpSession session) {
+		session.setAttribute("page", page);
+
+		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo(page);
+		int countOfResList = resInfoService.countOfResInfo();
+		int totalPage = 0;
+		if(countOfResList > 0) {
+			totalPage= (int)Math.ceil(countOfResList/10.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
+		int nowPageBlock = (int) Math.ceil(page/10.0);
+		int startPage = (nowPageBlock-1)*10 + 1;
+		int endPage = 0;
+		if(totalPage > nowPageBlock*10) {
+			endPage = nowPageBlock*10;
+		}else {
+			endPage = totalPage;
+		}
+
 		model.addAttribute("selectAllResInfo", selectAllResInfo);
+		model.addAttribute("totalPageCount", totalPage);
+		model.addAttribute("nowPage", page);
+		model.addAttribute("totalPageBlock", totalPageBlock);
+		model.addAttribute("nowPageCount", nowPageBlock);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
 		
 		List<ResInfo> searchResInfoByResClass = resInfoService.searchResInfoByResClass();
 		model.addAttribute("search", searchResInfoByResClass);
+		
 		List<CommonCodeDetail> selectResStatusCode = resInfoService.selectResStatusCode("RES000");
 		model.addAttribute("selectResStatusCode", selectResStatusCode);
 		
 		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace();
 		model.addAttribute("selectResInstallPlace", selectResInstallPlace);
 		List<ResClass> resClassList = resInfoService.selectAllResClass();
-		
+
 		Map<String,List<Map<String,List<Map<String,String>>>>> lev1 = new HashMap<String, List<Map<String,List<Map<String,String>>>>>();
 		// 데이터를 반복하면서 맵에 추가
         for (ResClass r : resClassList) {
@@ -94,7 +118,7 @@ public class ResInfoController {
         logger.info("resClassList: "+lev1.toString());
         model.addAttribute("resClassList", lev1);
 
-        // 결과 출력
+
         return "resinfo/resinfo";
     }
 

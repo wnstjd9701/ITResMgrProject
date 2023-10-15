@@ -268,6 +268,40 @@ $(document).ready(function () {
 	$('#res-class-search-btn').on('click',function(){
 		$('#res-class-choose-modal').modal('show');
 		});
+		
+		//페이지 누르면 이동하는 기능
+$("#pagination").on("click", ".page-btn", function() {
+    // Loop through all checkboxes in the table
+    $('table#add-item-table input[type=checkbox]').each(function() {
+        if ($(this).is(':checked')) {
+            checkedAddItems.push($(this).val());
+        }
+    });
+    const page = $(this).val();
+    paging(page);
+});
+
+
+
+function paging(page) {
+    $.ajax({
+        type: 'GET',
+        url: '/resinfo',
+        contentType: "application/json",
+        data: {
+            'page': page
+        },
+        success: function (response) {
+		
+            $('ul#pagination').html(pagingHtml);  // 수정된 선택자
+            // 테이블의 기존 내용을 지우기
+        },
+        error: function (error) {
+            // 요청이 실패한 경우 처리
+            console.log('에러:', error);
+        }
+    });
+}
 });
 
 

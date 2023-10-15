@@ -3,27 +3,60 @@
 <mapper namespace="kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository">
 
 	<select id="selectAllResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
-			SELECT
-			    urc_name.res_class_name	"topUpperResClassName",
-			    urc.res_class_name	"upperResClassName",
-			    rc.res_class_name	"resClassName",
-			    r.res_name	"resName",
-			    i.install_place_name	"installPlaceName",
-			    r.manufacture_company_name	"manufactureCompanyName",
-			    r.mgmt_id	"mgmtId",
-			    r.monitoring_yn	"monitoringYn",
-                r.res_serial_id "resSerialId"
-			FROM resinfo r
-			LEFT OUTER JOIN installplace i
-			    ON i.install_place_sn = r.install_place_sn
-			LEFT OUTER JOIN resclass rc
-			    ON rc.res_class_id = r.res_class_id
-			LEFT OUTER JOIN resclass urc
-			    ON urc.res_class_id = rc.upper_res_class_id
-			LEFT OUTER JOIN resclass urc_name
-			    ON urc_name.res_class_id = urc.upper_res_class_id
+			SELECT 
+			    "topUpperResClassName",
+			    "upperResClassName",
+			    "resClassName",
+			    "resName",
+			    "installPlaceName",
+			    "manufactureCompanyName",
+			    "mgmtId",
+			    "monitoringYn",
+			    "resSerialId"
+			FROM (
+			    SELECT 
+			        "topUpperResClassName",
+			        "upperResClassName",
+			        "resClassName",
+			        "resName",
+			        "installPlaceName",
+			        "manufactureCompanyName",
+			        "mgmtId",
+			        "monitoringYn",
+			        "resSerialId",
+			        ROWNUM AS rnum
+			    FROM (
+			        SELECT
+			            urc_name.res_class_name    "topUpperResClassName",
+			            urc.res_class_name        "upperResClassName",
+			            rc.res_class_name        "resClassName",
+			            r.res_name                "resName",
+			            i.install_place_name    "installPlaceName",
+			            r.manufacture_company_name    "manufactureCompanyName",
+			            r.mgmt_id                "mgmtId",
+			            r.monitoring_yn            "monitoringYn",
+			            r.res_serial_id            "resSerialId"
+			        FROM resinfo r
+			        LEFT OUTER JOIN installplace i
+			            ON i.install_place_sn = r.install_place_sn
+			        LEFT OUTER JOIN resclass rc
+			            ON rc.res_class_id = r.res_class_id
+			        LEFT OUTER JOIN resclass urc
+			            ON urc.res_class_id = rc.upper_res_class_id
+			        LEFT OUTER JOIN resclass urc_name
+			            ON urc_name.res_class_id = urc.upper_res_class_id
+			    )
+			)
+			WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
-	
+
+	<select id="countOfResInfo" resultType="integer">
+		<![CDATA[
+			SELECT COUNT(*) AS "resName"
+			FROM resinfo
+		]]>
+	</select>
+
 	<select id="searchResInfoByResClass" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
 
 			SELECT
