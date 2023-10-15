@@ -42,4 +42,7 @@ public class ResInfo {
 	private int level;
 	private String upperResClassId;
 	
+	private String addItemSn;
+	private String addItemName;
+	
 }

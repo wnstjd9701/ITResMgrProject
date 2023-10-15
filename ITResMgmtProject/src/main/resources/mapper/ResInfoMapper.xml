@@ -3,7 +3,6 @@
 <mapper namespace="kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository">
 
 	<select id="selectAllResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
-
 			SELECT
 			    urc_name.res_class_name	"topUpperResClassName",
 			    urc.res_class_name	"upperResClassName",
@@ -12,7 +11,8 @@
 			    i.install_place_name	"installPlaceName",
 			    r.manufacture_company_name	"manufactureCompanyName",
 			    r.mgmt_id	"mgmtId",
-			    r.monitoring_yn	"monitoringYn"
+			    r.monitoring_yn	"monitoringYn",
+                r.res_serial_id "resSerialId"
 			FROM resinfo r
 			LEFT OUTER JOIN installplace i
 			    ON i.install_place_sn = r.install_place_sn
@@ -22,7 +22,6 @@
 			    ON urc.res_class_id = rc.upper_res_class_id
 			LEFT OUTER JOIN resclass urc_name
 			    ON urc_name.res_class_id = urc.upper_res_class_id
-
 	</select>
 	
 	<select id="searchResInfoByResClass" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
@@ -124,26 +123,35 @@
 	</select>
 	
 	
-		<select id="selectAllResClass" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
+		<select id="selectAllResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
 		<![CDATA[
-			SELECT c.res_class_name "resClassName",
-			       listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
-			       c.upper_res_class_id	"upperResClassId",
-                   r.res_class_id   "resClassId"
+			SELECT
+			    c.res_class_name AS "resClassName",
+			    LISTAGG(r.res_class_name, ',') WITHIN GROUP (ORDER BY r.res_class_name DESC) AS "resClassName2",
+			    TO_CHAR(r.lv) AS "level",
+			    c.upper_res_class_id AS "upperResClassId",
+			    r.res_class_id AS "resClassId"
 			FROM (
-			    SELECT upper_res_class_id, 
-			           res_class_name,
-                       res_class_id,
-			           level as lv 
-		        FROM RESCLASS
-		        WHERE use_yn = 'Y'
-		        START WITH upper_res_class_id IS NULL
-		        CONNECT BY PRIOR res_class_id = upper_res_class_id
+			    SELECT
+			        upper_res_class_id,
+			        res_class_name,
+			        res_class_id,
+			        LEVEL AS lv
+			    FROM
+			        RESCLASS
+			    WHERE
+			        use_yn = 'Y'
+			    START WITH
+			        upper_res_class_id IS NULL
+			    CONNECT BY
+			        PRIOR res_class_id = upper_res_class_id
 			) r
-			JOIN RESCLASS c ON r.upper_res_class_id = c.res_class_id
-			WHERE r.upper_res_class_id = (select res_class_id from resclass where res_class_name =#{resClassName})
-			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id,r.res_class_id
-			ORDER BY r.lv , c.res_class_name DESC
+			JOIN
+			    RESCLASS c ON r.upper_res_class_id = c.res_class_id
+			GROUP BY
+			    r.lv, c.res_class_name, c.upper_res_class_id, r.res_class_id
+			ORDER BY
+			    r.lv, c.res_class_name DESC
 		]]>
 
 	</select>
@@ -178,4 +186,18 @@
 		]]>
 	</select>
 	
+	<!-- 자원에 매핑된 부가항목리스트 -->
+	<select id="selectMappingAddItem" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT
+				r.res_serial_id "resSerialId",
+				m.res_class_id  "resClassId",
+				m.add_item_sn   "addItemSn",
+				a.add_item_name "addItemName"
+			FROM resclassasideinfomapping m
+			JOIN resinfo r ON m.res_class_id = r.res_class_id
+			JOIN additem a ON m.add_item_sn = a.add_item_sn
+			WHERE r.res_serial_id = #{resSerialId}
+		]]>
+	</select>
 </mapper>

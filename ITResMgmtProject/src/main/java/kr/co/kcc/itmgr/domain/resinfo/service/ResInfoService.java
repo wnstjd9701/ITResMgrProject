@@ -33,8 +33,8 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public void insertResInfo(ResInfo resInfo) {
-		resInfoRepository.insertResInfo(resInfo);
+	public ResInfo insertResInfo(ResInfo resInfo) {
+		return resInfoRepository.insertResInfo(resInfo);
 		
 	}
 
@@ -49,13 +49,18 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public List<ResClass> selectAllResClass(String resClassName) {
-		return resInfoRepository.selectAllResClass(resClassName);
+	public List<ResClass> selectAllResClass() {
+		return resInfoRepository.selectAllResClass();
 	}
 
 	@Override
 	public ResInfo selectResInfoDetail(String resName) {
 		return resInfoRepository.selectResInfoDetail(resName);
+	}
+
+	@Override
+	public List<ResInfo> selectMappingAddItem(String resSerialId) {
+		return resInfoRepository.selectMappingAddItem(resSerialId);
 	}
 
 }

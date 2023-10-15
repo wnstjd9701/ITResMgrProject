@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,25 +40,45 @@ public class ResInfoController {
 		
 		List<ResInfo> searchResInfoByResClass = resInfoService.searchResInfoByResClass();
 		model.addAttribute("search", searchResInfoByResClass);
-		
 		List<CommonCodeDetail> selectResStatusCode = resInfoService.selectResStatusCode("RES000");
 		model.addAttribute("selectResStatusCode", selectResStatusCode);
 		
 		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace();
 		model.addAttribute("selectResInstallPlace", selectResInstallPlace);
-		
-		Map<String, Map<String, List<String>>> resClassMap = new LinkedHashMap<>();
-		Map<String, Map<String, List<String>>> resClassMap2 = new LinkedHashMap<>();
+		List<ResClass> resClassList = resInfoService.selectAllResClass();
+		Map<String, List<Map<String, List<Map<String, String>>>>> resClassMap = new LinkedHashMap<>();
+		// 데이터를 반복하면서 맵에 추가
+        for (ResClass r : resClassList) {
+            if (r.getUpperResClassId() == null) {
+                // 상위 클래스 ID가 null이면 하드웨어 또는 보안 항목
+                String value = r.getResClassName2(); // 하드웨어 또는 보안 항목 이름
+                // Create a new List<Map<String, List<Map<String, String>>>> and populate it
+                List<Map<String, List<Map<String, String>>>> tempMapList = new ArrayList<>();
+                Map<String, List<Map<String, String>>> innerMap = new LinkedHashMap<>();
+                List<Map<String, String>> innerList = new ArrayList<>();
+                Map<String, String> innerMapEntry = new HashMap<>();
+                innerMapEntry.put("key", "key"); // Modify with appropriate key name
+                innerList.add(innerMapEntry);
+                innerMap.put(value, innerList); // Modify with appropriate inner key name
+                tempMapList.add(innerMap);
 
-		
-		return "resinfo/resinfo";
-	}
+                System.out.println(tempMapList);
+                resClassMap.put(r.getResClassName(), tempMapList);
+            }
+        }
+        System.out.println(resClassMap);
+
+        // 결과 출력
+        return "resinfo/resinfo";
+    }
+
 	
-	@GetMapping("/resinfo/resclass")
+	@GetMapping("/resinfo/additem")
 	@ResponseBody
-	public String selectAllResClass(Model model, @RequestParam("resClassName")String resClassName) {
-		List<ResClass> resClassList = resInfoService.selectAllResClass(resClassName);
-		return "resinfo/resinfo";
+	public List<ResInfo> selectMappingAddItem(@RequestParam("resSerialId") String resSerialId){
+		System.out.println("asdasdasdasdasdasdasdas"+resSerialId);
+		List<ResInfo> selectMappingAddItem = resInfoService.selectMappingAddItem(resSerialId);
+		return selectMappingAddItem;
 	}
 	
 	@GetMapping("/resinfo/search")
@@ -68,10 +89,10 @@ public class ResInfoController {
 	}
 	
 	@PostMapping("/resinfo/insert")
-	public String insertResInfo(ResInfo resInfo, Model model) {
-		model.addAttribute("resInfo", resInfo);
-		resInfoService.insertResInfo(resInfo);
-		return "resinfo/resinfo";
+	@ResponseBody
+	public ResInfo insertResInfo(@RequestBody ResInfo resInfo) {
+		ResInfo insertResInfo = resInfoService.insertResInfo(resInfo);
+		return insertResInfo;
 	}
 	
 	@GetMapping("/resinfo/detail")

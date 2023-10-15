@@ -8,8 +8,7 @@
 		<![CDATA[
 			SELECT c.res_class_name "resClassName",
 			listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
-			c.upper_res_class_id	"upperResClassId",
-			r.res_class_id   "resClassId"
+			c.upper_res_class_id	"upperResClassId"
 			FROM (
 			SELECT upper_res_class_id, 
 			res_class_name,
@@ -21,7 +20,7 @@
 			CONNECT BY PRIOR res_class_id = upper_res_class_id
 			) r
 			JOIN RESCLASS c ON r.upper_res_class_id = c.res_class_id
-			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id,r.res_class_id
+			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id
 			ORDER BY r.lv , c.res_class_name DESC
 		]]>
 
