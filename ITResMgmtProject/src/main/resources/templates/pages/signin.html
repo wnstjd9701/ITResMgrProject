@@ -20,43 +20,43 @@
 	</header>
 
 	<th:block layout:fragment="content">
-		<main id="main" class="main">
+		<main id="main" class="main ">
 			<!-- Jumbotron -->
-			<div class="px-4 py-5 px-md-5 text-center text-lg-start"
+			<div class="px-4  px-md-5 text-center text-lg-start bg"
 				style="background-color: hsl(0, 0%, 96%);">
 				<div class="container">
 					<div class="row gx-lg-5 align-items-center">
-						<div class="col-lg-6 mb-5 mb-lg-0">
-							<h1 class="my-5 display-3 fw-bold ls-tight">
+						<div class=" mb-5 mb-lg-0 text-center">
+							<h1 class="my-5 display-3 fw-bold ls-tight ">
 								KCC 정보통신 <br /> <span class="text-primary">IT 자원 관리 시스템</span>
 							</h1>
-							<p style="color: hsl(217, 10%, 50.8%)">Lorem ipsum dolor sit
-								amet consectetur adipisicing elit. Eveniet, itaque accusantium
-								odio, soluta, corrupti aliquam quibusdam tempora at cupiditate
-								quis eum maiores libero veritatis? Dicta facilis sint aliquid
-								ipsum atque?</p>
 						</div>
 
-						<div class="col-lg-6 mb-5 mb-lg-0">
-							<div class="card">
-								<div class="card-body py-5 px-md-5">
-
+						<div class="mb-5 mb-lg-0 ">
+							<div class="card card-size ">
+								<div class="card-body py-5 px-md-5 ">
 									<p th:if="${message != null}" th:text="${message}"
-										class="text-danger"></p>
-										
+										class="text-danger massage-text" id="message-paragraph"></p>
 									<form th:action="@{/signin}" method="post" id="login">
 										<div class="form-outline mb-4">
-											<input type="text" id="employeeId" name="employeeId"
-												class="form-control" required /> <label class="form-label"
-												for="form3Example3">ID</label>
+											<div class="icon-input">
+												<span class="login-icon-wrap"><img
+													src="assets/img/id.png" class="login-img"></span> <input
+													type="text" id="employeeId" name="employeeId"
+													class="id-input-box" placeholder="아이디를 입력해 주세요." required />
+											</div>
 										</div>
+
 										<div class="form-outline mb-4">
-											<input type="password" id="employeePwd" name="employeePwd"
-												class="form-control" required /> <label class="form-label"
-												for="form3Example4">Password</label>
+											<div class="icon-input">
+												<span class="login-icon-wrap"><img
+													src="assets/img/pwd.png" class="login-img"></span> <input
+													type="text" id="employeePwd" name="employeePwd"
+													class="id-input-box" placeholder="비밀번호를 입력해 주세요." required />
+											</div>
 										</div>
 										<!-- Submit button -->
-										<button type="submit" class="btn btn-primary btn-block mb-4">
+										<button type="submit" class="btn btn-primary mb-4 btn-size">
 											Sign up</button>
 									</form>
 								</div>
