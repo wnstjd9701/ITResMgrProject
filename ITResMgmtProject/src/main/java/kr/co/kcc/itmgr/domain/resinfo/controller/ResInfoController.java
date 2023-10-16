@@ -88,23 +88,19 @@ public class ResInfoController {
 		            }
 		    }
 		    if(!map2.isEmpty()) {
-		    Map<String, String> map3 = new HashMap<>();
 		    for(String key2 : map2.keySet()) {
-		    for(ResClass r2 : resClassList) {
-			    	if(key2.equals(r2.getResClassName2())&&r2.getResClassId().startsWith("HW_")) {
-			    		map3.put(r2.getResClassName2(), r2.getResClassId());
-			    		map2.put(key2, map3);
+		    	Map<String, String> map3 = new HashMap<>();
+		    	for(ResClass r2 : resClassList) {
+			    	if(key2.equals(r2.getResClassName()) && key.equals(r2.getUpperResClassName())) {
+			    			map3.put(r2.getResClassName2(), r2.getResClassId());
 			    	}
-			    	if(key2.equals(r2.getResClassName2())&&r2.getResClassId().startsWith("SW_")) {
-			    		map3.put(r2.getResClassName2(), r2.getResClassId());
-			    		map2.put(key2, map3);
-			    	}
+			    	map2.put(key2, map3);
 			    }
-			    logger.info("map2"+map2);
 		    }
 		}
 		    resClassMap.put(key, map2);
 		}
+		model.addAttribute("resClassMap", resClassMap);
 		logger.info("dsdss"+resClassMap);
 		return "resinfo/resinfo";
 	}

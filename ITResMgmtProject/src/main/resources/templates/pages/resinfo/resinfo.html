@@ -266,6 +266,9 @@
 									</tr>
 								</thead>
 								<tbody>
+									<tr th:each="res:${resClassMap}">
+										<td th:value="${res.key}">[[${res.key}]]</td>
+									</tr>
 								</tbody>
 							</table>
 							<table class="table" id="res-class-list-table2">
@@ -274,7 +277,10 @@
 										<th>중분류</th>
 									</tr>
 								</thead>
-									<tbody>
+									<tbody th:each="res:${resClassMap}">
+										<tr th:each="rv:${res.value}">
+												<td th:value="${rv.key}">[[${rv.key}]]</td>
+										</tr>
 									</tbody>
 
 							</table>
@@ -284,8 +290,15 @@
 										<th>소분류</th>
 									</tr>
 								</thead>
-								    <tbody>
-								    </tbody>
+									<tbody th:each="res:${resClassMap}">
+										<div th:each="rv:${res.value}">
+										<tr th:each="r:${rv.value}">
+											<td th:value="${r.value}">
+												[[${r.key}]]
+											</td>
+										</tr>
+										</div>
+									</tbody>
 							</table>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
