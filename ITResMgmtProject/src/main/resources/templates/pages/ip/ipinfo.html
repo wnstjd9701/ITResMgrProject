@@ -24,17 +24,18 @@
 					<div class="ip-search-container">
 						<div class="ip-search">IP 검색</div>
 						<div class="ip-search ip-search-input">
-							<input class="ip-search-input" type="text" placeholder="IP 주소">
+							<input class="ip-address-search-input" type="text" placeholder="IP 주소">
 						</div>
 						<button class="btn btn-primary ip-btn search-btn">조회</button>
 						<button class="btn btn-primary ip-btn ip-new-btn">신규</button>
 						<button class="btn btn-primary ip-btn ip-save-btn">저장</button>
 						<button class="btn btn-primary ip-btn ip-delete-btn">삭제</button>
-						<button class="btn btn-primary excel-btn excel-upload-btn">엑셀 업로드</button>
-						<button class="btn btn-primary excel-btn excel-download-btn">엑셀 다운로드</button>
+						<button class="btn btn-primary excel-btn excel-upload-btn">엑셀
+							업로드</button>
+						<button class="btn btn-primary excel-btn excel-download-btn">엑셀
+							다운로드</button>
 					</div>
-					<div class="ip-btn-container">
-					</div>
+					<div class="ip-btn-container"></div>
 					<div class="ip-list-table-container">
 						<table class="table ip-table">
 							<thead>
@@ -46,17 +47,21 @@
 									<th>상세</th>
 								</tr>
 							</thead>
-							<tbody class="table ip-table-body">
+							<tbody class="ip-table-body">
 								<tr th:each="ip, i : ${ipInfo}">
-									<td class="ip-check"><input type="checkbox" class="ip-checkbox" th:value="${ip.ipSn}"></td>
+									<td class="ip-check"><input type="checkbox"
+										class="ip-checkbox" th:value="${ip.ipSn}"></td>
 									<td class="ip" th:text="${ip.ip}"></td>
 									<td class="ip-desc" th:text="${ip.ipDesc}">IP 설명입니다.</td>
-									<td class="ip-detail-code-name" th:text="${ip.detailCodeName}">IP 유형입니다.</td>
-									<td class="ip-detail"><input type="button" class="btn btn-primary ip-detail-btn" th:data-ip-sn="${ip.ipSn}" value="상세"></td>
+									<td class="ip-detail-code-name" th:text="${ip.detailCodeName}">IP
+										유형입니다.</td>
+									<td class="ip-detail"><input type="button"
+										class="btn btn-primary ip-detail-btn"
+										th:data-ip-sn="${ip.ipSn}" value="상세"></td>
 								</tr>
 							</tbody>
 						</table>
-						<input type="hidden" class="search-type" value="">
+						<input type="hidden" class="ip-search-type" value="">
 						<nav aria-label="Page navigation example" class="paging-nav">
 							<ul class="pagination ip-pagination justify-content-center">
 								<li class="page-item">
@@ -65,17 +70,20 @@
 										<span aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
 									</button>
 								</li>
-								<li class="page-item" th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
-									<button class="page-link page-link-val" th:value="${pageNum}" th:text="${pageNum}"></button>
+								<li class="page-item"
+									th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+									<button class="page-link page-link-val" th:value="${pageNum}"
+										th:text="${pageNum}"></button>
 								</li>
 								<li class="page-item">
-									<button class="page-link next-page-link" aria-label="Next" th:value="${paging.endPage + 1}" th:if="${paging.endPage > 5}">
-									    <span aria-hidden="true">&raquo;</span>
-									    <span class="sr-only">Next</span>
+									<button class="page-link next-page-link" aria-label="Next"
+										th:value="${paging.endPage + 1}" th:if="${paging.endPage > 5}">
+										<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
 									</button>
-									<button class="page-link next-page-link" aria-label="Next" disabled th:unless="${paging.endPage > 5}" th:value="${paging.endPage + 1}">
-									    <span aria-hidden="true">&raquo;</span>
-									    <span class="sr-only">Next</span>
+									<button class="page-link next-page-link" aria-label="Next"
+										disabled th:unless="${paging.endPage > 5}"
+										th:value="${paging.endPage + 1}">
+										<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
 									</button>
 								</li>
 							</ul>
@@ -85,47 +93,45 @@
 				<div class="ip-res-container">
 					<div class="ip-detail-container">
 						<form>
-						  <div class="form-group">
-						    <label for="exampleFormControlInput1">IP 주소</label>
-						    <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="IP">
-						  </div>
-						  <div class="form-group">
-						    <label for="exampleFormControlSelect1">유형</label>
-						    <select class="form-control" id="exampleFormControlSelect1">
-						      <option>1</option>
-						      <option>2</option>
-						      <option>3</option>
-						      <option>4</option>
-						      <option>5</option>
-						    </select>
-						  </div>
-						  <div class="form-group">
-						    <label for="exampleFormControlTextarea1">설명</label>
-						    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-						  </div>
+							<div class="form-group">
+								<label for="ip-address-input-label">IP 주소</label> <input
+									type="text" class="form-control detail-ip"
+									id="ip-address-input-label" placeholder="IP">
+							</div>
+							<div class="form-group">
+								<label for="ip-type-label">유형</label> <select
+									class="form-control detail-ip-type" id="ip-type-label">
+									<option th:each="ipCode : ${ipCode}" th:value="${ipCode.detailCode}" th:text="${ipCode.detailCodeName}">
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="ip-desc-label">설명</label>
+								<textarea class="form-control detail-ip-desc" id="ip-desc-label"
+									rows="3"></textarea>
+							</div>
 						</form>
 					</div>
 					<div class="res-info-container">
-						<table class="table res-info-table ">
+						<input type="hidden" class="detail-ip-sn" value="">
+						<table class="table res-info-table">
 							<thead>
 								<tr>
 									<th>자원 이름</th>
 									<th>자원 상태</th>
 									<th>랙 정보</th>
 									<th>자원 분류</th>
-									<th>설치 장소</th>
 									<th>설치 장소명</th>
 									<th>설치 상세주소</th>
 									<th>상세</th>
-								</tr>	
+								</tr>
 							</thead>
-							<tbody>
+							<tbody class="res-info-table-body">
 								<tr>
-									<td colspan="8">IP를 선택하세요.</td>
+									<td colspan="7" style='text-align:center; font-weight: bold;'>IP를 선택하세요.</td>
 								</tr>
 							</tbody>
 						</table>
-						<input type="hidden" class="search-type" value="">
+						<input type="hidden" class="res-ip-sn" value="">
 						<nav aria-label="Page navigation example" class="paging-nav">
 							<ul class="pagination res-pagination justify-content-center">
 								<!-- <li class="page-item">
@@ -153,8 +159,8 @@
 				</div>
 			</div>
 		</main>
-	<script type="text/javascript" th:src="@{/js/ip/ip.js}"></script>
-	<script th:src="@{/assets/js/main.js}"></script>
+		<script type="text/javascript" th:src="@{/js/ip/ip.js}"></script>
+		<script th:src="@{/assets/js/main.js}"></script>
 	</th:block>
 </body>
 </html>
