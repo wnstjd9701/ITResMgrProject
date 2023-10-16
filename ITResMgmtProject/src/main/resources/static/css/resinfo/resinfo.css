@@ -227,3 +227,37 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 #resInfoDetailTable td label{
   	align-items: center;
 }
+
+
+/* Custom styles for the search bar container */
+.search-bar span {
+    border: 1px solid white-gray;
+    padding: 5px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color:rgb(232, 232, 232);
+    width: 22%;
+    height: 40px;
+}
+.search-bar input,
+.search-bar select,
+.search-bar label{
+	float:right;
+}
+
+.search-bar label{
+	margin-right:7px;
+}
+
+.search-bar label input{
+	margin-top:5px;
+	margin-left:5px;
+}
+
+
+
+
+
+
+

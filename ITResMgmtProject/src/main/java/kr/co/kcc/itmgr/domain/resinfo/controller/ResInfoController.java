@@ -1,6 +1,7 @@
 package kr.co.kcc.itmgr.domain.resinfo.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ResInfoController {
-	
+
 	private final IResInfoService resInfoService;
 	static final Logger logger = LoggerFactory.getLogger(ResClassController.class);
 
@@ -60,83 +61,68 @@ public class ResInfoController {
 		model.addAttribute("nowPageCount", nowPageBlock);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
-		
+
 		List<ResInfo> searchResInfoByResClass = resInfoService.searchResInfoByResClass();
 		model.addAttribute("search", searchResInfoByResClass);
-		
+
 		List<CommonCodeDetail> selectResStatusCode = resInfoService.selectResStatusCode("RES000");
 		model.addAttribute("selectResStatusCode", selectResStatusCode);
-		
+
 		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace();
 		model.addAttribute("selectResInstallPlace", selectResInstallPlace);
 		List<ResClass> resClassList = resInfoService.selectAllResClass();
+		Map<String, Map<String, Map<String, String>>> resClassMap = new HashMap<String, Map<String, Map<String, String>>>();
 
-		Map<String,List<Map<String,List<Map<String,String>>>>> lev1 = new HashMap<String, List<Map<String,List<Map<String,String>>>>>();
 		// 데이터를 반복하면서 맵에 추가
-        for (ResClass r : resClassList) {
-        	List<Map<String,List<Map<String,String>>>> lev2List = new ArrayList<Map<String,List<Map<String,String>>>>();
-            if (r.getUpperResClassName() == null) {
-            	if(!lev1.containsKey(r.getResClassName())) {
-            		Map<String,List<Map<String,String>>> lev2= new HashMap<String, List<Map<String,String>>>();
-            		List<Map<String,String>> lev3List=new ArrayList<Map<String,String>>(); 
-            		lev2.put(r.getResClassName2(), lev3List);
-            		lev2List.add(lev2);
-            		
-            		lev1.put(r.getResClassName(), lev2List);
-            	}else {
-            		Map<String,List<Map<String,String>>> lev2= new HashMap<String, List<Map<String,String>>>();
-            		List<Map<String,String>> lev3List=new ArrayList<Map<String,String>>(); 
-            		
-            		lev2.put(r.getResClassName2(), lev3List);
-            		lev2List=lev1.get(r.getResClassName());
-            		
-            		lev2List.add(lev2);
-            		lev1.put(r.getResClassName(), lev2List);
-            	}
-            }else {
-            	Map<String,List<Map<String,String>>> lev2=new HashMap<String, List<Map<String,String>>>();
-            	List<Map<String,String>> lev3List= new ArrayList<Map<String,String>>();
-            	Map<String,String> lev3 = new HashMap<String, String>();
+		
+		for (ResClass r : resClassList) {
+			if (r.getUpperResClassName() == null) {
+				resClassMap.put(r.getResClassName(), null);
+			}
+		}
+		for (String key: resClassMap.keySet()) {
+			Map<String, Map<String, String>> map2 = new HashMap<String, Map<String,String>>();
+		    for (ResClass r : resClassList) {
+		        if (key.equals(r.getResClassName())) {
+		        		map2.put(r.getResClassName2(), null);
+		            }
+		    }
+		    if(!map2.isEmpty()) {
+		    Map<String, String> map3 = new HashMap<>();
+		    for(String key2 : map2.keySet()) {
+		    for(ResClass r2 : resClassList) {
+			    	if(key2.equals(r2.getResClassName2())&&r2.getResClassId().startsWith("HW_")) {
+			    		map3.put(r2.getResClassName2(), r2.getResClassId());
+			    		map2.put(key2, map3);
+			    	}
+			    	if(key2.equals(r2.getResClassName2())&&r2.getResClassId().startsWith("SW_")) {
+			    		map3.put(r2.getResClassName2(), r2.getResClassId());
+			    		map2.put(key2, map3);
+			    	}
+			    }
+			    logger.info("map2"+map2);
+		    }
+		}
+		    resClassMap.put(key, map2);
+		}
+		logger.info("dsdss"+resClassMap);
+		return "resinfo/resinfo";
+	}
 
-            	lev2List=lev1.get(r.getUpperResClassName());
-            	for(int i=0;i<lev2List.size();i++) {
-            		if(lev2List.get(i).containsKey(r.getResClassName())) {
-            			lev2=lev2List.get(i);
-            			lev3List=lev2List.get(i).get(r.getResClassName());
-            			lev2List.remove(i);
-            			break;
-            		}
-            	}
-            	lev3.put(r.getResClassName2(), r.getResClassId());
-            	lev3List.add(lev3);
-            	lev2.put(r.getResClassName(), lev3List);
-            	
-            	lev2List.add(lev2);
-            	lev1.put(r.getUpperResClassName(), lev2List);
-            }
-        }
-        logger.info("resClassList: "+lev1.toString());
-        model.addAttribute("resClassList", lev1);
-
-
-        return "resinfo/resinfo";
-    }
-
-	
 	@GetMapping("/resinfo/additem")
 	@ResponseBody
 	public List<ResInfo> selectMappingAddItem(@RequestParam("resSerialId") String resSerialId){
 		List<ResInfo> selectMappingAddItem = resInfoService.selectMappingAddItem(resSerialId);
 		return selectMappingAddItem;
 	}
-	
+
 	@GetMapping("/resinfo/search")
 	@ResponseBody
 	public List<ResInfo> searchResInfo(ResInfo resInfo) {
 		List<ResInfo> searchResInfo = resInfoService.searchResInfo(resInfo);
 		return searchResInfo;
 	}
-	
+
 	@PostMapping("/resinfo/insert")
 	@ResponseBody
 	public void insertResInfo(@RequestBody ResInfo resInfo) {
@@ -161,7 +147,7 @@ public class ResInfoController {
 		resInfo.setAddInfo(resInfo.getAddInfo());
 		resInfoService.insertResInfo(resInfo);
 	}
-	
+
 	@GetMapping("/resinfo/detail")
 	@ResponseBody
 	public ResInfo selectResInfoDetail(@RequestParam("resName")String resName) {
