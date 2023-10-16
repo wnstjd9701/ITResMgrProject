@@ -1,0 +1,202 @@
+/* .modal{
+    position:absolute;
+    display:none;
+    
+    background-color:white;
+    
+    justify-content: center;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+}
+ */
+.installPlaceModal{
+    position:absolute;
+    display:none;
+    
+    background-color:#f5f5f5;
+    background-color: rgba( 255, 255, 255, 0.5 );
+    justify-content: center;
+    top:40;
+    left:40;
+
+    width:30%;
+    height:80%;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.container {
+    margin-top: 10px;
+    margin-left: 270px;
+    max-width: 85%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: navy;
+    border-color: navy;
+    color: white;
+    margin-left: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #001f3f;
+    border-color: #001f3f;
+}
+
+select, input[type="text"] {
+    padding: 3px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.btn-group span {
+    margin-right: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.radio-label {
+    margin-right: 20px;
+}
+
+.addTable table {
+    display: none; /* Initially hide all tables */
+}
+
+.nav-link .active {
+    background-color: #f8f9fa; /* Change the background color when active */
+    border-top: 2px solid navy; /* Add a border at the bottom when active */
+    color: navy; /* Change the text color when active */
+}
+
+#closeModal {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+#closeModal2 {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+#save_btn {
+    display: block;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 테이블 스타일 */
+.res-info-list-table  {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.res-info-list-table tr th, .res-info-list-table tr td {
+  padding: 10px;
+  text-align: center;
+}
+
+.res-info-list-table tr th {
+  background-color: #7289AB;
+  color:white;
+}
+.res-info-list-table tr td {
+  background-color: #FCFCFC;
+}
+
+.table{
+	font-size:12px;
+}
+
+.table tr th {
+  background-color: #7289AB;
+  color:white;
+}
+
+#installPlaceSearchBtn, #res-class-search-btn {
+  font-size: 12px; /* 원하는 크기로 조정하세요 */
+padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
+  background-color:navy;
+  border : navy;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-container button {
+  margin: 0 5px;
+}
+
+/* CSS for the Save button */
+#res-info-save-btn {
+  color: white;
+  padding: 6px 12px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 5px;
+  background-color: navy;
+}
+
+/* CSS for the Close button */
+#res-info-close-btn {
+  color: white;
+  padding: 6px 12px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 5px;
+  background-color: navy;
+}
+
+/* Optional: Add hover effect */
+#res-info-save-btn:hover {
+  background-color: darkblue;
+}
+
+
+
+.nav-tabs .nav-item .nav-link {
+  color: gray;
+  font-weight: bold;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  background-color: navy;
+  color: white;
+}
+
+/* CSS for styling the content tables */
+.table-content {
+  margin-top: 20px;
+}
+
+.table-content table {
+  width: 100%;
+  border: 1px solid navy;
+}
+
+.table-content table tbody tr td {
+  padding: 10px;
+}
+
+.selected {
+    background-color: #ffeeba; /* 선택한 td의 배경색을 변경하세요 */
+}
+

@@ -1,0 +1,94 @@
+table th{
+	width:200px;
+}
+
+.add-res-class-modal{
+    position:absolute;
+    display:none;
+    
+    background-color:#f5f5f5;
+    background-color: rgba( 255, 255, 255, 0.5 );
+    justify-content: center;
+    top:20;
+    left:50;
+
+    width:50%;
+    height:50%;
+}
+
+.modal.modal-center {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) { 
+  .modal.modal-center:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog.modal-center {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle; 
+}
+
+.btn {
+	float: right; 
+	margin-left: 10px;
+}
+
+.second-container{
+    padding: 20px;
+    background-color: white;
+    width: 65%; 
+    padding-bottom: 20px; 
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+.first-container{
+    padding: 20px;
+    background-color: white;
+    width: 35%; 
+    padding-bottom: 20px; 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+/* 자원분류 테이블 */
+#resClassDetailTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#resClassDetailTable th, #resClassDetailTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+#resClassDetailTable th {
+  background-color: #7289AB;
+  color:white;
+}
+/* 부가항목 테이블 스타일 */
+#addInfoTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#addInfoTable th, #addInfoTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+#addInfoTable th {
+  background-color: #7289AB;
+  color:white;
+}
+
+.addInfoTableHead th {
+  font-weight: bold;
+}

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.home.dao.IMonitoringRepository">
+	<sql id="ip">
+		AND ip.ip is not null
+	</sql>
+	<sql id="resInfo">
+		SELECT
+		    r.res_serial_id                                     AS "resSerialId",
+		    r.res_name                                          AS "resName",
+		    r.mgmt_id                                           AS "mgmtId",
+		    r.res_status_code                                   AS "resStatusCode",
+		    r.introduction_date                                 AS "introductionDate",
+		    r.use_yn                                            AS "resUseYn",
+		    rc.res_class_id                                     AS "resClassId",
+		    rc.res_class_name                                   AS "resClassName",
+		    rc.res_class_path                                   AS "resClassPath",
+		    i.install_place_sn                                  AS "installPlaceSn",
+		    i.install_place_name                                AS "installPlaceName",
+		    concat(i.install_place_address,
+		           concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
+		    ip.ip                                               AS "ip",
+		    ip.ip_desc                                          AS "ipDesc"
+		FROM
+		    resinfo      r
+		    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
+		    LEFT JOIN (
+		        SELECT
+		            level,
+		            res_class_id,
+		            res_class_name,
+		            substr(sys_connect_by_path(res_class_name, '>'),
+		                   2) AS "RES_CLASS_PATH"
+		        FROM
+		            resclass
+		        WHERE
+		            level = 3
+		        START WITH
+		            upper_res_class_id IS NULL
+		        CONNECT BY
+		            PRIOR res_class_id = upper_res_class_id
+		    ) rc ON r.res_class_id = rc.res_class_id
+	</sql>
+	
+	<select id="selectAllResourceInformation">
+		<include refid="resInfo"></include>
+		WHERE
+		    r.monitoring_yn = 'Y' AND r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' <include refid="ip"></include>
+	</select>
+	
+	<select id="selectResClassInformationByLevel" parameterType="int">
+		<![CDATA[
+			SELECT
+			    level,
+			    res_class_id as "resClassId",
+			    upper_res_class_id as "upperResClassId",
+			    res_class_name as "resClassName"
+			FROM
+			    resclass 
+			WHERE
+			    level = #{level} AND res_class_id LIKE 'HW%'
+			START WITH
+			    upper_res_class_id IS NULL
+			CONNECT BY
+			    PRIOR res_class_id = upper_res_class_id
+		]]>
+	</select>
+	
+	<select id="selectResourceInformationBySearchCondition" 
+		parameterType="kr.co.kcc.itmgr.domain.home.model.SearchCondition" resultType="kr.co.kcc.itmgr.domain.home.model.Monitoring">
+			SELECT
+			    r.res_serial_id                                     AS "resSerialId",
+			    r.res_name                                          AS "resName",
+			    r.mgmt_id                                           AS "mgmtId",
+			    r.res_status_code                                   AS "resStatusCode",
+			    r.introduction_date                                 AS "introductionDate",
+			    r.use_yn                                            AS "resUseYn",
+			    rc.res_class_id                                     AS "resClassId",
+			    rc.res_class_name                                   AS "resClassName",
+			    rc.res_class_path                                   AS "resClassPath",
+			    i.install_place_sn                                  AS "installPlaceSn",
+			    i.install_place_name                                AS "installPlaceName",
+			    concat(i.install_place_address,
+			           concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
+			    ip.ip                                               AS "ip",
+			    ip.ip_desc                                          AS "ipDesc"
+			FROM
+			    (
+			        SELECT
+			            level,
+			            res_class_id,
+			            res_class_name,
+			            substr(sys_connect_by_path(res_class_name, '>'),
+			                   2) AS "RES_CLASS_PATH"
+			        FROM
+			            resclass
+			        WHERE
+			                level = 3
+			            	<if test='! bottomResClass.equals("A")'>
+			            		and	res_class_id = #{bottomResClass}
+			            	</if>
+			            	<if test='! midResClass.equals("A")'>
+								and upper_res_class_id = #{midResClass}			            		
+			            	</if>
+			        START WITH
+			            upper_res_class_id IS NULL
+			        CONNECT BY
+			            PRIOR res_class_id = upper_res_class_id
+			    )            rc
+			    LEFT JOIN resinfo      r ON rc.res_class_id = r.res_class_id
+			    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+			    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
+			WHERE
+			    r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' <include refid="ip"></include>
+			        <if test='monitoringYn.equals("Y")'>
+			            and r.monitoring_yn = #{monitoringYn}
+			        </if>
+			        <if test='resName != null or resName = "" or resName.length() gte 1'>
+			            and r.res_name LIKE '%' || #{resName} || '%'
+			        </if>
+			        <if test='midResClass.equals("A") or bottomResClass.equals("A")'>
+			        	and r.res_serial_id is not null
+			        </if>
+	</select>
+</mapper>

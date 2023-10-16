@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.resclass.dao.IResClassRepository">
+
+
+
+	<select id="selectAllResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
+		<![CDATA[
+			SELECT c.res_class_name "resClassName",
+			listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
+			c.upper_res_class_id	"upperResClassId",
+			r.res_class_id   "resClassId"
+			FROM (
+			SELECT upper_res_class_id, 
+			res_class_name,
+			res_class_id,
+			level as lv 
+			FROM RESCLASS
+			WHERE use_yn = 'Y'
+			START WITH upper_res_class_id IS NULL
+			CONNECT BY PRIOR res_class_id = upper_res_class_id
+			) r
+			JOIN RESCLASS c ON r.upper_res_class_id = c.res_class_id
+			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id,r.res_class_id
+			ORDER BY r.lv , c.res_class_name DESC
+		]]>
+
+	</select>
+	
+	<select id="numberOfResByResClass" resultType="map">
+		<![CDATA[
+		    SELECT rc.upper_res_class_id	"upperResClassId",
+		    rc.res_class_name "resClassName" , 
+		    COUNT(*) AS "mappingNumberOfRes" 
+            FROM RESINFO r
+            JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+            GROUP BY rc.res_class_name, rc.upper_res_class_id
+		]]>
+
+	</select>
+	
+	<select id="numberOfResByResClass2" resultType="map">
+		<![CDATA[
+            select rcaa.upper_res_class_id  "upperResClassId",
+            rca.res_class_name  "resClassName",
+            rcaa.mappingNumberOfRes "mappingNumberOfRes"
+            from resclass rca
+            inner join
+            (SELECT rc.upper_res_class_id,
+            COUNT(*) AS mappingNumberOfRes 
+            FROM RESINFO r
+            JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+            GROUP BY rc.upper_res_class_id)rcaa on rcaa.upper_res_class_id=rca.res_class_id
+		]]>
+	</select>
+	
+	<select id="numberOfResByResClass3" resultType="map">
+		<![CDATA[
+				SELECT
+				rc.res_class_id	"upperResClassId",
+				rc.res_class_name	"resClassName", 
+				SUM(rr.aa) 	"mappingNumberOfRes"
+				FROM resclass rc
+				INNER JOIN (
+				SELECT 
+				rs.upper_res_class_id, 
+				SUM(r.aa) AS aa
+				FROM resclass rs
+				INNER JOIN (
+				SELECT 
+				rc.upper_res_class_id, 
+				rc.res_class_id,
+				COUNT(*) AS aa
+				FROM RESINFO r
+				JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+				GROUP BY 
+				rc.upper_res_class_id, rc.res_class_id) r ON rs.res_class_id = r.upper_res_class_id
+				GROUP BY rs.upper_res_class_id ) rr ON rc.res_class_id = rr.upper_res_class_id
+				GROUP BY rc.res_class_name, rc.res_class_id
+
+		]]>
+	</select>
+	<select id="selectResClassByResClassName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<![CDATA[
+			SELECT
+			    urc_name.res_class_name "topUpperResClassName",
+			    urc.res_class_name   "upperResClassName",
+			    rc.res_class_name   "resClassName",
+			    rc.res_class_id		"resClassId",
+			    rc.use_yn   "useYn",
+                a.add_item_sn   "addItemSn",
+                ad.add_item_name "addItemName",
+                ad.use_yn    "addItemUseYn"
+			FROM RESCLASS rc
+			    INNER JOIN RESCLASS urc
+			        ON urc.res_class_id = rc.upper_res_class_id
+			    INNER JOIN RESCLASS urc_name
+			        ON urc_name.res_class_id = urc.upper_res_class_id
+                LEFT OUTER JOIN resclassasideinfomapping a
+                    ON a.res_class_id = rc.res_class_id
+                LEFT OUTER JOIN additem ad
+                    ON ad.add_item_sn = a.add_item_sn
+			    WHERE rc.res_class_name = #{resClassName}
+		]]>
+
+	</select>
+	
+	<insert id="insertResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<![CDATA[
+			INSERT INTO
+				RESCLASS
+				(upper_res_class_id, res_class_id, res_class_name, use_yn, create_date, creater_id, update_date, updater_id)
+			VALUES
+				(#{upperResClassId}, #{resClassId}, #{resClassName}, 'Y', SYSDATE, 'wh467925', SYSDATE, 'wh467925')
+		]]>
+	</insert>
+	
+	<select id="selectResClassByLevel" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<![CDATA[
+			SELECT
+			    LEVEL	"level",
+			    res_class_id	"resClassId",
+			    res_class_name	"resClassName",
+			    upper_res_class_id	"upperResClassId"
+			FROM RESCLASS
+			START WITH upper_res_class_id IS NULL
+			CONNECT BY PRIOR res_class_id = upper_res_class_id
+			ORDER SIBLINGS BY res_class_id
+		]]>
+	</select>
+	
+	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		<![CDATA[
+			SELECT /* selectAddItemInResClass */
+				add_item_sn		"addItemSn",
+				add_item_name	"addItemName",
+				add_item_desc	"addItemDesc",
+				use_yn	"addItemUseYn"
+			FROM (
+				SELECT add_item_sn, add_item_name, add_item_desc, use_yn, rownum AS rnum
+				FROM (
+					SELECT * FROM additem
+					WHERE use_yn = 'Y'
+					)
+				)
+			WHERE rnum BETWEEN #{start} AND #{end}
+		]]>
+	</select>
+	
+	<select id="countOfAddItemList" resultType="integer">
+			SELECT COUNT(*) AS "addItemSn"
+			FROM ADDITEM
+			WHERE use_yn = 'Y'
+	</select>
+
+	<insert id="insertAddItemToResClass"  parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+			INSERT INTO resclassasideinfomapping(
+				res_class_id,
+				add_item_sn,
+				create_date,
+				creater_id
+			)
+			<foreach collection="list" item="resClass" separator="UNION ALL">
+				SELECT
+					#{resClass.resClassId},
+					#{resClass.addItemSn},
+					SYSDATE,
+					'wh467925'
+				FROM
+					DUAL
+			</foreach>
+	</insert>
+	
+
+	
+	<update id="updateResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+			UPDATE RESCLASS
+			SET 
+				res_class_name	=	#{resClassName}, 
+				use_yn	=	#{useYn}
+			WHERE res_class_id	=	#{resClassId}
+	</update>
+	
+	<delete id="deleteAddItemInResClass" parameterType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		DELETE FROM resclassasideinfomapping
+			WHERE 
+				res_class_id = #{resClassId} AND add_item_sn = #{addItemSn}		
+
+	</delete>
+	
+	<select id="selectResClassAndAddItemList" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
+		SELECT
+			    urc_name.res_class_name "topUpperResClassName",
+			    urc.res_class_name   "upperResClassName",
+			    rc.res_class_name   "resClassName",
+			    rc.res_class_id		"resClassId",
+			    rc.use_yn   "useYn",
+                a.add_item_sn   "addItemSn",
+                ad.add_item_name "addItemName",
+                ad.use_yn    "addItemUseYn"
+			FROM RESCLASS rc
+			    INNER JOIN RESCLASS urc
+			        ON urc.res_class_id = rc.upper_res_class_id
+			    INNER JOIN RESCLASS urc_name
+			        ON urc_name.res_class_id = urc.upper_res_class_id
+                LEFT OUTER JOIN resclassasideinfomapping a
+                    ON a.res_class_id = rc.res_class_id
+                LEFT OUTER JOIN additem ad
+                    ON ad.add_item_sn = a.add_item_sn
+	</select>
+	
+</mapper>
