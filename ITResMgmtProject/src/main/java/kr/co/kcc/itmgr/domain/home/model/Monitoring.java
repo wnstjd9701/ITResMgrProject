@@ -37,6 +37,7 @@ public class Monitoring {
 	// IP
 	private String ip; // IP 번호
 	private String ipDesc; // IP 설명
+	private boolean ipStatus;
 	
 	// 검색을 위한 칼럼
 	private String midResClass;
