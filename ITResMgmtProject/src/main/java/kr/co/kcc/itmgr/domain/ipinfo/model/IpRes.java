@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class IpRes {
 	// resipmapping
-	private int resSerialId;
+	private int ipSn;
+	private String resSerialId;
 	private String ipTypeCode;
 	private String ipTypeCodeName;
 	
@@ -15,7 +16,6 @@ public class IpRes {
 	private String mgmtDeptName;
 	private String rackInfo;
 	private String resClassName;
-	private int resCount;
 	
 	// installPlace
 	private String installPlaceName;
