@@ -23,7 +23,7 @@
 	padding: 0 0 0 10px;
 }
 
-.place-table {
+.place-table, #chart-area {
 	font-size: 12px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -52,6 +52,7 @@ input[type="button"] {
 					<div>
 						<input type="button" class="group-do" value="지도 새로고침">
 					</div>
+					<div id="chart-area"></div>
 					<select id="doNameSelect" class="form-select">
 						<option value="-">선택</option>
 						<option value="ALL">전체 [ [[${totalResCount}]] ]</option>
@@ -160,7 +161,6 @@ input[type="button"] {
 			</div>
 		</div>
 		<div id="chart-area"></div>
-	</div>
 </main>
 	<script th:src="@{/assets/js/main.js}"></script>
 	<script type="text/javascript"
@@ -688,20 +688,121 @@ $(document).ready(function(){
     
     const el = document.getElementById('chart-area');
     const data = {
-      categories: ['Browser'],
+      categories: ['자원 현황'],
       series: [],
     };
-    const options = {
-      chart: { title: '지역별 자원 현황', width: 600, height: 600 },
-      series: {
-        dataLabels: {
-          visible: true,
-          pieSeriesName: {
-            visible: true,
-          },
-        },
-      },
-    };
+    var options = {
+    		chart: { title: '지역별 자원 현황', width: 720, height: 400 },
+    		  series: {
+    		    dataLabels: {
+    		      visible: true,
+    		      pieSeriesName: { visible: true, anchor: 'outer' },
+    		    },
+    		    radiusRange: {
+    	            inner: '20%',
+    	            outer: '100%',
+    	        },
+    		  },
+    		  theme: {
+    			  title: {
+    			      fontFamily: 'Comic Sans MS',
+    			      fontSize: 25,
+    			      fontWeight: 100,
+    			      color: '#ff416d'
+    			    },
+    			    exportMenu: {
+    			        button: {
+    			          backgroundColor: '#ff0000',
+    			          borderRadius: 5,
+    			          borderWidth: 2,
+    			          borderColor: '#000000',
+    			          xIcon: {
+    			            color: '#ffffff',
+    			            lineWidth: 3,
+    			          },
+    			          dotIcon: {
+    			            color: '#ffffff',
+    			            width: 10,
+    			            height: 3,
+    			            gap: 1,
+    			          },
+    			        },
+    			        panel: {
+    			          borderColor: '#ff0000',
+    			          borderWidth: 2,
+    			          borderRadius: 10,
+    			          header: {
+    			            fontSize: 15,
+    			            fontFamily: 'fantasy',
+    			            color: '#ffeb3b',
+    			            fontWeight: 700,
+    			            backgroundColor: '#673ab7',
+    			          },
+    			          body: {
+    			            fontSize: 12,
+    			            fontFamily: 'fantasy',
+    			            color: '#ff0000',
+    			            fontWeight: '500',
+    			            backgroundColor: '#000000',
+    			          },
+    			        }
+    			    },
+    			    tooltip: {
+    			        background: '#80CEE1',
+    			        borderColor: '#3065AC',
+    			        borderWidth: 10,
+    			        borderRadius: 20,
+    			        borderStyle: 'double',
+    			        header: {
+    			          fontSize: 15,
+    			          fontWeight: 700,
+    			          color: '#333333',
+    			          fontFamily: 'monospace',
+    			        },
+    			        body: {
+    			          fontSize: 11,
+    			          fontWeight: 700,
+    			          color: '#a66033',
+    			          fontFamily: 'monospace',
+    			        }
+    			      },
+    			      chart: {
+    			          fontFamily: 'Verdana',
+    			          backgroundColor: 'rgba(9, 206, 115, 0.1)',
+    			        },
+    		    series: {
+    		      dataLabels: {
+    		        fontFamily: 'monaco',
+    		        useSeriesColor: true,
+    		        lineWidth: 2,
+    		        textStrokeColor: '#ffffff',
+    		        shadowColor: '#ffffff',
+    		        shadowBlur: 4,
+    		        callout: {
+    		          lineWidth: 3,
+    		          lineColor: '#f44336',
+    		          useSeriesColor: false
+    		        },
+    		        pieSeriesName: {
+    		          useSeriesColor: false,
+    		          color: '#f44336',
+    		          fontFamily: 'fantasy',
+    		          fontSize: 13,
+    		          textBubble: {
+    		            visible: true,
+    		            paddingX: 1,
+    		            paddingY: 1,
+    		            backgroundColor: 'rgba(158, 158, 158, 0.3)',
+    		            shadowOffsetX: 0,
+    		            shadowOffsetY: 0,
+    		            shadowBlur: 0,
+    		            shadowColor: 'rgba(0, 0, 0, 0)'
+    		          }
+    		        }
+    		      }
+    		    }
+    		  }
+    		};
     var doNameList = JSON.parse(doNames);
     console.log(doNameList);
     for (const key in doNameList){

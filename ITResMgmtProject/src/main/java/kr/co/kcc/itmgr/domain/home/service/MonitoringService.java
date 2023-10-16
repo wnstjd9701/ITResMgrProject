@@ -1,5 +1,8 @@
 package kr.co.kcc.itmgr.domain.home.service;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,20 @@ public class MonitoringService implements IMoniteringService{
 	@Override
 	public List<Monitoring> selectResInformationBySearchCondition(SearchCondition searchCondition) {
 		return monitoringRepository.selectResourceInformationBySearchCondition(searchCondition);
+	}
+	
+	// 서버 핑 체크
+	@Override
+	public Boolean serverPingCheck(String ip) {
+		InetAddress pingCheck;
+		boolean isAlive = false;
+		try {
+			pingCheck = InetAddress.getByName(ip);
+			isAlive = pingCheck.isReachable(5000); // Timeout 조절 가능
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return isAlive;
 	}
 
 }

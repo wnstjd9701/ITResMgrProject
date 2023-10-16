@@ -1,5 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.kcc.itmgr.domain.additem.dao.IIpRepository">
-
+<mapper namespace="kr.co.kcc.itmgr.domain.ipinfo.dao.IIpInfoRepository">
+	<sql id="pagingCondition">
+		<where>
+		    rn BETWEEN ${start} AND ${end}
+		</where>
+	</sql>
+	
+	<sql id="ipCount">
+		SELECT COUNT(*) FROM ipinfo
+	</sql>
+	
+	<sql id="ipInfo">
+		WITH ipcode AS (
+		    SELECT
+		        cd.detail_code,
+		        cd.code_group_id,
+		        cd.detail_code_name
+		    FROM
+		        commoncodedetail cd
+		        LEFT JOIN commoncode       c ON c.code_group_id = cd.code_group_id
+		    WHERE
+		        c.code_group_id = 'IPT000'
+		)
+		SELECT
+		    *
+		FROM
+		    (
+		        SELECT
+		            ip.ip_sn           AS "ipSn",
+		            ip.ip              AS "ip",
+		            ip.ip_desc         AS "ipDesc",
+		            c.code_group_id    AS "codeGroupId",
+		            c.detail_code      AS "detailCode",
+		            c.detail_code_name AS "detailCodeName",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    ip.ip_sn
+		            )                  AS rn
+		        FROM
+		            ipinfo       ip
+		            LEFT JOIN resipmapping rim ON ip.ip_sn = rim.ip_sn
+		            LEFT JOIN resinfo      r ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipcode       c ON c.detail_code = rim.ip_type_code
+		        ORDER BY
+		            ip.ip_sn
+		    ) ip
+	</sql>
+	<sql id="resInfo">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT
+		    *
+		FROM
+		    (
+		        SELECT
+		            r.res_serial_id                AS "resSerialId",
+		            r.res_name                     AS "resName",
+		            cd_res_status.detail_code_name AS "resStatusCodeName",
+		            r.mgmt_dept_name               AS "mgmtDeptName",
+		            r.rack_info                    AS "rackInfo",
+		            rc.res_class_name              AS "resClassName",
+		            cd_ip_type.detail_code_name    AS "ipTypeCodeName",
+		            insp.install_place_name AS "installPlaceName",
+		            CONCAT(CONCAT(insp.install_place_address, ' '), insp.install_place_detail_address) AS "detailAddress",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    r.res_serial_id
+		            )                              AS rn
+		        FROM
+		            resinfo      r
+		            LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+		            LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		            LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		            LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		            LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		    ) r
+	</sql>
+	
+	<select id="selectIpInfoByPage" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
+		<include refid="ipInfo"/>
+		<include refid="pagingCondition">
+			<property name="start" value="#{start}"/>
+			<property name="end" value="#{end}"/>
+		</include>
+	</select>
+	
+	<select id="selectIpCount">
+		<include refid="ipCount"/>
+	</select>
+	
+	<select id="selectIpDetail">
+		<include refid="ipInfo"/>
+		<where>
+			i.
+		</where>
+	</select>
 </mapper>
