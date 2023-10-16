@@ -107,8 +107,8 @@ public class ResInfoController {
 
 	@GetMapping("/resinfo/additem")
 	@ResponseBody
-	public List<ResInfo> selectMappingAddItem(@RequestParam("resSerialId") String resSerialId){
-		List<ResInfo> selectMappingAddItem = resInfoService.selectMappingAddItem(resSerialId);
+	public List<ResInfo> selectMappingAddItem(@RequestParam("resClassId") String resClassId){
+		List<ResInfo> selectMappingAddItem = resInfoService.selectMappingAddItem(resClassId);
 		return selectMappingAddItem;
 	}
 

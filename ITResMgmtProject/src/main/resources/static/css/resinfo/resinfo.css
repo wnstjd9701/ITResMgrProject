@@ -230,7 +230,8 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 
 
 /* Custom styles for the search bar container */
-.search-bar span {
+/* .search-bar span,
+.search-bar div {
     border: 1px solid white-gray;
     padding: 5px;
     display: inline-block;
@@ -245,15 +246,7 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 .search-bar label{
 	float:right;
 }
-
-.search-bar label{
-	margin-right:7px;
-}
-
-.search-bar label input{
-	margin-top:5px;
-	margin-left:5px;
-}
+ */
 
 
 
