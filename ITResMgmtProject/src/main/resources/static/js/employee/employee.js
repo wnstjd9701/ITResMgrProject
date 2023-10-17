@@ -28,6 +28,7 @@ function addRow() {
 	const empTypeSelect = document.createElement('select');
 	empTypeSelect.id = 'empTypeCode' + rowCount;
 	empTypeSelect.name = 'empTypeList'; // 선택 목록의 name 속성 설정
+	empTypeSelect.style.fontSize = '15px';
 
 	document.querySelectorAll('#searchEmpTypeList option:not(:first-child)').forEach((option) => {
 		const empTypeSelectOption = document.createElement('option');
@@ -42,6 +43,7 @@ function addRow() {
 	const empStatusSelect = document.createElement('select');
 	empStatusSelect.id = 'empTypeStatus' + rowCount;
 	empStatusSelect.name = 'empStatusList';
+	empStatusSelect.style.fontSize = '15px';
 
 	document.querySelectorAll('#searchEmpStatusList option:not(:first-child)').forEach((option) => {
 		const empStatusSelectOption = document.createElement('option');
@@ -54,9 +56,13 @@ function addRow() {
 
 	rowCount++;
 
+	const newCells = [newCellCheckBox, newCellStatus, newCellEmpId, newCellEmpPwd, newCellEmpName, newCellEmpType, newCellEmpStatus];
+	newCells.forEach((cell) => {
+		cell.style.padding = '8px'; // Change the padding value as needed
+	});
+
 	const tableContainer = document.querySelector(".table-container");
 	tableContainer.scrollTop = tableContainer.scrollHeight; // 맨 아래로 스크롤 이동
-
 }
 
 //행삭제 버튼
@@ -160,7 +166,6 @@ function saveList() {
 			}
 		}
 	}//update
-
 
 	//Insert
 	//1. 입력칸 모두 작성할 것
@@ -404,10 +409,11 @@ function handleClick(element) {
 function showSelectBox(listItem) {
 	const textElement = listItem.querySelector(".text");
 	textElement.style.display = "none";
-
+	
 	const selectElement = listItem.querySelector(".select");
 	selectElement.style.display = "inline-block";
-
+	selectElement.style.fontSize = "15px";
+	
 	selectElement.focus();
 
 	// 현재 선택한 text 값
@@ -434,10 +440,13 @@ function showSelectBox(listItem) {
 	});
 }
 
-//사원명 클릭했을 때 input박스 생성
+//사원명 클릭했을 때 <input> 생성
 function showNameField(element) {
 	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
 	empStatusSpan.textContent = 'U';
+	
+	const tdElement = element;
+	tdElement.style.padding = '0';
 
 	const updateName = document.createElement('input');
 	updateName.type = 'text';
@@ -466,8 +475,11 @@ function showPasswordField(element) {
 	empStatusSpan.textContent = 'U';
 
 	const employeeId = element.closest('tr').querySelector("td[name='employeeId']").textContent;
-	console.log('선택된 사원의 ID: ' + employeeId);
+	console.log('선택된 사원의 ID: ' + employeeId);	
 
+	const tdElement = element;
+	tdElement.style.padding = '0';
+	
 	const updatePwd = document.createElement('input');
 	updatePwd.type = 'text';
 
@@ -491,7 +503,6 @@ function showPasswordField(element) {
 	updatePwd.classList.add('edit-field');
 	// 스팬을 입력 필드로 대체
 	element.textContent = '';
-	updatePwd.style.width = '170px';
 	updatePwd.style.textAlign = 'center'; // 텍스트를 가운데 정렬
 	element.appendChild(updatePwd);
 
@@ -523,7 +534,6 @@ function searchList() {
 		success: function(response) {
 			var empTypeSelect = document.querySelector("select[name='empTypeList']");
 			var empStatusSelect = document.querySelector("select[name='empStatusList']");
-
 
 			$('#empTable > tbody').empty();
 

@@ -55,7 +55,7 @@
 		</div>
 			
 			<div class="table-container">
-				<table id="empTable" class="table table-hover">
+				<table class="employee-table" id="empTable">
 					<!-- <table id="empTable" class="table"> -->
 					<thead class = "employee-thead">
 						<tr>
@@ -69,7 +69,7 @@
 
 						</tr>
 					</thead>
-					<tbody style="text-align: center;">
+					<tbody>
 						<tr th:each="employeeList : ${employeeList}" id="empList">
 							<td><input type="checkbox" name="empCheckbox"></td>
 							<td><span name="empStatus">S</span></td>
