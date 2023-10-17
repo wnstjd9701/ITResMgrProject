@@ -1,27 +1,5 @@
 $(document).ready(function () {
-	$(".pagination").on("click", ".page-link-val", function(){
-		var page = $(this).text();
-		var searchType = $(".search-type").val();
-		
-		if(searchType === "" || searchType === "undefined"){
-			searchType = "ALL"
-		}
-		
-		$.ajax({
-			method: "GET",
-			url: "/resinfo/" + page,
-			data: {
-				searchType: searchType
-			},
-			success: function(response){
-				console.log(response);
-				updateInstallPlace(response);
-			},
-			error: function(xhr, status, err){
-				console.log(err);
-			}
-		});
-	});
+
 
     $('#newResInfoBtn').on('click', function () {
         clearModalContent()
