@@ -48,8 +48,7 @@
 			</nav>
 		</div>
 		<!-- End Page Title -->
-
-		<div class="addItemSerach">
+		<!-- <div class="addItemSerach">
 			<p id="p-addItemUseYN">사용여부</p>
 			<select name="searchUseYN" id="searchUseYN">
 				<option value="">전체</option>
@@ -59,11 +58,21 @@
 			<p id="p-addItemName">부가항목</p>
 			<input id="addItemSearchText" type="text" placeholder="명 입력"
 				style="text-align: center;">
-		</div>
+		</div> -->
+<div class="addItem-serachBar">
+			<p id="search-useYN">사용여부</p>
+			<select name="searchUseYN" id="searchUseYN" class="search-useYN-select">
+				<option value="">전체</option>
+				<option value="Y">Y</option>
+			</select>
 
-		<div class="table-container">
-			<table id="addItemTable" class="table table-hover">
-				<thead style="text-align: center;">
+			<p id="search-addItemName">부가항목</p>
+			<input id="addItemSearchText" type="text" placeholder="명 입력"
+				style="text-align: center;">
+		</div>
+		<div class="additem-table-container">
+			<table class="additem-table" id="addItemTable">
+				<thead class="additem-thead">
 					<tr>
 						<th class="col-checkbox">선택</th>
 						<th class="col-status">상태</th>
@@ -73,7 +82,7 @@
 						<th class="col-useYN">사용여부</th>
 					</tr>
 				</thead>
-				<tbody style="text-align: center;">
+				<tbody>
 					<tr th:each="addItemList : ${addItemList}">
 						<td><input type="checkbox" name="checkBox"></td>
 						<td name="addItemStatus"><span name="status">S</span></td>

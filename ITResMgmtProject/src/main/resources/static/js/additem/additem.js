@@ -16,10 +16,10 @@ function addItemAddRow() {
 	/*	newCellSn.innerHTML = "<input type='text' id='addItemSn" + rowCount + "' size='5'>";*/
 
 	var newCellName = newRow.insertCell(3);
-	newCellName.innerHTML = "<input type='text' id='insertName" + rowCount + "' size='17' placeholder='반드시 입력해주세요.' style='text-align: center;'>";
+	newCellName.innerHTML = "<input type='text' id='insertName" + rowCount + "' placeholder='반드시 입력해주세요.' style='text-align: center;'>";
 
 	var newCellDesc = newRow.insertCell(4);
-	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "' size='30'>";
+	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "'>";
 
 	var newCellUseYN = newRow.insertCell(5);
 	newCellUseYN.innerHTML = "<span>Y</span>";
@@ -57,6 +57,9 @@ function handleClick(element) {
 		return;
 	} else {
 		addItemStatus.textContent = 'U';
+		
+		const tdElement = element;
+		tdElement.style.padding = '0';
 
 		//입력필드 생성
 		const inputDesc = document.createElement('input');
@@ -189,6 +192,7 @@ function addItemSaveAll() {
 
 								$('#addItemTable > tbody').append(addTableRow);
 							}
+							alert("저장되었습니다.");
 							return;
 						},
 						error: function(xhr, status, error) {
