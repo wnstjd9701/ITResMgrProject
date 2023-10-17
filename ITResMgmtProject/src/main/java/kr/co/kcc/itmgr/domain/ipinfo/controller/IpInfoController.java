@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
@@ -176,5 +178,28 @@ public class IpInfoController {
 		
 		return ResponseEntity.ok().body(response);
 	}
+	
+	/*
+	 * @Author: [윤준성]
+	 * @API No.5-5. IP 삭제
+	 * @Info: IP 선택 삭제
+	 */
+	@PostMapping("/delete/ip")
+	public ResponseEntity<IpApiResponse> deleteIp(@RequestBody List<String> deleteIpSnList){
+		log.info("deleteIpSnList: " + deleteIpSnList);
+		//ipService.deleteIpSn();
+		IpApiResponse response = new IpApiResponse();
+		Map<String,Object> data = new HashMap<String, Object>();
+		
+		int start = 1;
+		int end = start + 9;
+		
+		int totalCount = ipService.selectIpCount();
+		List<IpInfo> ipInfo = ipService.selectIpInfoByPage(start, end);
+		Map<String, Object> ipPaging = ipService.ipInfoPaging(start, totalCount);
+		
+		return null;
+	}
+	
 	
 }

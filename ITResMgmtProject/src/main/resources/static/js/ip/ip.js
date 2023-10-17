@@ -1,5 +1,6 @@
 $(document).ready(function () {
-	$(".ip-pagination").on("click", ".page-link-val", function(){
+	// 페이징
+	$(".ip-pagination").on("click", ".ip-page-link-val", function(){
 		var page = $(this).val();
 		var searchType = $(".ip-search-type").val();
 		console.log(searchType);
@@ -18,7 +19,7 @@ $(document).ready(function () {
 					alert(`${response.message}`);
 				}
 				updateIpInfo(response.data.ipInfo);
-				//updatePaging(response.data.ipPaging);
+				//ipPaging(response.data.ipPaging);
 			},
 			error: function(xhr, status, err){
 				console.log(err);
@@ -43,7 +44,8 @@ $(document).ready(function () {
 			var ipCheckBox = $("<td>").append($("<input>").attr({
 				type: "checkbox",
 				value: ip[i].ipSn,
-				class: "ip-checkbox"
+				class: "ip-checkbox",
+				name: "ip-checkbox"
 			}));
 			var ipText = $("<td>").addClass("ip").text(ip[i].ip);
 			var ipDesc;
@@ -74,6 +76,34 @@ $(document).ready(function () {
 		}
 	}
 	
+	// IP 페이징
+	function ipPaging(paging) {
+	    var pagination = $(".ip-pagination");
+	    
+	    pagination.empty();
+		if(paging.endPage === 0){
+			return;
+		}
+	    
+	    pagination.append(`<li class='page-item'><button class='page-link ip-prev-page-link' value="${paging.startPage - 1}" aria-label='Previous'>&laquo;</button></li>`);
+	    
+	    for (var pageNum = paging.startPage; pageNum <= paging.endPage; pageNum++) {
+	        pagination.append(`<li class='page-item'><button class='page-link ip-page-link-val' value=${pageNum}>${pageNum}</button></li>`);
+	    }
+	    
+	    pagination.append(`<li class='page-item'><button class='page-link ip-next-page-link' value="${paging.endPage + 1}" aria-label='Next'>&raquo;</button></li>`);
+
+	    // 이전 페이지가 없는 경우 이전 버튼 비활성화
+	    if (paging.startPage === 1 || $(".ip-prev-page-link").val() === 0) {
+	        pagination.find(".prev-page-link").prop("disabled", true);
+	        console.log(paging.startPage);
+	    }
+	    
+	    // 다음 페이지가 없는 경우 다음 버튼 비활성화
+	    if (paging.endPage === paging.totalPageCount) {
+	        pagination.find(".ip-next-page-link").prop("disabled", true);
+	    }
+	}
 	// IP 상세조회 업데이트
 	function updateIpDetail(ipInfo){
 		var ip = ipInfo.ip;
@@ -182,7 +212,7 @@ $(document).ready(function () {
 				}
 				updateIpInfo(response.data.ipInfo);
 				$(".ip-search-type").val(keyword);
-				//ipInfoPaging
+				ipPaging(response.data.ipPaging);
 			},
 			error: function(xhr, status, err){
 				console.log(err);
@@ -198,5 +228,35 @@ $(document).ready(function () {
 		$(".detail-ip-desc").text("");
 		noMappingResInfo();
 	})
+	
+	// 삭제
+	$(".ip-delete-btn").on("click", function(){
+		const apiUrl = "/delete/ip";
+		var selectedRows = $("input[name='ip-checkbox']:checked").closest("tr");
+		var deleteIpSnList = [];
+		
+		if (selectedRows.length === 0) {
+			alert("삭제할 행을 선택하세요.");
+			return;
+		}
+		selectedRows.each(function(){
+			var ipSn = $(this).find("input[type='checkbox']").val();
+			console.log(ipSn);
+			deleteIpSnList.push(ipSn);
+		})
+		console.log(deleteIpSnList);
+		$.ajax({
+			method:"POST",
+			url: apiUrl,
+			data: JSON.stringify(deleteIpSnList),
+			contentType: "application/json",
+			success: function(response){
+				console.log(response);
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
+		})
+	});
 
 });
