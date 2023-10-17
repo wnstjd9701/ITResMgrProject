@@ -91,11 +91,11 @@ public class ResInfoController {
 		    Map<String, String> map3 = new HashMap<>();
 		    for(String key2 : map2.keySet()) {
 		    for(ResClass r2 : resClassList) {
-			    	if(key2.equals(r2.getResClassName2())&&r2.getResClassId().startsWith("HW_")) {
+			    	if(key2.equals(r2.getResClassName())&&r2.getResClassId().startsWith("HW_")) {
 			    		map3.put(r2.getResClassName2(), r2.getResClassId());
 			    		map2.put(key2, map3);
 			    	}
-			    	if(key2.equals(r2.getResClassName2())&&r2.getResClassId().startsWith("SW_")) {
+			    	if(key2.equals(r2.getResClassName())&&r2.getResClassId().startsWith("SW_")) {
 			    		map3.put(r2.getResClassName2(), r2.getResClassId());
 			    		map2.put(key2, map3);
 			    	}
