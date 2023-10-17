@@ -30,13 +30,19 @@
     <div class="first-container">
         <div class="col-md-12">
             <ul th:each="res:${resClassMap}" class="tree2">
-                [[${res.key}]][<span id="number3" th:text="${numOfRes3.get('__${res.key}__')}" />]
+                [[${res.key}]]
+                  <span id="number3" th:if="${numOfRes3.get('__${res.key}__')!=null}">[ [[${numOfRes3.get('__${res.key}__')}]] ]</span>
+                  <span id="number3" th:unless="${numOfRes3.get('__${res.key}__')!=null}" th:text="'[ ' + 0 + ' ]'"/></span>
                 <li></li>
                 <ul>
-                    <li th:each="rv:${res.value}">[[${rv.key}]][<span id="number2" th:text="${numOfRes2.get('__${rv.key}__')}" />]
+                    <li th:each="rv:${res.value}">[[${rv.key}]]
+                      <span id="number2" th:if="${numOfRes2.get('__${rv.key}__')!=null}">[ [[${numOfRes2.get('__${rv.key}__')}]] ]</span>
+                      <span id="number2" th:unless="${numOfRes2.get('__${rv.key}__')!=null}" th:text="'[ ' + 0 + ' ]'"/></span>
                         <ul>
                             <li th:each="name:${rv.value}" th:value="${name}">
-                                <a href="#" class="resClassDetail">[[${name}]]</a>[<span id="number" th:text="${numOfRes.get('__${name}__')}" />]
+                                <a href="#" class="resClassDetail">[[${name}]]</a>
+                                <span id="number" th:if="${numOfRes.get('__${name}__')!=null}">[ [[${numOfRes.get('__${name}__')}]] ]</span>
+                                <span id="number" th:unless="${numOfRes.get('__${name}__')!=null}" th:text="'[ ' + 0 + ' ]'"/></span>
                             </li>
                         </ul>
                     </li>
@@ -158,11 +164,11 @@
 								</tr>
 							</tbody>
 						</table>
-							<button type="submit">저장</button>
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
 						</form>
-						<div class="modal-footer">
-						</div>
+					<div class="modal-footer d-flex justify-content-center">
+					    <button type="submit" id="res-class-save-btn" class="btn btn-primary">저장</button>
+					    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					</div>
 				</div>
 			</div>
 		</div>

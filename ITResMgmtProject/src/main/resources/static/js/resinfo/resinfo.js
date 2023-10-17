@@ -1,4 +1,28 @@
 $(document).ready(function () {
+	$(".pagination").on("click", ".page-link-val", function(){
+		var page = $(this).text();
+		var searchType = $(".search-type").val();
+		
+		if(searchType === "" || searchType === "undefined"){
+			searchType = "ALL"
+		}
+		
+		$.ajax({
+			method: "GET",
+			url: "/resinfo/" + page,
+			data: {
+				searchType: searchType
+			},
+			success: function(response){
+				console.log(response);
+				updateInstallPlace(response);
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
+		});
+	});
+
     $('#newResInfoBtn').on('click', function () {
         clearModalContent()
         $('#resinfo-detail-modal').modal('show');
@@ -221,6 +245,7 @@ $(document).ready(function () {
 
 	// 설치장소 찾기 버튼 클릭 시
 	$('#installPlaceSearchBtn').on('click', function() {
+		$('#resinfo-detail-modal').modal('hide');
 	    $('#install-place-choose-modal').modal('show');
 	});
 	
@@ -239,6 +264,7 @@ $(document).ready(function () {
 	$('#install-place-choose-modal').on('hidden.bs.modal', function () {
 	    // 이전에 선택한 값을 초기화
 	    $('table#install-place-list-table input[type=checkbox]').prop('checked', false);
+		$('#resinfo-detail-modal').modal('show');
 	});
 	
 	// 설치장소 저장 눌렀을 때 기능
@@ -256,13 +282,14 @@ $(document).ready(function () {
 	        $('input[name=installPlaceSn]').val(installPlaceSn);
 	
 	        $('#install-place-choose-modal').modal('hide');
+			$('#resinfo-detail-modal').modal('show');
 	    } else {
 	        alert('설치장소를 선택해주세요.');
 	    }
 	});
 
 	
-	// "조회" 버튼 클릭 시
+	// "조회" 버튼 클릭 시 (검색기능)
     $('#search_btn').on('click', function() {
         // 대/중/소분류 값을 가져옴
         var topUpperResClassName = $("#topUpperResClassName option:selected").text();
@@ -338,10 +365,6 @@ $(document).ready(function () {
 	}
 	
 	
-	$('#res-class-search-btn').on('click',function(){
-		$('#res-class-choose-modal').modal('show');
-		});
-		
 		//페이지 누르면 이동하는 기능
 $("#pagination").on("click", ".page-btn", function() {
     // Loop through all checkboxes in the table
@@ -375,14 +398,28 @@ function paging(page) {
         }
     });
 }
+	$('#res-class-search-btn').on('click',function(){
+		$('#resinfo-detail-modal').modal('hide');
+		$('#res-class-choose-modal').modal('show');
+	    selectedThirdTableValue = undefined;
+	    selectedThirdTableValue2 = undefined;
+	    $('#res-class-list-table tbody td').removeClass('selected');
+	    $('#res-class-list-table tbody td').html(function () {
+	        return $(this).text();  // Remove bold style
+	    });
+	
+	    // 첫 번째 테이블의 선택 상태 초기화
+	    $('#res-class-list-table tbody tr').show();
+	});
+		
 
- var selectedThirdTableValue; // 세 번째 테이블에서 선택한 값의 변수
-	 $('#res-class-list-table2 tbody tr').hide();
-	 $('#res-class-list-table3 tbody tr').hide();
+ 	var selectedThirdTableValue; // 세 번째 테이블에서 선택한 값의 변수
+	$('#res-class-list-table2 tbody tr').hide();
+	$('#res-class-list-table3 tbody tr').hide();
     // 첫 번째 테이블에서 항목 선택 시
     $('#res-class-list-table tbody').on('click', 'td', function () {
         var selectedValue = $(this).attr('value');
-
+		$(this).html('<strong>' + $(this).text() + '</strong>');
         // 두 번째 테이블에서 선택한 대분류에 속하는 중분류만 표시
         $('#res-class-list-table2 tbody tr').hide();
         $('#res-class-list-table2 tbody tr').each(function () {
@@ -418,13 +455,27 @@ function paging(page) {
         selectedThirdTableValue2 = $(this).attr('value');
     });
 
+	// 각 테이블의 td 클릭 시
+	$('#res-class-list-table tbody td, #res-class-list-table2 tbody td, #res-class-list-table3 tbody td').on('click', function () {
+	    var tableId = $(this).closest('table').attr('id');
+	    $('#' + tableId + ' tbody td').removeClass('selected');
+	    $('#' + tableId + ' tbody td').html(function () {
+	        return $(this).text();  // Remove bold style
+	    });
+	
+	    $(this).addClass('selected');
+	    $(this).html('<strong>' + $(this).text() + '</strong>');
+	});
+
     // 확인 버튼 클릭 시 선택한 자원 분류 가져오기
     $('#choose-res-class-btn').on('click', function () {
         $('input[name=resClassName]').val(selectedThirdTableValue);
         $('input[name=resClassId]').val(selectedThirdTableValue2);
 		$('#res-class-choose-modal').modal('hide');
+		$('#resinfo-detail-modal').modal('show');
 		
         var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
+		
         $.ajax({
             type: 'GET',
             url: '/resinfo/additem',
@@ -447,14 +498,33 @@ function paging(page) {
                 console.log('에러:', error);
             }
         });
+
     });
 	// 모달이 닫힐 때 선택한 값 초기화
 	$('#res-class-choose-modal').on('hidden.bs.modal', function () {
 	    selectedThirdTableValue = undefined;
 	    selectedThirdTableValue2 = undefined;
-		$('#res-class-list-table2 tbody tr').hide();
-		$('#res-class-list-table3 tbody tr').hide();
-	});
+	    $('#res-class-list-table2 tbody tr').hide();
+	    $('#res-class-list-table3 tbody tr').hide();
+	    $('#res-class-list-table3 tbody td').removeClass('selected');
+	    $('#res-class-list-table3 tbody td').html(function () {
+	        return $(this).text();  // Remove bold style
+	    	});
+    	});
+
+
+/*	$(document).on("focusout focus", "input[name=introdutionPrice]", function(event) {
+	    if (event.type === "focusout") {
+	        $(this).val($(this).val().replace(/,/g, ""));
+	        $(this).val($(this).val().replace(/[^-\.0-9]/g, ""));
+	        $(this).val($(this).val().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+	        if ($(this).val() !== '') {
+	            $(this).val($(this).val() + '원');
+	        }
+	    } else if (event.type === "focus") {
+	        $(this).val($(this).val().replace("원", ""));
+	    }
+	});*/
 });
 
 

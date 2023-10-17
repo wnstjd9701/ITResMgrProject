@@ -45,4 +45,13 @@ public class ResInfo {
 	private String addItemSn;
 	private String addItemName;
 	
+	//페이징
+	private int totalPageBlock;
+	private int totalPage;
+	private int page;
+	private int nowPageBlock;
+	private int startPage;
+	private int endPage;
+	
+	
 }

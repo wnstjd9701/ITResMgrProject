@@ -1,7 +1,5 @@
 package kr.co.kcc.itmgr.domain.resinfo.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,14 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import jakarta.servlet.http.HttpSession;
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resclass.controller.ResClassController;
@@ -34,11 +30,13 @@ public class ResInfoController {
 	private final IResInfoService resInfoService;
 	static final Logger logger = LoggerFactory.getLogger(ResClassController.class);
 
-	@RequestMapping(value="/resinfo/{page}")
-	public String selectAllResInfo(Model model,@PathVariable int page,HttpSession session) {
-		session.setAttribute("page", page);
+	@GetMapping("/resinfo")
+	public String selectAllResInfo(Model model) {
+		int page = 1;
 
 		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo(page);
+		Map<String, Object> resInfoMap = new HashMap<String, Object>();
+		
 		int countOfResList = resInfoService.countOfResInfo();
 		int totalPage = 0;
 		if(countOfResList > 0) {
@@ -53,14 +51,20 @@ public class ResInfoController {
 		}else {
 			endPage = totalPage;
 		}
-
+		
+		Map<String,Object> page2 = new HashMap<String, Object>();
+		
+		page2.put("totalPageCount", totalPage);
+		page2.put("nowPage", page);
+		page2.put("totalPageBlock", totalPageBlock);
+		page2.put("nowPageCount", nowPageBlock);
+		page2.put("startPage", startPage);
+		page2.put("endPage", endPage);
+		
+		resInfoMap.put("selectAllResInfo",selectAllResInfo);
+		resInfoMap.put("page",page2);
 		model.addAttribute("selectAllResInfo", selectAllResInfo);
-		model.addAttribute("totalPageCount", totalPage);
-		model.addAttribute("nowPage", page);
-		model.addAttribute("totalPageBlock", totalPageBlock);
-		model.addAttribute("nowPageCount", nowPageBlock);
-		model.addAttribute("startPage", startPage);
-		model.addAttribute("endPage", endPage);
+		model.addAttribute("page2", page2);
 
 		List<ResInfo> searchResInfoByResClass = resInfoService.searchResInfoByResClass();
 		model.addAttribute("search", searchResInfoByResClass);
@@ -101,9 +105,10 @@ public class ResInfoController {
 		    resClassMap.put(key, map2);
 		}
 		model.addAttribute("resClassMap", resClassMap);
-		logger.info("dsdss"+resClassMap);
 		return "resinfo/resinfo";
 	}
+	
+	
 
 	@GetMapping("/resinfo/additem")
 	@ResponseBody
