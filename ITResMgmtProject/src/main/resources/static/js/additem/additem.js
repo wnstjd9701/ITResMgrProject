@@ -16,17 +16,22 @@ function addItemAddRow() {
 	/*	newCellSn.innerHTML = "<input type='text' id='addItemSn" + rowCount + "' size='5'>";*/
 
 	var newCellName = newRow.insertCell(3);
-	newCellName.innerHTML = "<input type='text' id='insertName" + rowCount + "' placeholder='반드시 입력해주세요.' style='text-align: center;'>";
+	newCellName.innerHTML = "<input type='text' id='insertName" + rowCount + "' style='text-align: center;'>";
 
 	var newCellDesc = newRow.insertCell(4);
-	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "'>";
+	newCellDesc.innerHTML = "<input type='text' id='addItemDesc" + rowCount + "' size='40'>";
 
 	var newCellUseYN = newRow.insertCell(5);
 	newCellUseYN.innerHTML = "<span>Y</span>";
 
 	rowCount++;
+	
+	const newCells = [newCellCheckBox, newCellStatus, newCellSn, newCellName, newCellDesc, newCellUseYN];
+	newCells.forEach((cell) => {
+		cell.style.padding = '8px'; // Change the padding value as needed
+	});
 
-	const tableContainer = document.querySelector(".table-container");
+	const tableContainer = document.querySelector(".additem-table-container");
 	tableContainer.scrollTop = tableContainer.scrollHeight; // 맨 아래로 스크롤 이동
 }
 
@@ -63,6 +68,7 @@ function handleClick(element) {
 
 		//입력필드 생성
 		const inputDesc = document.createElement('input');
+		inputDesc.size = '40';
 		inputDesc.type = 'text';
 		inputDesc.value = element.textContent;
 		inputDesc.classList.add('edit-field');

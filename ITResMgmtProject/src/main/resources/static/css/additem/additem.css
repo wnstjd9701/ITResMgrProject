@@ -65,26 +65,30 @@
 	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
 }
 
+.additem-table tbody tr:hover td {
+    background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
 .col-checkbox {
-	width: 20px;
+	width: 5%;
 }
 
 .col-status {
-	width: 30px;
+	width: 5%;
 }
 
 .col-sn {
-	width: 30px;
+	width: 7%;
 }
 
 .col-name {
-	width: 100px;
+	width: 20%;
 }
 
 .col-desc {
-	width: 200px;
+	width: 40%;
 }
 
 .col-useYN {
-	width: 50px;
+	width: 15%;
 }
