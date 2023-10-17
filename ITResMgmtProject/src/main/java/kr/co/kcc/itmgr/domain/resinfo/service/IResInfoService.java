@@ -23,6 +23,6 @@ public interface IResInfoService {
 	
 	ResInfo selectResInfoDetail(String resName);
 	
-	List<ResInfo> selectMappingAddItem(String resSerialId);
+	List<ResInfo> selectMappingAddItem(String resClassId);
 
 }

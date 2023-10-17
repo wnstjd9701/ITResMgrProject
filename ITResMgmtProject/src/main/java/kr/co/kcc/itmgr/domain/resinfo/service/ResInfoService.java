@@ -60,8 +60,8 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public List<ResInfo> selectMappingAddItem(String resSerialId) {
-		return resInfoRepository.selectMappingAddItem(resSerialId);
+	public List<ResInfo> selectMappingAddItem(String resClassId) {
+		return resInfoRepository.selectMappingAddItem(resClassId);
 	}
 
 	@Override

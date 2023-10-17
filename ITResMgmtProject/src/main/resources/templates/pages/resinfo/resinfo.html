@@ -47,7 +47,7 @@
 		<span>자원명
 			<input type="text" name="resName"></input>
 		</span>
-		<span>설치장소
+		<span>설치장소명
 			<input type="text" name="installPlaceName"></input>
 		</span>
 		<span>제조회사명
@@ -90,7 +90,7 @@
 					<td th:text="${resinfo.manufactureCompanyName}"></td>
 					<td th:text="${resinfo.mgmtId}"></td>
 					<td th:text="${resinfo.monitoringYn}"></td>
-					<input type="hidden" th:value="${resinfo.resSerialId}">
+					<input type="hidden" th:value="${resinfo.resClassId}">
 					<td><button type="button" id="resinfo-detail-btn">보기</button></td>
 				</tr>
 			</tbody>
@@ -129,9 +129,9 @@
 							<tbody>
 								<tr>
 									<th scope="row">자원분류명</th>
-									<td><input type="text" id="resClassId"
-										name="resClassId">
-										<!-- <input type="hidden" name="resClassId"> -->
+									<td><input type="text" id="resClassName"
+										name="resClassName">
+										<input type="hidden" name="resClassId">
 										<button type="button" class="btn btn-primary"
 										id="res-class-search-btn">찾기</button></td>
 									<th scope="row">관리ID</th>
@@ -266,6 +266,9 @@
 									</tr>
 								</thead>
 								<tbody>
+									<tr th:each="res:${resClassMap}">
+										<td th:value="${res.key}">[[${res.key}]]</td>
+									</tr>
 								</tbody>
 							</table>
 							<table class="table" id="res-class-list-table2">
@@ -274,7 +277,10 @@
 										<th>중분류</th>
 									</tr>
 								</thead>
-									<tbody>
+									<tbody th:each="res:${resClassMap}">
+										<tr th:each="rv:${res.value}" th:value="${res.key}">
+												<td th:value="${rv.key}">[[${rv.key}]]</td>
+										</tr>
 									</tbody>
 
 							</table>
@@ -284,8 +290,14 @@
 										<th>소분류</th>
 									</tr>
 								</thead>
-								    <tbody>
-								    </tbody>
+									<tbody th:each="res:${resClassMap}">
+										<div th:each="rv:${res.value}"  th:value="${res.key}">
+										<tr th:each="r:${rv.value}" th:value="${rv.key}">
+											<td th:value="${r.value}" th:text="${r.key}">
+											</td>
+										</tr>
+										</div>
+									</tbody>
 							</table>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"

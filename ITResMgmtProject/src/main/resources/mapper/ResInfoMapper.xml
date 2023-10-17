@@ -12,7 +12,7 @@
 			    "manufactureCompanyName",
 			    "mgmtId",
 			    "monitoringYn",
-			    "resSerialId"
+			    "resClassId"
 			FROM (
 			    SELECT 
 			        "topUpperResClassName",
@@ -23,7 +23,7 @@
 			        "manufactureCompanyName",
 			        "mgmtId",
 			        "monitoringYn",
-			        "resSerialId",
+			        "resClassId",
 			        ROWNUM AS rnum
 			    FROM (
 			        SELECT
@@ -35,7 +35,7 @@
 			            r.manufacture_company_name    "manufactureCompanyName",
 			            r.mgmt_id                "mgmtId",
 			            r.monitoring_yn            "monitoringYn",
-			            r.res_serial_id            "resSerialId"
+			            r.res_class_id            "resClassId"
 			        FROM resinfo r
 			        LEFT OUTER JOIN installplace i
 			            ON i.install_place_sn = r.install_place_sn
@@ -224,14 +224,15 @@
 	<select id="selectMappingAddItem" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
 		<![CDATA[
 			SELECT
-				r.res_serial_id "resSerialId",
-				m.res_class_id  "resClassId",
-				m.add_item_sn   "addItemSn",
-				a.add_item_name "addItemName"
-			FROM resclassasideinfomapping m
-			JOIN resinfo r ON m.res_class_id = r.res_class_id
-			JOIN additem a ON m.add_item_sn = a.add_item_sn
-			WHERE r.res_serial_id = #{resSerialId}
+			    m.res_class_id AS "resClassId",
+			    m.add_item_sn AS "addItemSn",
+			    a.add_item_name AS "addItemName"
+			FROM
+			    resclassasideinfomapping m
+			JOIN
+			    additem a ON m.add_item_sn = a.add_item_sn
+			WHERE
+			    m.res_class_id = #{resClassId}
 		]]>
 	</select>
 </mapper>
