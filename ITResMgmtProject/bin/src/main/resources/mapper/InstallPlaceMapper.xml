@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository">
+	<select id="selectInstallPlaceList">
+		SELECT
+		    i.install_place_sn,
+		    i.install_place_name,
+		    i.install_place_postno,
+		    i.install_place_address,
+		    i.install_place_detail_address,
+		    i.longitude,
+		    i.latitude,
+		    r."resCount",
+		    ROWNUM AS rNum
+		FROM
+		    installplace i
+		    LEFT JOIN (
+		        SELECT
+		            i.install_place_sn AS "install_place_sn",
+		            COUNT(r.res_sn)    AS "resCount"
+		        FROM
+		            installplace i
+		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		        GROUP BY
+		            i.install_place_sn
+		    )            r ON i.install_place_sn = r."install_place_sn"
+		ORDER BY
+		    i.install_place_name
+	</select>
+	
+	<select id="selectAllPlace">
+		SELECT
+		    i.install_place_sn             AS "installPlaceSn",
+		    i.install_place_name           AS "installPlaceName",
+		    i.install_place_postno         AS "installPlacePostno",
+		    i.install_place_address        AS "installPlaceAddress",
+		    i.install_place_detail_address AS "installPlaceDetailAddress",
+		    i.longitude                    AS "longitude",
+		    i.latitude                     AS "latitude",
+		    i."resCount"                   AS "resCount",
+		    ROWNUM                         AS rn
+		FROM
+		    (
+		        SELECT
+		            i.install_place_sn,
+		            i.install_place_name,
+		            i.install_place_postno,
+		            i.install_place_address,
+		            i.install_place_detail_address,
+		            i.longitude,
+		            i.latitude,
+		            r."resCount",
+		            ROWNUM AS rNum
+		        FROM
+		            installplace i
+		            LEFT JOIN (
+		                SELECT
+		                    i.install_place_sn AS "install_place_sn",
+		                    COUNT(r.res_sn)    AS "resCount"
+		                FROM
+		                    installplace i
+		                    LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		                GROUP BY
+		                    i.install_place_sn
+		            )            r ON i.install_place_sn = r."install_place_sn"
+		        ORDER BY
+		            i.install_place_name
+		    ) i
+		WHERE
+		    rNum BETWEEN #{start} AND #{end}
+		ORDER BY i.install_place_name 
+	</select>
+	
+	<select id="selectInstallPlaceCount">
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace
+	</select>
+	
+	<select id="selectAllResInfo" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT 
+			*
+		FROM 
+			(SELECT
+			    r.res_serial_id                AS "resSerialId",
+			    r.res_name                     AS "resName",
+			    cd_res_status.detail_code_name AS "resStatusCodeName",
+			    r.mgmt_dept_name               AS "mgmtDeptName",
+			    r.rack_info                    AS "rackInfo",
+			    rc.res_class_name              AS "resClassName",
+			    rim.ip_sn                      AS "ipSn",
+			    i.ip                           AS "ip",
+			    i.ip_desc                      AS "ipDesc",
+			    cd_ip_type.detail_code_name    AS "ipTypeCodeName",
+			    ROW_NUMBER() OVER (ORDER BY r.res_serial_id) AS rn
+			FROM
+	            resinfo      r
+			    LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+			    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+			    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+			    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id) r
+			WHERE
+				rn BETWEEN #{start} and #{end}
+	</select>
+	
+	<select id="selectInstallPlaceByName" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		SELECT *
+        FROM (
+            SELECT
+                i.install_place_sn             AS "installPlaceSn",
+                i.install_place_name           AS "installPlaceName",
+                i.install_place_postno         AS "installPlacePostno",
+                i.install_place_address        AS "installPlaceAddress",
+                i.install_place_detail_address AS "installPlaceDetailAddress",
+                i.longitude                    AS "longitude",
+                i.latitude                     AS "latitude",
+                r."resCount"                   AS "resCount",
+                ROW_NUMBER() OVER (ORDER BY i.install_place_name) AS rn
+            FROM
+                installplace i
+                LEFT JOIN (
+                    SELECT
+                        i.install_place_sn AS "install_place_sn",
+                        COUNT(r.res_sn)    AS "resCount"
+                    FROM
+                        installplace i
+                        LEFT JOIN resinfo r ON i.install_place_sn = r.install_place_sn
+                    GROUP BY
+                        i.install_place_sn
+                ) r ON i.install_place_sn = r."install_place_sn"
+            <where>
+            	i.install_place_name LIKE '%' || #{keyword} || '%'
+            </where> 
+            ORDER BY rn, i.install_place_name
+        ) i
+        WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectInstallPlaceSearchCount">
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace
+		<where>
+			install_place_name LIKE '%' || #{keyword} || '%'
+		</where>
+	</select>
+	
+	<select id="selectResInformationByInstallPlaceName" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT
+		    *
+		FROM
+		    (
+		        SELECT
+		            r.res_serial_id                AS "resSerialId",
+		            r.res_name                     AS "resName",
+		            cd_res_status.detail_code_name AS "resStatusCodeName",
+		            r.mgmt_dept_name               AS "mgmtDeptName",
+		            r.rack_info                    AS "rackInfo",
+		            rc.res_class_name              AS "resClassName",
+		            rim.ip_sn                      AS "ipSn",
+		            i.ip                           AS "ip",
+		            i.ip_desc                      AS "ipDesc",
+		            cd_ip_type.detail_code_name    AS "ipTypeCodeName",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    insp.install_place_name
+		            )                              AS rn
+		        FROM
+		            installplace insp
+		            LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+		            LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		            LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		            LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		            LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+				<where>
+				    insp.install_place_name = #{placeName}
+				</where>			
+				    AND r.res_serial_id IS NOT NULL
+					) i
+				WHERE
+				    rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectInstallPlaceDetail" parameterType="String" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		SELECT
+		    i.install_place_sn             AS "installPlaceSn",
+		    i.install_place_name           AS "installPlaceName",
+		    i.install_place_postno         AS "installPlacePostno",
+		    i.install_place_address        AS "installPlaceAddress",
+		    i.install_place_detail_address AS "installPlaceDetailAddress",
+		    i.longitude                    AS "longitude",
+		    i.latitude                     AS "latitude",
+		    r."resCount"                   AS "resCount"
+		FROM
+		    installplace i
+		    LEFT JOIN (
+		        SELECT
+		            i.install_place_sn AS "install_place_sn",
+		            COUNT(r.res_sn)    AS "resCount"
+		        FROM
+		            installplace i
+		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		        GROUP BY
+		            i.install_place_sn
+		    )            r ON i.install_place_sn = r."install_place_sn"
+		<where>
+			install_place_name = #{placeName}
+		</where>	
+	</select>
+	
+	<insert id="insertInstallPlace" parameterType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		INSERT INTO installplace (
+		    install_place_sn,
+		    install_place_name,
+		    install_place_postno,
+		    install_place_address,
+		    install_place_detail_address,
+		    longitude,
+		    latitude,
+		    creater_id,
+		    create_date
+		) VALUES (
+		    install_place_sn_seq.NEXTVAL,
+		    #{installPlaceName},
+		    #{installPlacePostno},
+		    #{installPlaceAddress},
+		    #{installPlaceDetailAddress},
+		    #{longitude},
+		    #{latitude},
+		    'wnstjd',
+		    sysdate
+		)
+	</insert>
+	
+	<update id="updateInstallPlace" parameterType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+	    UPDATE installplace
+	    SET
+	        install_place_name = nvl(#{installPlaceName}, install_place_name),
+	        install_place_postno = nvl(#{installPlacePostno}, install_place_postno),
+	        install_place_address = nvl(#{installPlaceAddress}, install_place_address),
+	        install_place_detail_address = nvl(#{installPlaceDetailAddress}, install_place_detail_address),
+	        longitude = #{longitude},
+	        latitude = #{latitude},
+	        updater_id = 'junsung',
+	        update_date = SYSDATE
+	    WHERE
+	        install_place_sn = #{installPlaceSn}
+	</update>
+	
+	<select id="checkPlaceNameBySn" parameterType="map" resultType="int">
+		SELECT
+		    COUNT(*) AS result
+		FROM
+		    installplace
+		WHERE
+		    install_place_name = #{placeName}
+		    AND
+		    install_place_sn = #{placesn}
+	</select>
+	
+	<select id="checkPlaceNameByName" parameterType="map" resultType="int">
+		SELECT
+		    COUNT(*) AS result
+		FROM
+		    installplace
+		WHERE
+		    install_place_name = #{placeName}
+	</select>
+	
+	<select id="selectInstallPlaceBySn" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		SELECT
+			install_place_name as "installPlaceName"
+		FROM
+			installplace
+		WHERE
+			install_place_sn = #{placesn}
+	</select>
+	
+	<delete id="deleteInstallPlace" parameterType="int">
+		DELETE installplace
+		WHERE
+		    install_place_sn = #{placesn}
+	</delete>
+	
+	<select id="selectPlaceListByPlaceName" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		SELECT
+		    * FROM (SELECT
+				    i.install_place_sn             AS "installPlaceSn",
+				    i.install_place_name           AS "installPlaceName",
+				    i.install_place_postno         AS "installPlacePostno",
+				    i.install_place_address        AS "installPlaceAddress",
+				    i.install_place_detail_address AS "installPlaceDetailAddress",
+				    i.longitude                    AS "longitude",
+				    i.latitude                     AS "latitude",
+				    r."resCount"                   AS "resCount",
+		            ROW_NUMBER() OVER (ORDER BY i.install_place_name) AS rn
+				FROM
+				    installplace i
+				    LEFT JOIN (
+				        SELECT
+				            i.install_place_sn AS "install_place_sn",
+				            COUNT(r.res_sn)    AS "resCount"
+				        FROM
+				            installplace i
+				            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+				        GROUP BY
+				            i.install_place_sn
+				    )            r ON i.install_place_sn = r."install_place_sn"
+		     	<where>
+				   i.install_place_name IN 
+					<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+			        		#{placeName}
+		    	   	</foreach>
+			 ) i
+		     WHERE rn between #{start} and #{end}
+       	</where>
+	</select>
+	
+	<select id="selectResInformationByCity" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT 
+			* 
+		FROM
+			(SELECT
+			    r.res_serial_id                AS "resSerialId",
+			    r.res_name                     AS "resName",
+			    cd_res_status.detail_code_name AS "resStatusCodeName",
+			    r.mgmt_dept_name               AS "mgmtDeptName",
+			    r.rack_info                    AS "rackInfo",
+			    rc.res_class_name              AS "resClassName",
+			    rim.ip_sn                      AS "ipSn",
+			    i.ip                           AS "ip",
+			    i.ip_desc                      AS "ipDesc",
+			    cd_ip_type.detail_code_name    AS "ipTypeCodeName",
+			    ROW_NUMBER() OVER (ORDER BY r.res_serial_id) AS rn
+			FROM
+			    installplace insp
+			    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+			    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+			    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+			    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+			WHERE
+				r.res_serial_id IS NOT NULL
+				AND
+			    insp.install_place_name IN 
+					<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+	            		#{placeName}
+	        		</foreach>
+	        ) i
+		WHERE
+			rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectResCountByCity" parameterType="java.util.List">
+		WITH commoncodes AS (
+			    SELECT
+			        detail_code,
+			        detail_code_name
+			    FROM
+			        commoncodedetail
+			)
+			SELECT
+			    COUNT(*)
+			FROM
+			    installplace insp
+			    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+			    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+			    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+			    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+			WHERE
+			    r.res_serial_id IS NOT NULL
+				AND
+			    insp.install_place_name IN 
+					<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+	            		#{placeName}
+	        		</foreach>
+	</select>
+	
+	<select id="selectPlaceByCity" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		SELECT
+		    *
+		FROM
+		    (
+		        SELECT
+		            i.install_place_sn             AS "installPlaceSn",
+		            i.install_place_name           AS "installPlaceName",
+		            i.install_place_postno         AS "installPlacePostno",
+		            i.install_place_address        AS "installPlaceAddress",
+		            i.install_place_detail_address AS "installPlaceDetailAddress",
+		            i.longitude                    AS "longitude",
+		            i.latitude                     AS "latitude",
+		            r."resCount"                   AS "resCount",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    i.install_place_sn
+		            )                              AS rn
+		        FROM
+		            installplace i
+		            LEFT JOIN (
+		                SELECT
+		                    i.install_place_sn AS "install_place_sn",
+		                    COUNT(r.res_sn)    AS "resCount"
+		                FROM
+		                    installplace i
+		                    LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		                GROUP BY
+		                    i.install_place_sn
+		            )            r ON i.install_place_sn = r."install_place_sn"
+				<where>
+            		(i.install_place_address LIKE #{firstDoName} || '%' OR i.install_place_address LIKE #{secondDoName} || '%')
+				</where>
+		    ) i
+		WHERE
+		    rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectResInfoByCity" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT *
+		FROM (
+		    SELECT
+		        r.res_serial_id AS "resSerialId",
+		        r.res_name AS "resName",
+		        cd_res_status.detail_code_name AS "resStatusCodeName",
+		        r.mgmt_dept_name AS "mgmtDeptName",
+		        r.rack_info AS "rackInfo",
+		        rc.res_class_name AS "resClassName",
+		        rim.ip_sn AS "ipSn",
+		        i.ip AS "ip",
+		        i.ip_desc AS "ipDesc",
+		        cd_ip_type.detail_code_name AS "ipTypeCodeName",
+		        ROW_NUMBER() OVER (ORDER BY r.res_serial_id) AS rn
+		    FROM
+		        resinfo r
+		        LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+		        LEFT JOIN commoncodes cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		        LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		        LEFT JOIN ipinfo i ON rim.ip_sn = i.ip_sn
+		        LEFT JOIN commoncodes cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		        LEFT JOIN resclass rc ON r.res_class_id = rc.res_class_id
+		    WHERE
+		        (insp.install_place_address LIKE '%' || #{firstDoName} || '%' OR insp.install_place_address LIKE '%' || #{secondDoName} || '%') AND r.res_serial_id IS NOT NULL
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectResInfoCountByCity">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT
+		    COUNT(*)
+		FROM
+		    resinfo      r
+		    LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+		    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		 WHERE
+		    insp.install_place_address LIKE '%' || #{firstDoName} || '%' OR insp.install_place_address LIKE '%' || #{secondDoName} || '%' 
+		    AND r.res_serial_id IS NOT NULL
+	</select>
+	
+	<select id="selectPlaceCountByCity">
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace i
+		    LEFT JOIN (
+		        SELECT
+		            i.install_place_sn AS "install_place_sn",
+		            COUNT(r.res_sn)    AS "resCount"
+		        FROM
+		            installplace i
+		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		        GROUP BY
+		            i.install_place_sn
+		    )            r ON i.install_place_sn = r."install_place_sn"
+		<where>
+           	(i.install_place_address LIKE #{firstDoName} || '%' OR i.install_place_address LIKE #{secondDoName} || '%')
+		</where>
+	</select>
+	
+	<select id="selectPlaceCountByPlaceName">
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace i
+		    LEFT JOIN (
+		        SELECT
+		            i.install_place_sn AS "install_place_sn",
+		            COUNT(r.res_sn)    AS "resCount"
+		        FROM
+		            installplace i
+		            LEFT JOIN resinfo      r ON i.install_place_sn = r.install_place_sn
+		        GROUP BY
+		            i.install_place_sn
+		    )            r ON i.install_place_sn = r."install_place_sn"
+		WHERE
+		    i.install_place_name IN 
+				<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+            		#{placeName}
+        		</foreach>
+	</select>
+	
+	<select id="selectResInfoCountByPlaceName">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace insp
+		    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+		    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		where
+		    r.res_serial_id IS NOT NULL
+		    AND insp.install_place_name = #{placeName}
+	</select>
+	
+	<select id="selectResCount">
+		SELECT
+		    COUNT(*)
+		FROM
+		    resinfo      r
+		    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+		WHERE
+		    i.install_place_sn IS NOT NULL
+	</select>
+</mapper>

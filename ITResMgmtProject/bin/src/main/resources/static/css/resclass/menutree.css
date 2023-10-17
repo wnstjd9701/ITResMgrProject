@@ -1,0 +1,92 @@
+.tree2, .tree2 ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+    margin-left:10px;
+    font-weight:700;
+}
+.tree2 ul {
+    margin-left:1em;
+    position:relative;
+    font-weight:700;
+}
+.tree2 ul ul {
+    margin-left:.5em
+    
+}
+.tree2 ul:before {
+    content:"";
+    display:block;
+    width:0;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    border-left:1px solid
+}
+.tree2 li {
+    margin:0;
+    padding:0 1em;
+    line-height:2em;
+    color: #2E2E2E;
+    font-weight:400;
+    position:relative
+}
+.tree2 ul li:before {
+    content:"";
+    display:block;
+    width:10px;
+    height:0;
+    border-top:1px solid;
+    margin-top:-1px;
+    position:absolute;
+    top:1em;
+    left:0
+}
+.tree2 ul li:last-child:before {
+    background:#fff;
+    height:auto;
+    top:1em;
+    bottom:0
+}
+.indicator {
+    margin-right:5px;
+}
+.tree2 li a {
+    text-decoration: none;
+    color: #2E2E2E;
+}
+.tree2 li button, .tree li button:active, .tree li button:focus {
+    text-decoration: none;
+    color: #2E2E2E;
+    border:none;
+    background:transparent;
+    margin:0px 0px 0px 0px;
+    padding:0px 0px 0px 0px;
+    outline: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th{
+	text-align: center; /* 텍스트 가운데 정렬 스타일 */
+
+    padding: 10px; /* 셀 안의 여백 설정 */
+}
+td {
+    text-align: center; /* 텍스트 가운데 정렬 스타일 */
+
+    padding: 10px; /* 셀 안의 여백 설정 */
+}
+.addInfoTable{
+     border: 1px solid #ccc; /* 테두리 스타일 설정 */
+     margin: 0 auto; /* 가운데 정렬 */
+}
+thead th {
+	 text-align: center;
+     border-bottom: 1px solid; /* <thead>의 <th> 요소에 아랫선 추가 */
+     padding: 10px;
+}

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
+</head>
+<body>
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<main id="main" class="main">
+	<div class="pagetitle">
+      		<button id="search_btn" type="button" class="btn btn-primary" style="float:right; margin-top:10px;margin-left:10px; background-color:navy; border:navy;">조회</button>
+			<button id="newResInfoBtn" type="button" data-bs-toggle="modal"
+			data-bs-target="#resInfoInsertModal" class="btn btn-primary" style="float:right; margin-top:10px;  background-color:navy; border:navy;">신규</button>	
+      <h1>IT자원</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+          <li class="breadcrumb-item active">자원</li>
+        </ol>
+      </nav>
+      </div>
+	<div>
+		<span>대 분 류</span>
+		<select id="topUpperResClassName" name="topUpperResClassName">
+		    <!-- "전체" 옵션 추가 -->
+		    <option value=""></option>
+		    <!-- 다른 대분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+		    <option th:each="search:${search}" th:if="${search.level}==1" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+		</select>
+		<span>중 분 류</span>
+		<select id="upperResClassName" name="upperResClassName">
+		    <!-- 중분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+		    <option value="" ></option>
+		    <option th:each="search:${search}" th:if="${search.level}==2" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+		</select>
+		<span>소 분 류</span>
+		<select id="resClassName" name="resClassName">
+		    <!-- 소분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+		    <option value="" ></option>
+		    <option th:each="search:${search}" th:if="${search.level}==3" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+		</select>
+		<span>자원명</span>
+			<input type="text" name="resName"></input>
+		<span>설치장소</span>
+			<input type="text" name="installPlaceName"></input>
+		<span>제조회사명</span>
+			<input type="text" name="manufactureCompanyName"></input>
+		<span>관리ID</span>
+			<input type="text" name="mgmtId"></input>
+		<span>모니터링 여부</span> 
+			<label> <input type="radio" name="monitoringYn" value="Y" checked="checked"/> 모니터링 자원 </label>		
+			<label> <input type="radio"name="monitoringYn" value="A" /> 전체 </label> 
+	</div>
+	<!-- 검색창 끝 -->
+	
+	<!-- 자원 리스트 -->
+	<div>
+	<span>
+		<table class="res-info-list-table">
+			<thead style="text-align: center;">
+				<tr>
+					<th>대분류</th>
+					<th>중분류</th>
+					<th>소분류</th>
+					<th>자원명</th>
+					<th>설치장소명</th>
+					<th>제조회사명</th>
+					<th>관리ID</th>
+					<th>모니터링여부</th>
+					<th>상세보기</th>
+				</tr>
+			</thead>
+			<tbody style="text-align: center;" id="resInfoTable">
+				<tr th:each="resinfo:${selectAllResInfo}">
+					<td th:text="${resinfo.topUpperResClassName}"></td>
+					<td th:text="${resinfo.upperResClassName}"></td>
+					<td th:text="${resinfo.ResClassName}"></td>
+					<td th:text="${resinfo.resName}"></td>
+					<td th:text="${resinfo.installPlaceName}"></td>
+					<td th:text="${resinfo.manufactureCompanyName}"></td>
+					<td th:text="${resinfo.mgmtId}"></td>
+					<td th:text="${resinfo.monitoringYn}"></td>
+					<td><button type="button" id="resinfo-detail-btn">보기</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</span>
+	</div>
+	</main>
+	<!-- 자원리스트 끝 -->
+
+	<!-- 모달창 -->
+	<div class="modal fade" id="resInfoInsertModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">IT자원 등록</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- 자원정보 입력 -->
+					<form id="resInfoSave" name="resInfoSave" method="post"
+						th:action="@{/resinfo/insert}">
+						<table id="resInfoDetailTable"  class="table table-bordered">
+							<tbody>
+								<tr>
+									<th scope="row">자원분류명</th>
+									<td><input type="text" id="install-place-input"
+										name="resClassName">
+										<input type="hidden" name="resClassId">
+										<button type="button" class="btn btn-primary"
+										id="res-class-search-btn">찾기</button></td>
+									</td>
+									<th scope="row">관리ID</th>
+									<td><input type="text" name="mgmtId"></input></td>
+									<th scope="row">관리부서명</th>
+									<td><input type="text" name="mgmtDeptName"></input></td>
+									<th scope="row">자원시리얼아이디</th>
+									<td><input type="text" name="resSerialId"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">자원명</th>
+									<td><input type="text" name="resName"></input></td>
+									<th scope="row">자원상태</th>
+									<td><select name="resStatusCode">
+											<option th:each="selectResStatusCode:${selectResStatusCode}"
+												th:value="${selectResStatusCode.resStatusCode}"
+												th:text="${selectResStatusCode.detailCodeName}"></option>
+									</select></td>
+									<th scope="row">담당자명</th>
+									<td><input type="text" name="managerName"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">자원시리얼번호</th>
+									<td><input type="text" name="resSn"></input></td>
+									<th scope="row">제조회사명</th>
+									<td><input type="text" name="manufactureCompanyName"></input>
+									</td>
+									<th scope="row">모델명</th>
+									<td><input type="text" name="modelName"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">설치장소</th>
+									<td><input type="text" id="install-place-input"
+										name="installPlaceName"> <input type="hidden"
+										id="install-place-sn-input" name="installPlaceSn">
+										<button type="button" class="btn btn-primary"
+											id="installPlaceSearchBtn">찾기</button></td>
+									<th scope="row">랙정보</th>
+									<td><input type="text" name="rackInfo"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">도입일자</th>
+									<td><input type="text" name="introductionDate"
+										placeholder="YYYYMMDD"></input></td>
+									<th scope="row">폐기일자</th>
+									<td><input type="text" name="expirationDate"
+										placeholder="YYYYMMDD"></input></td>
+									<th scope="row">추가정보</th>
+									<td><input type="text" name="addInfo"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">도입가격</th>
+									<td><input type="text" name="introdutionPrice"></input></td>
+									<th scope="row">사용여부</th>
+									<td><label> <input type="radio" name="useYn"
+											value="Y" checked="checked" /> Y
+									</label> <label> <input type="radio" name="useYn" value="N" />
+											N
+									</label></td>
+								</tr>
+								<tr>
+									<th scope="row">구매처명</th>
+									<td><input type="text" name="purchaseCompanyName"></input>
+									</td>
+									<th scope="row">모니터링여부</th>
+									<td><label> <input type="radio"
+											name="monitoringYn" value="Y" checked="checked" /> Y
+									</label> <label> <input type="radio" name="monitoringYn"
+											value="N" /> N
+									</label></td>
+									<th scope="row"></th>
+									<td><input type="hidden" name="createrId"></input></td>
+									<td><input type="hidden" name="updaterId"></input></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="btn-container">
+						<button id="res-info-save-btn" type="submit">등록</button>
+						<button id="res-info-close-btn" type="button" data-bs-dismiss="modal">취소</button>
+						</div>
+					</form>
+
+					<!-- 자원정보입력칸 끝 -->
+
+		<!-- 매핑된 부가정보 및 ip목록 -->
+		<div class="">
+			<ul class="nav nav-tabs">
+				<li class="nav-item"><a class="nav-link" href="#"
+					onclick="showTable('additionalInfo')">부가정보</a></li>
+				<li class="nav-item"><a class="nav-link" href="#"
+					onclick="showTable('ipList')">IP 목록</a></li>
+			</ul>
+
+			<div class="addTable">
+				<table id="additionalInfoTable" class="table table-hover">
+					<tbody>
+						<tr>
+							<td>Content for 부가정보 table</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table id="ipListTable" class="table table-hover">
+					<tbody>
+						<tr>
+							<td>Content for IP 목록 table</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- 매핑된 부가정보 및 ip목록 끝 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 모달 끝 -->
+	
+	
+	
+	<!-- 설치장소 리스트 선택 모달창 -->
+ 	<div class="modal fade" id="install-place-choose-modal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addItemList">설치장소</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+					<div class="modal-body">
+						<div class="mb-3">
+							<table class="table" id="install-place-list-table">
+								<thead>
+									<tr>
+										<th>선택</th>
+										<th>설치장소명</th>
+										<th>우편번호</th>
+										<th>주소</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="selectResInstallPlace:${selectResInstallPlace}">
+										<td><input type="checkbox" id="place-sn"name="checkInstallPlace" th:value="${selectResInstallPlace.installPlaceSn}"></td>
+										<td id="place-name" name="installPlaceName" th:text=${selectResInstallPlace.installPlaceName}></td>
+										<td th:text=${selectResInstallPlace.installPlacePostno}></td>
+										<td th:text=${selectResInstallPlace.installPlaceAddress}></td>
+									</tr>	
+								</tbody>
+							</table>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">취소</button>
+								<button type="button" id="choose-install-place-btn">확인</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 설치장소 리스트 선택 모달 끝 -->
+		
+		<!-- 자원상세조회 모달창 -->
+	<div class="modal fade" id="resinfo-detail-modal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">IT자원 등록</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<!-- 자원정보 입력 -->
+						<table id="resInfoDetailTable"  class="table table-bordered">
+							<tbody>
+								<tr>
+									<th scope="row">자원분류명</th>
+									<td><input type="text" id="install-place-input"
+										name="resClassName">
+										<input type="hidden" name="resClassId">
+										<button type="button" class="btn btn-primary"
+										id="res-class-search-btn">찾기</button></td>
+									</td>
+									<th scope="row">관리ID</th>
+									<td><input type="text" name="mgmtId"></input></td>
+									<th scope="row">관리부서명</th>
+									<td><input type="text" name="mgmtDeptName"></input></td>
+									<th scope="row">자원시리얼아이디</th>
+									<td><input type="text" name="resSerialId"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">자원명</th>
+									<td><input type="text" name="resName"></input></td>
+									<th scope="row">자원상태</th>
+									<td><select name="resStatusCode">
+											<option th:each="selectResStatusCode:${selectResStatusCode}"
+												th:value="${selectResStatusCode.resStatusCode}"
+												th:text="${selectResStatusCode.detailCodeName}"></option>
+									</select></td>
+									<th scope="row">담당자명</th>
+									<td><input type="text" name="managerName"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">자원시리얼번호</th>
+									<td><input type="text" name="resSn"></input></td>
+									<th scope="row">제조회사명</th>
+									<td><input type="text" name="manufactureCompanyName"></input>
+									</td>
+									<th scope="row">모델명</th>
+									<td><input type="text" name="modelName"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">설치장소</th>
+									<td><input type="text" id="install-place-input"
+										name="installPlaceName"> <input type="hidden"
+										id="install-place-sn-input" name="installPlaceSn">
+										<button type="button" class="btn btn-primary"
+											id="installPlaceSearchBtn">찾기</button></td>
+									<th scope="row">랙정보</th>
+									<td><input type="text" name="rackInfo"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">도입일자</th>
+									<td><input type="text" name="introductionDate"
+										placeholder="YYYYMMDD"></input></td>
+									<th scope="row">폐기일자</th>
+									<td><input type="text" name="expirationDate"
+										placeholder="YYYYMMDD"></input></td>
+									<th scope="row">추가정보</th>
+									<td><input type="text" name="addInfo"></input></td>
+								</tr>
+								<tr>
+									<th scope="row">도입가격</th>
+									<td><input type="text" name="introdutionPrice"></input></td>
+									<th scope="row">사용여부</th>
+									<td><label> <input type="radio" name="useYn"
+											value="Y" checked="checked" /> Y
+									</label> <label> <input type="radio" name="useYn" value="N" />
+											N
+									</label></td>
+								</tr>
+								<tr>
+									<th scope="row">구매처명</th>
+									<td><input type="text" name="purchaseCompanyName"></input>
+									</td>
+									<th scope="row">모니터링여부</th>
+									<td><label> <input type="radio"
+											name="monitoringYn" value="Y" checked="checked" /> Y
+									</label> <label> <input type="radio" name="monitoringYn"
+											value="N" /> N
+									</label></td>
+									<th scope="row"></th>
+									<td><input type="hidden" name="createrId"></input></td>
+									<td><input type="hidden" name="updaterId"></input></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="btn-container">
+						<button id="res-info-save-btn" type="submit">등록</button>
+						<button id="res-info-close-btn" type="button" data-bs-dismiss="modal">취소</button>
+						</div>
+					<!-- 자원정보입력칸 끝 -->
+
+		<!-- 매핑된 부가정보 및 ip목록 -->
+		<div class="">
+			<ul class="nav nav-tabs">
+				<li class="nav-item"><a class="nav-link" href="#"
+					onclick="showTable('additionalInfo')">부가정보</a></li>
+				<li class="nav-item"><a class="nav-link" href="#"
+					onclick="showTable('ipList')">IP 목록</a></li>
+			</ul>
+
+			<div class="addTable">
+				<table id="additionalInfoTable" class="table table-hover">
+					<tbody>
+						<tr>
+							<td>Content for 부가정보 table</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table id="ipListTable" class="table table-hover">
+					<tbody>
+						<tr>
+							<td>Content for IP 목록 table</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- 매핑된 부가정보 및 ip목록 끝 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 자원상세조회 모달 끝 -->
+	
+<script type="text/javascript" th:src="@{/js/resinfo/resinfo.js}"></script>
+  <!-- Template Main JS File -->
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>

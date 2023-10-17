@@ -91,7 +91,8 @@
 					</thead>
 					<tbody>
 						<tr th:each="resourceInfo:${resourceInfo}">
-							<td class="resInfoTd status">상태</td>
+							<td class="resInfoTd status" th:if="${resourceInfo.ipStatus == true}">🟢</td>
+							<td class="resInfoTd status" th:if="${resourceInfo.ipStatus == false}">🔴</td>
 							<td class="refresh"><input type="button" class="refresh"
 								value="새로고침" th:data-ip="${resourceInfo.ip}"></td>
 							<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}">[[${resourceInfo.ip}]]</td>
@@ -112,8 +113,8 @@
 			</form>
 		</div>
 	</div>
+	<!-- <div th:replace="~{../common/fragments/footer.html :: fragment-footer}"></div>  -->
 	</main>
-	<div th:replace="~{../common/fragments/footer.html :: fragment-footer}"></div>
 	<script th:src="@{/assets/js/main.js}"></script>
 	<script>
 	$(document).ready(function () {
@@ -182,7 +183,12 @@
 
 	                for (var i = 0; i < response.length; i++) {
 	                    const newRow = $("<tr>");
-	                    const status = $("<td>").addClass("resInfoTd status").text("상태");
+	                    var status;
+	                    if(response[i].ipStatus === true){
+		                    status = $("<td>").addClass("resInfoTd status").text("🟢");
+	                    }else{
+	                    	status = $("<td>").addClass("resInfoTd status").text("🔴");
+	                    }
 	                    const refreshButton = $("<input>").attr({
 	                        type: "button",
 	                        class: "refresh-btn",
@@ -226,12 +232,16 @@
 	    });
 	    
 	    $(".table-container").on("click", "input[type='button']", function(){
-	    	console.log($(this).data("ip"));
-	    	const ip = $(this).data("ip");
+	    	var ip = $(this).data("ip");
+	    	ip = "1234";
+	    	console.log(ip);
 	    	if(ip === undefined){
 	    		console.log("err");
 	    		return;
 	    	}
+			
+	    	var row = $(this).closest("tr"); // 클릭한 버튼이 속한 테이블 행(row)을 선택합니다.
+	        var statusElement = row.find(".status");
 	    	$.ajax({
 	    		method: "GET",
 	    		url: "/ip/check",
@@ -241,6 +251,12 @@
 	    		contentType: "application/json",
 	    		success: function(response){
 	    			console.log(response)
+	    			if(response.code === 400){
+	    				// 빨강
+	    				statusElement.text("🔴"); 
+	    			}
+	    			// 초록
+	    			statusElement.text("🟢");
 	    		},
 	    		error: function(xhr, status, err){
 	    			console.log(err);

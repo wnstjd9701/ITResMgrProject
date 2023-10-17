@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository">
+
+	<select id="selectAllResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+
+			SELECT
+			    urc_name.res_class_name	"topUpperResClassName",
+			    urc.res_class_name	"upperResClassName",
+			    rc.res_class_name	"resClassName",
+			    r.res_name	"resName",
+			    i.install_place_name	"installPlaceName",
+			    r.manufacture_company_name	"manufactureCompanyName",
+			    r.mgmt_id	"mgmtId",
+			    r.monitoring_yn	"monitoringYn"
+			FROM resinfo r
+			LEFT OUTER JOIN installplace i
+			    ON i.install_place_sn = r.install_place_sn
+			LEFT OUTER JOIN resclass rc
+			    ON rc.res_class_id = r.res_class_id
+			LEFT OUTER JOIN resclass urc
+			    ON urc.res_class_id = rc.upper_res_class_id
+			LEFT OUTER JOIN resclass urc_name
+			    ON urc_name.res_class_id = urc.upper_res_class_id
+
+	</select>
+	
+	<select id="searchResInfoByResClass" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+
+			SELECT
+			    LEVEL	"level",
+			    res_class_id	"resClassId",
+			    res_class_name	"resClassName",
+			    upper_res_class_id	"upperResClassId"
+			FROM resclass
+			START WITH upper_res_class_id IS NULL
+			CONNECT BY PRIOR res_class_id = upper_res_class_id
+			ORDER SIBLINGS BY res_class_id
+
+		
+	</select>
+	
+	<select id="searchResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+			    SELECT
+			        urc_name.res_class_name "topUpperResClassName",
+			        urc.res_class_name "upperResClassName",
+			        rc.res_class_name "resClassName",
+			        r.res_name "resName",
+			        i.install_place_name "installPlaceName",
+			        r.manufacture_company_name "manufactureCompanyName",
+			        r.mgmt_id "mgmtId",
+			        r.monitoring_yn "monitoringYn"
+			    FROM RESINFO r
+			    LEFT OUTER JOIN INSTALLPLACE i
+			        ON i.install_place_sn = r.install_place_sn
+			    LEFT OUTER JOIN RESCLASS rc
+			        ON rc.res_class_id = r.res_class_id
+			    LEFT OUTER JOIN RESCLASS urc
+			        ON urc.res_class_id = rc.upper_res_class_id
+			    LEFT OUTER JOIN RESCLASS urc_name
+			        ON urc_name.res_class_id = urc.upper_res_class_id
+			  		<where>
+				    <if test='topUpperResClassName != null &amp;&amp; !topUpperResClassName.equals("") '>
+				        AND urc_name.res_class_name = #{topUpperResClassName} 
+				    </if>
+				    <if test='upperResClassName != null &amp;&amp; !upperResClassName.equals("") '>
+				        AND urc.res_class_name = #{upperResClassName}
+				    </if>
+				    <if test='resClassName != null &amp;&amp; !resClassName.equals("") '>
+				        AND rc.res_class_name = #{resClassName}
+				    </if>
+				    <if test='resName != null &amp;&amp; !resName.equals("") '>
+				        AND r.res_name LIKE '%'|| #{resName} ||'%'
+				    </if>
+				    <if test='installPlaceName != null &amp;&amp; !installPlaceName.equals("") '>
+				        AND i.install_place_name LIKE '%'|| #{installPlaceName} ||'%'
+				    </if>
+				    <if test='manufactureCompanyName != null &amp;&amp; !manufactureCompanyName.equals("") '>
+				        AND r.manufacture_company_name LIKE '%'|| #{manufactureCompanyName} ||'%'
+				    </if>
+				    <if test='mgmtId != null &amp;&amp; !mgmtId.equals("") '>
+				        AND r.mgmt_id LIKE '%'|| #{mgmtId} ||'%'
+				    </if>    
+				    <if test='monitoringYn.equals("Y")'>
+				        AND r.monitoring_yn = #{monitoringYn}
+				    </if>
+			  		</where>
+			  
+	</select>
+	
+	<insert id="insertResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			INSERT INTO 
+				RESINFO
+					(res_serial_id, res_class_id, res_name, res_sn, mgmt_id, res_status_code, manufacture_company_name,
+					model_name, mgmt_dept_name, manager_name, introduction_date, introduction_price, purchase_company_name, use_yn,
+					monitoring_yn, rack_info, expiration_date, add_info, create_date, creater_id, update_date, updater_id, install_place_sn)
+				VALUES
+					(#{resSerialId}, #{resClassId}, #{resName}, #{resSn}, #{mgmtId}, #{resStatusCode}, #{manufactureCompanyName},
+					#{modelName}, #{mgmtDeptName}, #{managerName}, #{introductionDate}, #{introductionPrice}, #{purchaseCompanyName}, #{useYn},
+					#{monitoringYn}, #{rackInfo}, #{expirationDate}, #{addInfo}, SYSDATE, 'wh467925', SYSDATE, 'wh467925', #{installPlaceSn})	
+		]]>
+	</insert>
+	
+	<select id="selectResStatusCode" parameterType="String" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
+		<![CDATA[
+			SELECT 
+				detail_code	"resStatusCode",
+				detail_code_name	"detailCodeName"
+			FROM COMMONCODEDETAIL
+			WHERE code_group_id = #{codeGroupId}			
+		]]>
+	</select>
+	
+	<select id="selectResInstallPlace" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
+		<![CDATA[
+			SELECT
+				install_place_sn	"installPlaceSn",
+				install_place_name	"installPlaceName",
+				install_place_postno	"installPlacePostno",
+				install_place_address	"installPlaceAddress"
+			FROM INSTALLPLACE
+		]]>
+	</select>
+	
+	
+		<select id="selectAllResClass" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
+		<![CDATA[
+			SELECT c.res_class_name "resClassName",
+			       listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
+			       c.upper_res_class_id	"upperResClassId",
+                   r.res_class_id   "resClassId"
+			FROM (
+			    SELECT upper_res_class_id, 
+			           res_class_name,
+                       res_class_id,
+			           level as lv 
+		        FROM RESCLASS
+		        WHERE use_yn = 'Y'
+		        START WITH upper_res_class_id IS NULL
+		        CONNECT BY PRIOR res_class_id = upper_res_class_id
+			) r
+			JOIN RESCLASS c ON r.upper_res_class_id = c.res_class_id
+			WHERE r.upper_res_class_id = (select res_class_id from resclass where res_class_name =#{resClassName})
+			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id,r.res_class_id
+			ORDER BY r.lv , c.res_class_name DESC
+		]]>
+
+	</select>
+	
+	<select id="selectResInfoDetail" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT
+			    r.res_serial_id   "resSerialId",
+			    rc.res_class_name   "resClassName",
+			    r.res_name  "resName",
+			    r.res_sn    "resSn",
+			    r.mgmt_id   "mgmtId",
+			    c.detail_code_name   "resStatusCode",
+			    r.manufacture_company_name  "manufactureCompanyName",
+			    r.model_name    "modelName",
+			    r.mgmt_dept_name    "mgmtDeptName",
+			    r.manager_name  "managerName",
+			    r.introduction_date "introductionDate",
+			    r.introduction_price    "introductionPrice",
+			    r.purchase_company_name "purchaseCompanyName",
+			    r.use_yn    "useYn",
+			    r.monitoring_yn "monitoringYn",
+			    r.rack_info "rackInfo",
+			    r.expiration_date   "expirationDate",
+			    r.add_info  "addInfo",
+                i.install_place_name "installPlaceName"
+			    FROM RESINFO r
+			    LEFT OUTER JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+			    LEFT OUTER JOIN COMMONCODEDETAIL c ON r.res_status_code =  c.detail_code
+                LEFT OUTER JOIN INSTALLPLACE i ON r.install_place_sn = i.install_place_sn
+			    WHERE r.res_name = #{resName}
+		]]>
+	</select>
+	
+</mapper>
