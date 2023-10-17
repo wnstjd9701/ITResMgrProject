@@ -394,7 +394,7 @@ cells.forEach((cell) => {
 function handleClick(element) {
 	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
 
-	if (empStatusSpan.textContent === 'D') {
+	if (empStatusSpan.textContent === 'D') {		
 		return;
 	} else {
 		empStatusSpan.textContent = 'U';
@@ -443,77 +443,87 @@ function showSelectBox(listItem) {
 //사원명 클릭했을 때 <input> 생성
 function showNameField(element) {
 	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
-	empStatusSpan.textContent = 'U';
-	
-	const tdElement = element;
-	tdElement.style.padding = '0';
 
-	const updateName = document.createElement('input');
-	updateName.type = 'text';
-	updateName.value = element.textContent;
-	updateName.classList.add('edit-field');
+	if (empStatusSpan.textContent === 'D') {
+		return; // 'D' 상태인 경우 수정불가
+	} else {
+		empStatusSpan.textContent = 'U';
 
-	//스팬을 입력 필드로 대체
-	element.textContent = '';
-	updateName.style.width = '100px'
-	updateName.style.textAlign = 'center'; // 텍스트를 가운데 정렬
-	element.appendChild(updateName);
+		const tdElement = element;
+		tdElement.style.padding = '0';
 
-	updateName.focus();
+		const updateName = document.createElement('input');
+		updateName.type = 'text';
+		updateName.value = element.textContent;
+		updateName.classList.add('edit-field');
 
-	//입력 필드가 포커스를 잃을 때
-	updateName.addEventListener('blur', function() {
-		//입력 필드에서 새로운 값 가져오기
-		const updateNameValue = updateName.value;
-		element.textContent = updateNameValue;
-	});
+		//스팬을 입력 필드로 대체
+		element.textContent = '';
+		updateName.style.width = '100px'
+		updateName.style.textAlign = 'center'; // 텍스트를 가운데 정렬
+		element.appendChild(updateName);
+
+		updateName.focus();
+
+		//입력 필드가 포커스를 잃을 때
+		updateName.addEventListener('blur', function() {
+			//입력 필드에서 새로운 값 가져오기
+			const updateNameValue = updateName.value;
+			element.textContent = updateNameValue;
+		});
+	}
 }
 
 //사원비밀번호 가져오기
 function showPasswordField(element) {
 	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
-	empStatusSpan.textContent = 'U';
 
-	const employeeId = element.closest('tr').querySelector("td[name='employeeId']").textContent;
-	console.log('선택된 사원의 ID: ' + employeeId);	
+	if (empStatusSpan.textContent === 'D') {
+		return; // 'D' 상태인 경우 수정불가
+	} else {
+		empStatusSpan.textContent = 'U';
 
-	const tdElement = element;
-	tdElement.style.padding = '0';
-	
-	const updatePwd = document.createElement('input');
-	updatePwd.type = 'text';
+		const employeeId = element.closest('tr').querySelector("td[name='employeeId']").textContent;
+		console.log('선택된 사원의 ID: ' + employeeId);
 
-	$.ajax({
-		url: '/findEmployeePwd',
-		type: 'Post',
-		data: { employeeId: employeeId },
-		success: function(response) {
+		const tdElement = element;
+		tdElement.style.padding = '0';
 
-			// JSON 응답에서 employeePwd 필드의 값을 추출
-			var employeePwd = response.employeePwd;
-			console.log("employeePwd: " + employeePwd);
+		const updatePwd = document.createElement('input');
+		updatePwd.type = 'text';
 
-			updatePwd.value = employeePwd;
-		},
-		error: function(request, status, error) {
-			alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-		}
-	});
+		$.ajax({
+			url: '/findEmployeePwd',
+			type: 'Post',
+			data: { employeeId: employeeId },
+			success: function(response) {
 
-	updatePwd.classList.add('edit-field');
-	// 스팬을 입력 필드로 대체
-	element.textContent = '';
-	updatePwd.style.textAlign = 'center'; // 텍스트를 가운데 정렬
-	element.appendChild(updatePwd);
+				// JSON 응답에서 employeePwd 필드의 값을 추출
+				var employeePwd = response.employeePwd;
+				console.log("employeePwd: " + employeePwd);
 
-	updatePwd.focus();
+				updatePwd.value = employeePwd;
+			},
+			error: function(request, status, error) {
+				alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+			}
+		});
 
-	// 입력 필드가 포커스를 잃을 때
-	updatePwd.addEventListener('blur', function() {
-		// 입력 필드에서 새로운 값 가져오기
-		const updateNameValue = updatePwd.value;
-		element.textContent = updateNameValue;
-	});
+		updatePwd.classList.add('edit-field');
+		// 스팬을 입력 필드로 대체
+		element.textContent = '';
+		updatePwd.style.textAlign = 'center'; // 텍스트를 가운데 정렬
+		element.appendChild(updatePwd);
+
+		updatePwd.focus();
+
+		// 입력 필드가 포커스를 잃을 때
+		updatePwd.addEventListener('blur', function() {
+			// 입력 필드에서 새로운 값 가져오기
+			const updateNameValue = updatePwd.value;
+			element.textContent = updateNameValue;
+		});
+	}
 }
 
 //조회
