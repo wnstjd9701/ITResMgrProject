@@ -448,7 +448,7 @@ function showSelectBox(listItem) {
 //사원명 클릭했을 때 <input> 생성
 function showNameField2(element) {
 	const tdElement = element;
-		tdElement.style.padding = '0';
+		tdElement.style.padding = '10';
 
 
 /*	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
