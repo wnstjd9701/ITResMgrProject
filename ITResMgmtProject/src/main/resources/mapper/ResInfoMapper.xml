@@ -124,5 +124,57 @@
 	</select>
 	
 	
+		<select id="selectAllResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
+		<![CDATA[
+			SELECT c.res_class_name "resClassName",
+			       listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
+			       c.upper_res_class_id	"upperResClassId",
+                   r.res_class_id   "resClassId"
+			FROM (
+			    SELECT upper_res_class_id, 
+			           res_class_name,
+                       res_class_id,
+			           level as lv 
+		        FROM RESCLASS
+		        WHERE use_yn = 'Y'
+		        START WITH upper_res_class_id IS NULL
+		        CONNECT BY PRIOR res_class_id = upper_res_class_id
+			) r
+			JOIN RESCLASS c ON r.upper_res_class_id = c.res_class_id
+			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id,r.res_class_id
+			ORDER BY r.lv , c.res_class_name DESC
+		]]>
+
+	</select>
+	
+	<select id="selectResInfoDetail" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT
+			    r.res_serial_id   "resSerialId",
+			    rc.res_class_name   "resClassName",
+			    r.res_name  "resName",
+			    r.res_sn    "resSn",
+			    r.mgmt_id   "mgmtId",
+			    c.detail_code_name   "resStatusCode",
+			    r.manufacture_company_name  "manufactureCompanyName",
+			    r.model_name    "modelName",
+			    r.mgmt_dept_name    "mgmtDeptName",
+			    r.manager_name  "managerName",
+			    r.introduction_date "introductionDate",
+			    r.introduction_price    "introductionPrice",
+			    r.purchase_company_name "purchaseCompanyName",
+			    r.use_yn    "useYn",
+			    r.monitoring_yn "monitoringYn",
+			    r.rack_info "rackInfo",
+			    r.expiration_date   "expirationDate",
+			    r.add_info  "addInfo",
+                i.install_place_name "installPlaceName"
+			    FROM RESINFO r
+			    LEFT OUTER JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+			    LEFT OUTER JOIN COMMONCODEDETAIL c ON r.res_status_code =  c.detail_code
+                LEFT OUTER JOIN INSTALLPLACE i ON r.install_place_sn = i.install_place_sn
+			    WHERE r.res_name = #{resName}
+		]]>
+	</select>
 	
 </mapper>

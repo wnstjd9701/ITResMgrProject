@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/css/user/user.css}" rel="stylesheet" />
+<th:block
+	th:replace="~{../common/fragments/head2.html :: fragment-head2}"></th:block>
+<!-- Template Main JS File -->
+</head>
+<body>
+	<header id="header" class="header fixed-top d-flex align-items-center">
+		<div class="d-flex align-items-center justify-content-between">
+			<div class="logo d-flex align-items-center">
+				<img src="assets/img/logo.png" alt=""> <span
+					class="d-none d-lg-block">KCC정보통신</span>
+			</div>
+		</div>
+		<!-- End Logo -->
+	</header>
+
+	<th:block layout:fragment="content">
+		<main id="main" class="main">
+			<!-- Jumbotron -->
+			<div class="px-4 py-5 px-md-5 text-center text-lg-start"
+				style="background-color: hsl(0, 0%, 96%);">
+				<div class="container">
+					<div class="row gx-lg-5 align-items-center">
+						<div class="col-lg-6 mb-5 mb-lg-0">
+							<h1 class="my-5 display-3 fw-bold ls-tight">
+								KCC 정보통신 <br /> <span class="text-primary">IT 자원 관리 시스템</span>
+							</h1>
+							<p style="color: hsl(217, 10%, 50.8%)">Lorem ipsum dolor sit
+								amet consectetur adipisicing elit. Eveniet, itaque accusantium
+								odio, soluta, corrupti aliquam quibusdam tempora at cupiditate
+								quis eum maiores libero veritatis? Dicta facilis sint aliquid
+								ipsum atque?</p>
+						</div>
+
+						<div class="col-lg-6 mb-5 mb-lg-0">
+							<div class="card">
+								<div class="card-body py-5 px-md-5">
+
+									<p th:if="${message != null}" th:text="${message}"
+										class="text-danger"></p>
+										
+									<form th:action="@{/signin}" method="post" id="login">
+										<div class="form-outline mb-4">
+											<input type="text" id="employeeId" name="employeeId"
+												class="form-control" required /> <label class="form-label"
+												for="form3Example3">ID</label>
+										</div>
+										<div class="form-outline mb-4">
+											<input type="password" id="employeePwd" name="employeePwd"
+												class="form-control" required /> <label class="form-label"
+												for="form3Example4">Password</label>
+										</div>
+										<!-- Submit button -->
+										<button type="submit" class="btn btn-primary btn-block mb-4">
+											Sign up</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</th:block>
+	<script src="js/user/user.js"></script>
+</body>
+</html>
