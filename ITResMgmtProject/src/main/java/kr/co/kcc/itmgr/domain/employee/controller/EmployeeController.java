@@ -151,7 +151,6 @@ public class EmployeeController {
 
 		try {
 			employeePwd = employeeService.selectEmployeePwd(employeeId);
-			System.out.println("-------employeePwd------------"+employeePwd);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
