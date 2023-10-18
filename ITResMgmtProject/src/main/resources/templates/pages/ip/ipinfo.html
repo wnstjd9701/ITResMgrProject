@@ -92,21 +92,22 @@
 				</div>
 				<div class="ip-res-container">
 					<div class="ip-detail-container">
-						<form>
+						<form id="ip-info-form">
+							<input type="hidden" name="ipSn" class="detail-origin-ip-sn" value="0">
 							<div class="form-group">
 								<label for="ip-address-input-label">IP 주소</label> <input
-									type="text" class="form-control detail-ip"
+									type="text" class="form-control detail-ip" name="ip"
 									id="ip-address-input-label" placeholder="IP">
 							</div>
 							<div class="form-group">
 								<label for="ip-type-label">유형</label> <select
-									class="form-control detail-ip-type" id="ip-type-label">
+									class="form-control detail-ip-type" id="ip-type-label" name="detailCode">
 									<option th:each="ipCode : ${ipCode}" th:value="${ipCode.detailCode}" th:text="${ipCode.detailCodeName}">
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="ip-desc-label">설명</label>
-								<textarea class="form-control detail-ip-desc" id="ip-desc-label"
+								<textarea class="form-control detail-ip-desc" id="ip-desc-label" name="ipDesc"
 									rows="3"></textarea>
 							</div>
 						</form>

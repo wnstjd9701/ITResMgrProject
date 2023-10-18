@@ -38,6 +38,7 @@
 	    WHERE
 	        c.code_group_id = 'IPT000'
 	</sql>
+	
 	<sql id="ipInfo">
 		WITH ipcode AS (
 		    <include refid="ipCode"/>
@@ -46,9 +47,8 @@
 		    ip.ip_sn            AS "ipSn",
 		    ip.ip               AS "ip",
 		    ip.ip_desc          AS "ipDesc",
-		    ip."codeGroupId"    AS "codeGroupId",
-		    ip."detailCode"     AS "detailCode",
-		    ip."detailCodeName" AS "detailCodeName",
+		    ip.detail_code      AS "detailCode",
+		    ip.detail_code_name AS "detailCodeName",
 		    ROW_NUMBER()
 		    OVER(
 		        ORDER BY
@@ -60,9 +60,8 @@
 		            ip.ip_sn,
 		            ip.ip,
 		            ip.ip_desc,
-		            c."codeGroupId",
-		            c."detailCode",
-		            c."detailCodeName",
+		            cd.detail_code_name,
+		            cd.detail_code,
 		            ROW_NUMBER()
 		            OVER(
 		                ORDER BY
@@ -72,12 +71,11 @@
 		            ipinfo       ip
 		            LEFT JOIN resipmapping rim ON ip.ip_sn = rim.ip_sn
 		            LEFT JOIN resinfo      r ON r.res_serial_id = rim.res_serial_id
-		            LEFT JOIN ipcode       c ON c."detailCode" = rim.ip_type_code
+		            LEFT JOIN commoncodedetail cd on ip.ip_type_code = cd.detail_code
 		        ORDER BY
 		            ip.ip_sn
 		    ) ip
 	</sql>
-	
 	
 	<sql id="commoncode">
 		SELECT
@@ -136,6 +134,22 @@
 		    ) r
 	</sql>
 	
+	<sql id="resSelect">
+		WITH commoncodes AS (
+		    <include refid="commoncode"/>
+		)
+		SELECT
+		  	COUNT(*)
+		FROM
+		   resinfo      r
+		   LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+		   LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status."detailCode"
+		   LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		   LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		   LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type."detailCode"
+		   LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+	</sql>
+	
 	<select id="selectIpInfoByPage" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
 		<include refid="ipInfo"/>
 		<where>
@@ -173,6 +187,13 @@
 				<property name="start" value="#{start}"/>
 				<property name="end" value="#{end}"/>
 			</include>
+		</where>
+	</select>
+	
+	<select id="selectResInfoCountByIpSn">
+		<include refid="resSelect"/>
+		<where>
+			i.ip_sn = #{ipSn}
 		</where>
 	</select>
 	
@@ -239,5 +260,65 @@
 			</include>
 		</where>
 	</select>
+	
+	<sql id="ipExists">
+		SELECT
+			COUNT(*)
+		FROM 
+			ipinfo
+	</sql>
+	
+	<select id="ipIsExists">
+		<include refid="ipExists"/>
+		<where>
+			ip = #{ip}
+		</where>
+	</select>
+	
+	<select id="updateIpIsExists">
+		<include refid="ipExists"/>
+		<where>
+			ip = #{ip} and ip_sn = #{ipSn} 
+		</where>
+	</select>
+	
+	<insert id="insertIp" parameterType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
+			INSERT INTO ipinfo (
+			    ip_sn,
+			    ip,
+			    ip_desc,
+			    ip_type_code,
+			    create_date,
+			    creater_id
+			) VALUES (
+			    ipinfo_seq.NEXTVAL,
+			    #{ip},
+			    #{ipDesc, jdbcType=VARCHAR},
+			    #{detailCode},
+			    sysdate,
+			    'wnstjd9701'
+			)
+			
+			<selectKey keyProperty="ipSn" resultType="int" order="AFTER">
+				SELECT ipinfo_seq.CURRVAL FROM DUAL
+			</selectKey>
+	</insert>
+	
+	<update id="updateIp">
+		UPDATE ipinfo
+		SET
+		    ip = #{ip},
+		    ip_desc = #{ipDesc, jdbcType=VARCHAR},
+		    ip_type_code = #{detailCode}
+		WHERE
+		    ip_sn = #{ipSn}
+	</update>
+	
+	<delete id="deleteIpInfo">
+		DELETE FROM ipinfo WHERE ip_sn = #{ipSn}
+	</delete>
+	<delete id="deleteResIpMapping">
+		DELETE FROM resipmapping WHERE ip_sn = #{ipSn}
+	</delete>
 	
 </mapper>
