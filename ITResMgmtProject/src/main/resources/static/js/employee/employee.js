@@ -372,6 +372,8 @@ function updateValidation(updateEmpName, updateEmpPwd) {
 	// 사원명 유효성 검사
 	if (!/^[^\d\s!@#$%^&*(),.?":{}|<>]{2,}$/.test(updateEmpName)) {
 		alert("수정된 사원명은 2글자 이상, 숫자, 공백, 특수문자는 사용할 수 없습니다.");
+		//showNameField(updateEmpName);
+		//document.getElementById('empName' + count).focus();
 		return false;
 	}
 
@@ -381,6 +383,9 @@ function updateValidation(updateEmpName, updateEmpPwd) {
 	}
 	return true;
 }
+
+
+
 
 
 const cells = document.querySelectorAll('td[name="employeeName"], td[name="employeeType"], td[name="employeeStatus"]');
@@ -441,8 +446,12 @@ function showSelectBox(listItem) {
 }
 
 //사원명 클릭했을 때 <input> 생성
-function showNameField(element) {
-	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
+function showNameField2(element) {
+	const tdElement = element;
+		tdElement.style.padding = '0';
+
+
+/*	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
 
 	if (empStatusSpan.textContent === 'D') {
 		return; // 'D' 상태인 경우 수정불가
@@ -471,7 +480,7 @@ function showNameField(element) {
 			const updateNameValue = updateName.value;
 			element.textContent = updateNameValue;
 		});
-	}
+	}*/
 }
 
 //사원비밀번호 가져오기

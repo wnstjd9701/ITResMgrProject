@@ -31,7 +31,7 @@
 		</div>
 		<!-- End Page Title -->
 
-		<div id="searchBar">
+		<div class="searchBar">
 			<p id="searchEmpType">사원유형</p>
 			<select id="searchEmpTypeList" name="searchEmpTypeList">
 				<option value=''>전체</option>
@@ -54,7 +54,7 @@
 			<input id="searchText" type="text" placeholder="ID 및 명 입력">
 		</div>
 			
-			<div class="table-container">
+			<div class="employee-table-container">
 				<table class="employee-table" id="empTable">
 					<!-- <table id="empTable" class="table"> -->
 					<thead class = "employee-thead">
@@ -76,8 +76,14 @@
 							<td th:text="${employeeList.employeeId}" name="employeeId"></td>
 							<!-- 	<td th:text="${employeeList.employeePwd}" name="employeePwd" onclick="showPasswordField(this)"></td> -->
 							<td name="employeePwd" onclick="showPasswordField(this)">**********</td>
-							<td th:text="${employeeList.employeeName}" name="employeeName"
-								onclick="showNameField(this)"></td>
+							<!-- <td th:text="${employeeList.employeeName}" name="employeeName"
+								onclick="showNameField(this)"></td> -->
+								<td><input th:value="${employeeList.employeeName}" name="employeeName"
+								onclick="showNameField2(this)" style="width:100px; text-align: center;  border: none;" class="hidden-input"></input></td>
+								
+								
+								
+								
 							<td onclick="handleClick(this)" name="employeeType"><span
 								class="text" th:text="${employeeList.employeeType}"
 								name="empType"></span> <select name="empTypeList" class="select"

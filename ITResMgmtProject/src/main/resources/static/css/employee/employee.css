@@ -1,4 +1,4 @@
-#searchBar {
+.searchBar {
 	display: flex;
 	align-items: center; /* 수직 가운데 정렬 */
 	flex-direction: row;
@@ -66,7 +66,7 @@
 	margin-left: 10px;
 }
 
-.table-container {
+.employee-table-container {
 	max-height: 700px;
 	overflow-y: auto;
 }
@@ -100,6 +100,24 @@
 	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
 }
 
+.employee-table tbody tr:hover td {
+    background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
+
+.employee-table tbody tr:hover input.hidden-input {
+    background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
+}
+
+.employee-table tbody tr td input.hidden-input:focus {
+    background-color: white; /* 입력란이 활성화 상태일 때 <input> 요소의 배경색 변경 */
+	padding: 0px;
+}
+/* .employee-table tbody tr:hover td,
+.employee-table tbody tr:hover td .hidden-input {
+    background-color: #ECECEC; 호버 시 배경색 변경
+} */
+
 .col-empCheckBox {
 	width: 5%;
 }
@@ -127,3 +145,17 @@
 .col-empStatus {
 	width: 15%;
 }
+
+
+/* 숨김 스타일 클래스 추가 */
+.hidden-input {
+    /* border: none;
+    background-color: transparent;
+    outline: none; */
+}
+
+.hidden-input.clicked input{
+/* 	 background-color: white;
+	 border : 10px solid #ccc; */
+}
+
