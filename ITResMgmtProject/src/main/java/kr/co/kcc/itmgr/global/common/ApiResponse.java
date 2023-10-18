@@ -1,3 +1,5 @@
+package kr.co.kcc.itmgr.global.common;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

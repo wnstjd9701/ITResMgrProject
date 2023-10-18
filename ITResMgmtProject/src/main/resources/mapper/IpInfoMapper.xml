@@ -176,7 +176,7 @@
 		</where>
 	</select>
 	
-	<select id="searchIp" resultType="IpInfo">
+	<select id="searchIp" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
 		WITH ipcode AS (
 		    <include refid="ipCode"/>
 		)
