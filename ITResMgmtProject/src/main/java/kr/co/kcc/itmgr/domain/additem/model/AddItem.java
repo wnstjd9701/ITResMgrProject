@@ -17,10 +17,8 @@ public class AddItem {
 	private String updaterId;
 	
 	private String searchText;
-	private List<AddItem> insertAddItem;
+	private List<AddItem> insertAddItems;
 	private List<Integer> deletedAddItems;
-	
-	private String flag;
-	
+	private List<AddItem> updateAddItems;
 
 }

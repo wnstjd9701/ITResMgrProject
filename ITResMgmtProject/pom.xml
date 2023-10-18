@@ -81,6 +81,21 @@
     		<groupId>nz.net.ultraq.thymeleaf</groupId>
 		    <artifactId>thymeleaf-layout-dialect</artifactId>
   		</dependency>
+
+		<!-- 엑셀 파일 다운로드-->
+		<!-- HSSFWorkbook 사용가능 -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>4.1.2</version>
+		</dependency>
+    
+		<!-- XSSFWorkbook 사용가능 -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.2</version>
+		</dependency>
 		
 		<!-- JSON -->
 		<dependency>

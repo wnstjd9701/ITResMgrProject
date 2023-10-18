@@ -17,7 +17,7 @@ public class Employee {
 	private String createrId;
 	private Timestamp updateDate;
 	private String updaterId;
-	private char useYN;
+	private String useYN;
 	
 	private String employeeType;
 	private String employeeStatus;

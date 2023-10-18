@@ -30,7 +30,7 @@ public interface IResClassService {
 	int updateResClass(ResClass resclass);	//자원분류 업데이트
 	int deleteAddItemInResClass(ResClass resclass);	//매핑된 부가항목 삭제
 	
-	List<AddItem> setFlagAddItemList(List<AddItem> addItem); //부가항목리스트 flag설정
+//	List<AddItem> setFlagAddItemList(List<AddItem> addItem); //부가항목리스트 flag설정
 	List<ResClass> setFlagResClassList(List<ResClass> resClass); //자원분류 flag설정	
 	<T extends ResClassDTO> List<T> setFlag(List<T> code);
 }

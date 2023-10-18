@@ -29,4 +29,7 @@ public interface IEmployeeRepository {
 
 	//공통코드 사원상태
 	List<CommonCodeDetail> commonCodeEmpStatus();
+	
+	//사원 비밀번호조회
+	Employee selectEmployeePwd(String employeeId);
 }
