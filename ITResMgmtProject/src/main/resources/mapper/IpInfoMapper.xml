@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.ipinfo.dao.IIpInfoRepository">
+	<sql id="pagingCondition">
+		AND rn BETWEEN ${start} AND ${end}
+	</sql>
+	
+	<sql id="ipSn">
+		AND ip_sn = ${ipSn} 
+	</sql>
+	
+	<sql id="ipSearchKeyword">
+		AND ip.ip LIKE '%' || ${keyword} || '%'		
+	</sql>
+	
+	<sql id="ipCount">
+		SELECT COUNT(*) FROM ipinfo
+	</sql>
+	
+	<sql id="ipCountByKeyword">
+		SELECT
+		    COUNT(*)
+		FROM
+		    ipinfo       ip
+		    LEFT JOIN resipmapping rim ON ip.ip_sn = rim.ip_sn
+		    LEFT JOIN resinfo      r ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipcode       c ON c."detailCode" = rim.ip_type_code
+	</sql>
+	
+	<sql id="ipCode">
+		SELECT
+	        cd.detail_code      AS "detailCode",
+	        cd.code_group_id    AS "codeGroupId",
+	        cd.detail_code_name AS "detailCodeName"
+	    FROM
+	        commoncodedetail cd
+	        LEFT JOIN commoncode       c ON c.code_group_id = cd.code_group_id
+	    WHERE
+	        c.code_group_id = 'IPT000'
+	</sql>
+	<sql id="ipInfo">
+		WITH ipcode AS (
+		    <include refid="ipCode"/>
+		)
+		SELECT
+		    ip.ip_sn            AS "ipSn",
+		    ip.ip               AS "ip",
+		    ip.ip_desc          AS "ipDesc",
+		    ip."codeGroupId"    AS "codeGroupId",
+		    ip."detailCode"     AS "detailCode",
+		    ip."detailCodeName" AS "detailCodeName",
+		    ROW_NUMBER()
+		    OVER(
+		        ORDER BY
+		            ip.ip_sn
+		    )                   AS rn
+		FROM
+		    (
+		        SELECT
+		            ip.ip_sn,
+		            ip.ip,
+		            ip.ip_desc,
+		            c."codeGroupId",
+		            c."detailCode",
+		            c."detailCodeName",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    ip.ip_sn
+		            ) AS rn
+		        FROM
+		            ipinfo       ip
+		            LEFT JOIN resipmapping rim ON ip.ip_sn = rim.ip_sn
+		            LEFT JOIN resinfo      r ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipcode       c ON c."detailCode" = rim.ip_type_code
+		        ORDER BY
+		            ip.ip_sn
+		    ) ip
+	</sql>
+	
+	
+	<sql id="commoncode">
+		SELECT
+	        detail_code      AS "detailCode",
+	        detail_code_name AS "detailCodeName"
+	    FROM
+	        commoncodedetail
+	</sql>
+	<sql id="resInfo">
+		WITH commoncodes AS (
+		    <include refid="commoncode"/>
+		)
+		SELECT
+		    r.res_serial_id       AS "resSerialId",
+		    r.res_name            AS "resName",
+		    r."resStatusCodeName" AS "resStatusCodeName",
+		    r.mgmt_dept_name      AS "mgmtDeptName",
+		    r.rack_info           AS "rackInfo",
+		    r.res_class_name      AS "resClassName",
+		    r."ipTypeCodeName"    AS "ipTypeCodeName",
+		    r.install_place_name  AS "installPlaceName",
+		    r."detailAddress",
+		    r.ip_sn               AS "ipSn",
+		    ROW_NUMBER()
+		    OVER(
+		        ORDER BY
+		            r.res_serial_id
+		    )                     AS rn
+		FROM
+		    (
+		        SELECT
+		            r.res_serial_id,
+		            r.res_name,
+		            cd_res_status."detailCodeName"            AS "resStatusCodeName",
+		            r.mgmt_dept_name,
+		            r.rack_info,
+		            rc.res_class_name,
+		            rim.ip_sn,
+		            cd_ip_type."detailCodeName"               AS "ipTypeCodeName",
+		            insp.install_place_name,
+		            concat(concat(insp.install_place_address, ' '),
+		                   insp.install_place_detail_address) AS "detailAddress",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    r.res_serial_id
+		            )                                         AS rn
+		        FROM
+		            resinfo      r
+		            LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+		            LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status."detailCode"
+		            LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		            LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type."detailCode"
+		            LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		    ) r
+	</sql>
+	
+	<select id="selectIpInfoByPage" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
+		<include refid="ipInfo"/>
+		<where>
+			<include refid="pagingCondition">
+				<property name="start" value="#{start}"/>
+				<property name="end" value="#{end}"/>
+			</include>
+		</where>
+	</select>
+	
+	<select id="selectIpCount">
+		<include refid="ipCount"/>
+	</select>
+	
+	<select id="selectIpDetail">
+		<include refid="ipInfo"/>
+		<where>
+			<include refid="ipSn">
+				<property name="ipSn" value="#{ipSn}"/>
+			</include>
+		</where>
+	</select>
+	
+	<select id="selectIpCode" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpCode">
+		<include refid="ipCode"/>
+	</select>
+	
+	<select id="selectResInfoByIpSn" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpRes">
+		<include refid="resInfo"/>
+		<where>
+			<include refid="ipSn">
+				<property name="ipSn" value="#{ipSn}"/>
+			</include>
+			<include refid="pagingCondition">
+				<property name="start" value="#{start}"/>
+				<property name="end" value="#{end}"/>
+			</include>
+		</where>
+	</select>
+	
+	<select id="searchIp" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
+		WITH ipcode AS (
+		    <include refid="ipCode"/>
+		)
+		SELECT
+		    ip.ip_sn            AS "ipSn",
+		    ip.ip               AS "ip",
+		    ip.ip_desc          AS "ipDesc",
+		    ip."codeGroupId"    AS "codeGroupId",
+		    ip."detailCode"     AS "detailCode",
+		    ip."detailCodeName" AS "detailCodeName",
+		    ROW_NUMBER()
+		    OVER(
+		        ORDER BY
+		            ip.ip_sn
+		    )                   AS rn
+		FROM
+		    (
+		        SELECT
+		            ip.ip_sn,
+		            ip.ip,
+		            ip.ip_desc,
+		            c."codeGroupId",
+		            c."detailCode",
+		            c."detailCodeName",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    ip.ip_sn
+		            ) AS rn
+		        FROM
+		            ipinfo       ip
+		            LEFT JOIN resipmapping rim ON ip.ip_sn = rim.ip_sn
+		            LEFT JOIN resinfo      r ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipcode       c ON c."detailCode" = rim.ip_type_code
+				<where>
+					<include refid="ipSearchKeyword">
+						<property name="keyword" value="#{keyword}"></property>
+					</include>
+				</where>
+		        ORDER BY
+		            ip.ip_sn
+		    ) ip
+		    <where>
+		    	<include refid="pagingCondition">
+						<property name="start" value="#{start}"/>
+						<property name="end" value="#{end}"/>
+				</include>
+		    </where>
+		    
+	</select>
+	
+	<select id="selectIpCountByKeyword">
+		WITH ipcode AS (
+		    <include refid="ipCode"/>
+		)
+		<include refid="ipCountByKeyword"></include>
+		<where>
+			<include refid="ipSearchKeyword">
+				<property name="keyword" value="#{keyword}"></property>
+			</include>
+		</where>
+	</select>
+	
+</mapper>

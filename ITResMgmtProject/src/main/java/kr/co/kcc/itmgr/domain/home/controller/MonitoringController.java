@@ -28,26 +28,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MonitoringController {
 	private final IMoniteringService monitoringService;
-	
+
 	/*
 	 * Author: [윤준성]
 	 * API No1-1. 모니터링 페이지
 	 * Info : 모든 모니터링 자원 정보 보여주는 API (N인 경우도 보여줌)
 	 */
 	@GetMapping("/")
-	public String selectAllResourceInformation(Model model) {
+	public String selectAllResourceInformation(Model model) throws IOException {
 		List<Monitoring> resourceInfo = monitoringService.selectAllResourceInformation();
 		List<ResClass> resClassLevel2 = monitoringService.selectResClassInformationByLevel(2);
 		List<ResClass> resClassLevel3 = monitoringService.selectResClassInformationByLevel(3);
-		
+		for(Monitoring resInfo : resourceInfo) {
+			String ip = resInfo.getIp();
+			boolean isAlive = monitoringService.serverPingCheck(ip);
+			resInfo.setIpStatus(isAlive);
+		}
 		model.addAttribute("resourceInfo", resourceInfo);
 
 		model.addAttribute("resClassLevel2", resClassLevel2);
 		model.addAttribute("resClassLevel3", resClassLevel3);
-	
+
 		return "index"; 
 	}
-	
+
 	/* 
 	 * Author: [윤준성]
 	 * API No1-2. 모니터링 화면 검색 [비동기]
@@ -58,10 +62,16 @@ public class MonitoringController {
 	public List<Monitoring> selectResourceInformationByCategory(Model model, SearchCondition searchCondition) {
 		log.info("searchCondition: " + searchCondition);
 		List<Monitoring> searchResult = monitoringService.selectResInformationBySearchCondition(searchCondition);
+		
+		for(Monitoring resInfo : searchResult) {
+			String ip = resInfo.getIp();
+			boolean isAlive = monitoringService.serverPingCheck(ip);
+			resInfo.setIpStatus(isAlive);
+		}
 		log.info("SearchResult: " + searchResult);
 		return searchResult;
 	}
-	
+
 	/*
 	 * @Author: [윤준성]
 	 * @API No1-3: 서버 Ping 확인
@@ -69,30 +79,21 @@ public class MonitoringController {
 	 */
 	@GetMapping("/ip/check")
 	public ResponseEntity<ServerStatusResponse> getServerStatus(@RequestParam("ip") String ip) throws IOException {
-	    ServerStatusResponse response = new ServerStatusResponse();
-	    
-	    try {
-	        InetAddress pingCheck = InetAddress.getByName(ip);
-	        boolean isAlive = pingCheck.isReachable(5000); // Timeout 조절 가능
-	        
-	        if (isAlive) {
-	            response.setCode(200);
-	            response.setStatus("성공");
-	            response.setMessage("서버 살아 있음");
-	            response.setServerStatus(isAlive);
-	        } else {
-	            response.setCode(400);
-	            response.setStatus("실패");
-	            response.setMessage("서버 죽음");
-	            response.setServerStatus(isAlive);
-	        }
-	    } catch (UnknownHostException e) {
-	        response.setCode(400);
-	        response.setStatus("실패");
-	        response.setMessage("잘못된 IP 주소");
-	        response.setServerStatus(false);
-	    }
-	    return ResponseEntity.ok().body(response);
+		ServerStatusResponse response = new ServerStatusResponse();
+
+		boolean isAlive = monitoringService.serverPingCheck(ip);
+		if (isAlive) {
+			response.setCode(200);
+			response.setStatus("성공");
+			response.setMessage("서버 살아 있음");
+			response.setServerStatus(isAlive);
+		} else {
+			response.setCode(400);
+			response.setStatus("실패");
+			response.setMessage("서버 죽음");
+			response.setServerStatus(isAlive);
+		}
+		return ResponseEntity.ok().body(response);
 	}
 
 }

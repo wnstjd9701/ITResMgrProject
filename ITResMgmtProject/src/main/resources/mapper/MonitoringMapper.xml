@@ -1,49 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.kcc.itmgr.domain.home.dao.IMonitoringRepository">
+	<sql id="ip">
+		AND ip.ip is not null
+	</sql>
+	<sql id="resInfo">
+		SELECT
+		    r.res_serial_id                                     AS "resSerialId",
+		    r.res_name                                          AS "resName",
+		    r.mgmt_id                                           AS "mgmtId",
+		    r.res_status_code                                   AS "resStatusCode",
+		    r.introduction_date                                 AS "introductionDate",
+		    r.use_yn                                            AS "resUseYn",
+		    rc.res_class_id                                     AS "resClassId",
+		    rc.res_class_name                                   AS "resClassName",
+		    rc.res_class_path                                   AS "resClassPath",
+		    i.install_place_sn                                  AS "installPlaceSn",
+		    i.install_place_name                                AS "installPlaceName",
+		    concat(i.install_place_address,
+		           concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
+		    ip.ip                                               AS "ip",
+		    ip.ip_desc                                          AS "ipDesc"
+		FROM
+		    resinfo      r
+		    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
+		    LEFT JOIN (
+		        SELECT
+		            level,
+		            res_class_id,
+		            res_class_name,
+		            substr(sys_connect_by_path(res_class_name, '>'),
+		                   2) AS "RES_CLASS_PATH"
+		        FROM
+		            resclass
+		        WHERE
+		            level = 3
+		        START WITH
+		            upper_res_class_id IS NULL
+		        CONNECT BY
+		            PRIOR res_class_id = upper_res_class_id
+		    ) rc ON r.res_class_id = rc.res_class_id
+	</sql>
+	
 	<select id="selectAllResourceInformation">
-		<![CDATA[
-			SELECT
-			    r.res_serial_id                                     AS "resSerialId",
-			    r.res_name                                          AS "resName",
-			    r.mgmt_id                                           AS "mgmtId",
-			    r.res_status_code                                   AS "resStatusCode",
-			    r.introduction_date                                 AS "introductionDate",
-			    r.use_yn                                            AS "resUseYn",
-			    rc.res_class_id                                     AS "resClassId",
-			    rc.res_class_name                                   AS "resClassName",
-			    rc.res_class_path                                   AS "resClassPath",
-			    i.install_place_sn                                  AS "installPlaceSn",
-			    i.install_place_name                                AS "installPlaceName",
-			    concat(i.install_place_address,
-			           concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
-			    ip.ip                                               AS "ip",
-			    ip.ip_desc                                          AS "ipDesc"
-			FROM
-			    resinfo      r
-			    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
-			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
-			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
-			    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
-			    LEFT JOIN (
-			        SELECT
-			            level,
-			            res_class_id,
-			            res_class_name,
-			            substr(sys_connect_by_path(res_class_name, '>'),
-			                   2) AS "RES_CLASS_PATH"
-			        FROM
-			            resclass
-			        WHERE
-			            level = 3
-			        START WITH
-			            upper_res_class_id IS NULL
-			        CONNECT BY
-			            PRIOR res_class_id = upper_res_class_id
-			    ) rc ON r.res_class_id = rc.res_class_id
-			WHERE
-			    r.monitoring_yn = 'Y' AND r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' 
-		]]>
+		<include refid="resInfo"></include>
+		WHERE
+		    r.monitoring_yn = 'Y' AND r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' <include refid="ip"></include>
 	</select>
 	
 	<select id="selectResClassInformationByLevel" parameterType="int">
@@ -111,7 +116,7 @@
 			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
 			    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
 			WHERE
-			    r.use_yn = 'Y'
+			    r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' <include refid="ip"></include>
 			        <if test='monitoringYn.equals("Y")'>
 			            and r.monitoring_yn = #{monitoringYn}
 			        </if>

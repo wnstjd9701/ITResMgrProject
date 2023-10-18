@@ -1,0 +1,22 @@
+@charset "UTF-8";
+.ip-container {
+    display: flex;
+}
+
+.ip-search-container {
+    display: flex;
+}
+
+.ip-btn{
+	background-color: navy;
+	border: navy;
+}
+
+.excel-btn{
+	background-color: green;
+	border: green;
+}
+
+.excel-btn:hover{
+	background-color: green;
+}

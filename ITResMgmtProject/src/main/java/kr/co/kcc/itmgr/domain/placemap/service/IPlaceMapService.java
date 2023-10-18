@@ -10,7 +10,7 @@ public interface IPlaceMapService {
 	List<InstallPlace> selectInstallPlaceList(); // 모든 설치 장소 조회
 	Map<String,Object> placeMapPaging(int page, int totalCount); // 설치 장소 페이징 처리
 	
+	Map<String, Integer> getDoCountValues(); // 도 이름 조회
 	InstallPlace getDoName(InstallPlace place); // 도 이름, 좌표 가져오기
-	List<String> getDoValues(); // 도 이름 조회
 	DoName getDoValuesByDoName(String doName); // 도 이름 조회
 }
