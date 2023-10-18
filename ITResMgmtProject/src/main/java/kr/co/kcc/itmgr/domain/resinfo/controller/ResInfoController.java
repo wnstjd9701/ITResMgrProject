@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -108,6 +107,42 @@ public class ResInfoController {
 		return "resinfo/resinfo";
 	}
 	
+	@GetMapping("/resinfopagination")
+	@ResponseBody
+	public Map<String,Object> selectResinfoPagination(int page){
+
+		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo(page);
+		Map<String, Object> resInfoMap = new HashMap<String, Object>();
+		
+		int countOfResList = resInfoService.countOfResInfo();
+		int totalPage = 0;
+		if(countOfResList > 0) {
+			totalPage= (int)Math.ceil(countOfResList/10.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
+		int nowPageBlock = (int) Math.ceil(page/10.0);
+		int startPage = (nowPageBlock-1)*10 + 1;
+		int endPage = 0;
+		if(totalPage > nowPageBlock*10) {
+			endPage = nowPageBlock*10;
+		}else {
+			endPage = totalPage;
+		}
+		
+		Map<String,Object> page2 = new HashMap<String, Object>();
+		
+		page2.put("totalPageCount", totalPage);
+		page2.put("currentPage", page);
+		page2.put("totalPageBlock", totalPageBlock);
+		page2.put("nowPageCount", nowPageBlock);
+		page2.put("startPage", startPage);
+		page2.put("endPage", endPage);
+		
+		resInfoMap.put("selectAllResInfo",selectAllResInfo);
+		resInfoMap.put("page",page2);
+		return resInfoMap;
+	}
+	
 	
 
 	@GetMapping("/resinfo/additem")
@@ -115,6 +150,19 @@ public class ResInfoController {
 	public List<ResInfo> selectMappingAddItem(@RequestParam("resClassId") String resClassId){
 		List<ResInfo> selectMappingAddItem = resInfoService.selectMappingAddItem(resClassId);
 		return selectMappingAddItem;
+	}
+	
+	@PostMapping("/resinfo/additemvalue")
+	@ResponseBody
+	public void insertAddItemValueInResInfo(@RequestBody List<ResInfo> resInfo){
+		resInfoService.insertAddItemValueInResInfo(resInfo);
+	}
+	
+	@GetMapping("/resinfo/additemvalue")
+	@ResponseBody
+	public List<ResInfo> selectAddItemValueInResInfo(String resSerialId){
+		List<ResInfo> selectAddItemValueInResInfo = resInfoService.selectAddItemValueInResInfo(resSerialId);
+		return selectAddItemValueInResInfo;
 	}
 
 	@GetMapping("/resinfo/search")
@@ -127,25 +175,6 @@ public class ResInfoController {
 	@PostMapping("/resinfo/insert")
 	@ResponseBody
 	public void insertResInfo(@RequestBody ResInfo resInfo) {
-		resInfo.setResClassId(resInfo.getResClassId());
-		resInfo.setMgmtId(resInfo.getMgmtId());
-		resInfo.setMgmtDeptName(resInfo.getMgmtDeptName());
-		resInfo.setResName(resInfo.getResName());
-		resInfo.setResStatusCode(resInfo.getResStatusCode());
-		resInfo.setManagerName(resInfo.getManagerName());
-		resInfo.setResSerialId(resInfo.getResSerialId());
-		resInfo.setManufactureCompanyName(resInfo.getManufactureCompanyName());
-		resInfo.setModelName(resInfo.getModelName());
-		resInfo.setInstallPlaceSn(resInfo.getInstallPlaceSn());
-		resInfo.setRackInfo(resInfo.getRackInfo());
-		resInfo.setResSn(resInfo.getResSn());
-		resInfo.setIntroductionDate(resInfo.getIntroductionDate());
-		resInfo.setExpirationDate(resInfo.getExpirationDate());
-		resInfo.setIntroductionPrice(resInfo.getIntroductionPrice());
-		resInfo.setUseYn(resInfo.getUseYn());
-		resInfo.setMonitoringYn(resInfo.getMonitoringYn());
-		resInfo.setPurchaseCompanyName(resInfo.getPurchaseCompanyName());
-		resInfo.setAddInfo(resInfo.getAddInfo());
 		resInfoService.insertResInfo(resInfo);
 	}
 

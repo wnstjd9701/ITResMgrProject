@@ -69,4 +69,14 @@ public class ResInfoService implements IResInfoService {
 		return resInfoRepository.countOfResInfo();
 	}
 
+	@Override
+	public void insertAddItemValueInResInfo(List<ResInfo> resInfo) {
+		resInfoRepository.insertAddItemValueInResInfo(resInfo);
+	}
+
+	@Override
+	public List<ResInfo> selectAddItemValueInResInfo(String resSerialId) {
+		return resInfoRepository.selectAddItemValueInResInfo(resSerialId);
+	}
+
 }

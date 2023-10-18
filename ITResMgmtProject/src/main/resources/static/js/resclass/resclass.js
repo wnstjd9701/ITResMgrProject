@@ -140,7 +140,6 @@ function paging(page) {
             var pagingHtml = pagingLine(response);  // 응답 객체 전달
             updateTable(response.test);
             $('ul#pagination').html(pagingHtml);  // 수정된 선택자
-            // 테이블의 기존 내용을 지우기
         },
         error: function (error) {
             // 요청이 실패한 경우 처리

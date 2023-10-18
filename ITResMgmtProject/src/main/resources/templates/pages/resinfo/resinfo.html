@@ -91,30 +91,33 @@
 					<td th:text="${resinfo.mgmtId}"></td>
 					<td th:text="${resinfo.monitoringYn}"></td>
 					<input type="hidden" th:value="${resinfo.resClassId}">
-					<td><button type="button" id="resinfo-detail-btn">보기</button></td>
+					<td>
+					<input type="hidden" name ="resSerialId" th:value="${resinfo.resSerialId}">
+					<button type="button" id="resinfo-detail-btn">보기</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>
 		<nav aria-label="Page navigation example" class="paging-nav">
-						<ul class="pagination place-pagination justify-content-center">
-							<li class="page-item">
-								<button class="page-link prev-page-link" aria-label="Previous" value="0"> 
-									<span aria-hidden="true">&laquo;</span>
-									<span class="sr-only">Previous</span>
-								</button>
-							</li>
-							<li class="page-item"
-								th:each="pageNum : ${#numbers.sequence(page2.startPage, page2.endPage)}">
-								<button class="page-link page-link-val" th:text="${pageNum}">1</button>
-							</li>
-							<li class="page-item">
-								<button class="page-link next-page-link" aria-label="Next" value="6"> 
-									<span aria-hidden="true">&raquo;</span> 
-									<span class="sr-only">Next</span>
-								</button>
-							</li>
-						</ul>
-					</nav>
+			<ul class="pagination place-pagination justify-content-center">
+				<li class="page-item">
+					<button class="page-link prev-page-link" aria-label="Previous" th:if="${page2.startPage-1} > 1" th:onclick="paging([[${page2.startPage-1}]])"> 
+						<span aria-hidden="true">&laquo;</span>
+						<span class="sr-only">Previous</span>
+					</button>
+				</li>
+				<li class="page-item"
+					th:each="pageNum : ${#numbers.sequence(page2.startPage, page2.endPage)}">
+					<button class="page-link page-link-val" th:text="${pageNum}" th:onclick="paging([[${pageNum}]])"></button>
+				</li>
+				<li class="page-item">
+					<button class="page-link next-page-link" aria-label="Next" th:onclick="paging([[${page2.nowPage+1}]])"> 
+						<span aria-hidden="true">&raquo;</span> 
+						<span class="sr-only">Next</span>
+					</button>
+				</li>
+			</ul>
+		</nav>
 	</span>
 	</div>
 	</main>
@@ -135,19 +138,19 @@
 						<table id="resInfoDetailTable"  class="table table-bordered">
 							<tbody>
 								<tr>
-									<th scope="row">자원분류명</th>
+									<th scope="row">자원분류명 <span class="essential-resinfo">*</span></th>
 									<td><input type="text" id="resClassName"
 										name="resClassName">
 										<input type="hidden" name="resClassId">
 										<button type="button" class="btn btn-primary"
 										id="res-class-search-btn">찾기</button></td>
-									<th scope="row">관리ID</th>
+									<th scope="row">관리ID<span class="essential-resinfo">*</span></th>
 									<td><input type="text" name="mgmtId"></input></td>
 									<th scope="row">관리부서명</th>
 									<td><input type="text" name="mgmtDeptName"></input></td>
 								</tr>
 								<tr>
-									<th scope="row">자원명</th>
+									<th scope="row">자원명<span class="essential-resinfo">*</span></th>
 									<td><input type="text" name="resName"></input></td>
 									<th scope="row">자원상태</th>
 									<td><select name="resStatusCode">
@@ -159,12 +162,12 @@
 									<td><input type="text" name="managerName"></input></td>
 								</tr>
 								<tr>
-									<th scope="row">자원시리얼번호</th>
+									<th scope="row">자원시리얼번호<span class="essential-resinfo">*</span></th>
 									<td><input type="text" name="resSn"></input></td>
-									<th scope="row">제조회사명</th>
+									<th scope="row">제조회사명<span class="essential-resinfo">*</span></th>
 									<td><input type="text" name="manufactureCompanyName"></input>
 									</td>
-									<th scope="row">모델명</th>
+									<th scope="row">모델명<span class="essential-resinfo">*</span></th>
 									<td><input type="text" name="modelName"></input></td>
 								</tr>
 								<tr>
@@ -176,7 +179,7 @@
 											id="installPlaceSearchBtn">찾기</button></td>
 									<th scope="row">랙정보</th>
 									<td><input type="text" name="rackInfo"></input></td>
-									<th scope="row">자원시리얼아이디</th>
+									<th scope="row">자원시리얼아이디<span class="essential-resinfo">*</span></th>
 									<td><input type="text" name="resSerialId"></input></td>
 								</tr>
 								<tr>
@@ -196,7 +199,7 @@
 									</label> <label> <input type="radio" name="useYn" value="N" />
 											N
 									</label></td>
-									<th scope="row">모니터링여부</th>
+									<th scope="row">모니터링여부<span class="essential-resinfo">*</span></th>
 									<td><label> <input type="radio"
 											name="monitoringYn" value="Y" checked="checked" /> Y
 									</label> <label> <input type="radio" name="monitoringYn"

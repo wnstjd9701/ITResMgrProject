@@ -45,6 +45,8 @@ public class ResInfo {
 	private String addItemSn;
 	private String addItemName;
 	
+	private String resDetailValue;
+	
 	//페이징
 	private int totalPageBlock;
 	private int totalPage;

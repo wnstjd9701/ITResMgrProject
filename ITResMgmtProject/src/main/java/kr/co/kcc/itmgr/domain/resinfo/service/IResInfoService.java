@@ -24,5 +24,8 @@ public interface IResInfoService {
 	ResInfo selectResInfoDetail(String resName);
 	
 	List<ResInfo> selectMappingAddItem(String resClassId);
+	
+	void insertAddItemValueInResInfo(List<ResInfo> resInfo); //매핑된 부가항목 값 넣기
+	List<ResInfo> selectAddItemValueInResInfo(String resSerialId);
 
 }

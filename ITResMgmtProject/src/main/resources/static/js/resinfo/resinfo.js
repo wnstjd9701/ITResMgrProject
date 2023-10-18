@@ -1,10 +1,43 @@
+function paging(page) {
+	
+	$.ajax({
+        type: 'GET',
+        url: '/resinfopagination',
+        contentType: "application/json",
+        data: {
+            'page': page
+        },
+        success: function (response) {
+           $('tbody#resInfoTable').empty();
+
+            // Iterate over the response data and append new rows
+            for (var i = 0; i < response.selectAllResInfo.length; i++) {
+                var resInfoRow = "<tr>"+
+                        "<td>"+response.selectAllResInfo[i].topUpperResClassName+"</td>"+
+                        "<td>"+response.selectAllResInfo[i].upperResClassName+"</td>"+
+                        "<td>"+response.selectAllResInfo[i].resClassName+"</td>"+
+                        "<td>"+response.selectAllResInfo[i].resName+"</td>"+
+                        "<td>"+response.selectAllResInfo[i].installPlaceName+"</td>"+
+                        "<td>"+response.selectAllResInfo[i].manufactureCompanyName+"</td>"+
+                        "<td>"+response.selectAllResInfo[i].mgmtId+"</td>"+
+                        "<td>"+response.selectAllResInfo[i].monitoringYn+"</td>"+
+ 						"<td><input type='hidden' name ='resSerialId' value='" + response.selectAllResInfo[i].resSerialId
+						+"'>" + "<button type='button' id='resinfo-detail-btn'>보기</button></td>"+
+                        "</tr>";
+                $('tbody#resInfoTable').append(resInfoRow);
+            }
+        },
+        error: function (error) {
+            // 요청이 실패한 경우 처리
+            console.log('에러:', error);
+        }
+    });
+}
 $(document).ready(function () {
-
-
     $('#newResInfoBtn').on('click', function () {
+		var resInfoaddItemList = [];
         clearModalContent()
         $('#resinfo-detail-modal').modal('show');
-
         $('#res-info-save-btn').on('click', function () {
             var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
             var mgmtId = $('#resinfo-detail-modal input[name=mgmtId]').val();
@@ -25,6 +58,26 @@ $(document).ready(function () {
             var monitoringYn = 'Y';
             var purchaseCompanyName = $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val();
             var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
+			var addItemSn = $('#additionalInfoTable input[name="addItemSn"]').val();
+			var resDetailValue = $('#additionalInfoTable input[name="resDetailValue"]').val();
+			
+			
+			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
+			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
+			
+			for (var i = 0; i < addItemSnElements.length; i++) {
+			    var addItemSnValue = addItemSnElements.eq(i).val(); // 현재 순서의 addItemSn 값 가져오기
+			    var resDetailValueValue = resDetailValueElements.eq(i).val(); // 현재 순서의 resDetailValue 값 가져오기
+			
+			    var resDetailValueList = {
+			        addItemSn: addItemSnValue, // 순서대로 각 addItemSn 값을 가져와서 추가
+			        resSerialId: $('#resinfo-detail-modal input[name="resSerialId"]').val(),
+			        resDetailValue: resDetailValueValue // 현재 순서의 resDetailValue 값을 가져와서 추가
+			    };
+			
+			    resInfoaddItemList.push(resDetailValueList);
+			    console.log(resInfoaddItemList);
+			}
 
             $.ajax({
                 type: 'POST',
@@ -60,12 +113,27 @@ $(document).ready(function () {
                 }
             });
 
+            $.ajax({
+                type: 'POST',
+                url: '/resinfo/additemvalue',
+                data: JSON.stringify(resInfoaddItemList),
+                contentType: "application/json",
+                success: function (response) {
+					console.log(response)
+                    alert("저장되었습니다.");
+                },
+                error: function (error) {
+                    console.log('에러:', error);
+                }
+            });
+
         });
     });
 
     $('#resInfoTable').on('click', '#resinfo-detail-btn', function () {
         var resName = $(this).closest('tr').find('td:nth-child(4)').text();
-        console.log(resName);
+		var resSerialId = $(this).closest('tr').find('input[name="resSerialId"]').val();
+        console.log(resSerialId);
         $.ajax({
             type: 'GET',
             url: '/resinfo/detail',
@@ -92,30 +160,27 @@ $(document).ready(function () {
                 $('#resinfo-detail-modal input[name="useYn"]').val(response.useYn);
                 $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val(response.purchaseCompanyName);
                 $('#resinfo-detail-modal input[name="monitoringYn"]').val(response.monitoringYn);
-                $('#resinfo-detail-modal').modal('show');
+ 				$('#resinfo-detail-modal').modal('show');
             },
             error: function (error) {
                 console.log('에러:', error);
             }
         });
 
-        var resClassId = $(this).closest('tr').find('input[type="hidden"]').val();
-		console.log(resClassId)
         $.ajax({
             type: 'GET',
-            url: '/resinfo/additem',
+            url: '/resinfo/additemvalue',
             data: {
-                "resClassId": resClassId
+                "resSerialId": resSerialId
             },
             success: function (response) {
                 $('#additionalInfoTable tbody').empty();
                 for (var i = 0; i < response.length; i++) {
                     addTableRow = "<tr>" +
                         "<td>" + response[i].addItemName + "</td>" +
-                        "<td><input type='text' name='resDetailValue'>" + "</td>" +
+                       	"<td><input type='text' name='resDetailValue' value='"+response[i].resDetailValue+"'></td>" +
                         "</tr>";
                     $('#additionalInfoTable tbody').append(addTableRow);
-                    console.log(response[i].addItemName);
                 }
                 showTable('additionalInfo');
             },
@@ -123,10 +188,13 @@ $(document).ready(function () {
                 console.log('에러:', error);
             }
         });
+
+
     });
 
     function showResourceDetail(resName) {
 	var resName = $('#resinfo-detail-modal input[name="resName"]').val();
+	var resSerialId = $('#resinfo-detail-modal input[name="resSerialId"]').val();
         $.ajax({
             type: 'GET',
             url: '/resinfo/detail',
@@ -159,22 +227,20 @@ $(document).ready(function () {
                 console.log('에러:', error);
             }
         });
-        var resClassId = $('#resinfo-detail-modal input[name="resClassId"]').val();
         $.ajax({
             type: 'GET',
-            url: '/resinfo/additem',
+            url: '/resinfo/additemvalue',
             data: {
-                "resClassId": resClassId
+                "resSerialId": resSerialId
             },
             success: function (response) {
                 $('#additionalInfoTable tbody').empty();
                 for (var i = 0; i < response.length; i++) {
                     addTableRow = "<tr>" +
                         "<td>" + response[i].addItemName + "</td>" +
-                        "<td><input type='text' name='resDetailValue'>" + "</td>" +
+                       	"<td><input type='text' name='resDetailValue' value='"+response[i].resDetailValue+"'></td>" +
                         "</tr>";
                     $('#additionalInfoTable tbody').append(addTableRow);
-                    console.log(response[i].addItemName);
                 }
                 showTable('additionalInfo');
             },
@@ -342,40 +408,6 @@ $(document).ready(function () {
 	    }).addClass('active');
 	}
 	
-	
-		//페이지 누르면 이동하는 기능
-$("#pagination").on("click", ".page-btn", function() {
-    // Loop through all checkboxes in the table
-    $('table#add-item-table input[type=checkbox]').each(function() {
-        if ($(this).is(':checked')) {
-            checkedAddItems.push($(this).val());
-        }
-    });
-    const page = $(this).val();
-    paging(page);
-});
-
-
-
-function paging(page) {
-    $.ajax({
-        type: 'GET',
-        url: '/resinfo',
-        contentType: "application/json",
-        data: {
-            'page': page
-        },
-        success: function (response) {
-		
-            $('ul#pagination').html(pagingHtml);  // 수정된 선택자
-            // 테이블의 기존 내용을 지우기
-        },
-        error: function (error) {
-            // 요청이 실패한 경우 처리
-            console.log('에러:', error);
-        }
-    });
-}
 	$('#res-class-search-btn').on('click',function(){
 		$('#resinfo-detail-modal').modal('hide');
 		$('#res-class-choose-modal').modal('show');
@@ -464,11 +496,10 @@ function paging(page) {
                 $('#additionalInfoTable tbody').empty();
                 for (var i = 0; i < response.length; i++) {
                     addTableRow = "<tr>" +
-                        "<td>" + response[i].addItemName + "</td>" +
-                        "<td><input type='text' name='resDetailValue'>" + "</td>" +
+                        "<td><input type='hidden' name='addItemSn' value='"+ response[i].addItemSn +"'>" + response[i].addItemName + "</td>" +
+                       	"<td><input type='text' name='resDetailValue'>" + "</td>" +
                         "</tr>";
                     $('#additionalInfoTable tbody').append(addTableRow);
-                    console.log(response[i].addItemName);
                 }
                 showTable('additionalInfo');
             },
@@ -491,18 +522,6 @@ function paging(page) {
     	});
 
 
-/*	$(document).on("focusout focus", "input[name=introdutionPrice]", function(event) {
-	    if (event.type === "focusout") {
-	        $(this).val($(this).val().replace(/,/g, ""));
-	        $(this).val($(this).val().replace(/[^-\.0-9]/g, ""));
-	        $(this).val($(this).val().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-	        if ($(this).val() !== '') {
-	            $(this).val($(this).val() + '원');
-	        }
-	    } else if (event.type === "focus") {
-	        $(this).val($(this).val().replace("원", ""));
-	    }
-	});*/
 });
 
 

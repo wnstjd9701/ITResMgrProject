@@ -12,7 +12,8 @@
 			    "manufactureCompanyName",
 			    "mgmtId",
 			    "monitoringYn",
-			    "resClassId"
+			    "resClassId",
+			    "resSerialId"
 			FROM (
 			    SELECT 
 			        "topUpperResClassName",
@@ -24,6 +25,7 @@
 			        "mgmtId",
 			        "monitoringYn",
 			        "resClassId",
+			        "resSerialId",
 			        ROWNUM AS rnum
 			    FROM (
 			        SELECT
@@ -35,7 +37,8 @@
 			            r.manufacture_company_name    "manufactureCompanyName",
 			            r.mgmt_id                "mgmtId",
 			            r.monitoring_yn            "monitoringYn",
-			            r.res_class_id            "resClassId"
+			            r.res_class_id            "resClassId",
+			            r.res_serial_id			"resSerialId"
 			        FROM resinfo r
 			        LEFT OUTER JOIN installplace i
 			            ON i.install_place_sn = r.install_place_sn
@@ -233,6 +236,39 @@
 			    additem a ON m.add_item_sn = a.add_item_sn
 			WHERE
 			    m.res_class_id = #{resClassId}
+		]]>
+	</select>
+	
+	<insert id="insertAddItemValueInResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		INSERT INTO resinfodetail(
+				res_serial_id, 
+		    	add_item_sn, 
+		    	res_detail_value, 
+		    	create_date, 
+		    	creater_id
+		    	)
+		    <foreach collection="list" item="resInfo" separator="UNION ALL">
+				SELECT
+					#{resInfo.resSerialId},
+					#{resInfo.addItemSn},
+					#{resInfo.resDetailValue},
+					SYSDATE,
+					'wh467925'
+				FROM
+					DUAL
+			</foreach>
+	</insert>
+	
+	<select id="selectAddItemValueInResInfo" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT 
+				rid.res_detail_value	"resDetailValue",
+				ai.add_item_name	"addItemName"
+			FROM resinfo r
+			INNER JOIN resinfodetail rid ON r.res_seriaL_id=rid.res_serial_id
+			INNER JOIN additem ai ON ai.add_item_sn=rid.add_item_sn
+			INNER JOIN resclassasideinfomapping ra ON ai.add_item_sn = ra.add_item_sn AND r.res_class_id=ra.res_class_id
+			WHERE r.res_serial_id = #{resSerialId}
 		]]>
 	</select>
 </mapper>
