@@ -282,23 +282,29 @@
 		</where>
 	</select>
 	
-	<insert id="insertIp" parameterType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
-			INSERT INTO ipinfo (
+	<sql id="insertIpInfo">
+		INSERT INTO ipinfo (
 			    ip_sn,
 			    ip,
 			    ip_desc,
 			    ip_type_code,
 			    create_date,
 			    creater_id
-			) VALUES (
+			)
+	</sql>
+	<sql id="insertIpValues">
+		VALUES (
 			    ipinfo_seq.NEXTVAL,
 			    #{ip},
 			    #{ipDesc, jdbcType=VARCHAR},
 			    #{detailCode},
 			    sysdate,
 			    'wnstjd9701'
-			)
-			
+		)
+	</sql>
+	<insert id="insertIp" parameterType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
+			<include refid="insertIpInfo"/>
+			<include refid="insertIpValues"/>
 			<selectKey keyProperty="ipSn" resultType="int" order="AFTER">
 				SELECT ipinfo_seq.CURRVAL FROM DUAL
 			</selectKey>
@@ -309,7 +315,9 @@
 		SET
 		    ip = #{ip},
 		    ip_desc = #{ipDesc, jdbcType=VARCHAR},
-		    ip_type_code = #{detailCode}
+		    ip_type_code = #{detailCode},
+		    update_date = sysdate,
+		    updater_id = 'wnstjd9701'
 		WHERE
 		    ip_sn = #{ipSn}
 	</update>
@@ -320,5 +328,30 @@
 	<delete id="deleteResIpMapping">
 		DELETE FROM resipmapping WHERE ip_sn = #{ipSn}
 	</delete>
+	
+	<select id="selectIpSet">
+		SELECT
+			ip
+		FROM
+			ipInfo
+	</select>
+	
+	<insert id="insertIpList" parameterType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
+		<selectKey keyProperty="ipSn" resultType="int" order="BEFORE">
+				SELECT ipinfo_seq.NEXTVAL FROM DUAL
+		</selectKey>
+		<include refid="insertIpInfo"/>
+		<foreach collection="list" item="ip" index="i" separator="UNION ALL">
+			SELECT
+			    #{ipSn} + #{i},
+			    #{ip.ip},
+				#{ip.ipDesc, jdbcType=VARCHAR},
+			    #{ip.detailCode},
+			    sysdate,
+			    'wnstjd9701'
+			FROM
+				DUAL
+		</foreach>
+	</insert>
 	
 </mapper>
