@@ -1,18 +1,25 @@
 package kr.co.kcc.itmgr.domain.placemap.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import kr.co.kcc.itmgr.domain.installplace.dao.IInstallPlaceRepository;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.global.common.DoName;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class PlaceMapService implements IPlaceMapService {
-
+	
+	private final IInstallPlaceRepository installPlaceRepository;
+	
 	public InstallPlace getDoName(InstallPlace place) {
 		String address = place.getInstallPlaceAddress();
 
@@ -62,5 +69,39 @@ public class PlaceMapService implements IPlaceMapService {
 			}
 		}
 		return selectedDoName;
+	}
+	
+	// 모든 설치 장소 조회
+	@Override
+	public List<InstallPlace> selectInstallPlaceList() {
+		return installPlaceRepository.selectInstallPlaceList();
+	}
+
+	// 설치 장소 페이징 처리
+	@Override
+	public Map<String, Object> placeMapPaging(int page, int totalCount) {
+		
+		int totalPage=0;
+		if(totalCount > 0) {
+			totalPage=(int)Math.ceil(totalCount / 5.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage / 5.0));
+		int nowPageBlock = (int)Math.ceil(page / 5.0);
+		int startPage = (nowPageBlock - 1) * 5 + 1;
+		int endPage=0;
+		if(totalPage > nowPageBlock * 5) {
+			endPage = nowPageBlock * 5;
+		}else {
+			endPage = totalPage;
+		}
+		
+		Map<String,Object> paging = new HashMap<String, Object>();
+		paging.put("totalPageCount", totalPage);
+		paging.put("nowPage", page);
+		paging.put("totalPageBlock", totalPageBlock);
+		paging.put("nowPageCount", nowPageBlock);
+		paging.put("startPage", startPage);
+		paging.put("endPage", endPage);
+		return paging;
 	}
 }

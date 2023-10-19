@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.user.dao.IUserRepository">
+
+
+<select id="selectUser" resultType = "kr.co.kcc.itmgr.domain.user.model.User">
+	<![CDATA[
+		SELECT employee_id AS employeeId,
+				employee_pwd AS employeePwd,
+				employee_name AS employeeName,
+				employee_type_code AS employeeTypeCode,
+				employee_status_code AS employeeStatusCode,
+				use_yn AS useYN
+		FROM employeeinfo
+		WHERE employee_id=#{employeeId}
+	]]>
+</select>
+</mapper>

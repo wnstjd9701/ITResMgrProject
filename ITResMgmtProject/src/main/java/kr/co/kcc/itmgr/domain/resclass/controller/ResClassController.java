@@ -104,12 +104,10 @@ public class ResClassController {
 		model.addAttribute("numOfRes", numOfRes);
 		model.addAttribute("numOfRes2", numOfRes2);
 		model.addAttribute("numOfRes3", numOfRes3);
-	logger.info("numberOfRes2:"+numberOfRes2);
-	logger.info("numberOfRes3:"+numberOfRes3);
-	  	
-	  	List<ResClass> selectResClassByLevel = resClassService.selectResClassByLevel();
-	  	model.addAttribute("selectResClassByLevel", selectResClassByLevel);
 
+
+		List<ResClass> selectResClassByLevel = resClassService.selectResClassByLevel();
+	  	model.addAttribute("selectResClassByLevel", selectResClassByLevel);
 		
 		return "resclass/resclass"; 
 	}

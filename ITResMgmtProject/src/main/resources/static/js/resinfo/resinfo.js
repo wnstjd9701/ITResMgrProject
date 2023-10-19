@@ -1,5 +1,55 @@
 // 검색창에서 select박스 계층형으로 보이게
 $(document).ready(function () {
+	
+	//자원상세보기
+	$('#resInfoTable').on('click','#resinfo-detail-btn',function(resName){
+		var resName = $(this).closest('tr').find('td:nth-child(4)').text();
+		$.ajax({
+            type: 'GET', // 또는 'GET', 요청 방식 선택
+            url: '/resinfo/detail', // Controller의 URL
+            data: {
+				"resName" : resName
+            },
+            success: function(response) {
+				$('#resinfo-detail-modal input[name="resClassName"]').val(response.resClassName);
+            	$('#resinfo-detail-modal input[name="resName"]').val(response.resName);
+            	$('#resinfo-detail-modal input[name="mgmtId"]').val(response.mgmtId);
+            	$('#resinfo-detail-modal input[name="mgmtDeptName"]').val(response.mgmtDeptName);
+            	$('#resinfo-detail-modal input[name="resSerialId"]').val(response.resSerialId);
+            	$('#resinfo-detail-modal input[name="resStatusCode"]').val(response.resStatusCode);
+            	$('#resinfo-detail-modal input[name="managerName"]').val(response.managerName);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+            	$('#resinfo-detail-modal input[name="manufactureCompanyName"]').val(response.manufactureCompanyName);
+            	$('#resinfo-detail-modal input[name="modelName"]').val(response.modelName);
+            	$('#resinfo-detail-modal input[name="installPlaceName"]').val(response.installPlaceName);
+            	$('#resinfo-detail-modal input[name="rackInfo"]').val(response.rackInfo);
+            	$('#resinfo-detail-modal input[name="introductionDate"]').val(response.introductionDate);
+            	$('#resinfo-detail-modal input[name="expirationDate"]').val(response.expirationDate);
+            	$('#resinfo-detail-modal input[name="addInfo"]').val(response.addInfo);
+            	$('#resinfo-detail-modal input[name="introdutionPrice"]').val(response.introdutionPrice);
+            	$('#resinfo-detail-modal input[name="useYn"]').val(response.useYn);
+            	$('#resinfo-detail-modal input[name="purchaseCompanyName"]').val(response.purchaseCompanyName);
+            	$('#resinfo-detail-modal input[name="monitoringYn"]').val(response.monitoringYn);
+				$('#resinfo-detail-modal').modal('show');
+				
+				
+				console.log(response)
+            },
+            error: function(error) {
+                // 요청이 실패한 경우 처리
+                console.log('에러:', error);
+            }
+        });
+	});
+	
+	
+	
+	
+	
+	
     // 대분류 선택 시
     $('#topUpperResClassName').change(function () {
         var selectedMainCategoryId = $(this).val();
@@ -138,5 +188,65 @@ $('#installPlaceSearchBtn').on('click', function() {
 				
 	            $('#install-place-choose-modal').modal('hide');
 	});	
+
 });
+
+
+$('#res-class-search-btn').on('click',function(){
+	$('#res-class-choose-modal').modal('show');
+	});
+
+$(document).ready(function () {
+    var selectedThirdTableValue; // 세 번째 테이블에서 선택한 값의 변수
+	 $('#res-class-list-table2 tbody tr').hide();
+	 $('#res-class-list-table3 tbody tr').hide();
+    // 첫 번째 테이블에서 항목 선택 시
+    $('#res-class-list-table tbody').on('click', 'td', function () {
+        var selectedValue = $(this).attr('value');
+
+        // 두 번째 테이블에서 선택한 대분류에 속하는 중분류만 표시
+        $('#res-class-list-table2 tbody tr').hide();
+        $('#res-class-list-table2 tbody tr').each(function () {
+            if ($(this).attr('value') === selectedValue) {
+                $(this).show();
+            }
+        });
+
+        // 세 번째 테이블 초기화
+        $('#res-class-list-table3 tbody tr').hide();
+    });
+
+    // 두 번째 테이블에서 항목 선택 시
+    $('#res-class-list-table2 tbody').on('click', 'td', function () {
+        var selectedValue = $(this).attr('value');
+
+        // 세 번째 테이블에서 선택한 중분류에 속하는 소분류만 표시
+        $('#res-class-list-table3 tbody tr').hide();
+        $('#res-class-list-table3 tbody tr').each(function () {
+            if ($(this).attr('value') === selectedValue) {
+                $(this).show();
+            }
+        });
+
+        // 두 번째 테이블에서 선택한 값 초기화
+        selectedThirdTableValue = undefined;
+    });
+
+    // 세 번째 테이블에서 항목 선택 시
+    $('#res-class-list-table3 tbody').on('click', 'td', function () {
+        selectedThirdTableValue = $(this).attr('value');
+        selectedThirdTableValue2 = $('span.selected-name2').attr('value');
+		console.log(selectedThirdTableValue2)
+    });
+
+    // 확인 버튼 클릭 시 선택한 자원 분류 가져오기
+    $('#choose-res-class-btn').on('click', function () {
+        console.log('선택한 자원 분류 value: ' + selectedThirdTableValue2);
+        $('input[name=resClassName]').val(selectedThirdTableValue);
+        $('input[name=resClassId]').val(selectedThirdTableValue2);
+		$('#res-class-choose-modal').modal('hide');
+    });
+});
+
+
 
