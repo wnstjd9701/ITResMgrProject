@@ -27,6 +27,8 @@ public interface IIpInfoService {
 	int insertIp(IpInfo ipInfo); // IP 등록
 	int updateIp(IpInfo ipInfo); // IP 수정
 	boolean deleteIp(int ipSn); // IP 삭제
+	int insertIpList(List<IpInfo> ipInfoList); // IP 엑셀 업로드
 	
 	int selectResInfoCountByIpSn(int ipSn); // 매핑된 자원 수 조회
+	List<String> selectIpSet(); // 중복 검사를 위한 Ip 조회
 }

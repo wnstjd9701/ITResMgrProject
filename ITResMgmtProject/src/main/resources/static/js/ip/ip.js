@@ -2,6 +2,26 @@ $(document).ready(function () {
 	// 페이징
 	$(".ip-pagination").on("click", ".ip-page-link-val", function(){
 		var page = $(this).val();
+		asyncIpPaging(page);		
+	});
+	$(".ip-pagination").on("click", ".ip-prev-page-link", function(){
+		var page = $(this).val();
+		if(page < 1){
+			alert("첫 페이지 입니다.");
+			return;
+		}
+		asyncIpPaging(page);	
+	})
+	$(".ip-pagination").on("click", ".ip-next-page-link", function(){
+		var page = $(this).val();
+		if(page < 6){
+			alert("마지막 페이지 입니다.");
+			return;
+		}
+		asyncIpPaging(page);
+	})
+	
+	function asyncIpPaging(page){
 		var searchType = $(".ip-search-type").val();
 		if(searchType === ""){
 			searchType = "ALL";
@@ -25,10 +45,33 @@ $(document).ready(function () {
 				console.log(err);
 			}
 		});
-	});
+	}
 	
+	// 자원 페이징
 	$(".res-pagination").on("click", ".res-page-link-val", function(){
 		var page = $(this).val();
+		asyncResFunction(page);
+	})
+	// 자원 다음 버튼
+	$(".res-pagination").on("click", ".res-next-page-link", function(){
+		var page = $(this).val();
+		if(page < 1){
+			alert("첫 페이지 입니다.");
+			return;
+		}
+		asyncResFunction(page);
+	})
+	// 자원 이전 버튼
+	$(".res-pagination").on("click", ".res-prev-page-link", function(){
+		var page = $(this).val();
+		if(page < 6){
+			alert("마지막 페이지 입니다.");
+			return;
+		}
+		asyncResFunction(page);
+	})
+	
+	function asyncResFunction(page){
 		var ipSn = $(".detail-ip-sn").val();
 		
 		const apiUrl = "/ip/resinfo/" + page
@@ -44,8 +87,8 @@ $(document).ready(function () {
 			error: function(xhr, status, err){
 				console.log(err);
 			}
-		})
-	})
+		});
+	}
 	
 	// 검색
 	$(".search-btn").on("click", function(){
@@ -271,7 +314,7 @@ $(document).ready(function () {
 
 	    // 이전 페이지가 없는 경우 이전 버튼 비활성화
 	    if (paging.startPage === 1 || $(".ip-prev-page-link").val() === 0) {
-	        pagination.find(".prev-page-link").prop("disabled", true);
+	        pagination.find(".ip-prev-page-link").prop("disabled", true);
 	    }
 	    
 	    // 다음 페이지가 없는 경우 다음 버튼 비활성화
@@ -363,5 +406,62 @@ $(document).ready(function () {
 		}
 	}
 	
+	function excelModalOpen(){
+		$("#excel-upload-modal").modal('show');
+	}
+	function excelModalClose(){
+		$("#excel-upload-modal").modal('hide');
+	}
+	
+    $('#open-excel-modal-btn').click(function() {
+		excelModalOpen();
+    });
+
+	// 모달창 닫기
+	$(".close-excel-modal-btn").click(function(){
+		$("#select-file-name").text("선택한 파일");
+		excelModalClose()
+	})
+	
+	var selectedFile = null;
+	// 파일
+	$('#fileInput').on('change', function() {
+        selectedFile = $(this)[0].files[0];
+		$("#select-file-name").text(selectedFile.name);
+    });
+
+	// 엑셀 파일 저장
+    $('.save-excel-btn').click(function() {
+		console.log(selectedFile);
+		var formData = new FormData();
+        formData.append('file', selectedFile);
+		const apiUrl = "/ip/excel/upload"
+		$.ajax({
+			method: 'POST',
+			url: apiUrl,
+			contentType: false,
+			processData: false,
+			data: formData,
+			success: function(response){
+				console.log(response);
+				if(response.code != 200){
+					alert(response.message);
+					return;
+				}
+				updateIpInfo(response.data.ipInfo);
+				ipPaging(response.data.ipPaging);
+				$("#select-file-name").text("선택한 파일");
+        		excelModalClose();
+			},
+			error: function(xhr, status, err){
+				console.log(err);
+			}
+		});
+		// 저장 로직
+    });
+
+	$('#ExcelUploadBtn').click(function() {
+        $('#fileInput').click();
+    });
 
 });

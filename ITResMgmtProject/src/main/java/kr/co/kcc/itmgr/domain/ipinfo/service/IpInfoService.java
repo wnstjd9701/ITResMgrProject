@@ -147,13 +147,25 @@ public class IpInfoService implements IIpInfoService{
 			ipRepository.deleteResIpMapping(ipSn);
 		}
 		ipRepository.deleteIpInfo(ipSn);
-		return false;
+		return true;
 	}
 
 	// 자원 페이징
 	@Override
 	public int selectResInfoCountByIpSn(int ipSn) {
 		return ipRepository.selectResInfoCountByIpSn(ipSn);
+	}
+	
+	// 중복 검사를 위한 Ip 조회
+	@Override
+	public List<String> selectIpSet() {
+		return ipRepository.selectIpSet();
+	}
+
+	// IP 엑셀 업로드
+	@Override
+	public int insertIpList(List<IpInfo> ipInfoList) {
+		return ipRepository.insertIpList(ipInfoList);
 	}
 
 }
