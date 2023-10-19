@@ -61,7 +61,7 @@ function addRow() {
 		cell.style.padding = '8px'; // Change the padding value as needed
 	});
 
-	const tableContainer = document.querySelector(".table-container");
+	const tableContainer = document.querySelector(".employee-table-container");
 	tableContainer.scrollTop = tableContainer.scrollHeight; // 맨 아래로 스크롤 이동
 }
 
@@ -85,18 +85,38 @@ function hideRow() {
 		rowCount--;
 	});
 }
+
+async function test(element) {
+	return new Promise(function(resolve) {
+		$.ajax({
+			url: '/findEmployeePwd',
+			type: 'Post',
+			data: { employeeId: element },
+			success: function(response) {
+
+				// JSON 응답에서 employeePwd 필드의 값을 추출
+				var employeePwd = response.employeePwd;
+				resolve(employeePwd);
+			},
+			error: function(request, status, error) {
+				alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+			}
+		});
+	});
+}
+
+
 //저장
-function saveList() {
+async function saveList() {
 	//Delete
 	var deletedEmployeeIds = [];
+	var deleteEmpStatus = document.getElementsByName("empStatus");
 
-	var hiddenFields = document.getElementsByName("empStatus");
-
-	for (var i = 0; i < hiddenFields.length; i++) {
-		var hiddenValue = hiddenFields[i].textContent;
-		if (hiddenValue === "D") {
+	for (var i = 0; i < deleteEmpStatus.length; i++) {
+		var deleteEmpStatusValue = deleteEmpStatus[i].textContent;
+		if (deleteEmpStatusValue === "D") {
 			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
-			var row = hiddenFields[i].closest("tr");
+			var row = deleteEmpStatus[i].closest("tr");
 			var employeeId = row.querySelector('[name="employeeId"]').textContent;
 			console.log("employeeId : ", employeeId);
 			deletedEmployeeIds.push(employeeId);
@@ -112,8 +132,13 @@ function saveList() {
 			// 해당 숨겨진 필드의 부모 행을 찾아서 employeeId 값을 가져옵니다.
 			var row = hiddenFields[i].closest("tr");
 			var updateEmpId = row.querySelector('[name="employeeId"]').textContent;
-			var updateEmpPwd = row.querySelector('[name="employeePwd"]').textContent;
-			var updateEmpName = row.querySelector('[name="employeeName"]').textContent;
+			var updateEmpPwd = row.querySelector('[name="employeePwd"]').value;
+			var updateEmpName = row.querySelector('input[name="employeeName"]').value;
+
+			if (updateEmpPwd === "**********") {
+				updateEmpPwd = await test(updateEmpId);
+			}
+
 			var updateEmpType = null;
 			var updateEmpStatus = null;
 
@@ -165,7 +190,9 @@ function saveList() {
 				return;
 			}
 		}
+
 	}//update
+	console.log("updatedEmployeeInfo", updatedEmployeeInfo);
 
 	//Insert
 	//1. 입력칸 모두 작성할 것
@@ -270,9 +297,9 @@ function saveList() {
 	else {
 		return;
 	}
-	
-	console.log("requestData",requestData);
 }
+
+
 
 //저장할때 ajax실행 함수
 function saveAjax(requestData) {
@@ -285,8 +312,6 @@ function saveAjax(requestData) {
 			contentType: 'application/json',
 			data: JSON.stringify(requestData),
 			success: function(response) {
-
-				console.log("response", response);
 				rowCount = 0;
 
 				var empTypeSelect = document.querySelector("select[name='empTypeList']");
@@ -299,9 +324,12 @@ function saveAjax(requestData) {
 						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td><span name='empStatus'>S</span></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-						"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
-						//"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>";
-						"<td name='employeeName' onclick='showNameField(this)'>" + response[i].employeeName + "</td>";
+						"<td><input type='text' value='**********' name='employeePwd' onclick='showPasswordField(this)'" +
+						"class='employee-input employee-pwd'></input></td>" +
+						"<td><input type='text' name='employeeName'" + "value='" + response[i].employeeName + "''" +
+						 "onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
+
+
 					//사원유형 <td>
 					var employeeTypeCell = "<td name='employeeType' onclick='handleClick(this)'>" +
 						"<span class='text' name='empType'>" + response[i].employeeType + "</span>";
@@ -332,24 +360,18 @@ function saveAjax(requestData) {
 
 //유효성 검사
 function validation(insertEmpId, insertEmpPwd, insertEmpName, count) {
-	console.log("insertEmpId", insertEmpId, "insertEmpPwd", insertEmpPwd, "insertEmpName", insertEmpName, "count", count);
-
 	// 사원ID 유효성 검사
 	var pattern_id = /^[^~!@#$%^&*_+|<>?:{}()-,.=\p{Script=Hangul}\s]/u;
 	var pattern_length = /^.{5,}$/;
 	var pattern_whitespace = /^\S*$/;
-
-
 	if (!pattern_length.test(insertEmpId) || !pattern_id.test(insertEmpId) || !pattern_whitespace.test(insertEmpId)) {
 		alert("사원ID는 5글자 이상이며, 특수문자, 공백, 한글을 사용할 수 없습니다.");
 		document.getElementById('empId' + count).focus();
 		return false;
 	}
 
-
 	// 사원비밀번호 유효성 검사
 	var pattern_pwd = /^(?=.*[!@#$%^&*_+|<>?:{}()-,.=])[^\s]{6,}$/;
-
 	if (!pattern_pwd.test(insertEmpPwd)) {
 		alert("사원비밀번호는 특수문자 포함 6글자 이상, 공백은 사용할 수 없습니다.");
 		document.getElementById('empPwd' + count).focus();
@@ -358,7 +380,6 @@ function validation(insertEmpId, insertEmpPwd, insertEmpName, count) {
 
 	// 사원명 유효성 검사
 	var pattern_name = /^[a-zA-Z가-힣]{2,}$/;
-
 	if (!pattern_name.test(insertEmpName)) {
 		alert("사원명은 2글자 이상, 숫자, 공백, 특수문자는 사용할 수 없습니다.");
 		document.getElementById('empName' + count).focus();
@@ -367,25 +388,34 @@ function validation(insertEmpId, insertEmpPwd, insertEmpName, count) {
 	return true;
 }
 
-
+//Update시 유효성검사, focus주기
 function updateValidation(updateEmpName, updateEmpPwd) {
 	// 사원명 유효성 검사
 	if (!/^[^\d\s!@#$%^&*(),.?":{}|<>]{2,}$/.test(updateEmpName)) {
 		alert("수정된 사원명은 2글자 이상, 숫자, 공백, 특수문자는 사용할 수 없습니다.");
-		//showNameField(updateEmpName);
-		//document.getElementById('empName' + count).focus();
+		const updateElementName = document.getElementsByName("employeeName");
+		for (var i = 0; i < updateElementName.length; i++) {
+			if (updateElementName[i].value === updateEmpName) {
+				updateElementName[i].focus();
+				break;
+			}
+		}
 		return false;
 	}
 
 	if (!/^(?=.*[!@#$%^&*_+|<>?:{}()-,.=])[^\s]{6,}$/.test(updateEmpPwd)) {
 		alert("사원비밀번호는 특수문자 포함 6글자 이상, 공백은 사용할 수 없습니다.");
+		const updateElementPwd = document.getElementsByName("employeePwd");
+		for (var i = 0; i < updateElementPwd.length; i++) {
+			if (updateElementPwd[i].value === updateEmpPwd) {
+				updateElementPwd[i].focus();
+				break;
+			}
+		}
 		return false;
 	}
 	return true;
 }
-
-
-
 
 
 const cells = document.querySelectorAll('td[name="employeeName"], td[name="employeeType"], td[name="employeeStatus"]');
@@ -399,7 +429,7 @@ cells.forEach((cell) => {
 function handleClick(element) {
 	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
 
-	if (empStatusSpan.textContent === 'D') {		
+	if (empStatusSpan.textContent === 'D') {
 		return;
 	} else {
 		empStatusSpan.textContent = 'U';
@@ -414,14 +444,13 @@ function handleClick(element) {
 function showSelectBox(listItem) {
 	const textElement = listItem.querySelector(".text");
 	textElement.style.display = "none";
-	
+
 	const selectElement = listItem.querySelector(".select");
 	selectElement.style.display = "inline-block";
 	selectElement.style.fontSize = "15px";
-	
+
 	selectElement.focus();
 
-	// 현재 선택한 text 값
 	const selectedText = textElement.textContent;
 
 	// select 요소 내의 모든 option 요소를 가져옵니다.
@@ -445,94 +474,31 @@ function showSelectBox(listItem) {
 	});
 }
 
-//사원명 클릭했을 때 <input> 생성
-function showNameField2(element) {
-	const tdElement = element;
-		tdElement.style.padding = '0';
-
-
-/*	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
-
-	if (empStatusSpan.textContent === 'D') {
-		return; // 'D' 상태인 경우 수정불가
-	} else {
-		empStatusSpan.textContent = 'U';
-
-		const tdElement = element;
-		tdElement.style.padding = '0';
-
-		const updateName = document.createElement('input');
-		updateName.type = 'text';
-		updateName.value = element.textContent;
-		updateName.classList.add('edit-field');
-
-		//스팬을 입력 필드로 대체
-		element.textContent = '';
-		updateName.style.width = '100px'
-		updateName.style.textAlign = 'center'; // 텍스트를 가운데 정렬
-		element.appendChild(updateName);
-
-		updateName.focus();
-
-		//입력 필드가 포커스를 잃을 때
-		updateName.addEventListener('blur', function() {
-			//입력 필드에서 새로운 값 가져오기
-			const updateNameValue = updateName.value;
-			element.textContent = updateNameValue;
-		});
-	}*/
-}
-
 //사원비밀번호 가져오기
 function showPasswordField(element) {
 	const empStatusSpan = element.closest('tr').querySelector("span[name='empStatus']");
+	empStatusSpan.textContent = 'U';
 
-	if (empStatusSpan.textContent === 'D') {
-		return; // 'D' 상태인 경우 수정불가
-	} else {
-		empStatusSpan.textContent = 'U';
+	element.value = "";
 
-		const employeeId = element.closest('tr').querySelector("td[name='employeeId']").textContent;
-		console.log('선택된 사원의 ID: ' + employeeId);
+	const employeeId = element.closest('tr').querySelector("td[name='employeeId']").textContent;
+	console.log('선택된 사원의 ID: ' + employeeId);
 
-		const tdElement = element;
-		tdElement.style.padding = '0';
+	$.ajax({
+		url: '/findEmployeePwd',
+		type: 'Post',
+		data: { employeeId: employeeId },
+		success: function(response) {
+			// JSON 응답에서 employeePwd 필드의 값을 추출
+			var employeePwd = response.employeePwd;
 
-		const updatePwd = document.createElement('input');
-		updatePwd.type = 'text';
-
-		$.ajax({
-			url: '/findEmployeePwd',
-			type: 'Post',
-			data: { employeeId: employeeId },
-			success: function(response) {
-
-				// JSON 응답에서 employeePwd 필드의 값을 추출
-				var employeePwd = response.employeePwd;
-				console.log("employeePwd: " + employeePwd);
-
-				updatePwd.value = employeePwd;
-			},
-			error: function(request, status, error) {
-				alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-			}
-		});
-
-		updatePwd.classList.add('edit-field');
-		// 스팬을 입력 필드로 대체
-		element.textContent = '';
-		updatePwd.style.textAlign = 'center'; // 텍스트를 가운데 정렬
-		element.appendChild(updatePwd);
-
-		updatePwd.focus();
-
-		// 입력 필드가 포커스를 잃을 때
-		updatePwd.addEventListener('blur', function() {
-			// 입력 필드에서 새로운 값 가져오기
-			const updateNameValue = updatePwd.value;
-			element.textContent = updateNameValue;
-		});
-	}
+			element.value = employeePwd;
+			element.focus();
+		},
+		error: function(request, status, error) {
+			alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+		}
+	});
 }
 
 //조회
@@ -546,6 +512,7 @@ function searchList() {
 		employeeStatusCode: employeeStatusCode,
 		searchText: searchText
 	};
+	
 
 	$.ajax({
 		url: '/search/employee?' + $.param(searchData),
@@ -563,23 +530,25 @@ function searchList() {
 			} else {
 				// 검색 결과가 있는 경우
 				for (var i = 0; i < response.length; i++) {
-					var addTableRow = "<tr>" +
+				var addTableRow = "<tr>" +
 						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td><span name='empStatus'>S</span></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-						"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
-						"<td name='employeeName' contenteditable='true' onclick='handleClick(this)'>" + response[i].employeeName + "</td>";
+						"<td><input type='text' value='**********' name='employeePwd' onclick='showPasswordField(this)'" +
+						"class='employee-input employee-pwd'></input></td>" +
+						"<td><input type='text' name='employeeName'" + "value='" + response[i].employeeName + "''" +
+						 "onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
+
 
 					//사원유형 <td>
-					var employeeTypeCell = "<td onclick='handleClick(this)' name='employeeType'>" +
+					var employeeTypeCell = "<td name='employeeType' onclick='handleClick(this)'>" +
 						"<span class='text' name='empType'>" + response[i].employeeType + "</span>";
 
 					employeeTypeCell += empTypeSelect.outerHTML; // 'empTypeSelect'를 새 셀에 추가합니다..
-					//console.log("찐 employeeTypeCell", employeeTypeCell);
 					employeeTypeCell += "</td>";
 
 					//사원상태 <td>
-					var employeeStatusCell = "<td onclick='handleClick(this)' name='employeeStatus'>" +
+					var employeeStatusCell = "<td name='employeeStatus' onclick='handleClick(this)'>" +
 						"<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>";
 
 					employeeStatusCell += empStatusSelect.outerHTML; // 'empStatusSelect'를 새 셀에 추가합니다.

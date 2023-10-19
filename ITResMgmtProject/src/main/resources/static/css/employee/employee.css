@@ -105,18 +105,30 @@
 }
 
 
-.employee-table tbody tr:hover input.hidden-input {
+.employee-table tbody tr:hover input.employee-input {
     background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
 }
 
-.employee-table tbody tr td input.hidden-input:focus {
+.employee-table tbody tr td input.employee-input:focus {
     background-color: white; /* 입력란이 활성화 상태일 때 <input> 요소의 배경색 변경 */
 	padding: 0px;
 }
-/* .employee-table tbody tr:hover td,
-.employee-table tbody tr:hover td .hidden-input {
-    background-color: #ECECEC; 호버 시 배경색 변경
-} */
+
+.employee-pwd{
+	text-align: center;
+	border: none; 
+	width: 190px; 
+	height: 25px; 
+	padding: 1px;
+}
+
+.employee-name{
+	text-align: center;
+	border: none; 
+	width: 100px; 
+	padding: 1px;
+}
+
 
 .col-empCheckBox {
 	width: 5%;
@@ -146,16 +158,4 @@
 	width: 15%;
 }
 
-
-/* 숨김 스타일 클래스 추가 */
-.hidden-input {
-    /* border: none;
-    background-color: transparent;
-    outline: none; */
-}
-
-.hidden-input.clicked input{
-/* 	 background-color: white;
-	 border : 10px solid #ccc; */
-}
 
