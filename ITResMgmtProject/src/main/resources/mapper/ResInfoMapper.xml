@@ -137,6 +137,32 @@
 		]]>
 	</insert>
 	
+	<update id="updateResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			UPDATE RESINFO
+			SET
+			    res_class_id = #{resClassId},
+			    res_name = #{resName},
+			    res_sn = #{resSn},
+			    mgmt_id = #{mgmtId},
+			    res_status_code = #{resStatusCode},
+			    manufacture_company_name = #{manufactureCompanyName},
+			    model_name = #{modelName},
+			    mgmt_dept_name = #{mgmtDeptName},
+			    manager_name = #{managerName},
+			    introduction_date = #{introductionDate},
+			    introduction_price = #{introductionPrice},
+			    purchase_company_name = #{purchaseCompanyName},
+			    use_yn = #{useYn},
+			    monitoring_yn = #{monitoringYn},
+			    rack_info = #{rackInfo},
+			    expiration_date = #{expirationDate},
+			    add_info = #{addInfo},
+			    update_date = SYSDATE
+			WHERE res_serial_id = #{resSerialId}
+		]]>
+	</update>
+	
 	<select id="selectResStatusCode" parameterType="String" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
 		<![CDATA[
 			SELECT 
@@ -197,6 +223,7 @@
 		<![CDATA[
 			SELECT
 			    r.res_serial_id   "resSerialId",
+			    r.res_class_id	"resClassId",
 			    rc.res_class_name   "resClassName",
 			    r.res_name  "resName",
 			    r.res_sn    "resSn",
@@ -239,25 +266,32 @@
 		]]>
 	</select>
 	
-	<insert id="insertAddItemValueInResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
-		INSERT INTO resinfodetail(
-				res_serial_id, 
-		    	add_item_sn, 
-		    	res_detail_value, 
-		    	create_date, 
-		    	creater_id
-		    	)
-		    <foreach collection="list" item="resInfo" separator="UNION ALL">
-				SELECT
-					#{resInfo.resSerialId},
-					#{resInfo.addItemSn},
-					#{resInfo.resDetailValue},
-					SYSDATE,
-					'wh467925'
-				FROM
-					DUAL
-			</foreach>
-	</insert>
+		<insert id="insertAddItemValueInResInfo" parameterType="java.util.HashMap">
+		    INSERT INTO resinfodetail(
+		        res_serial_id, 
+		        add_item_sn, 
+		        res_detail_value, 
+		        create_date, 
+		        creater_id
+		    )
+		    <foreach collection="addItemSnList" item="addItemSn" index="i" separator="UNION ALL">
+		        SELECT
+		            #{resSerialId},
+		            #{addItemSn},
+		            #{resDetailValueList[i]},
+		            SYSDATE,
+		            'wh467925'
+		        FROM DUAL
+		    </foreach>
+		</insert>
+
+	
+	<delete id="deleteAddItemValueInResInfo" parameterType="String">
+			DELETE 
+				FROM resinfodetail
+			WHERE
+				res_serial_id = #{resSerialId}
+	</delete>
 	
 	<select id="selectAddItemValueInResInfo" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
 		<![CDATA[
@@ -270,5 +304,12 @@
 			INNER JOIN resclassasideinfomapping ra ON ai.add_item_sn = ra.add_item_sn AND r.res_class_id=ra.res_class_id
 			WHERE r.res_serial_id = #{resSerialId}
 		]]>
+	</select>
+	
+	<select id="CountOfAddItemValueInResInfo" parameterType="String" resultType="Integer">
+			SELECT 
+				COALESCE(COUNT(*), 0)
+			FROM resinfodetail
+			WHERE res_serial_id = #{resSerialId}
 	</select>
 </mapper>

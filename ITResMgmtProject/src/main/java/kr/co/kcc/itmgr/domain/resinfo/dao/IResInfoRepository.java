@@ -10,6 +10,7 @@ import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
+import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 
 @Repository
 @Mapper
@@ -33,6 +34,10 @@ public interface IResInfoRepository {
 	
 	List<ResInfo> selectMappingAddItem(String resClassId);
 	
-	void insertAddItemValueInResInfo(List<ResInfo> resInfo); //매핑된 부가항목 값 넣기
+	void insertAddItemValueInResInfo(@Param("resSerialId") String resSerialId,@Param("addItemSnList") List<String> addItemSnList,@Param("resDetailValueList") List<String> resDetailValueList); //매핑된 부가항목 값 넣기
+	void deleteAddItemValueInResInfo(String resSerialId);
 	List<ResInfo> selectAddItemValueInResInfo(String resSerialId);
+	
+	int CountOfAddItemValueInResInfo(String resSerialId);
+	
 }

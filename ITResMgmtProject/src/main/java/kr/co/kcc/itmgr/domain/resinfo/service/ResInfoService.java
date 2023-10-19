@@ -3,12 +3,14 @@ package kr.co.kcc.itmgr.domain.resinfo.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
+import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -70,13 +72,30 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public void insertAddItemValueInResInfo(List<ResInfo> resInfo) {
-		resInfoRepository.insertAddItemValueInResInfo(resInfo);
+	public void insertAddItemValueInResInfo(String resSerialId, List<String> addItemSnList, List<String> resDetailValueList) {
+		resInfoRepository.insertAddItemValueInResInfo(resSerialId, addItemSnList, resDetailValueList);
 	}
 
 	@Override
 	public List<ResInfo> selectAddItemValueInResInfo(String resSerialId) {
 		return resInfoRepository.selectAddItemValueInResInfo(resSerialId);
 	}
+
+	@Override
+	public void updateResInfo(ResInfo resInfo) {
+		resInfoRepository.updateResInfo(resInfo);
+		
+	}
+
+	@Override
+	public void deleteAddItemValueInResInfo(String resSerialId) {
+		resInfoRepository.deleteAddItemValueInResInfo(resSerialId);
+	}
+
+	@Override
+	public int CountOfAddItemValueInResInfo(String resSerialId) {
+		return resInfoRepository.CountOfAddItemValueInResInfo(resSerialId);
+	}
+	
 
 }

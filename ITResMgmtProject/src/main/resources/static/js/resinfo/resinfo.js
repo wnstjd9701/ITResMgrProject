@@ -9,7 +9,7 @@ function paging(page) {
         },
         success: function (response) {
            $('tbody#resInfoTable').empty();
-
+			console.log(response.page);
             // Iterate over the response data and append new rows
             for (var i = 0; i < response.selectAllResInfo.length; i++) {
                 var resInfoRow = "<tr>"+
@@ -142,6 +142,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 $('#resinfo-detail-modal input[name="resClassName"]').val(response.resClassName);
+                $('#resinfo-detail-modal input[name="resClassId"]').val(response.resClassId);
                 $('#resinfo-detail-modal input[name="resName"]').val(response.resName);
                 $('#resinfo-detail-modal input[name="mgmtId"]').val(response.mgmtId);
                 $('#resinfo-detail-modal input[name="mgmtDeptName"]').val(response.mgmtDeptName);
@@ -188,6 +189,75 @@ $(document).ready(function () {
                 console.log('에러:', error);
             }
         });
+
+		$('#res-info-save-btn').on('click', function () {
+			var resInfoaddItemList = [];
+			var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
+            var mgmtId = $('#resinfo-detail-modal input[name=mgmtId]').val();
+            var mgmtDeptName = $('#resinfo-detail-modal input[name="mgmtDeptName"]').val();
+            var resName = $('#resinfo-detail-modal input[name="resName"]').val();
+            var resStatusCode = $('#resinfo-detail-modal select[name="resStatusCode"]').val();
+            var managerName = $('#resinfo-detail-modal input[name="managerName"]').val();
+            var resSn = $('#resinfo-detail-modal input[name="resSn"]').val();
+            var manufactureCompanyName = $('#resinfo-detail-modal input[name="manufactureCompanyName"]').val();
+            var modelName = $('#resinfo-detail-modal input[name="modelName"]').val();
+            var installPlaceSn = $('#resinfo-detail-modal #install-place-sn-input').val();
+            var rackInfo = $('#resinfo-detail-modal input[name="rackInfo"]').val();
+            var resSerialId = $('#resinfo-detail-modal input[name="resSerialId"]').val();
+            var introductionDate = $('#resinfo-detail-modal input[name="introductionDate"]').val();
+            var expirationDate = $('#resinfo-detail-modal input[name="expirationDate"]').val();
+            var introdutionPrice = $('#resinfo-detail-modal input[name="introdutionPrice"]').val();
+            var useYn = 'Y';
+            var monitoringYn = 'Y';
+            var purchaseCompanyName = $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val();
+            var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
+			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
+			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
+
+			var addItemSnList = [];
+			var resDetailValueList = [];
+			for (var i = 0; i < addItemSnElements.length; i++) {
+			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
+				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
+			}
+			
+			 $.ajax({
+                type: 'POST',
+                url: '/resinfo/update',
+                data: JSON.stringify({
+					'resClassId': resClassId,
+				    'mgmtId': mgmtId,
+				    'mgmtDeptName': mgmtDeptName,
+				    'resName': resName,
+				    'resStatusCode': resStatusCode,
+				    'managerName': managerName,
+				    'resSn': resSn,
+				    'manufactureCompanyName': manufactureCompanyName,
+				    'modelName': modelName,
+				    'installPlaceSn': installPlaceSn,
+				    'rackInfo': rackInfo,
+				    'resSerialId': resSerialId,
+				    'introductionDate': introductionDate,
+				    'expirationDate': expirationDate,
+				    'introdutionPrice': introdutionPrice,
+				    'useYn': useYn,
+				    'monitoringYn': monitoringYn,
+				    'purchaseCompanyName': purchaseCompanyName,
+				    'addInfo': addInfo,
+					'addItemSnList' : addItemSnList,
+					'resDetailValueList' : resDetailValueList
+				}),
+                contentType: "application/json",
+                success: function (response) {
+					alert("수정완료했습니다.")
+					showResourceDetail(response.resName);
+                },
+                error: function (error) {
+                    console.log('에러:', error);
+                }
+            });
+
+		});
 
 
     });

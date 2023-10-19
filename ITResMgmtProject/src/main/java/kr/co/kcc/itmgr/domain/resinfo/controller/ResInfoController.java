@@ -1,5 +1,6 @@
 package kr.co.kcc.itmgr.domain.resinfo.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resclass.controller.ResClassController;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
+import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 import kr.co.kcc.itmgr.domain.resinfo.service.IResInfoService;
 import lombok.RequiredArgsConstructor;
 
@@ -143,6 +145,36 @@ public class ResInfoController {
 		return resInfoMap;
 	}
 	
+	@PostMapping("/resinfo/update")
+	@ResponseBody
+	public void updateResInfo(@RequestBody ResInfo resInfo) {
+		System.out.println(resInfo.toString());
+		try {
+			resInfoService.updateResInfo(resInfo);
+			String resSerialId = resInfo.getResSerialId();
+			int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
+			try {
+				if(count >1) {
+					logger.info("=====================" + resInfo.getAddItemSnList());
+					logger.info("=====================" + resInfo.getResDetailValueList());
+					logger.info("=====================" + resSerialId);
+					resInfoService.deleteAddItemValueInResInfo(resSerialId);
+					resInfoService.insertAddItemValueInResInfo(resSerialId, resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+				}else{
+					logger.info("=====================" + resInfo.getAddItemSnList());
+					logger.info("=====================" + resInfo.getResDetailValueList());
+					logger.info("=====================" + resSerialId);
+					resInfoService.insertAddItemValueInResInfo(resSerialId, resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+					System.out.println("=============================================================================================");
+				}
+			}catch(Exception e){
+				e.getMessage();
+				System.out.println("예외가 발생했습니다: " + e.toString());
+			}
+		}catch(Exception e) {
+			e.getMessage();
+		}
+	}
 	
 
 	@GetMapping("/resinfo/additem")
@@ -154,8 +186,16 @@ public class ResInfoController {
 	
 	@PostMapping("/resinfo/additemvalue")
 	@ResponseBody
-	public void insertAddItemValueInResInfo(@RequestBody List<ResInfo> resInfo){
-		resInfoService.insertAddItemValueInResInfo(resInfo);
+	public void insertAddItemValueInResInfo(@RequestBody List<ResInfoDetailDTO> resInfoList){
+//		String resSerialId = resInfoList.get(0).getResSerialId();
+//		int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
+//		System.out.println("아아아악!!!"+count);
+//		if(count >1) {
+//			resInfoService.deleteAddItemValueInResInfo(resSerialId);
+//			resInfoService.insertAddItemValueInResInfo(resInfoList);
+//		}else{
+//			resInfoService.insertAddItemValueInResInfo(resInfoList);
+//		}
 	}
 	
 	@GetMapping("/resinfo/additemvalue")

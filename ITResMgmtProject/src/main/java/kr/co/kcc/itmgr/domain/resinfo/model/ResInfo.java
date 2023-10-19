@@ -1,6 +1,7 @@
 package kr.co.kcc.itmgr.domain.resinfo.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.Data;
 
@@ -46,6 +47,9 @@ public class ResInfo {
 	private String addItemName;
 	
 	private String resDetailValue;
+
+	private List<String> addItemSnList;
+	private List<String> resDetailValueList;
 	
 	//페이징
 	private int totalPageBlock;
