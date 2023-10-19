@@ -115,6 +115,7 @@
 }
 
 .employee-pwd{
+	text-align: center;
 	border: none; 
 	width: 190px; 
 	height: 25px; 
@@ -122,6 +123,7 @@
 }
 
 .employee-name{
+	text-align: center;
 	border: none; 
 	width: 100px; 
 	padding: 1px;
