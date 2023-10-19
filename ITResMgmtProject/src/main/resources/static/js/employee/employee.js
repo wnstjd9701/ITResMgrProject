@@ -324,13 +324,10 @@ function saveAjax(requestData) {
 						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td><span name='empStatus'>S</span></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-						"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
-						//"<td name='employeeName' onclick='showNameField(this)'>" + response[i].employeeName + "</td>";
-						"<td>" + "<input type='text' name='employeeName'" + "value='" + response[i].employeeName + "''"
-						+ "onclick='handleClick(this)' style=' text-align: center;  border: none; width:100px;' class='hidden-input'>"
-						+ "</td>";
-
-
+						"<td><input type='text' value='**********' name='employeePwd' onclick='showPasswordField(this)'" +
+						"class='employee-input employee-pwd'></input></td>" +
+						"<td><input type='text' name='employeeName'" + "value='" + response[i].employeeName + "''" +
+						 "onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
 
 
 					//사원유형 <td>
@@ -502,12 +499,6 @@ function showPasswordField(element) {
 			alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 		}
 	});
-	// 입력 필드가 포커스를 잃을 때
-	updatePwd.addEventListener('blur', function() {
-		// 입력 필드에서 새로운 값 가져오기
-		const updateNameValue = updatePwd.value;
-		element.textContent = updateNameValue;
-	});
 }
 
 //조회
@@ -521,6 +512,7 @@ function searchList() {
 		employeeStatusCode: employeeStatusCode,
 		searchText: searchText
 	};
+	
 
 	$.ajax({
 		url: '/search/employee?' + $.param(searchData),
@@ -538,23 +530,25 @@ function searchList() {
 			} else {
 				// 검색 결과가 있는 경우
 				for (var i = 0; i < response.length; i++) {
-					var addTableRow = "<tr>" +
+				var addTableRow = "<tr>" +
 						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td><span name='empStatus'>S</span></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
-						"<td name='employeePwd' onclick='showPasswordField(this)'>**********</td>" +
-						"<td name='employeeName' onclick='showNameField(this)'>" + response[i].employeeName + "</td>";
+						"<td><input type='text' value='**********' name='employeePwd' onclick='showPasswordField(this)'" +
+						"class='employee-input employee-pwd'></input></td>" +
+						"<td><input type='text' name='employeeName'" + "value='" + response[i].employeeName + "''" +
+						 "onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
+
 
 					//사원유형 <td>
-					var employeeTypeCell = "<td onclick='handleClick(this)' name='employeeType'>" +
+					var employeeTypeCell = "<td name='employeeType' onclick='handleClick(this)'>" +
 						"<span class='text' name='empType'>" + response[i].employeeType + "</span>";
 
 					employeeTypeCell += empTypeSelect.outerHTML; // 'empTypeSelect'를 새 셀에 추가합니다..
-					//console.log("찐 employeeTypeCell", employeeTypeCell);
 					employeeTypeCell += "</td>";
 
 					//사원상태 <td>
-					var employeeStatusCell = "<td onclick='handleClick(this)' name='employeeStatus'>" +
+					var employeeStatusCell = "<td name='employeeStatus' onclick='handleClick(this)'>" +
 						"<span class='text' name='empStatus'>" + response[i].employeeStatus + "</span>";
 
 					employeeStatusCell += empStatusSelect.outerHTML; // 'empStatusSelect'를 새 셀에 추가합니다.
