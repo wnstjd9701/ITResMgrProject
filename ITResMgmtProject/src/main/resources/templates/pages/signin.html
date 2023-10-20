@@ -3,25 +3,25 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <meta charset="UTF-8">
-<link th:href="@{/css/user/user.css}" rel="stylesheet" />
-<th:block
-	th:replace="~{../common/fragments/head2.html :: fragment-head2}"></th:block>
+<!-- <link th:href="@{/css/user/user.css}" rel="stylesheet" /> -->
+<link th:href="@{/css/user/user2.css}" rel="stylesheet" />
+<!-- <th:block
+	th:replace="~{../common/fragments/head2.html :: fragment-head2}"></th:block> -->
 <!-- Template Main JS File -->
 </head>
 <body>
-	<header id="header" class="header fixed-top d-flex align-items-center">
+	<!-- 	<header id="header" class="header fixed-top d-flex align-items-center">
 		<div class="d-flex align-items-center justify-content-between">
 			<div class="logo d-flex align-items-center">
 				<img src="assets/img/logo.png" alt=""> <span
 					class="d-none d-lg-block">KCC정보통신</span>
 			</div>
 		</div>
-		<!-- End Logo -->
-	</header>
+		End Logo
+	</header> -->
 
-	<th:block layout:fragment="content">
+	<!-- 	<th:block layout:fragment="content">
 		<main id="main" class="main ">
-			<!-- Jumbotron -->
 			<div class="px-4  px-md-5 text-center text-lg-start bg"
 				style="background-color: hsl(0, 0%, 96%);">
 				<div class="container">
@@ -55,7 +55,6 @@
 													class="id-input-box" placeholder="비밀번호를 입력해 주세요." required />
 											</div>
 										</div>
-										<!-- Submit button -->
 										<button type="submit" class="btn btn-primary mb-4 btn-size">
 											Sign up</button>
 									</form>
@@ -66,7 +65,91 @@
 				</div>
 			</div>
 		</main>
-	</th:block>
+	</th:block> -->
+
+
+	<!-- 		<main id="main" class="main ">
+			<div class="container">
+				<div>
+					<h1 class="my-5 display-3 fw-bold ls-tight ">
+						KCC 정보통신 <br /> <span class="text-primary">IT 자원 관리 시스템</span>
+					</h1>
+				</div>
+
+				<div class="longin-container">
+					<span th:if="${message != null}" th:text="${message}"
+						style="color: red; margin-bottom:20px; " id="message-paragraph" ></span>
+					<form th:action="@{/signin}" method="post" id="login">
+						<div>
+							<div class="icon-input">
+								<span class="login-icon-wrap"><img
+									src="assets/img/id.png" class="login-img"></span> <input
+									type="text" id="employeeId" name="employeeId"
+									class="id-input-box" placeholder="아이디를 입력해 주세요." required />
+							</div>
+							<div class="icon-input">
+								<span class="login-icon-wrap"><img
+									src="assets/img/pwd.png" class="login-img"></span> <input
+									type="password" id="employeePwd" name="employeePwd"
+									class="id-input-box" placeholder="비밀번호를 입력해 주세요." required />
+							</div>
+
+							<button type="submit" class="btn btn-primary btn-size">
+								Sign up</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</main>
+	 -->
+
+	<header class="sys-name">
+		<span class="kcc-name">KCC정보통신</span> <br> <span class="IT-name">IT자원관리시스템</span>
+	</header>
+	<main id="main" class="main">
+
+
+
+
+		<div class="login-container">
+
+			<div class="login-content">
+				<div class="login-content-wrap">
+					<div class="login-letter">
+						<h1 style="font-size: 25px; font-weight: bold;">Login</h1>
+					</div>
+
+
+					<span th:if="${message != null}" th:text="${message}"
+						style="color: red; margin-bottom: 20px;" id="message-paragraph"></span>
+					<form th:action="@{/signin}" method="post" id="login">
+						<div>
+							<div class="icon-input-id">
+								<span class="login-icon-wrap"><img
+									src="assets/img/id.png" class="login-img"></span> <input
+									type="text" id="employeeId" name="employeeId"
+									class="id-input-box" placeholder="아이디를 입력해 주세요." required />
+							</div>
+							<div class="icon-input-pwd">
+								<span class="login-icon-wrap"><img
+									src="assets/img/pwd.png" class="login-img"></span> <input
+									type="password" id="employeePwd" name="employeePwd"
+									class="id-input-box" placeholder="비밀번호를 입력해 주세요." required />
+							</div>
+
+							<button type="submit" class="btn btn-primary btn-size">
+								Sign up</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</main>
+
+
+
+
 	<script src="js/user/user.js"></script>
 </body>
 </html>

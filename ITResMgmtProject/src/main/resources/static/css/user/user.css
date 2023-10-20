@@ -53,6 +53,7 @@
 
 .icon-input {
 	display: flex;
+		justify-content: center;
 	align-items: center;
 }
 
@@ -104,11 +105,16 @@
 	display: block;
 }
 
+
+
+
 /* 카드 요소를 고정 위치로 설정 */
 .card-size {
 	position: relative; /* 부모 요소로부터 상대적 위치 설정 */
 	margin: 0 auto; /* 수평 가운데 정렬 */
-	max-width: 500px; /* 카드 요소 최대 너비 설정 */
+	/* max-width: 500px; 카드 요소 최대 너비 설정 */
+	
+	
 }
 
 .massage-text {
@@ -116,9 +122,13 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height: 15px;
+	/* height: 15px; */
 }
 
 
-
+.longin-container{
+	height:300px;
+	width:500px;
+	background-color:white;
+}
 

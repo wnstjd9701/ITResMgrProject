@@ -1,0 +1,134 @@
+/* .longin-container{
+	height:300px;
+	width:500px;
+	background-color:white;
+	 display: flex; Flexbox 레이아웃 적용
+	   flex-direction: column;
+    justify-content: center; 가로 중앙 정렬
+    align-items: center; 세로 중앙 정렬
+}
+
+
+
+.icon-input {
+	display: flex;
+	align-items: center;
+	margin-bottom:20px;
+}
+
+
+.login-icon-wrap {
+	border: 1px solid gray; 테두리 스타일 및 색상 설정
+	border-right: none; 오른쪽 테두리를 제거합니다
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px; 원하는 너비 설정
+	height: 40px; 원하는 높이 설정
+	border-collapse: collapse; 테두리 겹침 문제 해결
+	box-sizing: border-box; 박스 크기를 보더와 패딩을 포함한 크기로 설정
+	 background-color: hsl(0, 0%, 96%); 
+}
+
+.login-img {
+	width: 25px;
+	height: 25px;
+}
+
+#employeeId::placeholder {
+	color: gray;
+	font-size: 12px;
+}
+
+#employeePwd::placeholder {
+	color: gray;
+	font-size: 12px;
+}
+
+.id-input-box {
+	border: 1px solid gray;
+	border-radius: 0;
+	width: 300px; 원하는 너비 설정
+	height: 40px; 원하는 높이 설정
+}
+
+.id-input-box:focus {
+	border-color: gray; 포커스 상태에서 테두리 색상을 gray로 변경
+	outline: none; 포커스 테두리 숨기기
+	cursor: text; 커서 설정
+}
+
+.btn-size {
+	width: 340px;
+}
+
+ */
+
+
+.sys-name{
+    text-align: center;
+    margin-top:100px;
+    margin-bottom:50px;
+}
+
+.kcc-name{
+	margin-left:-220px;
+}
+
+.IT-name{
+	font-size:40px;
+	font-weight: bold;
+}
+
+
+.login-content-wrap{
+	display:block;
+	  border: 1px solid gray;
+  border-radius: 5px;
+  width:400px;
+  height:500px;
+}
+
+
+
+
+.icon-input-id {
+	display: flex;
+	align-items: center;
+	margin-bottom:20px;
+	margin-top:50px;
+}
+
+
+.icon-input-pwd {
+	display: flex;
+	align-items: center;
+	margin-bottom:20px;
+}
+
+.login-icon-wrap {
+	border: 1px solid gray;
+	border-right: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 40px;
+	border-collapse: collapse;
+	box-sizing: border-box;
+	 background-color: hsl(0, 0%, 96%); 
+}
+
+.login-img {
+	width: 25px;
+	height: 25px;
+}
+
+.id-input-box {
+	border: 1px solid gray;
+	border-radius: 0;
+	width: 300px;
+	height: 40px;
+}
+
+ 
