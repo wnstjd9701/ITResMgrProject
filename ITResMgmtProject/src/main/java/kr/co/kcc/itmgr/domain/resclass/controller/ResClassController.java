@@ -175,10 +175,6 @@ public class ResClassController {
 		return test;
 	}
 	
-//	@RequestMapping("/resclass/view")
-//	public String view() {
-//		return"resclass/view";
-//	}
 
 	
 	@PostMapping("/resclass/additem")
@@ -211,7 +207,7 @@ public class ResClassController {
 		    logger.info("deleteRow"+deleteRow);
 		}
 		Map<String,Object> resClassAddItemMap = new HashMap<String, Object>();
-		List<ResClass> resClassResult = resClassService.selectResClassByResClassName("BLADE서버");
+		List<ResClass> resClassResult = resClassService.selectResClassByResClassName(resClassList.get(0).getResClassName());
 		resClassAddItemMap.put("resClassResult", resClassResult);
 		logger.info("resClassAddItemMap:"+resClassAddItemMap);
 		return resClassAddItemMap;

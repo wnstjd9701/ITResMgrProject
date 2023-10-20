@@ -1,6 +1,7 @@
 package kr.co.kcc.itmgr.domain.resinfo.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.Data;
 
@@ -30,7 +31,7 @@ public class ResInfo {
 	private Timestamp updateDate;
 	private String updaterId;
 	private int installPlaceSn;
-	
+
 	
 	//추가컬럼
 	private String resClassName;
@@ -41,5 +42,23 @@ public class ResInfo {
 	private String installPlaceName;
 	private int level;
 	private String upperResClassId;
+	
+	private String addItemSn;
+	private String addItemName;
+	
+	private String resDetailValue;
+	
+	private List<String> resSerialIdList;
+	private List<String> addItemSnList;
+	private List<String> resDetailValueList;
+	
+	//페이징
+	private int totalPageBlock;
+	private int totalPage;
+	private int page;
+	private int nowPageBlock;
+	private int startPage;
+	private int endPage;
+	
 	
 }
