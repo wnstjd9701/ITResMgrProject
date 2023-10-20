@@ -21,4 +21,18 @@ public interface IIpInfoRepository {
 	
 	int selectIpCountByKeyword(String keyword); // IP 검색 결과 개수 조회
 	List<IpInfo> searchIp(String keyword, int start, int end); // IP 검색 조회
+	
+	int ipIsExists(String ip); // IP 존재여부 확인
+	int updateIpIsExists(int ipSn, String ip); // 업데이트 시 IP 수정 여부 확인
+	
+	int insertIp(IpInfo ipInfo); // IP 등록
+	int updateIp(IpInfo ipInfo); // IP 수정
+	int insertIpList(List<IpInfo> ipInfoList); // IP 엑셀 업로드
+	
+	// IP 삭제
+	int deleteResIpMapping(int ipSnList);
+	int deleteIpInfo(int ipSnList);
+	
+	int selectResInfoCountByIpSn(int ipSn); // 매핑된 자원 수 조회
+	List<String> selectIpSet(); // 중복 검사를 위한 Ip 조회
 }

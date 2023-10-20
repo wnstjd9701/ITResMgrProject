@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.kcc.itmgr.domain.additem.model.AddItem;
 import kr.co.kcc.itmgr.domain.additem.service.IAddItemService;
+import kr.co.kcc.itmgr.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
@@ -107,7 +108,7 @@ public class AddItemController {
 		Row row = null;
 		Cell cell = null;
 		int rowNum = 0;
-
+		ApiResponse<Map<String,Object>> a;
 		// Header
 		row = sheet.createRow(rowNum++);
 

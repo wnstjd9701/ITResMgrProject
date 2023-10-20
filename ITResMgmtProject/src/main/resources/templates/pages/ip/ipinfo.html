@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <link th:href="@{/css/ip/ip.css}" rel="stylesheet" />
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 </head>
 <body>
 	<th:block layout:fragment="content">
@@ -24,16 +25,20 @@
 					<div class="ip-search-container">
 						<div class="ip-search">IP 검색</div>
 						<div class="ip-search ip-search-input">
-							<input class="ip-address-search-input" type="text" placeholder="IP 주소">
+							<input class="ip-address-search-input" type="text"
+								placeholder="IP 주소">
 						</div>
 						<button class="btn btn-primary ip-btn search-btn">조회</button>
 						<button class="btn btn-primary ip-btn ip-new-btn">신규</button>
 						<button class="btn btn-primary ip-btn ip-save-btn">저장</button>
 						<button class="btn btn-primary ip-btn ip-delete-btn">삭제</button>
-						<button class="btn btn-primary excel-btn excel-upload-btn">엑셀
-							업로드</button>
-						<button class="btn btn-primary excel-btn excel-download-btn">엑셀
-							다운로드</button>
+					</div>
+					<div class="excel-btn-container">
+						<button type="button" class="btn btn-primary" style="background-color: green; border: green;" id="open-excel-modal-btn">엑셀 업로드</button>
+						<form action="/ip/excel/download" method="get">
+							<button type="submit" id="ExcelDownBtn" class="btn btn-primary"
+								style="background-color: green; border: green;">엑셀 다운로드</button>
+						</form>
 					</div>
 					<div class="ip-btn-container"></div>
 					<div class="ip-list-table-container">
@@ -54,7 +59,7 @@
 									<td class="ip" th:text="${ip.ip}"></td>
 									<td class="ip-desc" th:text="${ip.ipDesc}"></td>
 									<td class="ip-detail-code-name" th:text="${ip.detailCodeName}">
-										</td>
+									</td>
 									<td class="ip-detail"><input type="button"
 										class="btn btn-primary ip-detail-btn"
 										th:data-ip-sn="${ip.ipSn}" value="상세"></td>
@@ -65,15 +70,16 @@
 						<nav aria-label="Page navigation example" class="paging-nav">
 							<ul class="pagination ip-pagination justify-content-center">
 								<li class="page-item">
-									<button class="page-link ip-prev-page-link" aria-label="Previous"
-										th:value="${paging.startPage - 1}" disabled>
+									<button class="page-link ip-prev-page-link"
+										aria-label="Previous" th:value="${paging.startPage - 1}"
+										disabled>
 										<span aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
 									</button>
 								</li>
 								<li class="page-item"
 									th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
-									<button class="page-link ip-page-link-val" th:value="${pageNum}"
-										th:text="${pageNum}"></button>
+									<button class="page-link ip-page-link-val"
+										th:value="${pageNum}" th:text="${pageNum}"></button>
 								</li>
 								<li class="page-item">
 									<button class="page-link ip-next-page-link" aria-label="Next"
@@ -92,22 +98,27 @@
 				</div>
 				<div class="ip-res-container">
 					<div class="ip-detail-container">
-						<form>
+						<form id="ip-info-form">
+							<input type="hidden" name="ipSn" class="detail-origin-ip-sn"
+								value="0">
 							<div class="form-group">
 								<label for="ip-address-input-label">IP 주소</label> <input
-									type="text" class="form-control detail-ip"
+									type="text" class="form-control detail-ip" name="ip"
 									id="ip-address-input-label" placeholder="IP">
 							</div>
 							<div class="form-group">
 								<label for="ip-type-label">유형</label> <select
-									class="form-control detail-ip-type" id="ip-type-label">
-									<option th:each="ipCode : ${ipCode}" th:value="${ipCode.detailCode}" th:text="${ipCode.detailCodeName}">
+									class="form-control detail-ip-type" id="ip-type-label"
+									name="detailCode">
+									<option th:each="ipCode : ${ipCode}"
+										th:value="${ipCode.detailCode}"
+										th:text="${ipCode.detailCodeName}">
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="ip-desc-label">설명</label>
 								<textarea class="form-control detail-ip-desc" id="ip-desc-label"
-									rows="3"></textarea>
+									name="ipDesc" rows="3"></textarea>
 							</div>
 						</form>
 					</div>
@@ -127,7 +138,8 @@
 							</thead>
 							<tbody class="res-info-table-body">
 								<tr>
-									<td colspan="7" style='text-align:center; font-weight: bold;'>IP를 선택하세요.</td>
+									<td colspan="7" style='text-align: center; font-weight: bold;'>IP를
+										선택하세요.</td>
 								</tr>
 							</tbody>
 						</table>
@@ -155,6 +167,27 @@
 								</li> -->
 							</ul>
 						</nav>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="excel-upload-modal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Modal Title</h5>
+							<button type="button" class="close close-excel-modal-btn" data-dismiss="modal">&times;</button>
+						</div>
+						<div class="modal-body">
+							<form id="uploadForm" enctype="multipart/form-data">
+								<div id="select-file-name">선택한 파일</div>
+								<input type="file" id="fileInput" name="file" accept=".xlsx, .xls" style="display: none;">
+								<button type="button" id="ExcelUploadBtn" class="btn btn-primary" style="background-color: green; border: green;">파일 선택</button>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary save-excel-btn">저장</button>
+							<button type="button" class="btn btn-secondary close-excel-modal-btn" data-dismiss="modal">닫기</button>
+						</div>
 					</div>
 				</div>
 			</div>

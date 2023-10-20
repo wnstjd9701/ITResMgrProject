@@ -20,3 +20,11 @@
 .excel-btn:hover{
 	background-color: green;
 }
+
+.excel-btn-container{
+	display: flex;
+}
+
+#uploadForm{
+	display: flex;
+}
