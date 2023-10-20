@@ -1,0 +1,189 @@
+.containers {
+/* 	margin-left: 250px; */
+	font-size: 12px;
+}
+h1{
+	font-size: 24px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #012970;
+}
+.page-title-container {
+	margin: 80px 0 0 0;
+	padding: 20px 0 10px 0;
+	text-align: left;
+}
+
+.place-name-text {
+	margin: 15px 5px 15px 0;
+	padding: 2px 5px 2px 5px;
+}
+
+.search-container {
+	text-align: left;
+}
+
+.place {
+	text-align: center;
+	height: 110vh;
+	width: 75vw;
+	/* margin-left: 10em; */
+}
+
+.place-list-table-container {
+	font-size: 12px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.address-container, .resinfo-container {
+	margin-top: 20px; /* 주소 입력창과의 간격 조정 */
+}
+
+.address-container, .place-list-container {
+	text-align: left;
+}
+/* Style the address-map-container */
+.address-map-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	/* Add some spacing between the address container and the map container */
+	width: 20vw;
+}
+
+.resinfo-container {
+	flex: 3;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.place-list-container h2 {
+	font-size: 16px;
+}
+
+.resinfo-container h2 {
+	text-align: left;
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+/* Style the heading */
+.address-container h2 {
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+/* Style the input fields */
+.input-box {
+	width: 100%;
+	margin-bottom: 5px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+.zip-code-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: stretch;
+	justify-content: flex-start;
+	align-items: center;
+}
+/* Style the "주소 찾기" button */
+.find-postcode-btn {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	padding: 8px 12px;
+	margin: 5px;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.3s ease-in-out;
+}
+
+.find-postcode-btn:hover {
+	background-color: #0056b3;
+}
+
+/* Style the address-map-container */
+.address-map-container {
+	display: flex;
+	flex-wrap: nowrap;
+	gap: 20px;
+	flex-direction: row;
+	align-content: center;
+	align-items: flex-start;
+	width: 100%;
+}
+
+/* Style the address container */
+.address-container {
+	flex: 1;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the input fields */
+.address-input-box {
+	width: 100%;
+	margin-bottom: 5px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 1em;
+}
+
+#zip-code {
+	width: 30%;
+	margin: 0.1em 0 0 0;
+}
+
+/* Style the map container */
+.map {
+	flex: 1;
+	height: 200px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.table {
+	font-size: 12px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.fixed-header {
+	position: sticky;
+	top: 0;
+	background-color: white;
+	z-index: 1;
+}
+
+.place-table-container, .resinfo-table-container {
+	max-height: 30em; /* 원하는 높이로 조절 */
+	overflow-y: auto; /* 세로 스크롤 표시 */
+	height: 60%;
+}
+
+input[type="button"] {
+	padding: 2px 2px;
+	background-color: #007BFF;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	font-size: 12px;
+	cursor: pointer;
+}
+.paging-nav{
+	text-align:center;
+}
