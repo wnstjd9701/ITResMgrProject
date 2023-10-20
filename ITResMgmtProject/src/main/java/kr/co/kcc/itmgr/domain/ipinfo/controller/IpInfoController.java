@@ -16,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.http.fileupload.impl.FileUploadIOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,13 +24,19 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -43,6 +50,7 @@ import kr.co.kcc.itmgr.global.common.ApiResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "IP 관리", description = "IP 관리 API Document")
 @Controller
 @AllArgsConstructor
 @Slf4j
@@ -80,6 +88,7 @@ public class IpInfoController {
 	 * @Info: IP 정보 조회 페이징  
 	 */
 	@GetMapping("/ip/{page}")
+	@ResponseBody
 	public ResponseEntity<IpApiResponse> selecIpInfoByPage(@PathVariable("page") int page,
 			@RequestParam("searchType") String searchType){
 		log.info("searchType: " + searchType);
@@ -127,6 +136,7 @@ public class IpInfoController {
 	 * @Info: 자원 정보 페이징
 	 */
 	@GetMapping("/ip/resinfo/{page}")
+	@ResponseBody
 	public ResponseEntity<IpApiResponse> selectResInfoByPage(@PathVariable("page") int page,
 			@RequestParam("ipSn") int ipSn){
 		int start = (page - 1) * 5 + 1;
@@ -156,6 +166,7 @@ public class IpInfoController {
 	 * @Info: IP 상세 및 해당 자원 조회
 	 */
 	@GetMapping("/ip/detail/{ipsn}")
+	@ResponseBody
 	public ResponseEntity<IpApiResponse> selectIpAndResInfo(@PathVariable("ipsn") int ipSn){
 		// 자원 조회 
 		// 상세 Ip 정보 조회
@@ -207,6 +218,7 @@ public class IpInfoController {
 	 * @Info: IP 주소 검색
 	 */
 	@GetMapping("/search/ip")
+	@ResponseBody
 	public ResponseEntity<IpApiResponse> searchIp(@RequestParam("keyword") String keyword){
 		int start = 1;
 		int end = start + 9;
@@ -248,10 +260,12 @@ public class IpInfoController {
 	 * @API No.5-5. IP 삭제
 	 * @Info: IP 선택 삭제
 	 */
-	@PostMapping("/delete/ip")
-	public ResponseEntity<IpApiResponse> deleteIp(@RequestBody int deleteIpSn){
-		log.info("deleteIpSn: " + deleteIpSn);
-		boolean result = ipService.deleteIp(deleteIpSn);
+	@Operation(summary = "IP 삭제", description = "IP 삭제")
+	@DeleteMapping("/ip/{ipSn}")
+	@ResponseBody
+	public ResponseEntity<IpApiResponse> deleteIp(@Parameter @PathVariable("ipSn") int ipSn){
+		log.info("deleteIpSn: " + ipSn);
+		boolean result = ipService.deleteIp(ipSn);
 
 		IpApiResponse response = new IpApiResponse();
 		Map<String,Object> data = new HashMap<String, Object>();
@@ -279,8 +293,10 @@ public class IpInfoController {
 	 * @API No.5-6. IP 저장
 	 * @Info: IP 한 개 저장 
 	 */
-	@PostMapping("/save/ip")
-	public ResponseEntity<IpApiResponse> saveIp(@Valid IpInfo ipInfo, BindingResult bindingResult){
+	@Operation(summary = "IP 수정 / 신규", description = "IP 신규 등록 / 수정")
+	@PostMapping("/ip")
+	@ResponseBody
+	public ResponseEntity<IpApiResponse> saveIp(@RequestBody @Valid IpInfo ipInfo, BindingResult bindingResult){
 		log.info("Ip:" + ipInfo);
 		IpApiResponse response = new IpApiResponse();
 		Map<String,Object> data = new HashMap<String, Object>();
@@ -296,7 +312,6 @@ public class IpInfoController {
 			response.setStatus("NOT_VALID_VALUE");
 			return ResponseEntity.ok().body(response);
 		}
-
 
 		int count = 0;
 		int ipCheck;
@@ -426,7 +441,9 @@ public class IpInfoController {
 	 * @API No.5-9. 엑셀 업로드
 	 * @Info: 엑셀 업로드 
 	 */
+	@Operation(summary = "엑셀 업로드", description = "엑셀 파일로 Ip 등록 Api")
 	@PostMapping("/ip/excel/upload")
+	@ResponseBody
 	public ResponseEntity<ApiResponse<?>> ipExcelUpload(@RequestParam("file") MultipartFile file) throws Exception{
 		log.info("MultiFile: " + file);
 		// 업로드된 엑셀 파일을 읽기 위해 MultipartFile.getInputStream()을 사용

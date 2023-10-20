@@ -551,12 +551,15 @@ $(document).ready(function(){
 		resPagingClick(page);	
 	})
 	
-	$(".res-pagintaion").on("click", ".res-prev-page-link", function(){
-		
+	$(".res-pagination").on("click", ".res-prev-page-link", function(){
+		var page = $(this).val() - 4;
+		console.log("A");
+		resPagingClick(page);	
 	})
 	
 	$(".res-pagination").on("click", ".res-next-page-link", function(){
-		
+		var page = $(this).val();
+		resPagingClick(page);
 	})
 	
 	function installPlacePaging(paging) {

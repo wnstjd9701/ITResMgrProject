@@ -1,13 +1,6 @@
 package kr.co.kcc.itmgr.global.common;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,21 +23,13 @@ public class ApiResponse<T> {
     	return new ApiResponse<>(ApiResponseStatus.SUCCESS.getStatus(), ApiResponseStatus.SUCCESS.getCode(), ApiResponseStatus.SUCCESS.getMessage());
     }
     
+    public static ApiResponse<?> successDetailMessage(int code, String message){
+    	return new ApiResponse<>(ApiResponseStatus.SUCCESS.getStatus(), code, message);
+    }
+    
     public static ApiResponse<?> fail(int code, String message){
     	return new ApiResponse<>(code, message);
     }
-	/*
-	 * // Hibernate Validator에 의해 유효하지 않은 데이터로 인해 API 호출이 거부될때 반환 public static
-	 * ApiResponse<?> validError(BindingResult bindingResult) { Map<String, String>
-	 * errors = new HashMap<>();
-	 * 
-	 * List<ObjectError> allErrors = bindingResult.getAllErrors(); for (ObjectError
-	 * error : allErrors) { if (error instanceof FieldError) {
-	 * errors.put(((FieldError) error).getField(), error.getDefaultMessage()); }
-	 * else { errors.put(error.getObjectName(), error.getDefaultMessage()); } }
-	 * return new ApiResponse<>(ApiResponseStatus.FAIL.getStatus(),
-	 * ApiResponseStatus.FAIL.getCode(), errors); }
-	 */
     
     // 예외 발생으로 API 호출 실패시 반환
     public static ApiResponse<?> error(String errorText) {

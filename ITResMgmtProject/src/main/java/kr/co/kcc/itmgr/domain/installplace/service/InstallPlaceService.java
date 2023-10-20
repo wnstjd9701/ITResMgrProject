@@ -185,4 +185,9 @@ public class InstallPlaceService implements IInstallPlaceService {
 		return installPlaceRepository.selectResCount();
 	}
 
+	@Override
+	public int selectResInfoCountByInstallPlaceName(String placeName) {
+		return installPlaceRepository.selectResInfoCountByInstallPlaceName(placeName);
+	}
+
 }
