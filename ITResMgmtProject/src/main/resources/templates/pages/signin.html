@@ -5,8 +5,11 @@
 <meta charset="UTF-8">
 <!-- <link th:href="@{/css/user/user.css}" rel="stylesheet" /> -->
 <link th:href="@{/css/user/user2.css}" rel="stylesheet" />
-<!-- <th:block
-	th:replace="~{../common/fragments/head2.html :: fragment-head2}"></th:block> -->
+<link href="../assets/css/style.css" rel="stylesheet">
+
+
+<th:block
+	th:replace="~{../common/fragments/head2.html :: fragment-head2}"></th:block>
 <!-- Template Main JS File -->
 </head>
 <body>
@@ -67,8 +70,8 @@
 		</main>
 	</th:block> -->
 
-
-	<!-- 		<main id="main" class="main ">
+ 
+<!--   		<main id="main" class="main ">
 			<div class="container">
 				<div>
 					<h1 class="my-5 display-3 fw-bold ls-tight ">
@@ -76,9 +79,11 @@
 					</h1>
 				</div>
 
-				<div class="longin-container">
+				<div class="login-container">
 					<span th:if="${message != null}" th:text="${message}"
 						style="color: red; margin-bottom:20px; " id="message-paragraph" ></span>
+					
+					<div class="login-container-content">
 					<form th:action="@{/signin}" method="post" id="login">
 						<div>
 							<div class="icon-input">
@@ -98,12 +103,15 @@
 								Sign up</button>
 						</div>
 					</form>
+					</div>
+					
+					
 				</div>
 			</div>
-		</main>
-	 -->
+		</main> -->
 
-	<header class="sys-name">
+
+   <header class="sys-name">
 		<span class="kcc-name">KCC정보통신</span> <br> <span class="IT-name">IT자원관리시스템</span>
 	</header>
 	<main id="main" class="main">
@@ -115,30 +123,32 @@
 
 			<div class="login-content">
 				<div class="login-content-wrap">
-					<div class="login-letter">
-						<h1 style="font-size: 25px; font-weight: bold;">Login</h1>
+					<div>
+						<p style="font-size: 30px; font-weight: bold;  text-align: center; margin-top: -100px; margin-bottom:50px;">Login</p>
 					</div>
 
 
 					<span th:if="${message != null}" th:text="${message}"
-						style="color: red; margin-bottom: 20px;" id="message-paragraph"></span>
+						style="font-size:15px; color: red; margin-bottom: 20px;" id="message-paragraph"></span>
 					<form th:action="@{/signin}" method="post" id="login">
 						<div>
-							<div class="icon-input-id">
+							<div class="icon-input">
 								<span class="login-icon-wrap"><img
 									src="assets/img/id.png" class="login-img"></span> <input
 									type="text" id="employeeId" name="employeeId"
 									class="id-input-box" placeholder="아이디를 입력해 주세요." required />
 							</div>
-							<div class="icon-input-pwd">
+							<div class="icon-input">
 								<span class="login-icon-wrap"><img
 									src="assets/img/pwd.png" class="login-img"></span> <input
 									type="password" id="employeePwd" name="employeePwd"
 									class="id-input-box" placeholder="비밀번호를 입력해 주세요." required />
 							</div>
 
+							<div class="icon-input">
 							<button type="submit" class="btn btn-primary btn-size">
 								Sign up</button>
+								</div>
 						</div>
 					</form>
 				</div>
