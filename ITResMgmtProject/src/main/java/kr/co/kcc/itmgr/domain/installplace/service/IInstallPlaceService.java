@@ -14,6 +14,7 @@ public interface IInstallPlaceService {
 	
 	List<InstallRes> selectAllResInfo(int start, int end); // 모든 자원 정보 조회[페이징]
 	List<InstallRes> selectResInformationByInstallPlaceName(String placeName, int start, int end); // 해당 설치 장소 자원 정보 조회
+	int selectResInfoCountByInstallPlaceName(String placeName);
 	
 	int selectInstallPlaceSearchCount(String keyword); // 설치 장소 개수 조회
 	List<InstallPlace> searchInstallPlaceByName(String keyword, int start, int end); // 설치 장소 검색

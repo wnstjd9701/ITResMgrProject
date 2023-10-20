@@ -15,8 +15,9 @@ public interface IMonitoringRepository {
 	/*
 	 * Monitoring
 	 */
-	List<Monitoring> selectAllResourceInformation();  // 모니터링 모든 자원 정보 가져오기
+	List<Monitoring> selectAllResourceInformation(int start, int end);  // 모니터링 모든 자원 정보 가져오기
 	List<ResClass> selectResClassInformationByLevel(int level); // 하드웨어 레벨 별로 자원분류 가져오기
 	
 	List<Monitoring> selectResourceInformationBySearchCondition(SearchCondition searchCondition); // 자원 검색 결과 가져오기
+	int selectResCount(); // 자원 전체 개수 조회
 }

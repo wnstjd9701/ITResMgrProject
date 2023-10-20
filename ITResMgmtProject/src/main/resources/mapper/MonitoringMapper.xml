@@ -6,49 +6,79 @@
 	</sql>
 	<sql id="resInfo">
 		SELECT
-		    r.res_serial_id                                     AS "resSerialId",
-		    r.res_name                                          AS "resName",
-		    r.mgmt_id                                           AS "mgmtId",
-		    r.res_status_code                                   AS "resStatusCode",
-		    r.introduction_date                                 AS "introductionDate",
-		    r.use_yn                                            AS "resUseYn",
-		    rc.res_class_id                                     AS "resClassId",
-		    rc.res_class_name                                   AS "resClassName",
-		    rc.res_class_path                                   AS "resClassPath",
-		    i.install_place_sn                                  AS "installPlaceSn",
-		    i.install_place_name                                AS "installPlaceName",
-		    concat(i.install_place_address,
-		           concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
-		    ip.ip                                               AS "ip",
-		    ip.ip_desc                                          AS "ipDesc"
+		    r.res_serial_id      AS "resSerialId",
+		    r.res_name           AS "resName",
+		    r.mgmt_id            AS "mgmtId",
+		    r.res_status_code    AS "resStatusCode",
+		    r.introduction_date  AS "introductionDate",
+		    r.use_yn             AS "resUseYn",
+		    r.res_class_id       AS "resClassId",
+		    r.res_class_name     AS "resClassName",
+		    r.res_class_path     AS "resClassPath",
+		    r.install_place_sn   AS "installPlaceSn",
+		    r.install_place_name AS "installPlaceName",
+		    r."installPlaceFullAddress",
+		    r.ip                 AS "ip",
+		    r.ip_desc            AS "ipDesc",
+		    rn
 		FROM
-		    resinfo      r
-		    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
-		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
-		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
-		    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
-		    LEFT JOIN (
+		    (
 		        SELECT
-		            level,
-		            res_class_id,
-		            res_class_name,
-		            substr(sys_connect_by_path(res_class_name, '>'),
-		                   2) AS "RES_CLASS_PATH"
+		            r.res_serial_id,
+		            r.res_name,
+		            r.mgmt_id,
+		            r.res_status_code,
+		            r.introduction_date,
+		            r.use_yn,
+		            rc.res_class_id,
+		            rc.res_class_name,
+		            rc.res_class_path,
+		            i.install_place_sn,
+		            i.install_place_name,
+		            concat(i.install_place_address,
+		                   concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
+		            ip.ip,
+		            ip.ip_desc,
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    r.res_serial_id
+		            )                                                   AS rn
 		        FROM
-		            resclass
+		            resinfo      r
+		            LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+		            LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		            LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
+		            LEFT JOIN (
+		                SELECT
+		                    level,
+		                    res_class_id,
+		                    res_class_name,
+		                    substr(sys_connect_by_path(res_class_name, '>'),
+		                           2) AS "RES_CLASS_PATH"
+		                FROM
+		                    resclass
+		                WHERE
+		                    level = 3
+		                START WITH
+		                    upper_res_class_id IS NULL
+		                CONNECT BY
+		                    PRIOR res_class_id = upper_res_class_id
+		            )            rc ON r.res_class_id = rc.res_class_id
 		        WHERE
-		            level = 3
-		        START WITH
-		            upper_res_class_id IS NULL
-		        CONNECT BY
-		            PRIOR res_class_id = upper_res_class_id
-		    ) rc ON r.res_class_id = rc.res_class_id
+		                r.monitoring_yn = 'Y'
+		            AND r.use_yn = 'Y'
+		            AND r.res_class_id LIKE '%HW%'
+		            AND ip.ip IS NOT NULL
+		    ) r
 	</sql>
 	
 	<select id="selectAllResourceInformation">
 		<include refid="resInfo"></include>
-		WHERE
-		    r.monitoring_yn = 'Y' AND r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' <include refid="ip"></include>
+		<where>
+			rn BETWEEN #{start} AND #{end}
+		</where>
 	</select>
 	
 	<select id="selectResClassInformationByLevel" parameterType="int">
@@ -72,59 +102,113 @@
 	<select id="selectResourceInformationBySearchCondition" 
 		parameterType="kr.co.kcc.itmgr.domain.home.model.SearchCondition" resultType="kr.co.kcc.itmgr.domain.home.model.Monitoring">
 			SELECT
-			    r.res_serial_id                                     AS "resSerialId",
-			    r.res_name                                          AS "resName",
-			    r.mgmt_id                                           AS "mgmtId",
-			    r.res_status_code                                   AS "resStatusCode",
-			    r.introduction_date                                 AS "introductionDate",
-			    r.use_yn                                            AS "resUseYn",
-			    rc.res_class_id                                     AS "resClassId",
-			    rc.res_class_name                                   AS "resClassName",
-			    rc.res_class_path                                   AS "resClassPath",
-			    i.install_place_sn                                  AS "installPlaceSn",
-			    i.install_place_name                                AS "installPlaceName",
+			    rn,
+			    r.res_serial_id      AS "resSerialId",
+			    r.res_name           AS "resName",
+			    r.mgmt_id            AS "mgmtId",
+			    r.res_status_code    AS "resStatusCode",
+			    r.introduction_date  AS "introductionDate",
+			    r.use_yn             AS "resUseYn",
+			    r.res_class_id       AS "resClassId",
+			    r.res_class_name     AS "resClassName",
+			    r.res_class_path     AS "resClassPath",
+			    r.install_place_sn   AS "installPlaceSn",
+			    r.install_place_name AS "installPlaceName",
+			    r."installPlaceFullAddress",
+			    r.ip                 AS "ip",
+			    r.ip_desc            AS "ipDesc"
+			FROM (SELECT
+			    ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    r.res_serial_id
+		            )                                          AS rn,
+			    r.res_serial_id                                     ,
+			    r.res_name                                          ,
+			    r.mgmt_id                                           ,
+			    r.res_status_code                                   ,
+			    r.introduction_date                                 ,
+			    r.use_yn                                            ,
+			    rc.res_class_id                                     ,
+			    rc.res_class_name                                   ,
+			    rc.res_class_path                                   ,
+			    i.install_place_sn                                  ,
+			    i.install_place_name                                ,
 			    concat(i.install_place_address,
 			           concat(' ', i.install_place_detail_address)) AS "installPlaceFullAddress",
-			    ip.ip                                               AS "ip",
-			    ip.ip_desc                                          AS "ipDesc"
-			FROM
-			    (
-			        SELECT
-			            level,
-			            res_class_id,
-			            res_class_name,
-			            substr(sys_connect_by_path(res_class_name, '>'),
-			                   2) AS "RES_CLASS_PATH"
-			        FROM
-			            resclass
-			        WHERE
-			                level = 3
-			            	<if test='! bottomResClass.equals("A")'>
-			            		and	res_class_id = #{bottomResClass}
-			            	</if>
-			            	<if test='! midResClass.equals("A")'>
-								and upper_res_class_id = #{midResClass}			            		
-			            	</if>
-			        START WITH
-			            upper_res_class_id IS NULL
-			        CONNECT BY
-			            PRIOR res_class_id = upper_res_class_id
-			    )            rc
-			    LEFT JOIN resinfo      r ON rc.res_class_id = r.res_class_id
-			    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
-			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
-			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
-			    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
-			WHERE
-			    r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%' <include refid="ip"></include>
-			        <if test='monitoringYn.equals("Y")'>
-			            and r.monitoring_yn = #{monitoringYn}
-			        </if>
-			        <if test='resName != null or resName = "" or resName.length() gte 1'>
-			            and r.res_name LIKE '%' || #{resName} || '%'
-			        </if>
-			        <if test='midResClass.equals("A") or bottomResClass.equals("A")'>
-			        	and r.res_serial_id is not null
-			        </if>
+			    ip.ip                                               ,
+			    ip.ip_desc                                          
+						FROM (
+						    SELECT
+						        LEVEL,
+						        res_class_id,
+						        res_class_name,
+						        SUBSTR(SYS_CONNECT_BY_PATH(res_class_name, '>'), 2) AS "RES_CLASS_PATH"
+						    FROM
+						        resclass
+						    WHERE
+						        LEVEL = 3
+						        <if test='!bottomResClass.equals("A")'>
+						            AND res_class_id = #{bottomResClass}
+						        </if>
+						        <if test='!midResClass.equals("A")'>
+						            AND upper_res_class_id = #{midResClass}
+						        </if>
+						    START WITH
+						        upper_res_class_id IS NULL
+						    CONNECT BY
+						        PRIOR res_class_id = upper_res_class_id
+						) rc
+						LEFT JOIN resinfo r ON rc.res_class_id = r.res_class_id
+						LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+						LEFT JOIN resclass rc ON r.res_class_id = rc.res_class_id
+						LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+						LEFT JOIN ipinfo ip ON rim.ip_sn = ip.ip_sn
+						WHERE
+						    r.use_yn = 'Y' AND r.res_class_id LIKE '%HW%'
+						    <include refid="ip"></include>
+						    <if test='monitoringYn.equals("Y")'>
+						        AND r.monitoring_yn = #{monitoringYn}
+						    </if>
+						    <if test='resName != null or resName = "" or resName.length() gte 1'>
+						        AND r.res_name LIKE '%' || #{resName} || '%'
+						    </if>
+						    <if test='midResClass.equals("A") or bottomResClass.equals("A")'>
+						        AND r.res_serial_id IS NOT null </if> ) r 
+						<where>
+							rn between 1 and 10
+						</where>
+	</select>
+	
+	<select id="selectResCount">
+		SELECT
+		    COUNT(*)
+		FROM
+		    resinfo      r
+		    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipinfo       ip ON rim.ip_sn = ip.ip_sn
+		    LEFT JOIN (
+		        SELECT
+		            level,
+		            res_class_id,
+		            res_class_name,
+		            substr(sys_connect_by_path(res_class_name, '>'),
+		                   2) AS "RES_CLASS_PATH"
+		        FROM
+		            resclass
+		        WHERE
+		            level = 3
+		        START WITH
+		            upper_res_class_id IS NULL
+		        CONNECT BY
+		            PRIOR res_class_id = upper_res_class_id
+		    )            rc ON r.res_class_id = rc.res_class_id
+		WHERE
+		        r.monitoring_yn = 'Y'
+		    AND r.use_yn = 'Y'
+		    AND r.res_class_id LIKE '%HW%'
+		    AND ip.ip IS NOT NULL
 	</select>
 </mapper>

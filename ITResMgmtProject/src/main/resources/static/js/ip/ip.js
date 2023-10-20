@@ -5,7 +5,7 @@ $(document).ready(function () {
 		asyncIpPaging(page);		
 	});
 	$(".ip-pagination").on("click", ".ip-prev-page-link", function(){
-		var page = $(this).val();
+		var page = $(this).val() - 4;
 		if(page < 1){
 			alert("첫 페이지 입니다.");
 			return;
@@ -130,24 +130,17 @@ $(document).ready(function () {
 	
 	// 삭제
 	$(".ip-delete-btn").on("click", function(){
-		const apiUrl = "/delete/ip";
-		var selectedRows = $("input[name='ip-checkbox']:checked").closest("tr");
-		var deleteIpSnList = [];
 		var ipSn = $("input[name='ip-checkbox']:checked").val();
+		const apiUrl = "/ip/" + ipSn;
+		var selectedRows = $("input[name='ip-checkbox']:checked").closest("tr");
 		console.log("ipSN: " + ipSn);
 		if (selectedRows.length === 0) {
 			alert("삭제할 행을 선택하세요.");
 			return;
 		}
-		selectedRows.each(function(){
-			var ipSn = $(this).find("input[type='checkbox']").val();
-			deleteIpSnList.push(ipSn);
-		})
 		$.ajax({
-			method:"POST",
+			method:"DELETE",
 			url: apiUrl,
-			data: JSON.stringify(ipSn),
-			contentType: "application/json",
 			success: function(response){
 				console.log(response);
 				updateIpInfo(response.data.ipInfo);
@@ -163,18 +156,40 @@ $(document).ready(function () {
 		$(".detail-origin-ip-sn").val("0");
 	}
 	
+	$.fn.serializeObject = function() {
+	    var obj = null;
+	    try {
+	        if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
+	            var arr = this.serializeArray();
+	            if (arr) {
+	                obj = {};
+	                $.each(arr, function() {
+	                    obj[this.name] = this.value;
+	                });
+	            }//if ( arr ) {
+	        }
+	    } catch (e) {
+	        alert(e.message);
+	    } finally {
+	    }
+	 
+	    return obj;
+	};
+	
 	// IP 저장
 	$(".ip-save-btn").on("click", function(){
-		const apiUrl = "/save/ip";
+		const apiUrl = "/ip";
 		var originIpSn = $(".detail-origin-ip-sn").val();
 		if(originIpSn === null || originIpSn === ""){
 			originIpSn = 0;
 		}
-		
+		const ipInfo = $("#ip-info-form").serializeObject();
+		console.log(ipInfo);
 		$.ajax({
 			method: "POST",
 			url: apiUrl,
-			data: $("#ip-info-form").serialize(),
+			data: JSON.stringify(ipInfo),
+			contentType: "application/json",
 			success: function(response){
 				console.log(response);
 				if(response.code !== 200){
@@ -453,8 +468,8 @@ $(document).ready(function () {
 				$("#select-file-name").text("선택한 파일");
         		excelModalClose();
 			},
-			error: function(xhr, status, err){
-				console.log(err);
+			error: function(response){
+				errorHandler(response);
 			}
 		});
 		// 저장 로직
@@ -464,4 +479,17 @@ $(document).ready(function () {
         $('#fileInput').click();
     });
 
+	$('#excel-upload-modal').on('hidden.bs.modal', function (e) {
+    	$("#select-file-name").text("선택한 파일");
+  	});
+
+	function errorHandler(error){
+		if(error.status === 404){
+			alert(error.message);
+			//window.location.href = "/";
+		}else if(error.status === 500){
+			alert(error.message);
+			//window.location.href = "/";
+		}
+	}
 });

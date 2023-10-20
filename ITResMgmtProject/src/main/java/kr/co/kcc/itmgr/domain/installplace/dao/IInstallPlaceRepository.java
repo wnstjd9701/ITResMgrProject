@@ -17,6 +17,7 @@ public interface IInstallPlaceRepository {
 	int selectInstallPlaceCount(); // 설치 장소 개수 조회
 	
 	List<InstallRes> selectAllResInfo(int start, int end); // 모든 자원 정보 조회
+	int selectResInfoCountByInstallPlaceName(String placeName);
 	
 	int selectInstallPlaceSearchCount(String keyword); // 설치 장소 개수 조회
 	List<InstallPlace> selectInstallPlaceByName(String keyword, int start, int end); // 설치 장소 검색
