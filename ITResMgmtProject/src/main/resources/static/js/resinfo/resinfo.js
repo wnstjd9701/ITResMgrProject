@@ -34,6 +34,7 @@ function paging(page) {
     });
 }
 $(document).ready(function () {
+	const checkedAddItems = [];
     $('#newResInfoBtn').on('click', function () {
 		var resInfoaddItemList = [];
         clearModalContent()
@@ -65,18 +66,13 @@ $(document).ready(function () {
 			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
 			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
 			
+			var resSerialList=[];
+			var addItemSnList = [];
+			var resDetailValueList = [];
 			for (var i = 0; i < addItemSnElements.length; i++) {
-			    var addItemSnValue = addItemSnElements.eq(i).val(); // 현재 순서의 addItemSn 값 가져오기
-			    var resDetailValueValue = resDetailValueElements.eq(i).val(); // 현재 순서의 resDetailValue 값 가져오기
-			
-			    var resDetailValueList = {
-			        addItemSn: addItemSnValue, // 순서대로 각 addItemSn 값을 가져와서 추가
-			        resSerialId: $('#resinfo-detail-modal input[name="resSerialId"]').val(),
-			        resDetailValue: resDetailValueValue // 현재 순서의 resDetailValue 값을 가져와서 추가
-			    };
-			
-			    resInfoaddItemList.push(resDetailValueList);
-			    console.log(resInfoaddItemList);
+				resSerialList.push(resSerialId)
+			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
+				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
 			}
 
             $.ajax({
@@ -101,32 +97,20 @@ $(document).ready(function () {
                     'useYn': useYn,
                     'monitoringYn': monitoringYn,
                     'purchaseCompanyName': purchaseCompanyName,
-                    'addInfo': addInfo
+                    'addInfo': addInfo,
+					'resSerialIdList' : resSerialList,
+					'addItemSnList' : addItemSnList,
+					'resDetailValueList' : resDetailValueList
                 }),
                 contentType: "application/json",
                 success: function (response) {
-                    alert("저장되었습니다.");
                     showResourceDetail(response.resName);
-                },
-                error: function (error) {
-                    console.log('에러:', error);
-                }
-            });
-
-            $.ajax({
-                type: 'POST',
-                url: '/resinfo/additemvalue',
-                data: JSON.stringify(resInfoaddItemList),
-                contentType: "application/json",
-                success: function (response) {
-					console.log(response)
                     alert("저장되었습니다.");
                 },
                 error: function (error) {
                     console.log('에러:', error);
                 }
             });
-
         });
     });
 
@@ -213,10 +197,12 @@ $(document).ready(function () {
             var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
 			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
 			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
-
+			
+			var resSerialList=[];
 			var addItemSnList = [];
 			var resDetailValueList = [];
 			for (var i = 0; i < addItemSnElements.length; i++) {
+				resSerialList.push(resSerialId)
 			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
 				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
 			}
@@ -244,13 +230,14 @@ $(document).ready(function () {
 				    'monitoringYn': monitoringYn,
 				    'purchaseCompanyName': purchaseCompanyName,
 				    'addInfo': addInfo,
+					'resSerialIdList' : resSerialList,
 					'addItemSnList' : addItemSnList,
 					'resDetailValueList' : resDetailValueList
 				}),
                 contentType: "application/json",
                 success: function (response) {
-					alert("수정완료했습니다.")
 					showResourceDetail(response.resName);
+					alert("수정완료했습니다.")
                 },
                 error: function (error) {
                     console.log('에러:', error);
@@ -361,6 +348,7 @@ $(document).ready(function () {
 	$('#installPlaceSearchBtn').on('click', function() {
 		$('#resinfo-detail-modal').modal('hide');
 	    $('#install-place-choose-modal').modal('show');
+		paging(1)
 	});
 	
 	// 체크박스 클릭 시
@@ -590,8 +578,108 @@ $(document).ready(function () {
 	        return $(this).text();  // Remove bold style
 	    	});
     	});
+	function paging(page) {
+		$.ajax({
+	        type: 'GET',
+	        url: '/resinfo/installplace',
+	        contentType: "application/json",
+	        data: {
+	            'page': page
+	        },
+	        success: function (response) {
+	            var pagingHtml = pagingLine(response);
+				updateTable(response.selectResInstallPlace);
+	            $('ul#pagination').html(pagingHtml);  // 수정된 선택자
+	        },
+	        error: function (error) {
+	            // 요청이 실패한 경우 처리
+	            console.log('에러:', error);
+	        }
+	    });
+	}
+	//페이지 누르면 이동하는 기능
+	$("#pagination").on("click", ".page-btn", function() {
+	    const page = $(this).val();
+	    paging(page);
+	});
+	
+	//부가항목 리스트 모달 페이징처리
+	function pagingLine(data) {
+	    var totalPage = data.page.totalPageCount;
+	    var page = data.page.nowPage;
+	    var totalPageBlock = data.page.totalPageBlock;
+	    var nowPageBlock = data.page.nowPageCount;
+	    var startPage = data.page.startPage;
+	    var endPage = data.page.endPage;
+	
+	    var pagingLine = "<ul id='paging-line-ul' style='display: flex; justify-content: center; align-items: center; list-style: none; padding: 0;'>";
+	
+	    if (nowPageBlock > 1) {
+	        pagingLine += `<li id='paging-line-li' style='margin-right: 10px;'><button class='page-btn' value=${startPage-1}>⏪</button></li>`;
+	    }
+	
+	    for (var i = startPage; i <= endPage; i++) {
+	        var isActive = i === page ? "active" : "";
+	        pagingLine += `<li id='paging-line-li' style='margin-right: 10px;'><button class='page-btn ${isActive}' value=${i}>${i}</button></li>`;
+	    }
+	
+	    if (nowPageBlock < totalPageBlock) {
+	        pagingLine += `<li><button class='page-btn' value=${endPage+1}>⏩</button></li>`;
+	    }
+	
+	    pagingLine += "</ul>";
+	
+	    // Add custom CSS styles
+	    var customStyles = `
+	        <style>
+	            ul #paging-line-ul {
+	                display: flex;
+	                justify-content: center;
+	                align-items: center;
+	                list-style: none;
+	                padding: 0;
+	            }
+	
+	            ul li #paging-line-li {
+	                margin-right: 10px;
+	            }
+	
+	            ul li:last-child {
+	                margin-right: 0;
+	            }
+	
+	            ul li button {
+	                border: none;
+	                background: none;
+	                font-size: 16px;
+	                cursor: pointer;
+	            }
+	
+	            ul li button:focus {
+	                outline: none;
+	            }
+	        </style>
+	    `;
+	    pagingLine += customStyles;
+	
+	    return pagingLine;
+	}
 
 
+function updateTable(installPlace) {
+	var tbody = $('#install-place-list-table tbody');
+	tbody.empty();  // tbody 내용을 초기화
+	for (var i = 0; i < installPlace.length; i++) {
+        var installPlaceSn = installPlace[i].installPlaceSn;
+        var addTableRow = "<tr>" +
+            "<td><input type='checkbox' name='installPlaceSn' value='" + installPlaceSn + "'"+ "></td>" +
+            "<td>" + installPlace[i].installPlaceName + "</td>" +
+            "<td>" + installPlace[i].installPlacePostNo + "</td>" +
+            "<td>" + installPlace[i].installPlacePostAddress + "</td>" +
+            "</tr>";
+        $('table#install-place-list-table tbody').append(addTableRow);
+	}
+}
 });
 
 

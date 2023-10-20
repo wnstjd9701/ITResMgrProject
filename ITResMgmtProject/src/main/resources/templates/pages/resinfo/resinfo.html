@@ -341,14 +341,11 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="selectResInstallPlace:${selectResInstallPlace}">
-										<td><input type="checkbox" id="place-sn"name="checkInstallPlace" th:value="${selectResInstallPlace.installPlaceSn}"></td>
-										<td id="place-name" name="installPlaceName" th:text=${selectResInstallPlace.installPlaceName}></td>
-										<td th:text=${selectResInstallPlace.installPlacePostno}></td>
-										<td th:text=${selectResInstallPlace.installPlaceAddress}></td>
+									<tr>
 									</tr>	
 								</tbody>
 							</table>
+							<ul id="pagination"></ul>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
 									data-bs-dismiss="modal">취소</button>

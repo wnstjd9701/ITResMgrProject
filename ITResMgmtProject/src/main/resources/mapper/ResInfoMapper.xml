@@ -76,24 +76,53 @@
 	</select>
 	
 	<select id="searchResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
-			    SELECT
-			        urc_name.res_class_name "topUpperResClassName",
-			        urc.res_class_name "upperResClassName",
-			        rc.res_class_name "resClassName",
-			        r.res_name "resName",
-			        i.install_place_name "installPlaceName",
-			        r.manufacture_company_name "manufactureCompanyName",
-			        r.mgmt_id "mgmtId",
-			        r.monitoring_yn "monitoringYn"
-			    FROM RESINFO r
-			    LEFT OUTER JOIN INSTALLPLACE i
-			        ON i.install_place_sn = r.install_place_sn
-			    LEFT OUTER JOIN RESCLASS rc
-			        ON rc.res_class_id = r.res_class_id
-			    LEFT OUTER JOIN RESCLASS urc
-			        ON urc.res_class_id = rc.upper_res_class_id
-			    LEFT OUTER JOIN RESCLASS urc_name
-			        ON urc_name.res_class_id = urc.upper_res_class_id
+			SELECT 
+			    "topUpperResClassName",
+			    "upperResClassName",
+			    "resClassName",
+			    "resName",
+			    "installPlaceName",
+			    "manufactureCompanyName",
+			    "mgmtId",
+			    "monitoringYn",
+			    "resClassId",
+			    "resSerialId"
+			FROM (
+			    SELECT 
+			        "topUpperResClassName",
+			        "upperResClassName",
+			        "resClassName",
+			        "resName",
+			        "installPlaceName",
+			        "manufactureCompanyName",
+			        "mgmtId",
+			        "monitoringYn",
+			        "resClassId",
+			        "resSerialId",
+			        ROWNUM AS rnum
+			    FROM (
+			        SELECT
+			            urc_name.res_class_name    "topUpperResClassName",
+			            urc.res_class_name        "upperResClassName",
+			            rc.res_class_name        "resClassName",
+			            r.res_name                "resName",
+			            i.install_place_name    "installPlaceName",
+			            r.manufacture_company_name    "manufactureCompanyName",
+			            r.mgmt_id                "mgmtId",
+			            r.monitoring_yn            "monitoringYn",
+			            r.res_class_id            "resClassId",
+			            r.res_serial_id			"resSerialId"
+			        FROM resinfo r
+			        LEFT OUTER JOIN installplace i
+			            ON i.install_place_sn = r.install_place_sn
+			        LEFT OUTER JOIN resclass rc
+			            ON rc.res_class_id = r.res_class_id
+			        LEFT OUTER JOIN resclass urc
+			            ON urc.res_class_id = rc.upper_res_class_id
+			        LEFT OUTER JOIN resclass urc_name
+			            ON urc_name.res_class_id = urc.upper_res_class_id
+			    )
+			)	
 			  		<where>
 				    <if test='topUpperResClassName != null &amp;&amp; !topUpperResClassName.equals("") '>
 				        AND urc_name.res_class_name = #{topUpperResClassName} 
@@ -120,7 +149,7 @@
 				        AND r.monitoring_yn = #{monitoringYn}
 				    </if>
 			  		</where>
-			  
+			  WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 	
 	<insert id="insertResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
@@ -174,13 +203,19 @@
 	</select>
 	
 	<select id="selectResInstallPlace" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
-		<![CDATA[
+		<![CDATA[	
 			SELECT
 				install_place_sn	"installPlaceSn",
 				install_place_name	"installPlaceName",
 				install_place_postno	"installPlacePostno",
 				install_place_address	"installPlaceAddress"
-			FROM INSTALLPLACE
+			FROM (
+				SELECT install_place_sn, install_place_name, install_place_postno, install_place_address, rownum AS rnum
+				FROM (
+					SELECT * FROM INSTALLPLACE
+					)
+				)
+			WHERE rnum BETWEEN #{start} AND #{end}
 		]]>
 	</select>
 	
@@ -273,16 +308,16 @@
 		        res_detail_value, 
 		        create_date, 
 		        creater_id
-		    )
-		    <foreach collection="addItemSnList" item="addItemSn" index="i" separator="UNION ALL">
+		    ) values (#{resSerialId}, #{addItemSn}, #{resDetailValue}, SYSDATE, 'wh467925')
+		    <!-- foreach index="i" collection="addItemSnList" separator="UNION ALL">
 		        SELECT
-		            #{resSerialId},
-		            #{addItemSn},
+		            #{resSerialIdList[i]},
+		            #{addItemSnList[i]},
 		            #{resDetailValueList[i]},
 		            SYSDATE,
 		            'wh467925'
 		        FROM DUAL
-		    </foreach>
+		    </foreach-->
 		</insert>
 
 	
@@ -311,5 +346,12 @@
 				COALESCE(COUNT(*), 0)
 			FROM resinfodetail
 			WHERE res_serial_id = #{resSerialId}
+	</select>
+	
+	<select id="countOfInstallPlace" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS "installPlaceSn"
+			FROM installplace
+		]]>
 	</select>
 </mapper>

@@ -47,8 +47,9 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public List<InstallPlace> selectResInstallPlace() {
-		return resInfoRepository.selectResInstallPlace();
+	public List<InstallPlace> selectResInstallPlace(int page) {
+		int start = (page-1)*10+1;
+		return resInfoRepository.selectResInstallPlace(start,start+9);
 	}
 
 	@Override
@@ -72,8 +73,11 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public void insertAddItemValueInResInfo(String resSerialId, List<String> addItemSnList, List<String> resDetailValueList) {
-		resInfoRepository.insertAddItemValueInResInfo(resSerialId, addItemSnList, resDetailValueList);
+	@Transactional
+	public void insertAddItemValueInResInfo(List<String> resSerialIdList, List<String> addItemSnList, List<String> resDetailValueList) {
+		for(int i=0; i<resSerialIdList.size(); i++) {
+			resInfoRepository.insertAddItemValueInResInfo(resSerialIdList.get(i), addItemSnList.get(i), resDetailValueList.get(i));
+		}
 	}
 
 	@Override
@@ -95,6 +99,11 @@ public class ResInfoService implements IResInfoService {
 	@Override
 	public int CountOfAddItemValueInResInfo(String resSerialId) {
 		return resInfoRepository.CountOfAddItemValueInResInfo(resSerialId);
+	}
+
+	@Override
+	public int countOfInstallPlace() {
+		return resInfoRepository.countOfInstallPlace();
 	}
 	
 

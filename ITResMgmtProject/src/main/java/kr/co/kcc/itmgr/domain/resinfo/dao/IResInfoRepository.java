@@ -18,6 +18,7 @@ public interface IResInfoRepository {
 	
 	List<ResInfo> selectAllResInfo(@Param("start")int start, @Param("end")int end); //자원정보 모두 찾아오기
 	int countOfResInfo();//자원갯수
+	int countOfInstallPlace();
 	
 	List<ResInfo> searchResInfoByResClass(); //자원분류 조회
 	List<ResInfo> searchResInfo(ResInfo resInfo); //검색결과조회
@@ -28,16 +29,17 @@ public interface IResInfoRepository {
 	void updateResInfo(ResInfo resInfo); //자원수정
 	
 	List<CommonCodeDetail> selectResStatusCode(String codeGroupId); //자원상태코드 리스트 불러오기
-	List<InstallPlace> selectResInstallPlace(); //자원설치장소 리스트 불러오기
+	List<InstallPlace> selectResInstallPlace(@Param("start")int start, @Param("end")int end); //자원설치장소 리스트 불러오기
 	
 	ResInfo selectResInfoDetail(String resName);
 	
 	List<ResInfo> selectMappingAddItem(String resClassId);
 	
-	void insertAddItemValueInResInfo(@Param("resSerialId") String resSerialId,@Param("addItemSnList") List<String> addItemSnList,@Param("resDetailValueList") List<String> resDetailValueList); //매핑된 부가항목 값 넣기
+	void insertAddItemValueInResInfo(@Param("resSerialId") String resSerialId, @Param("addItemSn") String addItemSn, @Param("resDetailValue") String resDetailValue); //매핑된 부가항목 값 넣기
 	void deleteAddItemValueInResInfo(String resSerialId);
 	List<ResInfo> selectAddItemValueInResInfo(String resSerialId);
 	
 	int CountOfAddItemValueInResInfo(String resSerialId);
+
 	
 }

@@ -73,8 +73,7 @@ public class ResInfoController {
 		List<CommonCodeDetail> selectResStatusCode = resInfoService.selectResStatusCode("RES000");
 		model.addAttribute("selectResStatusCode", selectResStatusCode);
 
-		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace();
-		model.addAttribute("selectResInstallPlace", selectResInstallPlace);
+
 		List<ResClass> resClassList = resInfoService.selectAllResClass();
 		Map<String, Map<String, Map<String, String>>> resClassMap = new HashMap<String, Map<String, Map<String, String>>>();
 
@@ -155,17 +154,10 @@ public class ResInfoController {
 			int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
 			try {
 				if(count >1) {
-					logger.info("=====================" + resInfo.getAddItemSnList());
-					logger.info("=====================" + resInfo.getResDetailValueList());
-					logger.info("=====================" + resSerialId);
 					resInfoService.deleteAddItemValueInResInfo(resSerialId);
-					resInfoService.insertAddItemValueInResInfo(resSerialId, resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+					resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
 				}else{
-					logger.info("=====================" + resInfo.getAddItemSnList());
-					logger.info("=====================" + resInfo.getResDetailValueList());
-					logger.info("=====================" + resSerialId);
-					resInfoService.insertAddItemValueInResInfo(resSerialId, resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
-					System.out.println("=============================================================================================");
+					resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
 				}
 			}catch(Exception e){
 				e.getMessage();
@@ -184,19 +176,38 @@ public class ResInfoController {
 		return selectMappingAddItem;
 	}
 	
-	@PostMapping("/resinfo/additemvalue")
+	@GetMapping("/resinfo/installplace")
 	@ResponseBody
-	public void insertAddItemValueInResInfo(@RequestBody List<ResInfoDetailDTO> resInfoList){
-//		String resSerialId = resInfoList.get(0).getResSerialId();
-//		int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
-//		System.out.println("아아아악!!!"+count);
-//		if(count >1) {
-//			resInfoService.deleteAddItemValueInResInfo(resSerialId);
-//			resInfoService.insertAddItemValueInResInfo(resInfoList);
-//		}else{
-//			resInfoService.insertAddItemValueInResInfo(resInfoList);
-//		}
+	public Map<String, Object> selectResInstallPlace(int page){
+		Map<String, Object> installPlaceMap = new HashMap<String, Object>();
+		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace(page);
+		int installPalceCount = resInfoService.countOfInstallPlace();
+		int totalPage=0;
+		if(installPalceCount>0) {
+			totalPage=(int)Math.ceil(installPalceCount/10.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
+		int nowPageBlock = (int)Math.ceil(page/5.0);
+		int startPage = (nowPageBlock-1)*10+1;
+		int endPage=0;
+		if(totalPage > nowPageBlock* 10) {
+			endPage = nowPageBlock*10;
+		}else {
+			endPage = totalPage;
+		}
+		Map<String,Object> page2 = new HashMap<String, Object>();
+		page2.put("totalPageCount", totalPage);
+		page2.put("nowPage", page);
+		page2.put("totalPageBlock", totalPageBlock);
+		page2.put("nowPageCount", nowPageBlock);
+		page2.put("startPage", startPage);
+		page2.put("endPage", endPage);
+		
+		installPlaceMap.put("selectResInstallPlace",selectResInstallPlace);
+		installPlaceMap.put("page", page2);
+		return installPlaceMap;
 	}
+	
 	
 	@GetMapping("/resinfo/additemvalue")
 	@ResponseBody
@@ -216,6 +227,7 @@ public class ResInfoController {
 	@ResponseBody
 	public void insertResInfo(@RequestBody ResInfo resInfo) {
 		resInfoService.insertResInfo(resInfo);
+		resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
 	}
 
 	@GetMapping("/resinfo/detail")

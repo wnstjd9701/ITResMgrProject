@@ -47,7 +47,8 @@ public class ResInfo {
 	private String addItemName;
 	
 	private String resDetailValue;
-
+	
+	private List<String> resSerialIdList;
 	private List<String> addItemSnList;
 	private List<String> resDetailValueList;
 	
