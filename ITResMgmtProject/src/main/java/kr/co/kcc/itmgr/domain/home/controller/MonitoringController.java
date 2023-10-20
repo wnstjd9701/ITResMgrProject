@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,8 @@ import kr.co.kcc.itmgr.domain.home.model.SearchCondition;
 import kr.co.kcc.itmgr.domain.home.model.ServerStatusResponse;
 import kr.co.kcc.itmgr.domain.home.service.IMoniteringService;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
+import kr.co.kcc.itmgr.global.common.ApiResponse;
+import kr.co.kcc.itmgr.global.common.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +40,14 @@ public class MonitoringController {
 	 */
 	@GetMapping("/")
 	public String selectAllResourceInformation(Model model) throws IOException {
-		List<Monitoring> resourceInfo = monitoringService.selectAllResourceInformation();
+		int page = 1;
+		int start = 1;
+		int end = start + 4;
+		List<Monitoring> resourceInfo = monitoringService.selectAllResourceInformation(start, end);
+		
+		int totalCount = monitoringService.selectResCount();
+		Map<String,Object> monitoringPaging = monitoringService.monitoringPaging(page, totalCount);
+		
 		List<ResClass> resClassLevel2 = monitoringService.selectResClassInformationByLevel(2);
 		List<ResClass> resClassLevel3 = monitoringService.selectResClassInformationByLevel(3);
 		for(Monitoring resInfo : resourceInfo) {
@@ -45,7 +56,8 @@ public class MonitoringController {
 			resInfo.setIpStatus(isAlive);
 		}
 		model.addAttribute("resourceInfo", resourceInfo);
-
+		model.addAttribute("paging", monitoringPaging);
+		
 		model.addAttribute("resClassLevel2", resClassLevel2);
 		model.addAttribute("resClassLevel3", resClassLevel3);
 
@@ -59,7 +71,7 @@ public class MonitoringController {
 	 */
 	@PostMapping("/search")
 	@ResponseBody
-	public List<Monitoring> selectResourceInformationByCategory(Model model, SearchCondition searchCondition) {
+	public ResponseEntity<ApiResponse<?>> selectResourceInformationByCategory(Model model, SearchCondition searchCondition) {
 		log.info("searchCondition: " + searchCondition);
 		List<Monitoring> searchResult = monitoringService.selectResInformationBySearchCondition(searchCondition);
 		
@@ -69,7 +81,7 @@ public class MonitoringController {
 			resInfo.setIpStatus(isAlive);
 		}
 		log.info("SearchResult: " + searchResult);
-		return searchResult;
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(searchResult));
 	}
 
 	/*
@@ -78,22 +90,15 @@ public class MonitoringController {
 	 * @Info: 해당 IP 상태 체크
 	 */
 	@GetMapping("/ip/check")
-	public ResponseEntity<ServerStatusResponse> getServerStatus(@RequestParam("ip") String ip) throws IOException {
+	public ResponseEntity<ApiResponse<?>> getServerStatus(@RequestParam("ip") String ip) throws IOException {
 		ServerStatusResponse response = new ServerStatusResponse();
-
+		
 		boolean isAlive = monitoringService.serverPingCheck(ip);
 		if (isAlive) {
-			response.setCode(200);
-			response.setStatus("성공");
-			response.setMessage("서버 살아 있음");
-			response.setServerStatus(isAlive);
+			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.successDetailMessage(ApiResponseStatus.SERVER_PING_ALIVE.getCode(), ApiResponseStatus.SERVER_PING_ALIVE.getMessage()));
 		} else {
-			response.setCode(400);
-			response.setStatus("실패");
-			response.setMessage("서버 죽음");
-			response.setServerStatus(isAlive);
+			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.successDetailMessage(ApiResponseStatus.SERVER_PING_DIE.getCode(), ApiResponseStatus.SERVER_PING_DIE.getMessage()));
 		}
-		return ResponseEntity.ok().body(response);
 	}
 
 }

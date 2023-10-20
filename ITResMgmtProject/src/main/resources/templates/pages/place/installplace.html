@@ -237,7 +237,7 @@ input[type="button"] {
 								<th scope="col" class="text-left">주소</th>
 								<th scope="col">상세 주소</th>
 								<th scope="col">자원 수</th>
-								<th scope="col">상세 조회</th>
+								<th scope="col">상세</th>
 							</tr>
 						</thead>
 						<tbody class="place-table-body">
@@ -255,7 +255,7 @@ input[type="button"] {
 									class="place-detail-address"
 									th:text="${installPlace.installPlaceDetailAddress}"></td>
 								<td class="place-res-count" th:text="${installPlace.resCount}"></td>
-								<td><input type="button" class="resinfo-btn" value="상세 조회"
+								<td><input type="button" class="resinfo-btn" value="상세"
 									th:data-place-name="${installPlace.installPlaceName}"></td>
 							</tr>
 						</tbody>
@@ -333,7 +333,7 @@ input[type="button"] {
 							</tbody>
 						</table>
 						<input type="hidden" class="res-search-type" value="">
-						<nav aria-label="Page navigation example" class="paging-nav">
+						<nav aria-label="Page navigation example" class="paging-nav res-page">
 							<ul class="pagination res-pagination justify-content-center">
 								<!-- <li class="page-item">
 									<button class="page-link res-prev-page-link" aria-label="Previous" value="0"> 
@@ -532,9 +532,8 @@ $(document).ready(function(){
 		})
 	})
 	
-	$(".res-pagination").on("click", ".res-next-page-val", function(){
+	$(".res-pagination").on("click", ".res-next-page-link", function(){
 		var nextStartPage = $(this).val();
-		console.log(this.classList[1]);
 		var resSearchType = $(".res-search-type").val();
 		$.ajax({
 			method: "GET",
@@ -550,9 +549,10 @@ $(document).ready(function(){
 		});
 	});
 	
-	$(".res-pagination").on("click", ".res-prev-page-val", function(){
+	$(".res-pagination").on("click", ".res-prev-page-link", function(){
 		var page = $(this).val();
 		var prevStartPage = page - 4;
+		var resSearchType = $(".res-search-type").val();
 		$.ajax({
 			method: "GET",
 			url: "/installplace/resinfo/" + prevStartPage,
@@ -596,7 +596,7 @@ $(document).ready(function(){
 				const resInfoBtn = $("<td>").append($("<input>").attr({
 					type: "button",
 					class: "resinfo-btn",
-					value: "상세 조회",
+					value: "상세",
 					"data-place-name": place[i].installPlaceName
 				}))
 				
@@ -649,6 +649,7 @@ $(document).ready(function(){
 	        	}
 	        	resInfoPaging(response.paging);
 	        	$(".res-search-type").val(placeName);
+	        	return;
 	        },
 	        error: function(xhr, status, err){
 	            alert("Error", err)

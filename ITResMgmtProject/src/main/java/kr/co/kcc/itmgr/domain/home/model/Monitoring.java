@@ -42,4 +42,6 @@ public class Monitoring {
 	// 검색을 위한 칼럼
 	private String midResClass;
 	private String bottomResClass;
+	
+	private int rn;
 }

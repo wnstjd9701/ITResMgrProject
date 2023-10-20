@@ -578,4 +578,14 @@
 		WHERE
 		    i.install_place_sn IS NOT NULL
 	</select>
+	
+	<select id="selectResInfoCountByInstallPlaceName">
+		SELECT
+		    COUNT(*)
+		FROM
+		    resinfo      r
+		    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+		WHERE
+		    i.install_place_sn IS NOT NULL AND i.install_place_name = #{placeName}
+	</select>
 </mapper>
