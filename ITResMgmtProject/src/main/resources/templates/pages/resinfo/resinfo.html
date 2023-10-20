@@ -231,74 +231,7 @@
 	</div>
 	<!-- 모달 끝 -->
 	
-	<!-- 자원분류 선택 모달창 -->
-	<div class="modal fade" id="res-class-choose-modal" tabindex="-1"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="resclass-list">자원분류</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-				</div>
-					<div class="modal-body">
-						<div class="mb-3">
-							<table class="table" id="res-class-list-table">
-								<thead>
-									<tr>
-										<th>대분류</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="res:${resClassMap}">
-										<td th:value="${res.key}">[[${res.key}]]</td>
-									</tr>
-								</tbody>
-							</table>
-							<table class="table" id="res-class-list-table2">
-								<thead>
-									<tr>
-										<th>중분류</th>
-									</tr>
-								</thead>
-								<tbody th:each="res:${resClassMap}">
-									<tr th:each="rv:${res.value}" th:value="${res.key}">
-										<td th:value="${rv.key}">[[${rv.key}]]</td>
-									</tr>
-								</tbody>
-							</table>
-							<table class="table" id="res-class-list-table3">
-								<thead>
-									<tr>
-										<th>소분류</th>
-									</tr>
-								</thead>
-									<tbody>
-								        <th:block th:each="res : ${resClassMap}">
-								            <tr th:each="rv : ${res.value}" th:value="${rv.key}">
-								                <td th:each="name : ${rv.value}" th:value="${name}">
-								                	[[${name}]]
-								                </td>
-								            </tr>
-								        </th:block>
-									    <th:block style="display:none;" th:each="res2 : ${resClassMap2}">
-									        <div th:each="rv2 : ${res2.value}" th:value="${rv2.key}">
-									            <span class="selected-name2" th:each="name2 : ${rv2.value}" th:value="${name2}"></span>
-									        </div>
-									    </th:block>
-									</tbody>
-
-							</table>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary"
-									data-bs-dismiss="modal">취소</button>
-								<button type="button" id="choose-res-class-btn">확인</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	<!-- 자원분류 선택 모달창 끝  -->
+	
 	
 	<!-- 설치장소 리스트 선택 모달창 -->
  	<div class="modal fade" id="install-place-choose-modal" tabindex="-1"
@@ -480,5 +413,6 @@
 <script type="text/javascript" th:src="@{/js/resinfo/resinfo.js}"></script>
   <!-- Template Main JS File -->
 <script th:src="@{/assets/js/main.js}"></script>
+
 </body>
 </html>

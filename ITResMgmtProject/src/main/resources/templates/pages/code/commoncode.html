@@ -4,128 +4,13 @@
 	layout:decorate="../common/layout/default">
 <head>
 <meta charset="UTF-8">
-<style>
-/* 테이블 스타일 */
-.table {
-  width: 100%;
-  margin: 5px 0;
-}
-h1{
-	font-size: 24px;
-    margin-bottom: 0;
-    font-weight: 600;
-    color: #012970;
-}
-.table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-}
-
-.table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* 마우스 오버 효과 */
-.table tr:hover {
-  background-color: #e0e0e0;
-}
-/* 스크롤 가능한 영역의 스타일 */
-.container {
-	overflow-x: auto;
-}
-
-#commonCode {
-	display: flex;
-}
-
-.commoncode-container {
-	font-size: 13px;
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-}
-.commoncodedetail-container {
-	font-size: 13px;
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-}
-
-.table-container {
-	max-height: 40em; /* 원하는 높이로 조절 */
-	overflow-y: auto; /* 세로 스크롤 표시 */
-}
-
-/* 고정된 테이블 헤더 스타일 */
-.fixed-header {
-	position: sticky;
-	top: 0;
-	background-color: white;
-	z-index: 1;
-}
-
-.search-info-container {
-	margin: 20px 5px 10px 0;
-	justify-content: center; /* 가로 중앙 정렬을 위해 추가 */
-  	align-items: center; /* 세로 중앙 정렬을 위해 추가 */
-}
-.search-detail-info{
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-}
-.common-btn-container {
-	margin-left: auto;
-	text-align: right;
-}
-
-.row-btn {
-	text-align: right;
-}
-
-/* 입력란 스타일 */
-input[type="text"] {
-	margin: 2px;
-	padding: 2px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	font-size: 12px;
-	outline: none;
-}
-
-.code-group-id-input{
-	width: 40%;	
-}
-
-/* 선택 상자 스타일 */
-select {
-	margin: 2px;
-	padding: 2px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	font-size: 12px;
-	outline: none;
-}
-
-/* 버튼 스타일 */
-input[type="button"] {
-	padding: 5px 5px;
-	background-color: #007BFF;
-	color: #fff;
-	border: none;
-	border-radius: 5px;
-	font-size: 14px;
-	cursor: pointer;
-}
-</style>
+<link rel="stylesheet" type="text/css"
+	th:href="@{../css/common/commoncode.css}">
 <link th:href="@{/css/resclass/menutree.css}" rel="stylesheet" />
 </head>
 <th:block layout:fragment="content">
 <main id="main" class="main">
-	<h1>공통 코드</h1>
+	<h1 class="title">공통 코드</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
@@ -140,34 +25,35 @@ input[type="button"] {
 					🔵 생성
 					🔴 삭제
 				</div> -->
-			<h1>공통 코드</h1>
+			<h1 class="sub-title">공통 코드</h1>
 			<div class="common-btn-container">
-				<input id="searchCommonCodeBtn" type="button" value="조회"> <input id="commonCodeSaveBtn" type="button" value="저장">
+				<input id="searchCommonCodeBtn" type="button" value="조회" class="btn btn-primary" style="background-color: gray; border: gray; "> 
+				<input id="commonCodeSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
 			</div>
 			<div class="search-info-container">
-				<div class="search-detail-info">
-					<span>사용 여부</span> <select id="commonCodeUseYn">
+				<div class="search-detail-common">
+					<span class="common-search">사용 여부</span> <select id="commonCodeUseYn">
 						<option value="A">전체</option>
 						<option value="Y">Y</option>
 						<option value="N">N</option>
-					</select> <span>코드 그룹</span> <input name="commonCodeKeyword"
-						type="text" placeholder="ID 및 그룹명">
+					</select> <span class="common-search">코드 그룹</span> <input name="commonCodeKeyword"
+						type="text" placeholder="ID 및 그룹명" class="commonCodeKeyword">
 				</div>
 			</div>
 			<div class="row-btn">
-				<input id="commonCodeAddRowBtn" type="button" value="행추가"> <input
-					id="commonCodeDeleteRowBtn" type="button" value="행삭제">
+				<input id="commonCodeAddRowBtn" type="button" value="행추가" class="btn btn-primary"> <input
+					id="commonCodeDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
 			</div>
-			<div class="table-container commoncode-table-container">
-				<table class="table table-striped commoncode-table">
-					<thead class="fixed-header">
+			<div class="commoncode-table-container">
+				<table class="commoncode-table">
+					<thead class="common-thead">
 						<tr>
-							<th>상태</th>
-							<th>코드 그룹 ID</th>
-							<th>코드 그룹명</th>
-							<th>상세 코드 개수</th>
-							<th>사용 여부</th>
-							<th>조회</th>
+							<th class="col-comnStatus">상태</th>
+							<th class="col-comnCodeGroup">코드 그룹 ID</th>
+							<th class="col-comnCodeGroupName">코드 그룹명</th>
+							<th class="col-comnDetalCodeNum">상세 코드 개수</th>
+							<th class="col-comnUseYN">사용 여부</th>
+							<th class="col-comnSpe">상세</th>
 						</tr>
 					</thead>
 					<tbody id="commonCode-table-body">
@@ -179,7 +65,7 @@ input[type="button"] {
 								th:data-code-group-id="${commonCode.codeGroupId}"></td>
 							<td><input id="commonCode-group-name"
 								class="code-group-name" name="codeGroupName" type="text"
-								th:value="${commonCode.codeGroupName}"></td>
+								th:value="${commonCode.codeGroupName}" style="width:150px; text-align: center;"></td>
 							<td th:text="${commonCode.codeDetailCount}"></td>
 							<td><select>
 									<option th:value="Y" th:text="Y"
@@ -187,35 +73,35 @@ input[type="button"] {
 									<option th:value="N" th:text="N"
 										th:selected="${commonCode.useYn == 'N'}"></option>
 							</select></td>
-							<td><input type="button" value="조회" th:data-code-group-id="${commonCode.codeGroupId}"></td>
+							<td><input type="button" value="상세" th:data-code-group-id="${commonCode.codeGroupId}" class=""></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 		<div class="container commoncodedetail-container">
-			<h1>상세 코드</h1>
+			<h1 class="sub-title">상세 코드</h1>
 			<div class="common-btn-container">
-				<input id="searchCommonCodeDetailBtn" type="button" value="조회">
-				<input id="commonCodeDetailSaveBtn" type="button" value="저장">
+				<input id="searchCommonCodeDetailBtn" type="button" value="조회" class="btn btn-primary" style="background-color: gray; border: gray;">
+				<input id="commonCodeDetailSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
 			</div>
 			<div class="search-info-container">
-				<div class="search-detail-info">
-					<span>사용 여부</span> <select id="commonCodeDetailUseYn">
+				<div class="search-detail-commondetail">
+					<span class="common-search">사용 여부</span> <select id="commonCodeDetailUseYn">
 						<option value="A" selected>전체</option>
 						<option value="Y">Y</option>
 						<option value="N">N</option>
-					</select> <span>코드 그룹</span> <input name="commonCodeDetailKeyword"
-						type="text" placeholder="ID 및 그룹명">
+					</select> <span class="common-search">상세 코드 그룹</span> <input name="commonCodeDetailKeyword"
+						type="text" placeholder="ID 및 그룹명" class="commonCodeDetailKeyword">
 				</div>
 			</div>
 			<div class="row-btn">
-				<input id="commonCodeDetailAddRowBtn" type="button" value="행추가">
-				<input id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제">
+				<input id="commonCodeDetailAddRowBtn" type="button" value="행추가" class="btn btn-primary">
+				<input id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
 			</div>
-			<div class="table-container commoncodedetail-table-container">
-				<table class="table table-striped commoncodedetail-table">
-					<thead class="fixed-header">
+			<div class="commoncodedetail-table-container">
+				<table class="commoncodedetail-table">
+					<thead class="common-thead">
 						<tr>
 							<th>상태</th>
 							<th>선택</th>
@@ -531,6 +417,12 @@ input[type="button"] {
 								if(resultText.startsWith("검색")){
 									removeCommonCodeDetailRow();
 								}
+								console.log($("#commonCodeDetail-table-body td:first").attr("colspan"));
+								const colspan = $("#commonCodeDetail-table-body td:first").attr("colspan");
+								if(colspan === "6"){
+									$("#commonCodeDetail-table-body tr").remove();
+									console.log("A");
+								}
 								// 새로운 행 생성
 								var newRow = $("<tr>");
 								var status = $("<td>").text("C");
@@ -653,9 +545,11 @@ input[type="button"] {
 							$("#commonCodeDetailSaveBtn").click(() => {
 								var commonCodeDetailList = [];
 								var shouldContinue = true;
-								
+								console.log($("#commonCodeDetail-table-body tr"));
 								$("#commonCodeDetail-table-body tr").each(function(){
+									console.log("SHOULDCONTINUDE: " + shouldContinue);
 									if (!shouldContinue) {
+										console.log("?:",shouldContinue);
 							            return false; // 반복 종료
 							        }
 									
@@ -680,15 +574,14 @@ input[type="button"] {
 							            }
 									    
 									    if(!pattern.test(detailCode)){
-									    	alert(`${detailCode}를 영어와 숫자 6자리로 입력해주세요.`);
-									    	shouldContinude = false;
+									    	alert(`${detailCode}를 영어[대문자]와 숫자 6자리로 입력해주세요.`);
+									    	shouldContinue = false;
 									    	return false;
 									    }
-									    
 									}else if(flag == 'C'){
 										detailCodeGroupId = $(this).find("input[name='detailCodeGroupId']").val();
 										detailCode = $(this).find("input[name='detailCode']").val();
-										
+										console.log("detailCode: ",detailCode);
 										var pattern = /^[A-Z]{3}[0-9]{3}$/;
 									    if(!pattern.test(detailCodeGroupId)){
 									    	alert(`코드 그룹 ID :${detailCodeGroupId} \n정확한 코드 그룹을 입력해주세요.`);
@@ -697,19 +590,19 @@ input[type="button"] {
 									    }
 									    
 									    if (detailCode.length > 6 || detailCode.length < 6) {
-							                alert(`${detailCode}: 상세 코드를 영어와 숫자 6자리로 입력하세요.`);
+							                alert(`${detailCode}: 상세 코드를 영어[대문자]와 숫자 6자리로 입력하세요.`);
 							                shouldContinue = false; 
 							                return false;
 							            }
 									    
 									    if(!pattern.test(detailCode)){
-									    	alert(`${detailCode}: 상세 코드를 영어와 숫자 6자리로 입력하세요.`);
-									    	shouldContinude = false;
+									    	alert(`${detailCode}: 상세 코드를 영어[대문자]와 숫자 6자리로 입력하세요.`);
+									    	shouldContinue = false;
 									    	return false;
 									    }
 									}
 									var detailCodeName = $(this).find("input[name='detailCodeName']").val();
-									console.log(detailCodeName);
+									
 									if(detailCodeName === undefined || detailCodeName === ""){
 										alert("상세 코드명을 입력하세요.");
 										shouldContinue = false;
@@ -728,12 +621,11 @@ input[type="button"] {
 									 	commonCodeDetailList.push(commonCodeDetail);
 									}
 								});
-								
+								console.log(shouldContinue);
 								if(!shouldContinue){
 									return;
 								}
 								if(commonCodeDetailList.length < 1){
-									alert("저장할 내용이 없습니다.");
 									return ;
 								}
 								

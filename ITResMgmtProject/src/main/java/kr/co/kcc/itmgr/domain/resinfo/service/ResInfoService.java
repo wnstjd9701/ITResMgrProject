@@ -49,8 +49,8 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public List<ResClass> selectAllResClass() {
-		return resInfoRepository.selectAllResClass();
+	public List<ResClass> selectAllResClass(String resClassName) {
+		return resInfoRepository.selectAllResClass(resClassName);
 	}
 
 	@Override

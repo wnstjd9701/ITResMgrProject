@@ -68,7 +68,7 @@
 		    ) i
 		WHERE
 		    rNum BETWEEN #{start} AND #{end}
-		ORDER BY i.install_place_name desc
+		ORDER BY i.install_place_name 
 	</select>
 	
 	<select id="selectInstallPlaceCount">
@@ -86,25 +86,31 @@
 		    FROM
 		        commoncodedetail
 		)
-		SELECT
-		    r.res_serial_id                AS "resSerialId",
-		    r.res_name                     AS "resName",
-		    cd_res_status.detail_code_name AS "resStatusCodeName",
-		    r.mgmt_dept_name               AS "mgmtDeptName",
-		    r.rack_info                    AS "rackInfo",
-		    rc.res_class_name              AS "resClassName",
-		    rim.ip_sn                      AS "ipSn",
-		    i.ip                           AS "ip",
-		    i.ip_desc                      AS "ipDesc",
-		    cd_ip_type.detail_code_name    AS "ipTypeCodeName"
-		FROM
-            resinfo      r
-		    LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
-		    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
-		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
-		    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
-		    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
-		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		SELECT 
+			*
+		FROM 
+			(SELECT
+			    r.res_serial_id                AS "resSerialId",
+			    r.res_name                     AS "resName",
+			    cd_res_status.detail_code_name AS "resStatusCodeName",
+			    r.mgmt_dept_name               AS "mgmtDeptName",
+			    r.rack_info                    AS "rackInfo",
+			    rc.res_class_name              AS "resClassName",
+			    rim.ip_sn                      AS "ipSn",
+			    i.ip                           AS "ip",
+			    i.ip_desc                      AS "ipDesc",
+			    cd_ip_type.detail_code_name    AS "ipTypeCodeName",
+			    ROW_NUMBER() OVER (ORDER BY r.res_serial_id) AS rn
+			FROM
+	            resinfo      r
+			    LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+			    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+			    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+			    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id) r
+			WHERE
+				rn BETWEEN #{start} and #{end}
 	</select>
 	
 	<select id="selectInstallPlaceByName" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
@@ -150,7 +156,7 @@
 		</where>
 	</select>
 	
-	<select id="selectResInformationByInstallPlaceName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
+	<select id="selectResInformationByInstallPlaceName" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
 		WITH commoncodes AS (
 		    SELECT
 		        detail_code,
@@ -159,27 +165,40 @@
 		        commoncodedetail
 		)
 		SELECT
-		    r.res_serial_id                AS "resSerialId",
-		    r.res_name                     AS "resName",
-		    cd_res_status.detail_code_name AS "resStatusCodeName",
-		    r.mgmt_dept_name               AS "mgmtDeptName",
-		    r.rack_info                    AS "rackInfo",
-		    rc.res_class_name              AS "resClassName",
-		    rim.ip_sn                      AS "ipSn",
-		    i.ip                           AS "ip",
-		    i.ip_desc                      AS "ipDesc",
-		    cd_ip_type.detail_code_name    AS "ipTypeCodeName"
+		    *
 		FROM
-		    installplace insp
-		    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
-		    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
-		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
-		    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
-		    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
-		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
-		<where>
-		    insp.install_place_name = #{placeName}
-		</where >			
+		    (
+		        SELECT
+		            r.res_serial_id                AS "resSerialId",
+		            r.res_name                     AS "resName",
+		            cd_res_status.detail_code_name AS "resStatusCodeName",
+		            r.mgmt_dept_name               AS "mgmtDeptName",
+		            r.rack_info                    AS "rackInfo",
+		            rc.res_class_name              AS "resClassName",
+		            rim.ip_sn                      AS "ipSn",
+		            i.ip                           AS "ip",
+		            i.ip_desc                      AS "ipDesc",
+		            cd_ip_type.detail_code_name    AS "ipTypeCodeName",
+		            ROW_NUMBER()
+		            OVER(
+		                ORDER BY
+		                    insp.install_place_name
+		            )                              AS rn
+		        FROM
+		            installplace insp
+		            LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+		            LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		            LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		            LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		            LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		            LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+				<where>
+				    insp.install_place_name = #{placeName}
+				</where>			
+				    AND r.res_serial_id IS NOT NULL
+					) i
+				WHERE
+				    rn BETWEEN #{start} AND #{end}
 	</select>
 	
 	<select id="selectInstallPlaceDetail" parameterType="String" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
@@ -317,7 +336,7 @@
        	</where>
 	</select>
 	
-	<select id="selectResInformationByCity" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
+	<select id="selectResInformationByCity" parameterType="java.util.HashMap" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallRes">
 		WITH commoncodes AS (
 		    SELECT
 		        detail_code,
@@ -325,32 +344,66 @@
 		    FROM
 		        commoncodedetail
 		)
-		SELECT
-		    r.res_serial_id                AS "resSerialId",
-		    r.res_name                     AS "resName",
-		    cd_res_status.detail_code_name AS "resStatusCodeName",
-		    r.mgmt_dept_name               AS "mgmtDeptName",
-		    r.rack_info                    AS "rackInfo",
-		    rc.res_class_name              AS "resClassName",
-		    rim.ip_sn                      AS "ipSn",
-		    i.ip                           AS "ip",
-		    i.ip_desc                      AS "ipDesc",
-		    cd_ip_type.detail_code_name    AS "ipTypeCodeName"
+		SELECT 
+			* 
 		FROM
-		    installplace insp
-		    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
-		    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
-		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
-		    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
-		    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
-		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+			(SELECT
+			    r.res_serial_id                AS "resSerialId",
+			    r.res_name                     AS "resName",
+			    cd_res_status.detail_code_name AS "resStatusCodeName",
+			    r.mgmt_dept_name               AS "mgmtDeptName",
+			    r.rack_info                    AS "rackInfo",
+			    rc.res_class_name              AS "resClassName",
+			    rim.ip_sn                      AS "ipSn",
+			    i.ip                           AS "ip",
+			    i.ip_desc                      AS "ipDesc",
+			    cd_ip_type.detail_code_name    AS "ipTypeCodeName",
+			    ROW_NUMBER() OVER (ORDER BY r.res_serial_id) AS rn
+			FROM
+			    installplace insp
+			    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+			    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+			    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+			    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+			WHERE
+				r.res_serial_id IS NOT NULL
+				AND
+			    insp.install_place_name IN 
+					<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+	            		#{placeName}
+	        		</foreach>
+	        ) i
 		WHERE
-			r.res_serial_id IS NOT NULL
-			AND
-		    insp.install_place_name IN 
-				<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
-            		#{placeName}
-        		</foreach>
+			rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectResCountByCity" parameterType="java.util.List">
+		WITH commoncodes AS (
+			    SELECT
+			        detail_code,
+			        detail_code_name
+			    FROM
+			        commoncodedetail
+			)
+			SELECT
+			    COUNT(*)
+			FROM
+			    installplace insp
+			    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+			    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+			    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+			    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+			    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+			    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+			WHERE
+			    r.res_serial_id IS NOT NULL
+				AND
+			    insp.install_place_name IN 
+					<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
+	            		#{placeName}
+	        		</foreach>
 	</select>
 	
 	<select id="selectPlaceByCity" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">
@@ -400,28 +453,55 @@
 		    FROM
 		        commoncodedetail
 		)
+		SELECT *
+		FROM (
+		    SELECT
+		        r.res_serial_id AS "resSerialId",
+		        r.res_name AS "resName",
+		        cd_res_status.detail_code_name AS "resStatusCodeName",
+		        r.mgmt_dept_name AS "mgmtDeptName",
+		        r.rack_info AS "rackInfo",
+		        rc.res_class_name AS "resClassName",
+		        rim.ip_sn AS "ipSn",
+		        i.ip AS "ip",
+		        i.ip_desc AS "ipDesc",
+		        cd_ip_type.detail_code_name AS "ipTypeCodeName",
+		        ROW_NUMBER() OVER (ORDER BY r.res_serial_id) AS rn
+		    FROM
+		        resinfo r
+		        LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+		        LEFT JOIN commoncodes cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		        LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		        LEFT JOIN ipinfo i ON rim.ip_sn = i.ip_sn
+		        LEFT JOIN commoncodes cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		        LEFT JOIN resclass rc ON r.res_class_id = rc.res_class_id
+		    WHERE
+		        (insp.install_place_address LIKE '%' || #{firstDoName} || '%' OR insp.install_place_address LIKE '%' || #{secondDoName} || '%') AND r.res_serial_id IS NOT NULL
+		)
+		WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectResInfoCountByCity">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
 		SELECT
-		    r.res_serial_id                AS "resSerialId",
-		    r.res_name                     AS "resName",
-		    cd_res_status.detail_code_name AS "resStatusCodeName",
-		    r.mgmt_dept_name               AS "mgmtDeptName",
-		    r.rack_info                    AS "rackInfo",
-		    rc.res_class_name              AS "resClassName",
-		    rim.ip_sn                      AS "ipSn",
-		    i.ip                           AS "ip",
-		    i.ip_desc                      AS "ipDesc",
-		    cd_ip_type.detail_code_name    AS "ipTypeCodeName"
+		    COUNT(*)
 		FROM
-            resinfo      r
+		    resinfo      r
 		    LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
 		    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
 		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
 		    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
 		    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
 		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
-		<where>
-            (insp.install_place_address LIKE '%' || #{firstDoName} || '%' OR insp.install_place_address LIKE '%' || #{secondDoName} || '%') AND r.res_serial_id IS NOT NULL
-		</where>
+		 WHERE
+		    insp.install_place_address LIKE '%' || #{firstDoName} || '%' OR insp.install_place_address LIKE '%' || #{secondDoName} || '%' 
+		    AND r.res_serial_id IS NOT NULL
 	</select>
 	
 	<select id="selectPlaceCountByCity">
@@ -464,5 +544,38 @@
 				<foreach collection="placeNames" item="placeName" open="(" separator="," close=")">
             		#{placeName}
         		</foreach>
+	</select>
+	
+	<select id="selectResInfoCountByPlaceName">
+		WITH commoncodes AS (
+		    SELECT
+		        detail_code,
+		        detail_code_name
+		    FROM
+		        commoncodedetail
+		)
+		SELECT
+		    COUNT(*)
+		FROM
+		    installplace insp
+		    LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+		    LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
+		    LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
+		    LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
+		    LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
+		    LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
+		where
+		    r.res_serial_id IS NOT NULL
+		    AND insp.install_place_name = #{placeName}
+	</select>
+	
+	<select id="selectResCount">
+		SELECT
+		    COUNT(*)
+		FROM
+		    resinfo      r
+		    LEFT JOIN installplace i ON r.install_place_sn = i.install_place_sn
+		WHERE
+		    i.install_place_sn IS NOT NULL
 	</select>
 </mapper>
