@@ -3,113 +3,132 @@
 <head>
 </head>
 <body>
-<div th:fragment="fragment-nav2">
-  <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-      <a th:href="@{/}" class="logo d-flex align-items-center">
-        <img src="assets/img/KCC.png" alt="">
-        <span class="d-none d-lg-block">KCC정보통신</span>
-      </a>
-      <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div><!-- End Logo -->
-  </header><!-- End Header -->
+	<div th:fragment="fragment-nav2">
+		<!-- ======= Header ======= -->
+		<header id="header" class="header fixed-top d-flex align-items-center">
+			<div class="d-flex align-items-center justify-content-between">
+				<a th:href="@{/}" class="logo d-flex align-items-center"> <img
+					src="assets/img/logo.png" alt=""> <span
+					class="d-none d-lg-block">KCC정보통신</span>
+				</a> <i class="bi bi-list toggle-sidebar-btn"></i>
+			</div>
+			<!-- End Logo -->
+		</header>
+		<!-- End Header -->
 
-  <!-- ======= Sidebar ======= -->
-  <aside id="sidebar" class="sidebar">
+		<!-- ======= Sidebar ======= -->
+		<aside id="sidebar" class="sidebar">
 
-    <ul class="sidebar-nav" id="sidebar-nav">
+			<ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" th:href="@{/}">
-          <i class="bi bi-grid"></i>
-          <span>모니터링</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
+				<li class="nav-item"><a class="nav-link collapsed"
+					th:href="@{/}"> <i class="bi bi-grid"></i> <span>모니터링</span>
+				</a></li>
+				<!-- End Dashboard Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed " data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>자원</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-          <li>
-            <a th:href="@{/resclass}">
-              <i class="bi bi-circle"></i><span>IT자원분류</span>
-            </a>
-          </li>
-          <li>
-            <a th:href="@{/resinfo}">
-              <i class="bi bi-circle"></i><span>IT자원</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Components Nav -->
+				<li class="nav-item"><a class="nav-link collapsed "
+					data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+						<i class="bi bi-menu-button-wide"></i><span>자원</span><i
+						class="bi bi-chevron-down ms-auto"></i>
+				</a>
+					<ul id="components-nav" class="nav-content collapse"
+						data-bs-parent="#sidebar-nav">
+						<li><a th:href="@{/resclass}"> <i class="bi bi-circle"></i><span>IT자원분류</span>
+						</a></li>
+						<li><a th:href="@{/resinfo}"> <i class="bi bi-circle"></i><span>IT자원</span>
+						</a></li>
+					</ul></li>
+				<!-- End Components Nav -->
 
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>공통코드</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a th:href="@{/commoncode}">
-              <i class="bi bi-circle"></i><span>공통코드</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Forms Nav -->
-    
-      
-      <li class="nav-item">
-        <a class="nav-link collapsed" th:href="@{/additem}">
-          <i class="bi bi-layout-text-window-reverse"></i>
-          <span>부가정보</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-      
-       <li class="nav-item">
-        <a class="nav-link collapsed" th:href="@{/employee}">
-          <i class="bi bi-layout-text-window-reverse"></i>
-          <span>사원정보</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-      
-     
+				<li class="nav-item"><a class="nav-link collapsed"
+					data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+						<i class="bi bi-journal-text"></i><span>공통코드</span><i
+						class="bi bi-chevron-down ms-auto"></i>
+				</a>
+					<ul id="forms-nav" class="nav-content collapse "
+						data-bs-parent="#sidebar-nav">
+						<li><a th:href="@{/commoncode}"> <i class="bi bi-circle"></i><span>공통코드</span>
+						</a></li>
+					</ul></li>
+				<!-- End Forms Nav -->
+
+
+				<li class="nav-item"><a class="nav-link collapsed"
+					th:href="@{/additem}"> <i
+						class="bi bi-layout-text-window-reverse"></i> <span>부가정보</span>
+				</a></li>
+				<!-- End Dashboard Nav -->
+
+				<li class="nav-item"><a class="nav-link collapsed"
+					th:href="@{/employee}"> <i
+						class="bi bi-layout-text-window-reverse"></i> <span>사원정보</span>
+				</a></li>
+				<!-- End Dashboard Nav -->
 
 
 
-       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-layout-text-window-reverse"></i><span>장소</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a th:href="@{/installplace}">
-              <i class="bi bi-circle"></i><span>설치 장소</span>
-            </a>
-          </li>
-          <li>
-            <a th:href="@{/place/map}">
-              <i class="bi bi-circle"></i><span>지역별 자원 설치 현황</span>
-            </a>
-          </li>
-        </ul>
-      </li>End Tables Nav
 
 
-    </ul>
+				<li class="nav-item"><a class="nav-link collapsed"
+					data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+						<i class="bi bi-layout-text-window-reverse"></i><span>장소</span><i
+						class="bi bi-chevron-down ms-auto"></i>
+				</a>
+					<ul id="tables-nav" class="nav-content collapse "
+						data-bs-parent="#sidebar-nav">
+						<li><a th:href="@{/installplace}"> <i
+								class="bi bi-circle"></i><span>설치 장소</span>
+						</a></li>
+						<li><a th:href="@{/place/map}"> <i class="bi bi-circle"></i><span>지역별
+									자원 설치 현황</span>
+						</a></li>
+					</ul></li>
+				<!-- End Tables Nav -->
 
-  </aside><!-- End Sidebar-->
-</div>
+				<li class="nav-item"><a class="nav-link collapsed"
+					data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+						<i class="bi bi-bar-chart"></i><span>IP</span><i
+						class="bi bi-chevron-down ms-auto"></i>
+				</a>
+					<ul id="charts-nav" class="nav-content collapse "
+						data-bs-parent="#sidebar-nav">
+						<li><a th:href="@{/ip}"> <i class="bi bi-circle"></i><span>IP
+									관리</span>
+						</a></li>
+					</ul></li>
+			</ul>
 
-  <!-- Vendor JS Files -->
-  <script th:src="@{/assets/vendor/apexcharts/apexcharts.min.js}"></script>
-  <script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-  <script th:src="@{/assets/vendor/chart.js/chart.umd.js}"></script>
-  <script th:src="@{/assets/vendor/echarts/echarts.min.js}"></script>
-  <script th:src="@{/assets/vendor/quill/quill.min.js}"></script>
-  <script th:src="@{/assets/vendor/simple-datatables/simple-datatables.js}"></script>
-  <script th:src="@{/assets/vendor/tinymce/tinymce.min.js}"></script>
-  <script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
+		</aside>
+		<!-- End Sidebar-->
+	</div>
+	<script type="text/javascript">
+const thHrefLinks = document.querySelectorAll('a[th\\:href]');
 
+thHrefLinks.forEach(link => {
+  link.addEventListener('click', function(event) {
+    // 이전에 선택된 모든 링크의 클래스를 제거
+    thHrefLinks.forEach(otherLink => {
+      otherLink.classList.remove('active');
+      otherLink.classList.add('collapsed');
+    });
+
+    // 선택된 링크에 클래스를 추가
+    link.classList.remove('collapsed');
+    link.classList.add('active');
+  });
+});
+
+
+</script>
+	<!-- Vendor JS Files -->
+	<script th:src="@{/assets/vendor/apexcharts/apexcharts.min.js}"></script>
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/assets/vendor/chart.js/chart.umd.js}"></script>
+	<script th:src="@{/assets/vendor/echarts/echarts.min.js}"></script>
+	<script th:src="@{/assets/vendor/quill/quill.min.js}"></script>
+	<script
+		th:src="@{/assets/vendor/simple-datatables/simple-datatables.js}"></script>
+	<script th:src="@{/assets/vendor/tinymce/tinymce.min.js}"></script>
+	<script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
 </body>
 </html>
