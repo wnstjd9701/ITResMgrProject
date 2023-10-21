@@ -7,7 +7,6 @@ h1{
 
 .search-container {
 	text-align: left;
-	margin-top:-20px;
 }
 
 .place {
@@ -178,7 +177,6 @@ h1{
 	border-radius: 3px; /* 둥근 모서리 */
 	width: 267px;
 	height: 40px;
-	margin-top: 20px;
 	margin-bottom: 20px;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
 }
@@ -206,7 +204,6 @@ h1{
 .installplace-table{
 	width:100%;
 	table-layout:fixed;
-	
 }
 
 .installplace-table tr th{
@@ -231,7 +228,7 @@ h1{
 }
 
 .address-span{
-	font-size: 15px; 
+	font-size: 14px; 
 	font-weight: bold;  
 	 display: inline-block;
 /* 	 color:white;

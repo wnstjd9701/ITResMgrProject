@@ -28,6 +28,13 @@
 	margin-right: 5px;
 }
 
+#searchUseYN {
+	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
 .search-useYN-select {
 	margin-right: 10px;
 }
@@ -66,7 +73,7 @@
 }
 
 .additem-table tbody tr:hover td {
-    background-color: #ECECEC; /* 호버 시 배경색 변경 */
+	background-color: #ECECEC; /* 호버 시 배경색 변경 */
 }
 
 .col-checkbox {
