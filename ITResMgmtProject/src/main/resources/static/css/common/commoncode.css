@@ -17,7 +17,7 @@
 /* 스크롤 가능한 영역의 스타일 */
 .container {
 	 background-color: rgba(255, 255, 255, 0.5);
-	height: 700px;
+	height: 770px;
 }
 
 .commoncode-container {
@@ -25,6 +25,8 @@
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	margin-right:20px;
+	width:50%;
 }
 
 .commoncodedetail-container {
@@ -32,6 +34,7 @@
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	width:50%;
 }
 
 .common-search {
@@ -103,14 +106,14 @@
 }
 
 .commoncode-table-container {
-	max-height: 500px; /* 원하는 높이로 조절 */
+	max-height: 600px; /* 원하는 높이로 조절 */
 	overflow-y: auto; /* 세로 스크롤 표시 */
 }
 
 /*테이블 스타일 */
 .commoncode-table {
 	width: 100%;
-	margin: 5px 0;
+	/* margin: 5px 0; */
 	border-collapse: collapse;
 	text-align: center;
 }
@@ -146,13 +149,13 @@
 
 
 .commoncodedetail-table-container{
-	max-height: 500px; /* 원하는 높이로 조절 */
+	max-height: 600px; /* 원하는 높이로 조절 */
 	overflow-y: auto; /* 세로 스크롤 표시 */
 }
 
 .commoncodedetail-table{
 	width: 100%;
-	margin: 5px 0;
+	/* margin: 5px 0; */
 	border-collapse: collapse;
 	text-align: center;
 }
@@ -184,6 +187,7 @@
 .common-btn-container {
 	margin-left: auto;
 	text-align: right;
+	margin-top:-35px;
 }
 
 .row-btn {

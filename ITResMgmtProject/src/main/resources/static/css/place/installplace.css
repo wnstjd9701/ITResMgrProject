@@ -1,22 +1,8 @@
-.containers {
-/* 	margin-left: 250px; */
-	font-size: 12px;
-}
 h1{
 	font-size: 24px;
     margin-bottom: 0;
     font-weight: 600;
     color: #012970;
-}
-.page-title-container {
-	margin: 80px 0 0 0;
-	padding: 20px 0 10px 0;
-	text-align: left;
-}
-
-.place-name-text {
-	margin: 15px 5px 15px 0;
-	padding: 2px 5px 2px 5px;
 }
 
 .search-container {
@@ -26,20 +12,23 @@ h1{
 .place {
 	text-align: center;
 	height: 110vh;
-	width: 75vw;
+	width:100%;
+	/* width: 75vw; */
 	/* margin-left: 10em; */
 }
 
 .place-list-table-container {
-	font-size: 12px;
+	/* font-size: 12px; */
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	background-color: rgba(255, 255, 255, 0.5);
 }
 
 .address-container, .resinfo-container {
 	margin-top: 20px; /* 주소 입력창과의 간격 조정 */
+	background-color: rgba(255, 255, 255, 0.5);
 }
 
 .address-container, .place-list-container {
@@ -106,7 +95,7 @@ h1{
 	cursor: pointer;
 	font-size: 14px;
 	transition: background-color 0.3s ease-in-out;
-}
+} 
 
 .find-postcode-btn:hover {
 	background-color: #0056b3;
@@ -139,7 +128,7 @@ h1{
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
-	font-size: 1em;
+	font-size: 14px;
 }
 
 #zip-code {
@@ -155,13 +144,6 @@ h1{
 	border-radius: 5px;
 }
 
-.table {
-	font-size: 12px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-}
-
 .fixed-header {
 	position: sticky;
 	top: 0;
@@ -175,15 +157,82 @@ h1{
 	height: 60%;
 }
 
-input[type="button"] {
-	padding: 2px 2px;
-	background-color: #007BFF;
-	color: #fff;
-	border: none;
-	border-radius: 5px;
-	font-size: 12px;
-	cursor: pointer;
-}
 .paging-nav{
 	text-align:center;
+}
+
+.btn {
+	float: right;
+	margin-left: 10px;
+}
+
+.install-searchBar{
+	display: flex;
+	align-items: center; /* 수직 가운데 정렬 */
+	flex-direction: row;
+	white-space: nowrap;
+	background-color: #7289AB; /* 배경 색상 */
+	padding: 10px; /* 내부 여백 */
+	border: 1px solid #ccc; /* 테두리 스타일 및 색상 */
+	border-radius: 3px; /* 둥근 모서리 */
+	width: 267px;
+	height: 40px;
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
+}
+
+.search-name{
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	font-size: 14px;
+	color: white;
+	margin-right: 5px;
+}
+
+.place-name-text {
+	padding: 3px;
+	border: 1px solid #ccc; 
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+.place-name-text::placeholder{
+	text-align: center;
+}
+
+.installplace-table{
+	width:100%;
+	table-layout:fixed;
+}
+
+.installplace-table tr th{
+	padding: 10px;
+	background-color: #7289AB;
+	color: white;
+	background-color: #7289AB;
+	text-align: center;
+}
+
+.installplace-table tr td {
+	padding: 10px;
+	background-color: #FCFCFC;
+}
+
+.installplace-table tr {
+	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
+}
+
+.installplace-table tbody tr:hover td {
+    background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
+.address-span{
+	font-size: 14px; 
+	font-weight: bold;  
+	 display: inline-block;
+/* 	 color:white;
+	 background-color: #7289AB;
+	 padding:3px; */
+	
 }
