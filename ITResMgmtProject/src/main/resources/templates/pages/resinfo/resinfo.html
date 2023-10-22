@@ -20,46 +20,38 @@
       </nav>
       </div>
 	<div class="search-bar">
-		    <span>대 분 류
-		    <select id="topUpperResClassName" name="topUpperResClassName">
-		        <!-- "전체" 옵션 추가 -->
-		        <option value=""></option>
-		        <!-- 다른 대분류 옵션들을 Thymeleaf로 반복해서 추가 -->
-		        <option th:each="search:${search}" th:if="${search.level}==1" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
-		    </select>
-		    </span>
-		
-		    <span>중 분 류
-		    <select id="upperResClassName" name="upperResClassName">
-		        <!-- 중분류 옵션들을 Thymeleaf로 반복해서 추가 -->
-		        <option value="" ></option>
-		        <option th:each="search:${search}" th:if="${search.level}==2" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
-		    </select>
-		    </span>
-		
-		    <span>소 분 류
-		    <select id="resClassName" name="resClassName">
-		        <!-- 소분류 옵션들을 Thymeleaf로 반복해서 추가 -->
-		        <option value="" ></option>
-		        <option th:each="search:${search}" th:if="${search.level}==3" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
-		    </select>
-		    </span>
-		<span>자원명
+	    <span>대 분 류</span>
+	    <select id="topUpperResClassName" name="topUpperResClassName">
+	        <!-- "전체" 옵션 추가 -->
+	        <option value=""></option>
+	        <!-- 다른 대분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+	        <option th:each="search:${search}" th:if="${search.level}==1" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+	    </select>
+	
+	    <span>중 분 류</span>
+	    <select id="upperResClassName" name="upperResClassName">
+	        <!-- 중분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+	        <option value="" ></option>
+	        <option th:each="search:${search}" th:if="${search.level}==2" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+	    </select>
+	
+	    <span>소 분 류</span>
+	    <select id="resClassName" name="resClassName">
+	        <!-- 소분류 옵션들을 Thymeleaf로 반복해서 추가 -->
+	        <option value="" ></option>
+	        <option th:each="search:${search}" th:if="${search.level}==3" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
+	    </select>
+		<span>자원명</span>
 			<input type="text" name="resName"></input>
-		</span>
-		<span>설치장소명
+		<span>설치장소명</span>
 			<input type="text" name="installPlaceName"></input>
-		</span>
-		<span>제조회사명
+		<span>제조회사명</span>
 			<input type="text" name="manufactureCompanyName"></input>
-		</span>
-		<span>관리ID
+		<span>관리ID</span>
 			<input type="text" name="mgmtId"></input>
-		</span>
-		<span>모니터링 여부
+		<span>모니터링 여부</span>
 			<label> <input type="radio" name="monitoringYn" value="Y" checked="checked"/> 모니터링 자원 </label>		
 			<label> <input type="radio"name="monitoringYn" value="A" /> 전체 </label> 
-		</span> 
 	</div>
 	<!-- 검색창 끝 -->
 	
@@ -221,10 +213,8 @@
 		<!-- 매핑된 부가정보 및 ip목록 -->
 		<div class="">
 			<ul class="nav nav-tabs">
-				<li class="nav-item"><a class="nav-link" href="#"
-					onclick="showTable('additionalInfo')">부가정보</a></li>
-				<li class="nav-item"><a class="nav-link" href="#"
-					onclick="showTable('ipList')">IP 목록</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" id="additionalInfoTab" onclick="showTable('additionalInfo')">부가정보</a></li>
+				<li class="nav-item"><a class="nav-link" href="#" id="ipListTab" onclick="showTable('ipList')">IP 목록</a></li>
 			</ul>
 
 			<div class="addTable">
@@ -240,10 +230,16 @@
 				</table>
 
 				<table id="ipListTable" class="table table-hover">
-					<tbody>
+					<thead>
 						<tr>
-							<td>Content for IP 목록 table</td>
+							<th>✔️</th>
+							<th>ip</th>
+							<th>ipType</th>
+							<th style="width:5.5%;"><button id="search-ip-list-btn" style="float: right;">추가</button></th>
+							<th style="width:5.5%;"><button style="float: right;">삭제</button></th>
 						</tr>
+					</thead>
+					<tbody>
 					</tbody>
 				</table>
 			</div>
@@ -357,7 +353,44 @@
 			</div>
 		</div>
 		<!-- 설치장소 리스트 선택 모달 끝 -->
-	
+		
+		<!-- IP 리스트 선택 모달창 -->
+	 	<div class="modal fade" id="ip-list-choose-modal" tabindex="-1"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="ipList">IP List</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+					</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<table class="table" id="ip-list-table">
+									<thead>
+										<tr>
+											<th>선택</th>
+											<th>IP</th>
+											<th>IP TYPE</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+										</tr>	
+									</tbody>
+								</table>
+								<ul id="pagination2"></ul>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">취소</button>
+									<button type="button" id="choose-ip-list-btn">확인</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 설치장소 리스트 선택 모달 끝 -->
+		
 <script type="text/javascript" th:src="@{/js/resinfo/resinfo.js}"></script>
   <!-- Template Main JS File -->
 <script th:src="@{/assets/js/main.js}"></script>

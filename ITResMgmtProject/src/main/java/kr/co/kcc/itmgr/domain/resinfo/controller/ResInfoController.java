@@ -1,6 +1,5 @@
 package kr.co.kcc.itmgr.domain.resinfo.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
+import kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo;
 import kr.co.kcc.itmgr.domain.resclass.controller.ResClassController;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
-import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 import kr.co.kcc.itmgr.domain.resinfo.service.IResInfoService;
 import lombok.RequiredArgsConstructor;
 
@@ -147,19 +147,24 @@ public class ResInfoController {
 	@PostMapping("/resinfo/update")
 	@ResponseBody
 	public void updateResInfo(@RequestBody ResInfo resInfo) {
-		System.out.println(resInfo.toString());
 		try {
 			resInfoService.updateResInfo(resInfo);
-			String resSerialId = resInfo.getResSerialId();
-			int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
 			try {
-				if(count >1) {
-					resInfoService.deleteAddItemValueInResInfo(resSerialId);
-					resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
-				}else{
-					resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+				resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
+				String resSerialId = resInfo.getResSerialId();
+				int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
+				try {
+					if(count >1) {
+						resInfoService.deleteAddItemValueInResInfo(resSerialId);
+						resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+					}else{
+						resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+					}
+				}catch(Exception e){
+					e.getMessage();
+					System.out.println("예외가 발생했습니다: " + e.toString());
 				}
-			}catch(Exception e){
+			}catch(Exception e) {
 				e.getMessage();
 				System.out.println("예외가 발생했습니다: " + e.toString());
 			}
@@ -168,12 +173,51 @@ public class ResInfoController {
 		}
 	}
 	
-
+	
+	@GetMapping("/resinfo/iplist")
+	@ResponseBody
+	public Map<String, Object> selectAllIpInfoList(int page){
+		Map<String, Object> ipListMap = new HashMap<String, Object>();
+		List<IpInfo> selectAllIpInfoList =  resInfoService.selectAllIpInfoList(page);
+		int ipListCount = resInfoService.CountOfIpList();
+		int totalPage=0;
+		if(ipListCount>0) {
+			totalPage=(int)Math.ceil(ipListCount/10.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
+		int nowPageBlock = (int)Math.ceil(page/5.0);
+		int startPage = (nowPageBlock-1)*10+1;
+		int endPage=0;
+		if(totalPage > nowPageBlock* 10) {
+			endPage = nowPageBlock*10;
+		}else {
+			endPage = totalPage;
+		}
+		Map<String,Object> page2 = new HashMap<String, Object>();
+		page2.put("totalPageCount", totalPage);
+		page2.put("nowPage", page);
+		page2.put("totalPageBlock", totalPageBlock);
+		page2.put("nowPageCount", nowPageBlock);
+		page2.put("startPage", startPage);
+		page2.put("endPage", endPage);
+		
+		ipListMap.put("selectAllIpInfoList",selectAllIpInfoList);
+		ipListMap.put("page", page2);
+		return ipListMap;
+	}
+	
 	@GetMapping("/resinfo/additem")
 	@ResponseBody
 	public List<ResInfo> selectMappingAddItem(@RequestParam("resClassId") String resClassId){
 		List<ResInfo> selectMappingAddItem = resInfoService.selectMappingAddItem(resClassId);
 		return selectMappingAddItem;
+	}
+	
+	@GetMapping("/resinfo/ip")
+	@ResponseBody
+	public List<ResInfo> selectIpInResInfo(@RequestParam("resSerialId") String resSerialId){
+		List<ResInfo> selectIpInResInfo = resInfoService.selectIpInResInfo(resSerialId);
+		return selectIpInResInfo;
 	}
 	
 	@GetMapping("/resinfo/installplace")

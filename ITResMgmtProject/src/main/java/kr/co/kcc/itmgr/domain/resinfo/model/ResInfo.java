@@ -45,8 +45,15 @@ public class ResInfo {
 	
 	private String addItemSn;
 	private String addItemName;
-	
 	private String resDetailValue;
+	
+	private String ip;
+	private int ipSn;
+	private String detailCodeName;
+	private String ipTypeCode;
+	
+	private List<Integer> ipSnList;
+	private List<String> ipTypeCodeList;
 	
 	private List<String> resSerialIdList;
 	private List<String> addItemSnList;

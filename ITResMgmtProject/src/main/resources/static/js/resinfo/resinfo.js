@@ -33,6 +33,33 @@ function paging(page) {
         }
     });
 }
+	// 모달창에서 table별 클릭이동
+	function showTable(tableName) {
+	    // Hide all tables
+	    $('.addTable table').hide();
+	
+	    // Show the selected table based on tableName
+	    $('#' + tableName + 'Table').show();
+
+  		// 모든 탭의 배경색 초기화
+	    $('.nav-link').css('background-color', '');
+	
+	    // 선택한 탭 배경색 변경
+	    $('#' + tableName + 'Tab').css('background-color', '#7289AB');
+
+	    // 모든 탭의 글자 색상 초기화
+	    $('.nav-link').css('color', 'gray');
+	
+	    // 선택한 탭 글자 색상 변경
+	    $('#' + tableName + 'Tab').css('color', 'white');
+	    
+	    // Remove 'active' class from all nav links
+	    $('.nav-link').removeClass('active');
+	
+	    $('a.nav-link').filter(function() {
+	        return $(this).text().trim() === tableName;
+	    }).addClass('active');
+	}
 $(document).ready(function () {
 	const checkedAddItems = [];
     $('#newResInfoBtn').on('click', function () {
@@ -113,7 +140,6 @@ $(document).ready(function () {
             });
         });
     });
-
     $('#resInfoTable').on('click', '#resinfo-detail-btn', function () {
         var resName = $(this).closest('tr').find('td:nth-child(4)').text();
 		var resSerialId = $(this).closest('tr').find('input[name="resSerialId"]').val();
@@ -173,9 +199,32 @@ $(document).ready(function () {
                 console.log('에러:', error);
             }
         });
+		
+		$.ajax({
+		    type: 'GET',
+		    url: '/resinfo/ip',
+		    data: {
+		        "resSerialId": resSerialId
+		    },
+		    success: function (response) {
+		        for (var i = 0; i < response.length; i++) {
+		            var addTableRow = "<tr>" +
+		                "<td><input type='checkbox' name='ipSn' value='" + response[i].ipSn + "'></td>" +
+		                "<td><input type='text' readonly='readonly' name='ip' value='" + response[i].ip + "'></td>" +
+		                "<td><input type='text' readonly='readonly' name='detailCodeName' value='" + response[i].detailCodeName + "'></td>" +
+		                "<input type='hidden' readonly='readonly' name='ipTypeCode' value='" + response[i].ipTypeCode + "'>" +
+		                "</tr>";
+		            $('#ipListTable tbody').append(addTableRow); // IP 주소 행을 테이블에 추가합니다.
+		        }
+		        showTable('ipList');
+		    },
+		    error: function (error) {
+		        console.log('에러:', error);
+		    }
+		});
+
 
 		$('#res-info-save-btn').on('click', function () {
-			var resInfoaddItemList = [];
 			var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
             var mgmtId = $('#resinfo-detail-modal input[name=mgmtId]').val();
             var mgmtDeptName = $('#resinfo-detail-modal input[name="mgmtDeptName"]').val();
@@ -197,16 +246,26 @@ $(document).ready(function () {
             var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
 			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
 			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
-			
+			var ipSn = $('#ipListTable input[name="ipSn"]');
+			var ipTypeCode = $('#ipListTable input[name="ipTypeCode"]');
+			var resDetailValue = $('#additionalInfoTable input[name="resDetailValue"]').val();
 			var resSerialList=[];
 			var addItemSnList = [];
 			var resDetailValueList = [];
 			for (var i = 0; i < addItemSnElements.length; i++) {
-				resSerialList.push(resSerialId)
+				resSerialList.push(resSerialId);
 			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
 				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
 			}
-			
+			var ipSnList=[];
+			var ipTypeCodeList=[];
+			var resSerialList2=[];
+			for(var i=0; i < ipSn.length; i++){
+				resSerialList2.push(resSerialId);
+				ipSnList.push(ipSn.eq(i).val());
+				ipTypeCodeList.push(ipTypeCode.eq(i).val());
+				console.log(ipTypeCodeList);
+			}
 			 $.ajax({
                 type: 'POST',
                 url: '/resinfo/update',
@@ -230,9 +289,13 @@ $(document).ready(function () {
 				    'monitoringYn': monitoringYn,
 				    'purchaseCompanyName': purchaseCompanyName,
 				    'addInfo': addInfo,
+					'resDetailValue' : resDetailValue,
 					'resSerialIdList' : resSerialList,
 					'addItemSnList' : addItemSnList,
-					'resDetailValueList' : resDetailValueList
+					'resDetailValueList' : resDetailValueList,
+					'resSerialIdList' : resSerialList2,
+					'ipSnList' : ipSnList,
+					'ipTypeCodeList' : ipTypeCodeList
 				}),
                 contentType: "application/json",
                 success: function (response) {
@@ -344,12 +407,84 @@ $(document).ready(function () {
         $('#resClassName').val('');
     });
 
+	//IP리스트 찾기 버튼 클릭시
+	$('#search-ip-list-btn').on('click',function(){
+		$('#resinfo-detail-modal').modal('hide');
+	    $('#ip-list-choose-modal').modal('show');
+		pagingIpList(1)
+	});
+	
+	// 모달이 열릴 때
+	$('#ip-list-choose-modal').on('show.bs.modal', function () {
+	    // 이전에 선택한 값을 초기화
+	    $('table#ip-list-table input[type=checkbox]').prop('checked', false);
+	});
+	
+	// 모달이 닫힐 때
+	$('#ip-list-choose-modal').on('hidden.bs.modal', function () {
+	    // 이전에 선택한 값을 초기화
+	    $('table#ip-list-table input[type=checkbox]').prop('checked', false);
+		$('#resinfo-detail-modal').modal('show');
+	});
+	
+	// ip 저장 눌렀을 때 기능
+	$('#choose-ip-list-btn').click(function () {
+		var flag=true;
+	    var checkedIpList = $('table#ip-list-table input[type=checkbox]:checked');
+	    // 체크된 항목이 1개인 경우에만 처리
+	    if (checkedIpList.length === 0) {
+	        alert('ip를 선택해주세요.');
+	    } else {
+	        // 선택한 IP 목록을 담을 배열
+	        var selectedIPs = [];
+	
+	        // 선택한 IP를 배열에 추가
+			var trCount = $('#ipListTable tbody tr');
+	        checkedIpList.each(function () {
+	            var tr = $(this).closest('tr');
+	            var td = tr.children();
+	            var ipSn = td.eq(0).find('input[name=ipSn]').val();
+	            var ip = td.eq(1).text();
+	            var detailCodeName = td.eq(2).text();
+				var ipTypeCode = tr.find('input[name=ipTypeCode]').val();
+				console.log(ipTypeCode);
+	            selectedIPs.push({ ipSn: ipSn, ip: ip, detailCodeName: detailCodeName ,ipTypeCode : ipTypeCode});
+				trCount.each(function(){
+					var td=$(this).children();
+					var ip2=td.eq(0).children().eq(0).val()
+					if(ipSn==ip2){
+						alert("기존에 등록된 IP주소는 등록할 수 없습니다")
+						flag=false;
+						return;
+					}
+				});
+	        });
+				if(!flag){
+					$('table#ip-list-table input[type=checkbox]').prop('checked', false);
+					return;
+				}
+		 		// 선택한 IP 목록을 테이블에 추가
+		        for (var i = 0; i < selectedIPs.length; i++) {
+		            var addTableRow = "<tr>" +
+		                "<td><input type='checkbox' name='ipSn' value='" + selectedIPs[i].ipSn + "'></td>" +
+		                "<td><input type='text' readonly='readonly' name='ip' value='" + selectedIPs[i].ip + "'></td>" +
+		                "<td><input type='text' readonly='readonly' name='detailCodeName' value='" + selectedIPs[i].detailCodeName + "'></td>" +
+						"<input type='hidden' readonly='readonly' name='ipTypeCode' value='" + selectedIPs[i].ipTypeCode + "'>" +
+		                "</tr>";
+		            $('#ipListTable tbody').append(addTableRow); // IP 주소 행을 테이블에 추가합니다.
+		        }
+		        $('#ip-list-choose-modal').modal('hide');
+		        $('#resinfo-detail-modal').modal('show');
+	    }
+	});
+
 	// 설치장소 찾기 버튼 클릭 시
 	$('#installPlaceSearchBtn').on('click', function() {
 		$('#resinfo-detail-modal').modal('hide');
 	    $('#install-place-choose-modal').modal('show');
 		paging(1)
 	});
+	
 	
 	// 체크박스 클릭 시
 	$('table#install-place-list-table input[type=checkbox]').on('click', function () {
@@ -379,7 +514,6 @@ $(document).ready(function () {
 	        var td = tr.children();
 	        var installPlaceSn = td.eq(0).children().eq(0).val();
 	        var installPlaceName = td.eq(1).text();
-	        console.log(installPlaceSn + ',' + installPlaceName);
 	        $('input[id=install-place-input]').val(installPlaceName);
 	        $('input[name=installPlaceSn]').val(installPlaceSn);
 	
@@ -450,21 +584,7 @@ $(document).ready(function () {
             }
         });
     });
-	// 모달창에서 table별 클릭이동
-	function showTable(tableName) {
-	    // Hide all tables
-	    $('.addTable table').hide();
-	
-	    // Show the selected table based on tableName
-	    $('#' + tableName + 'Table').show();
-	    
-	    // Remove 'active' class from all nav links
-	    $('.nav-link').removeClass('active');
-	
-	    $('a.nav-link').filter(function() {
-	        return $(this).text().trim() === tableName;
-	    }).addClass('active');
-	}
+
 	
 	$('#res-class-search-btn').on('click',function(){
 		$('#resinfo-detail-modal').modal('hide');
@@ -597,11 +717,37 @@ $(document).ready(function () {
 	        }
 	    });
 	}
+	function pagingIpList(page){
+		$.ajax({
+	        type: 'GET',
+	        url: '/resinfo/iplist',
+	        contentType: "application/json",
+	        data: {
+	            'page': page
+	        },
+	        success: function (response) {
+	            var pagingHtml = pagingLine(response);
+				ipListTable(response.selectAllIpInfoList);
+	            $('ul#pagination2').html(pagingHtml);  // 수정된 선택자
+	        },
+	        error: function (error) {
+	            // 요청이 실패한 경우 처리
+	            console.log('에러:', error);
+	        }
+	    });
+	}
 	//페이지 누르면 이동하는 기능
 	$("#pagination").on("click", ".page-btn", function() {
 	    const page = $(this).val();
 	    paging(page);
 	});
+	
+	//페이지 누르면 이동하는 기능
+	$("#pagination2").on("click", ".page-btn", function() {
+	    const page = $(this).val();
+		pagingIpList(page);
+	});
+	
 	
 	//부가항목 리스트 모달 페이징처리
 	function pagingLine(data) {
@@ -678,6 +824,23 @@ function updateTable(installPlace) {
             "<td>" + installPlace[i].installPlacePostAddress + "</td>" +
             "</tr>";
         $('table#install-place-list-table tbody').append(addTableRow);
+	}
+}
+
+function ipListTable(ipList){
+	var tbody = $('#ip-list-table tbody');
+	tbody.empty();  // tbody 내용을 초기화
+	for (var i = 0; i < ipList.length; i++) {
+        var ipSn = ipList[i].ipSn;
+		var ipTypeCode = ipList[i].ipTypeCode;
+		console.log(ipTypeCode)
+        var addTableRow = "<tr>" +
+            "<td><input type='checkbox' name='ipSn' value='" + ipSn + "'"+ "></td>" +
+            "<td>" + ipList[i].ip + "</td>" +
+            "<td>" + ipList[i].detailCodeName + "</td>" +
+			"<input type='hidden' readonly='readonly' name='ipTypeCode' value='" + ipTypeCode + "'>" +
+            "</tr>";
+        $('table#ip-list-table tbody').append(addTableRow);
 	}
 }
 });

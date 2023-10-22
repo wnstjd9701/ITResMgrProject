@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
+import kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
-import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 
 @Repository
 @Mapper
@@ -27,6 +27,7 @@ public interface IResInfoRepository {
 	
 	void insertResInfo(ResInfo resInfo); //자원입력
 	void updateResInfo(ResInfo resInfo); //자원수정
+	void updateAddItemValueInResInfo(ResInfo resInfo);
 	
 	List<CommonCodeDetail> selectResStatusCode(String codeGroupId); //자원상태코드 리스트 불러오기
 	List<InstallPlace> selectResInstallPlace(@Param("start")int start, @Param("end")int end); //자원설치장소 리스트 불러오기
@@ -39,7 +40,11 @@ public interface IResInfoRepository {
 	void deleteAddItemValueInResInfo(String resSerialId);
 	List<ResInfo> selectAddItemValueInResInfo(String resSerialId);
 	
+	List<ResInfo> selectIpInResInfo(String resSerialId);
+	void insertIpInResInfo(@Param("resSerialId") String resSerialId,@Param("ipSn") int ipSn,@Param("ipTypeCode")String ipTypeCode);
+	List<IpInfo> selectAllIpInfoList(@Param("start")int start , @Param("end")int end);
+	
 	int CountOfAddItemValueInResInfo(String resSerialId);
-
+	int CountOfIpList();
 	
 }

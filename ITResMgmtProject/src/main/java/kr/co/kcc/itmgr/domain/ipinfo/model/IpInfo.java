@@ -36,4 +36,14 @@ public class IpInfo {
 	private String detailCodeName;
 	
 	private int rn;
+	
+	//resinfo에서 페이징
+	private int totalPageBlock;
+	private int totalPage;
+	private int page;
+	private int nowPageBlock;
+	private int startPage;
+	private int endPage;
+	
+	private String ipTypeCode;
 }

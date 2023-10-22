@@ -192,6 +192,15 @@
 		]]>
 	</update>
 	
+	<update id="updateAddItemValueInResInfo" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			UPDATE RESINFODETAIL
+			SET
+				res_detail_value = #{resDetailValue}
+			WHERE res_serial_id = #{resSerialId}
+		]]>
+	</update>
+	
 	<select id="selectResStatusCode" parameterType="String" resultType="kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail">
 		<![CDATA[
 			SELECT 
@@ -220,38 +229,37 @@
 	</select>
 	
 	
-		<select id="selectAllResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
-		<![CDATA[
-			SELECT
-			    c.res_class_name AS "resClassName",
-			    LISTAGG(r.res_class_name, ',') WITHIN GROUP (ORDER BY r.res_class_name DESC) AS "resClassName2",
-			    TO_CHAR(r.lv) AS "level",
-			    (SELECT aa.res_class_name FROM resclass aa
-                    WHERE aa.res_class_id=c.upper_res_class_id) AS "upperResClassName",
-			    r.res_class_id AS "resClassId"
-			FROM (
-			    SELECT
-			        upper_res_class_id,
-			        res_class_name,
-			        res_class_id,
-			        LEVEL AS lv
-			    FROM
-			        RESCLASS
-			    WHERE
-			        use_yn = 'Y'
-			    START WITH
-			        upper_res_class_id IS NULL
-			    CONNECT BY
-			        PRIOR res_class_id = upper_res_class_id
-			) r
-			JOIN
-			    RESCLASS c ON r.upper_res_class_id = c.res_class_id
-			GROUP BY
-			    r.lv, c.res_class_name, c.upper_res_class_id, r.res_class_id
-			ORDER BY
-			    r.lv, c.res_class_name DESC
-		]]>
-
+	<select id="selectAllResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass" >
+	<![CDATA[
+		SELECT
+		    c.res_class_name AS "resClassName",
+		    LISTAGG(r.res_class_name, ',') WITHIN GROUP (ORDER BY r.res_class_name DESC) AS "resClassName2",
+		    TO_CHAR(r.lv) AS "level",
+		    (SELECT aa.res_class_name FROM resclass aa
+                   WHERE aa.res_class_id=c.upper_res_class_id) AS "upperResClassName",
+		    r.res_class_id AS "resClassId"
+		FROM (
+		    SELECT
+		        upper_res_class_id,
+		        res_class_name,
+		        res_class_id,
+		        LEVEL AS lv
+		    FROM
+		        RESCLASS
+		    WHERE
+		        use_yn = 'Y'
+		    START WITH
+		        upper_res_class_id IS NULL
+		    CONNECT BY
+		        PRIOR res_class_id = upper_res_class_id
+		) r
+		JOIN
+		    RESCLASS c ON r.upper_res_class_id = c.res_class_id
+		GROUP BY
+		    r.lv, c.res_class_name, c.upper_res_class_id, r.res_class_id
+		ORDER BY
+		    r.lv, c.res_class_name DESC
+	]]>
 	</select>
 	
 	<select id="selectResInfoDetail" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
@@ -301,25 +309,73 @@
 		]]>
 	</select>
 	
-		<insert id="insertAddItemValueInResInfo" parameterType="java.util.HashMap">
-		    INSERT INTO resinfodetail(
-		        res_serial_id, 
-		        add_item_sn, 
-		        res_detail_value, 
-		        create_date, 
-		        creater_id
-		    ) values (#{resSerialId}, #{addItemSn}, #{resDetailValue}, SYSDATE, 'wh467925')
-		    <!-- foreach index="i" collection="addItemSnList" separator="UNION ALL">
-		        SELECT
-		            #{resSerialIdList[i]},
-		            #{addItemSnList[i]},
-		            #{resDetailValueList[i]},
-		            SYSDATE,
-		            'wh467925'
-		        FROM DUAL
-		    </foreach-->
-		</insert>
+	<insert id="insertAddItemValueInResInfo" parameterType="java.util.HashMap">
+	    INSERT INTO resinfodetail(
+	        res_serial_id, 
+	        add_item_sn, 
+	        res_detail_value, 
+	        create_date, 
+	        creater_id
+	    ) values (#{resSerialId}, #{addItemSn}, #{resDetailValue}, SYSDATE, 'wh467925')
+	</insert>
+	
+	<select id="selectAllIpInfoList" resultType="kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo">
+		<![CDATA[
+			SELECT
+			    "ip",
+			    "ipSn",
+                "ipTypeCode",
+                "detailCodeName"
+		    FROM (
+		    SELECT		"ip",
+		    			"ipSn",
+                        "ipTypeCode",
+                        "detailCodeName",
+		    			ROWNUM AS rnum
+		    			FROM (
+		    				SELECT
+							    i.ip    "ip",
+							    i.ip_sn "ipSn",
+                                i.ip_type_code "ipTypeCode",
+                                c.detail_code_name "detailCodeName"
+		    				FROM ipinfo i
+                            JOIN commoncodedetail c ON c.detail_code = i.ip_type_code
+							)
+					)
+				WHERE rnum BETWEEN #{start} AND #{end}
+		]]>
+	</select>
+	
+	<select id="CountOfIpList" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(*) AS "ip"
+			FROM ipinfo
+		]]>
+	</select>
 
+	<select id="selectIpInResInfo" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT 
+				i.ip "ip",
+				m.ip_sn "ipSn",
+				m.ip_type_code "ipTypeCode",
+				c.detail_code_name "detailCodeName"
+			FROM resipmapping m 
+			JOIN commoncodedetail c ON c.detail_code = m.ip_type_code
+			JOIN ipinfo i ON i.ip_sn = m.ip_sn
+			WHERE m.res_serial_id = #{resSerialId}
+		]]>
+	</select>
+	
+	<insert id="insertIpInResInfo" parameterType="java.util.HashMap">
+	    INSERT INTO resipmapping(
+	        res_serial_id, 
+	        ip_sn, 
+	        ip_type_code, 
+	        create_date, 
+	        creater_id
+	    ) values (#{resSerialId}, #{ipSn}, #{ipTypeCode}, SYSDATE, 'wh467925')
+	</insert>
 	
 	<delete id="deleteAddItemValueInResInfo" parameterType="String">
 			DELETE 

@@ -1,17 +1,4 @@
-/* .modal{
-    position:absolute;
-    display:none;
-    
-    background-color:white;
-    
-    justify-content: center;
-    top:0;
-    left:0;
 
-    width:100%;
-    height:100%;
-}
- */
 .installPlaceModal{
     position:absolute;
     display:none;
@@ -178,8 +165,8 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 }
 
 .nav-tabs .nav-item .nav-link.active {
-  background-color: navy;
-  color: white;
+  font-weight: bold;
+  
 }
 
 /* CSS for styling the content tables */
@@ -235,5 +222,78 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 	font-size: medium;
 }
 
+.addTable table tr th{
+	border :2px solid #7289AB;
+}
+
+.addTable table tr td {
+	table-layout: fixed;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* 텍스트 길이에 맞게 자동으로 줄 바꿈 */
+    background-color: #7289AB;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    color:white;
+}
 
 
+/* 스팬 요소 스타일 */
+.search-bar span {
+    margin-right: 10px; /* 스팬 요소 간의 간격 조정 */
+}
+
+/* 선택 상자 스타일 */
+.search-bar select {
+    margin-right: 10px; /* 선택 상자 간의 간격 조정 */
+}
+
+/* 입력 상자 스타일 */
+.search-bar input[type="text"] {
+    margin-right: 10px; /* 입력 상자 간의 간격 조정 */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* 라디오 버튼 스타일 */
+.search-bar input[type="radio"] {
+    margin-right: 5px; /* 라디오 버튼 간의 간격 조정 */
+}
+
+.search-bar span {
+    display: flex; /* SPAN 요소도 flex로 변경 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.search-bar select,
+.search-bar input[type="text"] {
+    width: 13%; /* 원하는 크기로 조절 */
+    height: 30px; /* 원하는 크기로 조절 */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.search-bar input[type="radio"]{
+	padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.search-bar label {
+    display: flex; /* 라디오 버튼 요소도 flex로 변경 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-bottom: 0px;
+    margin-right : 10px;
+    }

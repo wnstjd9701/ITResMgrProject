@@ -4,9 +4,9 @@ import java.util.List;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
+import kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
-import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 
 public interface IResInfoService {
 	List<ResInfo> selectAllResInfo(int page);
@@ -32,5 +32,10 @@ public interface IResInfoService {
 	List<ResInfo> selectAddItemValueInResInfo(String resSerialId);
 	void deleteAddItemValueInResInfo(String resSerialId);
 	
+	List<ResInfo> selectIpInResInfo(String resSerialId);
+	void insertIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList);
+	List<IpInfo> selectAllIpInfoList(int page);
+	
 	int CountOfAddItemValueInResInfo(String resSerialId);
+	int CountOfIpList();
 }

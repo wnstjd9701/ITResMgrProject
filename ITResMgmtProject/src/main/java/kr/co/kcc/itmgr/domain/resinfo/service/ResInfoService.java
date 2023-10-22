@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
+import kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
-import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -86,6 +86,7 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
+	@Transactional
 	public void updateResInfo(ResInfo resInfo) {
 		resInfoRepository.updateResInfo(resInfo);
 		
@@ -104,6 +105,30 @@ public class ResInfoService implements IResInfoService {
 	@Override
 	public int countOfInstallPlace() {
 		return resInfoRepository.countOfInstallPlace();
+	}
+
+	@Override
+	public List<ResInfo> selectIpInResInfo(String resSerialId) {
+		return resInfoRepository.selectIpInResInfo(resSerialId);
+	}
+
+	@Override
+	@Transactional
+	public void insertIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList) {
+		for(int i=0; i<resSerialIdList.size(); i++) {
+			resInfoRepository.insertIpInResInfo(resSerialIdList.get(i), ipSnList.get(i), ipTypeCodeList.get(i));
+		}
+	}
+
+	@Override
+	public List<IpInfo> selectAllIpInfoList(int page) {
+		int start = (page-1)*10+1;
+		return resInfoRepository.selectAllIpInfoList(start, start+9);
+	}
+
+	@Override
+	public int CountOfIpList() {
+		return resInfoRepository.CountOfIpList();
 	}
 	
 
