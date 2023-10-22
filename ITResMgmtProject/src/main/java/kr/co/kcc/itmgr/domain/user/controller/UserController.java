@@ -21,7 +21,7 @@ public class UserController {
 	private final IUserService userService;
 
 	@GetMapping("/signin")
-	public String userLogin() {
+	public String userLogin(Model model) {
 		return "signin";
 	}
 
@@ -35,9 +35,8 @@ public class UserController {
 			//아이디가 있는 경우
 			String userPwd = user.getEmployeePwd();
 			String userUseYN = user.getUseYN();
-			System.out.println("-----------userUseYN" +userUseYN);
 			String userStatusCode = user.getEmployeeStatusCode();
-			System.out.println("-----------userStatusCode" +userStatusCode);
+
 			if("N".equals(userUseYN)) {
 				model.addAttribute("message", "삭제된 사원은 로그인 할 수 없습니다.");
 			} else if("EMS003".equals(userStatusCode)) {

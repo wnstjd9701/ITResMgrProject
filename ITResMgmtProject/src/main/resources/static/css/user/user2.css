@@ -1,54 +1,49 @@
-.sys-name{
-    text-align: center;
-    margin-top:100px;
+.sys-name {
+	text-align: center;
+	margin-top: 100px;
 }
 
-.kcc-name{
-	margin-left:-270px;
+.kcc-name {
+	margin-left: -270px;
 	font-weight: bold;
-	font-size:20px;
+	font-size: 20px;
 }
 
-.IT-name{
-	font-size:50px;
+.IT-name {
+	font-size: 50px;
 	font-weight: bold;
-	color:#0275d8;	
-/* 	text-shadow: 1px 1px 4px black; */
-	
-	
+	color: #0275d8;
+	/* 	text-shadow: 1px 1px 4px black; */
 }
 
 .login-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid gray;
-  border-radius: 5px;
-  width:450px;
-  height:400px;
- box-shadow: 0 0 5px rgba(0, 0, 128, 0.5);
-
-
-  background-color:white;
- 
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border: 1px solid #0275d8;
+	border-radius: 5px;
+	width: 450px;
+	height: 400px;
+	box-shadow: 0 0 5px rgba(0, 0, 128, 0.5);
+	background-color: white;
 }
 
-.login-content{
-	height:400px;
+.login-content {
+	height: 400px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	margin-top:20px;
+	margin-top: 20px;
 }
-
 
 .icon-input {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-bottom : 20px;
+	margin-bottom: 20px;
+	margin-top: 5px;
 }
 
 .login-icon-wrap {
@@ -74,7 +69,7 @@
 	border-radius: 0;
 	width: 300px;
 	height: 40px;
-} 
+}
 
 #employeeId::placeholder {
 	color: gray;
@@ -88,9 +83,4 @@
 
 .btn-size {
 	width: 340px;
-	
 }
-
-
-
-/* font-family: "Open Sans", sans-serif; */
