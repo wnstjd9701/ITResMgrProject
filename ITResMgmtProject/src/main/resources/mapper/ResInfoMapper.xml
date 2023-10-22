@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository">
 
-	<select id="selectAllResInfo"  resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+	<select id="selectAllResInfo"  parameterType="java.util.Map" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
 			SELECT 
 			    "topUpperResClassName",
 			    "upperResClassName",
@@ -48,16 +48,74 @@
 			            ON urc.res_class_id = rc.upper_res_class_id
 			        LEFT OUTER JOIN resclass urc_name
 			            ON urc_name.res_class_id = urc.upper_res_class_id
+		            <where>
+					    <if test='resInfo.topUpperResClassName != null and resInfo.topUpperResClassName!="" '>
+					        AND urc_name.res_class_name = #{resInfo.topUpperResClassName} 
+					    </if>
+					    <if test='resInfo.upperResClassName != null and resInfo.upperResClassName!="" '>
+					        AND urc.res_class_name = #{resInfo.upperResClassName}
+					    </if>
+					    <if test='resInfo.resClassName != null and resInfo.resClassName!="" '>
+					        AND rc.res_class_name = #{resInfo.resClassName}
+					    </if>
+					    <if test='resInfo.resName != null and resInfo.resName!="" '>
+					        AND r.res_name LIKE '%'|| #{resInfo.resName} ||'%'
+					    </if>
+					    <if test='resInfo.installPlaceName != null and resInfo.installPlaceName!="" '>
+					        AND i.install_place_name LIKE '%'|| #{resInfo.installPlaceName} ||'%'
+					    </if>
+					    <if test='resInfo.manufactureCompanyName != null and resInfo.manufactureCompanyName!="" '>
+					        AND r.manufacture_company_name LIKE '%'|| #{resInfo.manufactureCompanyName} ||'%'
+					    </if>
+					    <if test='resInfo.mgmtId != null and resInfo.mgmtId!="" '>
+					        AND r.mgmt_id LIKE '%'|| #{resInfo.mgmtId} ||'%'
+					    </if>    
+					    <if test='resInfo.monitoringYn !=null and resInfo.monitoringYn.equals("Y")'>
+					        AND r.monitoring_yn = #{resInfo.monitoringYn}
+					    </if>
+			  		</where>
 			    )
 			)
 			WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 
-	<select id="countOfResInfo" resultType="integer">
-		<![CDATA[
+	<select id="countOfResInfo" resultType="integer" parameterType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
 			SELECT COUNT(*) AS "resName"
-			FROM resinfo
-		]]>
+			FROM resinfo r
+			LEFT OUTER JOIN installplace i
+	            ON i.install_place_sn = r.install_place_sn
+	        LEFT OUTER JOIN resclass rc
+	            ON rc.res_class_id = r.res_class_id
+	        LEFT OUTER JOIN resclass urc
+	            ON urc.res_class_id = rc.upper_res_class_id
+	        LEFT OUTER JOIN resclass urc_name
+	            ON urc_name.res_class_id = urc.upper_res_class_id
+		            <where>
+					    <if test='topUpperResClassName != null and topUpperResClassName!="" '>
+					        AND urc_name.res_class_name = #{topUpperResClassName} 
+					    </if>
+					    <if test='upperResClassName != null and upperResClassName!="" '>
+					        AND urc.res_class_name = #{upperResClassName}
+					    </if>
+					    <if test='resClassName != null and resClassName!="" '>
+					        AND rc.res_class_name = #{resClassName}
+					    </if>
+					    <if test='resName != null and resName!="" '>
+					        AND r.res_name LIKE '%'|| #{resName} ||'%'
+					    </if>
+					    <if test='installPlaceName != null and installPlaceName!="" '>
+					        AND i.install_place_name LIKE '%'|| #{installPlaceName} ||'%'
+					    </if>
+					    <if test='manufactureCompanyName != null and manufactureCompanyName!="" '>
+					        AND r.manufacture_company_name LIKE '%'|| #{manufactureCompanyName} ||'%'
+					    </if>
+					    <if test='mgmtId != null and mgmtId!="" '>
+					        AND r.mgmt_id LIKE '%'|| #{mgmtId} ||'%'
+					    </if>    
+					    <if test='monitoringYn !=null and monitoringYn.equals("Y")'>
+					        AND r.monitoring_yn = #{monitoringYn}
+					    </if>
+			  		</where>
 	</select>
 
 	<select id="searchResInfoByResClass" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">

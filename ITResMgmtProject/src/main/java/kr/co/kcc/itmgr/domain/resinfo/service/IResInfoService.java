@@ -9,8 +9,8 @@ import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
 
 public interface IResInfoService {
-	List<ResInfo> selectAllResInfo(int page);
-	int countOfResInfo();//자원갯수
+	List<ResInfo> selectAllResInfo(int page,ResInfo resInfo);
+	int countOfResInfo(ResInfo resInfo);//자원갯수
 	int countOfInstallPlace();
 	
 	List<ResInfo> searchResInfoByResClass();
