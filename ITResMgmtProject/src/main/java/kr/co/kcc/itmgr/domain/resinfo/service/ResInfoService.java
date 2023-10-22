@@ -1,6 +1,8 @@
 package kr.co.kcc.itmgr.domain.resinfo.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +12,6 @@ import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
-import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,9 +21,13 @@ public class ResInfoService implements IResInfoService {
 	private final IResInfoRepository resInfoRepository;
 	
 	@Override
-	public List<ResInfo> selectAllResInfo(int page) {
-		int start = (page-1)*10+1;
-		return resInfoRepository.selectAllResInfo(start,start+9);
+	public List<ResInfo> selectAllResInfo(int page,ResInfo resInfo) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		int start = (page-1)*5+1;
+		map.put("start", start);
+		map.put("end", start+9);
+		map.put("resInfo", resInfo);
+		return resInfoRepository.selectAllResInfo(map);
 	}
 
 	@Override
@@ -32,7 +37,11 @@ public class ResInfoService implements IResInfoService {
 
 	@Override
 	public List<ResInfo> searchResInfo(ResInfo resInfo) {
-		return resInfoRepository.searchResInfo(resInfo);
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("start", 1);
+		map.put("end", 10);
+		map.put("resInfo", resInfo);
+		return resInfoRepository.selectAllResInfo(map);
 	}
 
 	@Override
@@ -68,8 +77,8 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public int countOfResInfo() {
-		return resInfoRepository.countOfResInfo();
+	public int countOfResInfo(ResInfo resInfo) {
+		return resInfoRepository.countOfResInfo(resInfo);
 	}
 
 	@Override

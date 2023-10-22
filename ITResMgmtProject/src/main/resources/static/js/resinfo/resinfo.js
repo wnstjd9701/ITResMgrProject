@@ -1,10 +1,47 @@
+function changePageBtn(data,page){
+	var str=""
+	for(var i=data.page.startPage;i<=data.page.endPage;i++){
+		if(page==i){
+			str+='<button class="page-link page-link-val" onclick="paging('+i+')" style="font-weight:bolder;">'+i+'</button>'
+		}else{
+			str+='<button class="page-link page-link-val" onclick="paging('+i+')">'+i+'</button>'
+		}
+	}
+	$(".page-btn").html(str);
+}
 function paging(page) {
+    var topUpperResClassName = $("#topUpperResClassName option:selected").text();
+    var upperResClassName = $("#upperResClassName option:selected").text();
+    var resClassName = $("#resClassName option:selected").text();
+    var resName = $("input[name='resName']").val();
+    var installPlaceName = $("input[name='installPlaceName']").val();
+    var manufactureCompanyName = $("input[name='manufactureCompanyName']").val();
+    var mgmtId = $("input[name='mgmtId']").val();
+    // 선택된 라디오 버튼 값 가져오기 (사용 여부)
+    var monitoringYn = $("input[name='monitoringYn']:checked").val();
+
+	var totalPageCount=$("#totalPageCount").val();
+	if(totalPageCount<page){
+		alert("마지막 페이지 입니다.")
+		return;
+	}else if(page==0){
+		alert("첫번째 페이지 입니다.")
+		return;
+	}
 	
 	$.ajax({
         type: 'GET',
         url: '/resinfopagination',
         contentType: "application/json",
         data: {
+			"topUpperResClassName" : topUpperResClassName,
+            "upperResClassName" : upperResClassName,
+            "resClassName" : resClassName,
+            "resName" : resName,
+            "installPlaceName" : installPlaceName,
+            "manufactureCompanyName" : manufactureCompanyName,
+            "mgmtId" : mgmtId,
+            "monitoringYn" : monitoringYn,
             'page': page
         },
         success: function (response) {
@@ -26,6 +63,13 @@ function paging(page) {
                         "</tr>";
                 $('tbody#resInfoTable').append(resInfoRow);
             }
+			$("#nextPage").removeAttr("onclick");
+			$("#nextPage").attr("onclick","paging("+(page+1)+")");
+			
+			$("#previousPage").removeAttr("onclick");
+			$("#previousPage").attr("onclick","paging("+(page-1)+")");
+			
+			changePageBtn(response,page);
         },
         error: function (error) {
             // 요청이 실패한 경우 처리
@@ -426,23 +470,25 @@ $(document).ready(function () {
                     $('tbody#resInfoTable').append(addTableRow);
                     return;
                 }
-                // 성공적으로 요청이 완료되면 이곳에서 처리
-                for (var i = 0; i < response.length; i++) {
-                    // table 행 추가
-                    addTableRow = "<tr>" +
-                        "<td>" + response[i].topUpperResClassName + "</td>" +
-                        "<td>" + response[i].upperResClassName + "</td>" +
-                        "<td>" + response[i].resClassName + "</td>" +
-                        "<td>" + response[i].resName + "</td>" +
-                        "<td>" + response[i].installPlaceName + "</td>" +
-                        "<td>" + response[i].manufactureCompanyName + "</td>" +
-                        "<td>" + response[i].mgmtId + "</td>" +
-                        "<td>" + response[i].monitoringYn + "</td>" +
-                        "<td><button type='button' id='resinfo-detail-btn'>" + "보기" + "</td>" +
-                        "</tr>";
-
-                    $('tbody#resInfoTable').append(addTableRow);
-                }
+                $('tbody#resInfoTable').empty();
+	            // Iterate over the response data and append new rows
+	            for (var i = 0; i < response.selectAllResInfo.length; i++) {
+	                var resInfoRow = "<tr>"+
+	                        "<td>"+response.selectAllResInfo[i].topUpperResClassName+"</td>"+
+	                        "<td>"+response.selectAllResInfo[i].upperResClassName+"</td>"+
+	                        "<td>"+response.selectAllResInfo[i].resClassName+"</td>"+
+	                        "<td>"+response.selectAllResInfo[i].resName+"</td>"+
+	                        "<td>"+response.selectAllResInfo[i].installPlaceName+"</td>"+
+	                        "<td>"+response.selectAllResInfo[i].manufactureCompanyName+"</td>"+
+	                        "<td>"+response.selectAllResInfo[i].mgmtId+"</td>"+
+	                        "<td>"+response.selectAllResInfo[i].monitoringYn+"</td>"+
+	 						"<td><input type='hidden' name ='resSerialId' value='" + response.selectAllResInfo[i].resSerialId
+							+"'>" + "<button type='button' id='resinfo-detail-btn'>보기</button></td>"+
+	                        "</tr>";
+	                $('tbody#resInfoTable').append(resInfoRow);
+	            }
+				$("#totalPageCount").val(response.page.totalPageCount);
+				changePageBtn(response,1)
             },
             error: function(error) {
                 // 요청이 실패한 경우 처리
@@ -590,6 +636,7 @@ $(document).ready(function () {
 	            var pagingHtml = pagingLine(response);
 				updateTable(response.selectResInstallPlace);
 	            $('ul#pagination').html(pagingHtml);  // 수정된 선택자
+				
 	        },
 	        error: function (error) {
 	            // 요청이 실패한 경우 처리
@@ -678,6 +725,8 @@ function updateTable(installPlace) {
             "<td>" + installPlace[i].installPlacePostAddress + "</td>" +
             "</tr>";
         $('table#install-place-list-table tbody').append(addTableRow);
+
+		
 	}
 }
 });

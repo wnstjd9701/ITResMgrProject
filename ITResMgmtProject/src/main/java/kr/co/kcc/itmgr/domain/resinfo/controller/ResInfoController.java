@@ -34,21 +34,21 @@ public class ResInfoController {
 	@GetMapping("/resinfo")
 	public String selectAllResInfo(Model model) {
 		int page = 1;
-
-		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo(page);
+		ResInfo resInfo =new ResInfo();
+		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo(page,resInfo);
 		Map<String, Object> resInfoMap = new HashMap<String, Object>();
 		
-		int countOfResList = resInfoService.countOfResInfo();
+		int countOfResList = resInfoService.countOfResInfo(resInfo);
 		int totalPage = 0;
 		if(countOfResList > 0) {
 			totalPage= (int)Math.ceil(countOfResList/10.0);
 		}
-		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
-		int nowPageBlock = (int) Math.ceil(page/10.0);
-		int startPage = (nowPageBlock-1)*10 + 1;
+		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
+		int nowPageBlock = (int) Math.ceil(page/5.0);
+		int startPage = (nowPageBlock-1)*5 + 1;
 		int endPage = 0;
-		if(totalPage > nowPageBlock*10) {
-			endPage = nowPageBlock*10;
+		if(totalPage > nowPageBlock*5) {
+			endPage = nowPageBlock*5;
 		}else {
 			endPage = totalPage;
 		}
@@ -65,6 +65,7 @@ public class ResInfoController {
 		resInfoMap.put("selectAllResInfo",selectAllResInfo);
 		resInfoMap.put("page",page2);
 		model.addAttribute("selectAllResInfo", selectAllResInfo);
+		model.addAttribute("totalPageCount", totalPage);
 		model.addAttribute("page2", page2);
 
 		List<ResInfo> searchResInfoByResClass = resInfoService.searchResInfoByResClass();
@@ -110,22 +111,21 @@ public class ResInfoController {
 	
 	@GetMapping("/resinfopagination")
 	@ResponseBody
-	public Map<String,Object> selectResinfoPagination(int page){
-
-		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo(page);
+	public Map<String,Object> selectResinfoPagination(ResInfo resInfo){
+		List<ResInfo> selectAllResInfo = resInfoService.selectAllResInfo(resInfo.getPage(),resInfo);
 		Map<String, Object> resInfoMap = new HashMap<String, Object>();
 		
-		int countOfResList = resInfoService.countOfResInfo();
+		int countOfResList = resInfoService.countOfResInfo(resInfo);
 		int totalPage = 0;
 		if(countOfResList > 0) {
 			totalPage= (int)Math.ceil(countOfResList/10.0);
 		}
-		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
-		int nowPageBlock = (int) Math.ceil(page/10.0);
-		int startPage = (nowPageBlock-1)*10 + 1;
+		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
+		int nowPageBlock = (int) Math.ceil(resInfo.getPage()/5.0);
+		int startPage = (nowPageBlock-1)*5 + 1;
 		int endPage = 0;
-		if(totalPage > nowPageBlock*10) {
-			endPage = nowPageBlock*10;
+		if(totalPage > nowPageBlock*5) {
+			endPage = nowPageBlock*5;
 		}else {
 			endPage = totalPage;
 		}
@@ -133,7 +133,7 @@ public class ResInfoController {
 		Map<String,Object> page2 = new HashMap<String, Object>();
 		
 		page2.put("totalPageCount", totalPage);
-		page2.put("currentPage", page);
+		page2.put("currentPage", resInfo.getPage());
 		page2.put("totalPageBlock", totalPageBlock);
 		page2.put("nowPageCount", nowPageBlock);
 		page2.put("startPage", startPage);
@@ -218,9 +218,37 @@ public class ResInfoController {
 
 	@GetMapping("/resinfo/search")
 	@ResponseBody
-	public List<ResInfo> searchResInfo(ResInfo resInfo) {
+	public Map<String,Object> searchResInfo(ResInfo resInfo) {
 		List<ResInfo> searchResInfo = resInfoService.searchResInfo(resInfo);
-		return searchResInfo;
+		Map<String, Object> resInfoMap = new HashMap<String, Object>();
+		
+		int countOfResList = resInfoService.countOfResInfo(resInfo);
+		int totalPage = 0;
+		if(countOfResList > 0) {
+			totalPage= (int)Math.ceil(countOfResList/10.0);
+		}
+		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
+		int nowPageBlock = (int) Math.ceil(1/5.0);
+		int startPage = (nowPageBlock-1)*5 + 1;
+		int endPage = 0;
+		if(totalPage > nowPageBlock*5) {
+			endPage = nowPageBlock*5;
+		}else {
+			endPage = totalPage;
+		}
+		
+		Map<String,Object> page2 = new HashMap<String, Object>();
+		
+		page2.put("totalPageCount", totalPage);
+		page2.put("currentPage", 1);
+		page2.put("totalPageBlock", totalPageBlock);
+		page2.put("nowPageCount", nowPageBlock);
+		page2.put("startPage", startPage);
+		page2.put("endPage", endPage);
+		
+		resInfoMap.put("selectAllResInfo",searchResInfo);
+		resInfoMap.put("page",page2);
+		return resInfoMap;
 	}
 
 	@PostMapping("/resinfo/insert")

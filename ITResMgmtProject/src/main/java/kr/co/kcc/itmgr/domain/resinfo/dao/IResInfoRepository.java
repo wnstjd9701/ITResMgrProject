@@ -1,6 +1,7 @@
 package kr.co.kcc.itmgr.domain.resinfo.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,8 +17,8 @@ import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDetailDTO;
 @Mapper
 public interface IResInfoRepository {
 	
-	List<ResInfo> selectAllResInfo(@Param("start")int start, @Param("end")int end); //자원정보 모두 찾아오기
-	int countOfResInfo();//자원갯수
+	List<ResInfo> selectAllResInfo(Map<String,Object> map); //자원정보 모두 찾아오기
+	int countOfResInfo(ResInfo resInfo);//자원갯수
 	int countOfInstallPlace();
 	
 	List<ResInfo> searchResInfoByResClass(); //자원분류 조회
