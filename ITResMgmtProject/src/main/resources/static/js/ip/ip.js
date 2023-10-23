@@ -96,7 +96,7 @@ $(document).ready(function () {
 
 		$.ajax({
 			method: "GET",
-			url: "/search/ip",
+			url: "/ip/search",
 			data: {
 				keyword: keyword
 			},

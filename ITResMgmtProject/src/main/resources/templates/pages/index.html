@@ -212,7 +212,7 @@
 	    	
 	    	$.ajax({
 	    		method: "GET",
-	    		url: "/ip/check",
+	    		url: "/ping/check",
 	    		data: {
 	    			ip: ip
 	    		},
@@ -270,6 +270,9 @@
 	function monitoringPaging(paging) {
 	    var pagination = $(".monitoring-pagination");
 	    pagination.empty();
+		if(paging.endPage === 0){
+			return;
+		}
 	    
 	    pagination.append(`<li class='page-item'><button class='page-link prev-page-link' value="${paging.startPage - 1}" aria-label='Previous'>&laquo;</button></li>`);
 	    

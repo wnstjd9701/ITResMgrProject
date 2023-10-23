@@ -106,7 +106,7 @@ public class MonitoringController {
 	 * @API No1-3: 서버 Ping 확인
 	 * @Info: 해당 IP 상태 체크
 	 */
-	@GetMapping("/ip/check")
+	@GetMapping("/ping/check")
 	public ResponseEntity<ApiResponse<?>> getServerStatus(@RequestParam("ip") String ip) throws IOException {
 		boolean isAlive = monitoringService.serverPingCheck(ip);
 		if (isAlive) {
@@ -116,6 +116,11 @@ public class MonitoringController {
 		}
 	}
 	
+	/*
+	 * @Author: [윤준성]
+	 * @API No1-4: 자원 페이징
+	 * @Info: 해당 페이징 처리 
+	 */
 	@GetMapping("/monitoring/{page}")
 	public ResponseEntity<ApiResponse<?>> selectResInfoByPage(@PathVariable("page") int page, SearchCondition searchCondition){
 		log.info("Page / searchCondition: " + searchCondition);

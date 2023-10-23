@@ -217,7 +217,7 @@ public class IpInfoController {
 	 * @API No.5-4. IP 검색
 	 * @Info: IP 주소 검색
 	 */
-	@GetMapping("/search/ip")
+	@GetMapping("/ip/search")
 	@ResponseBody
 	public ResponseEntity<IpApiResponse> searchIp(@RequestParam("keyword") String keyword){
 		int start = 1;
