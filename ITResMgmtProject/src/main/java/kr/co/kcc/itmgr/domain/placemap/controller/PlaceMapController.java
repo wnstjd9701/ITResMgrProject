@@ -38,7 +38,7 @@ public class PlaceMapController {
 	/*
 	 * @Author: [윤준성]
 	 * @API No.4-1. 지역별 설치 장소 현황
-	 * @Info: 상세 주소 수정
+	 * @Info: 지역별 설치 장소 현황
 	 */
 	@GetMapping("/place/map")
     public ModelAndView selectPlaceMap() {

@@ -13,15 +13,15 @@
 	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
 	<main id="main" class="main">
 		<div class="pagetitle">
-			<button id="addItemSaveBtn" type="button" onclick="addItemSaveAll()"
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}" id="addItemSaveBtn" type="button" onclick="addItemSaveAll()"
 				class="btn btn-primary"
 				style="background-color: navy; border: navy;">저장</button>
-			<button id="addItemHideRowBtn" type="button"
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}" id="addItemHideRowBtn" type="button"
 				onclick="addItemHideRow()" class="btn btn-primary">행삭제</button>
-			<button id="addItemAddRowBtn" type="button" onclick="addItemAddRow()"
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}" id="addItemAddRowBtn" type="button" onclick="addItemAddRow()"
 				class="btn btn-primary">행추가</button>
 
-			<form id="uploadForm" enctype="multipart/form-data">
+			<form th:if="${session.user.employeeTypeCode == 'EMT001'}" id="uploadForm" enctype="multipart/form-data">
 				<input type="file" id="fileInput" name="file" accept=".xlsx, .xls"
 					style="display: none;">
 				<button type="button" id="ExcelUploadBtn" onclick="uploadFile()"
@@ -29,7 +29,7 @@
 					style="background-color: green; border: green;">엑셀업로드</button>
 			</form>
 
-			<form action="/excel/download" method="get">
+			<form th:if="${session.user.employeeTypeCode == 'EMT001'}" action="/excel/download" method="get">
 				<button type="submit" id="ExcelDownBtn" class="btn btn-primary"
 					style="background-color: green; border: green;">엑셀다운로드</button>
 			</form>
