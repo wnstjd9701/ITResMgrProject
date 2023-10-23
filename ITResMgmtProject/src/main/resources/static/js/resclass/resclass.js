@@ -127,7 +127,8 @@ $('#openAddItemModal').on('click', function() {
 
 //부가항목리스트 모달 
 function paging(page) {
-    $.ajax({
+	
+	$.ajax({
         type: 'GET',
         url: '/resclass/additem',
         contentType: "application/json",
@@ -139,7 +140,6 @@ function paging(page) {
             var pagingHtml = pagingLine(response);  // 응답 객체 전달
             updateTable(response.test);
             $('ul#pagination').html(pagingHtml);  // 수정된 선택자
-            // 테이블의 기존 내용을 지우기
         },
         error: function (error) {
             // 요청이 실패한 경우 처리
@@ -264,37 +264,40 @@ function updateTable(addItem) {
 
 	//부가항목 저장 눌렀을 때 기능
 	$('#check-additem').click(function () {
+	    // 기존에 선택된 행을 삭제하지 않고, 누적하여 보여줄 배열
+	    var selectedRows = [];
+	
 	    // 테이블 내의 각 체크박스를 순환
-		$('table#add-item-table input[type=checkbox]').each(function () {
+	    $('table#add-item-table input[type=checkbox]').each(function () {
 	        if ($(this).is(':checked')) {
 	            var row = $(this).closest('tr');  // 가장 가까운 행을 가져옴
 	            var addItemSn = $(this).val();
 	            var addItemName = row.find('td:eq(1)').text();  // addItemName에 해당하는 두 번째 td
 	            var useYn = row.find('input[name="useYN"]').val();
-				var statusC = 'C';
+	            var statusC = 'C';
+	
 	            // 새로운 행을 생성하고 각 정보를 삽입
 	            var newRow = "<tr>" +
-					"<td>"+statusC+"</td>"+
+	                "<td>" + statusC + "</td>" +
 	                "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'></td>" +
 	                "<td>" + addItemName + "</td>" +
 	                "</tr>";
-	            $('table#addInfoTable').append(newRow);
-	            $('#addItemModal').modal('hide');
-	        	const noDataTextElement = document.getElementById('noDataText');
-				const noDataText = noDataTextElement.innerText;
-				if(noDataText==="부가정보가 존재하지 않습니다."){		
-					 $('table#addInfoTable tbody').find('td').remove();
-				var newRow = "<tr>" +
-					"<td>"+statusC+"</td>"+
-	                "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'></td>" +
-	                "<td>" + addItemName + "</td>" +
-	                "</tr>";
-	            $('table#addInfoTable').append(newRow);
-	            $('#addItemModal').modal('hide');
-				}
-				}
-	    	});
-	});	
+	
+	            // 새로운 행을 selectedRows 배열에 추가
+	            selectedRows.push(newRow);
+	        }
+	    });
+	
+	    // td의 내용이 "부가정보가 존재하지 않습니다." 일 때만 기존 테이블의 내용을 지우고, 새로운 행들을 추가
+	    if ($('table#addInfoTable td').text() === "부가정보가 존재하지 않습니다.") {
+	        $('table#addInfoTable tbody').empty();
+	        $('table#addInfoTable').append(selectedRows.join(''));
+	    }else{
+	        $('table#addInfoTable').append(selectedRows.join(''));
+		}
+	
+	    $('#addItemModal').modal('hide');
+	});
 	
 	//행삭제 시 flag D로 변경
     $("#deleteAddItemBtn").click(function() {
@@ -315,7 +318,8 @@ $("#resclass-save").click(() => {
 	$('.second-container input[type=checkbox]:checked').each(function() {
     var addItemSn;
 	var resClassId;
-	var resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+	//var resClassName = $(this).closest('.second-container').find("input[name='resClassName']").val();
+	var resClassName = $("input[name='resClassName']").val();
     var flag = $(this).closest('tr').find('td:eq(0)').text(); // Assuming flag is in the first td
 
     if (flag === 'C' || flag==='D') {
@@ -379,6 +383,7 @@ $("#resclass-save").click(() => {
             }
 		});
 	});
+
 });
 
 
@@ -393,7 +398,6 @@ $('.tree2 a').on('click', function() {
 });
 
 
-//자원분류 등록 시 상위분류 선택하는 기능
 $(document).ready(function () {
     function updateOptions() {
         const selectedValue = $("#resClassLevel").val();
@@ -404,19 +408,26 @@ $(document).ready(function () {
         if (selectedValue === "1") {
             // 선택안함에 해당하는 옵션만 표시
             $("#resClassByLevel option[data-level='1']").show();
+            $("#resClassByLevel").val("");  // 중분류 선택 시 값 초기화
             $("#subCategoryRow").hide();  // 소분류 선택 시 숨기기
         } else if (selectedValue === "2") {
             // 대분류에 해당하는 옵션만 표시
             if ($("#hardwareRadio").is(':checked')) {
                 // 하드웨어 선택 시
-            $("#resClassByLevel option[data-level='2']").show();
+                $("#resClassByLevel option[data-level='2']").show();
             } else if ($("#softwareRadio").is(':checked')) {
-            $("#resClassByLevel option[data-level='3']").show();
                 // 소프트웨어 선택 시
+                $("#resClassByLevel option[data-level='3']").show();
             }
             $("#subCategoryRow").show();  // 소분류 선택 시 보이기
         }
+
+        // 선택한 값에 따라 SELECT 박스 비우기
+        $("#resClassByLevel").val("");
     }
+
+    // 페이지 로드 시 초기화
+    updateOptions();
 
     // resClassLevel 변경 이벤트 핸들러
     $("#resClassLevel").change(function () {
@@ -428,6 +439,7 @@ $(document).ready(function () {
         updateOptions();
     });
 });
+
 
 
 

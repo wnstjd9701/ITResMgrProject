@@ -8,8 +8,7 @@
 		<![CDATA[
 			SELECT c.res_class_name "resClassName",
 			listagg(r.res_class_name, ',') within group(order by r.res_class_name DESC) "resClassName2", r.lv || '' as "level",
-			c.upper_res_class_id	"upperResClassId",
-			r.res_class_id   "resClassId"
+			c.upper_res_class_id	"upperResClassId"
 			FROM (
 			SELECT upper_res_class_id, 
 			res_class_name,
@@ -21,7 +20,7 @@
 			CONNECT BY PRIOR res_class_id = upper_res_class_id
 			) r
 			JOIN RESCLASS c ON r.upper_res_class_id = c.res_class_id
-			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id,r.res_class_id
+			GROUP BY r.lv, c.res_class_name, c.upper_res_class_id
 			ORDER BY r.lv , c.res_class_name DESC
 		]]>
 
@@ -56,28 +55,27 @@
 	
 	<select id="numberOfResByResClass3" resultType="map">
 		<![CDATA[
-				SELECT
-				rc.res_class_id	"upperResClassId",
-				rc.res_class_name	"resClassName", 
-				SUM(rr.aa) 	"mappingNumberOfRes"
-				FROM resclass rc
-				INNER JOIN (
-				SELECT 
-				rs.upper_res_class_id, 
-				SUM(r.aa) AS aa
-				FROM resclass rs
-				INNER JOIN (
-				SELECT 
-				rc.upper_res_class_id, 
-				rc.res_class_id,
-				COUNT(*) AS aa
-				FROM RESINFO r
-				JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
-				GROUP BY 
-				rc.upper_res_class_id, rc.res_class_id) r ON rs.res_class_id = r.upper_res_class_id
-				GROUP BY rs.upper_res_class_id ) rr ON rc.res_class_id = rr.upper_res_class_id
-				GROUP BY rc.res_class_name, rc.res_class_id
-
+			SELECT
+			rc.res_class_id	"upperResClassId",
+			rc.res_class_name	"resClassName", 
+			SUM(rr.aa) 	"mappingNumberOfRes"
+			FROM resclass rc
+			INNER JOIN (
+			SELECT 
+			rs.upper_res_class_id, 
+			SUM(r.aa) AS aa
+			FROM resclass rs
+			INNER JOIN (
+			SELECT 
+			rc.upper_res_class_id, 
+			rc.res_class_id,
+			COUNT(*) AS aa
+			FROM RESINFO r
+			JOIN RESCLASS rc ON r.res_class_id = rc.res_class_id
+			GROUP BY 
+			rc.upper_res_class_id, rc.res_class_id) r ON rs.res_class_id = r.upper_res_class_id
+			GROUP BY rs.upper_res_class_id ) rr ON rc.res_class_id = rr.upper_res_class_id
+			GROUP BY rc.res_class_name, rc.res_class_id
 		]]>
 	</select>
 	<select id="selectResClassByResClassName" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
@@ -131,7 +129,7 @@
 	
 	<select id="selectAddItemInResClass" resultType="kr.co.kcc.itmgr.domain.resclass.model.ResClass">
 		<![CDATA[
-			SELECT /* selectAddItemInResClass */
+			SELECT
 				add_item_sn		"addItemSn",
 				add_item_name	"addItemName",
 				add_item_desc	"addItemDesc",

@@ -151,7 +151,7 @@
 								<tbody class="resinfo-table-body">
 									<tr>
 										<td colspan="7">장소명을 클릭하세요.
-										</th>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -159,6 +159,12 @@
 							<nav aria-label="Page navigation example" class="paging-nav">
 								<ul class="pagination res-pagination justify-content-center" style="margin-top:12px; margin-bottom:3px;">
 									<!-- <li class="page-item">
+=======
+						<input type="hidden" class="res-search-type" value="">
+						<nav aria-label="Page navigation example" class="paging-nav res-page">
+							<ul class="pagination res-pagination justify-content-center">
+								<!-- <li class="page-item">
+>>>>>>> branch 'develop' of https://github.com/minseonseon/ITResMgrProject.git
 									<button class="page-link res-prev-page-link" aria-label="Previous" value="0"> 
 										<span aria-hidden="true">&laquo;</span>
 										<span class="sr-only">Previous</span>
@@ -355,9 +361,8 @@ $(document).ready(function(){
 		})
 	})
 	
-	$(".res-pagination").on("click", ".res-next-page-val", function(){
+	$(".res-pagination").on("click", ".res-next-page-link", function(){
 		var nextStartPage = $(this).val();
-		console.log(this.classList[1]);
 		var resSearchType = $(".res-search-type").val();
 		$.ajax({
 			method: "GET",
@@ -373,9 +378,10 @@ $(document).ready(function(){
 		});
 	});
 	
-	$(".res-pagination").on("click", ".res-prev-page-val", function(){
+	$(".res-pagination").on("click", ".res-prev-page-link", function(){
 		var page = $(this).val();
 		var prevStartPage = page - 4;
+		var resSearchType = $(".res-search-type").val();
 		$.ajax({
 			method: "GET",
 			url: "/installplace/resinfo/" + prevStartPage,
@@ -472,6 +478,7 @@ $(document).ready(function(){
 	        	}
 	        	resInfoPaging(response.paging);
 	        	$(".res-search-type").val(placeName);
+	        	return;
 	        },
 	        error: function(xhr, status, err){
 	            alert("Error", err)

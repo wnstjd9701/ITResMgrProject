@@ -167,8 +167,7 @@ public class InstallPlaceController {
 		int endNum = startNum + 4;
 		
 		List<InstallRes> resInfo = installPlaceService.selectResInformationByInstallPlaceName(resSearchType, startNum, endNum);
-		
-		int totalCount = resInfo.size();
+		int totalCount = installPlaceService.selectResInfoCountByInstallPlaceName(resSearchType);
 		Map<String,Object> paging = installPlaceService.placePaging(page, totalCount);
 		
 		Map<String,Object> result = new HashMap<String, Object>();

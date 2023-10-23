@@ -68,7 +68,7 @@ input[type="button"] {
 									<th>주소</th>
 									<th>상세 주소</th>
 									<th>장비 개수</th>
-									<th>상세 보기</th>
+									<th>상세</th>
 								</tr>
 							</thead>
 							<tbody class="place-table-body">
@@ -84,7 +84,7 @@ input[type="button"] {
 									<td th:if="${place.installPlaceDetailAddress == null}"
 										class="place-detail-address">-</td>
 									<td class="place-res-count" th:text="${place.resCount}"></td>
-									<td><input name="search" type="button" value="조회"
+									<td><input name="search" type="button" value="상세"
 										class="place-detail-btn"> <input name="placesn"
 										class="place-sn" type="hidden"
 										th:value="${place.installPlaceSn}"> <input
@@ -310,7 +310,7 @@ $(document).ready(function(){
 	            '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
 	            '<td class="place-res-count">' + resCount + '</td>' +
 	            '<td>' +
-	            '<input name="search" type="button" value="조회" class="place-detail-btn">' +
+	            '<input name="search" type="button" value="상세" class="place-detail-btn">' +
 	            '<input name="placesn" class="place-sn" type="hidden" value="' + installPlaceSn + '">' +
 	            '<input type="hidden" class="latitude" value="' + latitude + '">' +
 	            '<input type="hidden" class="longitude" value="' + longitude + '">' +
@@ -345,7 +345,7 @@ $(document).ready(function(){
 	        '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
 	        '<td class="place-res-count">' + resCount + '</td>' +
 	        '<td>' +
-	        '<input name="search" type="button" value="조회" class="place-detail-btn">' +
+	        '<input name="search" type="button" value="상세" class="place-detail-btn">' +
 	        '<input name="placesn" class="place-sn" type="hidden" value="' + installPlaceSn + '">' +
 	        '<input type="hidden" class="latitude" value="' + latitude + '">' +
 	        '<input type="hidden" class="longitude" value="' + longitude + '">' +
@@ -551,12 +551,15 @@ $(document).ready(function(){
 		resPagingClick(page);	
 	})
 	
-	$(".res-pagintaion").on("click", ".res-prev-page-link", function(){
-		
+	$(".res-pagination").on("click", ".res-prev-page-link", function(){
+		var page = $(this).val() - 4;
+		console.log("A");
+		resPagingClick(page);	
 	})
 	
 	$(".res-pagination").on("click", ".res-next-page-link", function(){
-		
+		var page = $(this).val();
+		resPagingClick(page);
 	})
 	
 	function installPlacePaging(paging) {
