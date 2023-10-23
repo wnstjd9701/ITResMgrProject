@@ -50,7 +50,7 @@ public class UserController {
 					session.setAttribute("employeeId", employeeId);
 					session.setAttribute("employeeName", user.getEmployeeName());
 					session.setAttribute("employeeTypeCode", user.getEmployeeTypeCode());
-					return "/index";
+					return "index";
 				} else {
 					model.addAttribute("message", " 비밀번호를 잘못 입력했습니다.\r\n" + "다시 입력해 주세요.");
 				}
@@ -64,10 +64,10 @@ public class UserController {
 		return "signin";
 	}
 
-	@RequestMapping(value = "/user/logout", method = RequestMethod.GET)
-	public String logout(HttpSession session) {
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpSession session) {	
 		session.invalidate();
-		return "/signin";
+		return "redirect:/signin";
 	}
 
 
