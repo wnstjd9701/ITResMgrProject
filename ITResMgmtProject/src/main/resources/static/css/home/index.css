@@ -1,0 +1,21 @@
+@charset "UTF-8";
+.search-container {
+	display: flex;
+}
+
+.title-container{
+	display: flex;
+}
+
+.pagetitle{
+	margin-right: auto;
+}
+
+#searchBtn{
+	padding: 10px;
+	border: 1px solid #ccc; 
+	border-radius: 3px;
+	font-size: 18px;
+	background-color: gray; 
+	border: gray;	
+}

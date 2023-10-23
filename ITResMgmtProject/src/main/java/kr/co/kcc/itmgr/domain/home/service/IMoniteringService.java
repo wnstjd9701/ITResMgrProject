@@ -11,7 +11,8 @@ public interface IMoniteringService {
 	List<Monitoring> selectAllResourceInformation(int start, int end); // 모니터링 모든 자원 정보 가져오기
 	List<ResClass> selectResClassInformationByLevel(int level); // 하드웨어 레벨 별로 자원분류 가져오기
 	
-	List<Monitoring> selectResInformationBySearchCondition(SearchCondition searchCondition); // 자원 검색 결과 가져오기
+	List<Monitoring> selectResInformationBySearchCondition(SearchCondition searchCondition); // 자원 검색 결과 조회
+	int selectResCountBySearch(SearchCondition searchCondition); // 자원 검색 결과 개수 조회
 	
 	Boolean serverPingCheck(String ip); // 서버 핑 체크
 	Map<String, Object> monitoringPaging(int page, int totalCount); // 페이징 처리

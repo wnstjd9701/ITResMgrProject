@@ -86,4 +86,9 @@ public class MonitoringService implements IMoniteringService{
 		return monitoringRepository.selectResCount();
 	}
 
+	@Override
+	public int selectResCountBySearch(SearchCondition searchCondition) {
+		return monitoringRepository.selectResCountBySearch(searchCondition);
+	}
+
 }
