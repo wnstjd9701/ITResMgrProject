@@ -53,61 +53,54 @@
 			<p id="searchEmpText">사원</p>
 			<input id="searchText" type="text" placeholder="ID 및 명 입력">
 		</div>
-			
-			<div class="employee-table-container">
-				<table class="employee-table" id="empTable">
-					<!-- <table id="empTable" class="table"> -->
-					<thead class = "employee-thead">
-						<tr>
-							<th class="col-empCheckBox">선택</th>
-							<th class="col-Status">상태</th>
-							<th class="col-empId">사원ID</th>
-							<th class="col-empPwd">사원비밀번호</th>
-							<th class="col-empName">사원명</th>
-							<th class="col-empType">사원유형</th>
-							<th class="col-empStatus">사원상태</th>
 
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="employeeList : ${employeeList}" id="empList">
-							<td><input type="checkbox" name="empCheckbox"></td>
-							<td><span name="empStatus">S</span></td>
-							<td th:text="${employeeList.employeeId}" name="employeeId"></td>
-							<!-- 	<td th:text="${employeeList.employeePwd}" name="employeePwd" onclick="showPasswordField(this)"></td> -->
-							<td name="employeePwd" onclick="showPasswordField(this)">**********</td>
-							<!-- <td th:text="${employeeList.employeeName}" name="employeeName"
-								onclick="showNameField(this)"></td> -->
-								<td><input th:value="${employeeList.employeeName}" name="employeeName"
-								onclick="showNameField2(this)" style="width:100px; text-align: center;  border: none;" class="hidden-input"></input></td>
-								
-								
-								
-								
-							<td onclick="handleClick(this)" name="employeeType"><span
-								class="text" th:text="${employeeList.employeeType}"
-								name="empType"></span> <select name="empTypeList" class="select"
-								style="display: none;">
-									<th:block th:each="commonCode: ${commonCodeTypeList}">
-										<option th:value="${commonCode.key}"
-											th:text="${commonCode.value}"></option>
-									</th:block>
-							</select></td>
-							<td onclick="handleClick(this)" name="employeeStatus"><span
-								class="text" th:text="${employeeList.employeeStatus}"
-								name="empStatus"></span> <select name='empStatusList'
-								class="select" style="display: none;">
-									<th:block th:each="commonCode2: ${commonCodeStatusList}">
-										<option th:value="${commonCode2.key}"
-											th:text="${commonCode2.value}"></option>
-									</th:block>
-							</select></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			
-	
+		<div class="employee-table-container">
+			<table class="employee-table" id="empTable">
+				<!-- <table id="empTable" class="table"> -->
+				<thead class="employee-thead">
+					<tr>
+						<th class="col-empCheckBox">선택</th>
+						<th class="col-Status">상태</th>
+						<th class="col-empId">사원ID</th>
+						<th class="col-empPwd">사원비밀번호</th>
+						<th class="col-empName">사원명</th>
+						<th class="col-empType">사원유형</th>
+						<th class="col-empStatus">사원상태</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="employeeList : ${employeeList}" id="empList">
+						<td><input type="checkbox" name="empCheckbox"></input></td>
+						<td><span name="empStatus">S</span></td>
+						<td th:text="${employeeList.employeeId}" name="employeeId"></td>
+						<td><input type="text" value="**********" name="employeePwd"
+							onclick="showPasswordField(this)"
+							class="employee-input employee-pwd"></input></td>
+						<td><input type="text" name="employeeName"
+							th:value="${employeeList.employeeName}"
+							onclick="handleClick(this)" class="employee-input employee-name"></input></td>
+						<td onclick="handleClick(this)" name="employeeType"><span
+							class="text" th:text="${employeeList.employeeType}"
+							name="empType"></span> <select name="empTypeList" class="select"
+							style="display: none;">
+								<th:block th:each="commonCode: ${commonCodeTypeList}">
+									<option th:value="${commonCode.key}"
+										th:text="${commonCode.value}"></option>
+								</th:block>
+						</select></td>
+						<td onclick="handleClick(this)" name="employeeStatus"><span
+							class="text" th:text="${employeeList.employeeStatus}"
+							name="empStatus"></span> <select name='empStatusList'
+							class="select" style="display: none;">
+								<th:block th:each="commonCode2: ${commonCodeStatusList}">
+									<option th:value="${commonCode2.key}"
+										th:text="${commonCode2.value}"></option>
+								</th:block>
+						</select></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</main>
 	<script src="js/employee/employee.js"></script>
 	<script th:src="@{/assets/js/main.js}"></script>
