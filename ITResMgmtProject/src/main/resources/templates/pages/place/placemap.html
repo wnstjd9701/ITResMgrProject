@@ -5,54 +5,43 @@
 <head>
 <meta charset="UTF-8">
 <style>
-.place-map-container {
-	display: flex;
-}
-
 #map {
-	width: 45%;
-	height: 90vh;
+	height: 50vh;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
-.place-list-container {
-	width: 60%;
-	margin: 10px 0 0 10px;
-	padding: 0 0 0 10px;
-}
-
-.place-table, #chart-area {
+.place-table{
 	font-size: 12px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
-
-input[type="button"] {
-	padding: 2px 2px;
-	background-color: #007BFF;
-	color: #fff;
-	border: none;
-	border-radius: 5px;
-	font-size: 12px;
-	cursor: pointer;
+.map-container{
+	width: 50%;
 }
+.view-container{
+	display:flex;
+}
+
 </style>
 <link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
 <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
 </head>
 <th:block layout:fragment="content">
 	<main id="main" class="main">
-		<div class="container">
 			<div class="place-map-container">
-				<div id="map"></div>
-				<div class="place-list-container">
-					<div>
-						<input type="button" class="group-do" value="지도 새로고침">
+				<div class="view-container">
+					<div class="map-container">
+						<input type="button" class="group-do" value="💢">
+						<div id="map"></div>
 					</div>
-					<div id="chart-area"></div>
+					<div class="chart-container">
+						<div id="chart-area"></div>
+					</div>
+				</div>
+				<div class="place-list-container">
 					<select id="doNameSelect" class="form-select">
 						<option value="-">선택</option>
 						<option value="ALL">전체 [ [[${totalResCount}]] ]</option>
@@ -159,8 +148,6 @@ input[type="button"] {
 					</div>
 				</div>
 			</div>
-		</div>
-		<div id="chart-area"></div>
 </main>
 	<script th:src="@{/assets/js/main.js}"></script>
 	<script type="text/javascript"
@@ -694,129 +681,65 @@ $(document).ready(function(){
       categories: ['자원 현황'],
       series: [],
     };
-    var options = {
-    		chart: { title: '지역별 자원 현황', width: 720, height: 400 },
-    		  series: {
-    		    dataLabels: {
-    		      visible: true,
-    		      pieSeriesName: { visible: true, anchor: 'outer' },
-    		    },
-    		    radiusRange: {
-    	            inner: '20%',
-    	            outer: '100%',
-    	        },
-    		  },
-    		  theme: {
-    			  title: {
-    			      fontFamily: 'Comic Sans MS',
-    			      fontSize: 25,
-    			      fontWeight: 100,
-    			      color: '#ff416d'
-    			    },
-    			    exportMenu: {
-    			        button: {
-    			          backgroundColor: '#ff0000',
-    			          borderRadius: 5,
-    			          borderWidth: 2,
-    			          borderColor: '#000000',
-    			          xIcon: {
-    			            color: '#ffffff',
-    			            lineWidth: 3,
-    			          },
-    			          dotIcon: {
-    			            color: '#ffffff',
-    			            width: 10,
-    			            height: 3,
-    			            gap: 1,
-    			          },
-    			        },
-    			        panel: {
-    			          borderColor: '#ff0000',
-    			          borderWidth: 2,
-    			          borderRadius: 10,
-    			          header: {
-    			            fontSize: 15,
-    			            fontFamily: 'fantasy',
-    			            color: '#ffeb3b',
-    			            fontWeight: 700,
-    			            backgroundColor: '#673ab7',
-    			          },
-    			          body: {
-    			            fontSize: 12,
-    			            fontFamily: 'fantasy',
-    			            color: '#ff0000',
-    			            fontWeight: '500',
-    			            backgroundColor: '#000000',
-    			          },
-    			        }
-    			    },
-    			    tooltip: {
-    			        background: '#80CEE1',
-    			        borderColor: '#3065AC',
-    			        borderWidth: 10,
-    			        borderRadius: 20,
-    			        borderStyle: 'double',
-    			        header: {
-    			          fontSize: 15,
-    			          fontWeight: 700,
-    			          color: '#333333',
-    			          fontFamily: 'monospace',
-    			        },
-    			        body: {
-    			          fontSize: 11,
-    			          fontWeight: 700,
-    			          color: '#a66033',
-    			          fontFamily: 'monospace',
-    			        }
-    			      },
-    			      chart: {
-    			          fontFamily: 'Verdana',
-    			          backgroundColor: 'rgba(9, 206, 115, 0.1)',
-    			        },
-    		    series: {
-    		      dataLabels: {
-    		        fontFamily: 'monaco',
-    		        useSeriesColor: true,
-    		        lineWidth: 2,
-    		        textStrokeColor: '#ffffff',
-    		        shadowColor: '#ffffff',
-    		        shadowBlur: 4,
-    		        callout: {
-    		          lineWidth: 3,
-    		          lineColor: '#f44336',
-    		          useSeriesColor: false
-    		        },
-    		        pieSeriesName: {
-    		          useSeriesColor: false,
-    		          color: '#f44336',
-    		          fontFamily: 'fantasy',
-    		          fontSize: 13,
-    		          textBubble: {
-    		            visible: true,
-    		            paddingX: 1,
-    		            paddingY: 1,
-    		            backgroundColor: 'rgba(158, 158, 158, 0.3)',
-    		            shadowOffsetX: 0,
-    		            shadowOffsetY: 0,
-    		            shadowBlur: 0,
-    		            shadowColor: 'rgba(0, 0, 0, 0)'
-    		          }
-    		        }
-    		      }
-    		    }
-    		  }
-    		};
-    var doNameList = JSON.parse(doNames);
-    console.log(doNameList);
-    for (const key in doNameList){
-    	if (doNameList.hasOwnProperty(key)) {
-    	    data.series.push({
-    	      name: key,
-    	      data: doNameList[key],
-    	    });
+
+    const options = {
+	  chart: { 
+	  	title: '지역별 자원 현황',
+	   	width: 670,
+	   	height: 400,
+	  },
+      series: {
+        dataLabels: {
+          visible: true,
+          pieSeriesName: {
+            visible: true,
+            anchor: 'outer'
+          }
+        }
+      },
+      theme: {
+    	  	series: {
+    	      colors: ['#F94144', '#F3722C', '#F8961E', '#F9C74F', '#90BE6D', '#43AA8B', '#577590'],
+    	      lineWidth: 2,
+    	      strokeStyle: '#000000',
+    	    },
+    	    tooltip: {
+    	      background: '#80CEE1',
+    	      borderColor: '#3065AC',
+    	      borderWidth: 10,
+    	      borderRadius: 20,
+    	      borderStyle: 'double',
+    	      header: {
+    	        fontSize: 15,
+    	        fontWeight: 700,
+    	        color: '#333333',
+    	        fontFamily: 'monospace',
+    	      },
+    	      body: {
+    	        fontSize: 11,
+    	        fontWeight: 700,
+    	        color: '#a66033',
+    	        fontFamily: 'monospace',
+    	      }
+    	    }
     	  }
-    }
+    };
+    const doNameList = JSON.parse(doNames);
+
+	// 정렬된 데이터를 data에 추가
+	for (const key in doNameList) {
+	  if (doNameList.hasOwnProperty(key)) {
+	    console.log("key: " + key + " doNameList: " + doNameList[key]);
+	    data.series.push({
+	      name: key,
+	      data: doNameList[key],
+	    });
+	  }
+	}
+
+	console.log(data);
     const chart = toastui.Chart.pieChart({ el, data, options });
+
     
 });
 	</script>

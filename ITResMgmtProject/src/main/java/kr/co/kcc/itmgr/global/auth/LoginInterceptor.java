@@ -1,21 +1,37 @@
 package kr.co.kcc.itmgr.global.auth;
 
-import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import kr.co.kcc.itmgr.domain.user.model.User;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LoginInterceptor implements HandlerInterceptor{
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		//String requestURI = request.getRequestURI();
-		//System.out.println("[interceptor] requestURI : " + requestURI);
+		if(!(handler instanceof HandlerMethod)) {
+			return true;
+		}
+		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		
-		return true;  // false -> 이후에 진행을 하지 않는다.
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+		log.info("URI: " + request.getRequestURI());
+		log.info("user: " + user); 
+		if(user != null) {
+			return true;
+		}else {
+			response.sendRedirect("/signin");
+			return false;
+		}
 	}
 	
 	@Override
@@ -29,4 +45,5 @@ public class LoginInterceptor implements HandlerInterceptor{
 			throws Exception {
 		//System.out.println("[interceptor] afterCompletion");
 	}
+	
 }
