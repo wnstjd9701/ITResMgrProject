@@ -28,7 +28,7 @@
 			<h1 class="sub-title">공통 코드</h1>
 			<div class="common-btn-container">
 				<input id="searchCommonCodeBtn" type="button" value="조회" class="btn btn-primary" style="background-color: gray; border: gray; "> 
-				<input id="commonCodeSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
+				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
 			</div>
 			<div class="search-info-container">
 				<div class="search-detail-common">
@@ -41,8 +41,8 @@
 				</div>
 			</div>
 			<div class="row-btn" style="margin-bottom:5px;">
-				<input id="commonCodeAddRowBtn" type="button" value="행추가" class="btn btn-primary"> <input
-					id="commonCodeDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
+				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeAddRowBtn" type="button" value="행추가" class="btn btn-primary"> <input
+					th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
 			</div>
 			<div class="commoncode-table-container">
 				<table class="commoncode-table">
@@ -83,7 +83,7 @@
 			<h1 class="sub-title">상세 코드</h1>
 			<div class="common-btn-container">
 				<input id="searchCommonCodeDetailBtn" type="button" value="조회" class="btn btn-primary" style="background-color: gray; border: gray;">
-				<input id="commonCodeDetailSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
+				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDetailSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
 			</div>
 			<div class="search-info-container">
 				<div class="search-detail-commondetail">
@@ -96,8 +96,8 @@
 				</div>
 			</div>
 			<div class="row-btn" style="margin-bottom:5px;">
-				<input id="commonCodeDetailAddRowBtn" type="button" value="행추가" class="btn btn-primary">
-				<input id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
+				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDetailAddRowBtn" type="button" value="행추가" class="btn btn-primary">
+				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
 			</div>
 			<div class="commoncodedetail-table-container">
 				<table class="commoncodedetail-table">
