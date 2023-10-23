@@ -2,7 +2,7 @@ function changePageBtn(data,page){
 	var str=""
 	for(var i=data.page.startPage;i<=data.page.endPage;i++){
 		if(page==i){
-			str+='<button class="page-link page-link-val" onclick="paging('+i+')" style="font-weight:bolder;">'+i+'</button>'
+			str+='<button class="page-link page-link-val" onclick="paging('+i+')" style="font-weight:bolder;text-align:center;">'+i+'</button>'
 		}else{
 			str+='<button class="page-link page-link-val" onclick="paging('+i+')">'+i+'</button>'
 		}
@@ -251,12 +251,13 @@ $(document).ready(function () {
 		        "resSerialId": resSerialId
 		    },
 		    success: function (response) {
+				$('#ipListTable tbody').empty();
 		        for (var i = 0; i < response.length; i++) {
 		            var addTableRow = "<tr>" +
 		                "<td><input type='checkbox' name='ipSn' value='" + response[i].ipSn + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='ip' value='" + response[i].ip + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='detailCodeName' value='" + response[i].detailCodeName + "'></td>" +
-		                "<input type='hidden' readonly='readonly' name='ipTypeCode' value='" + response[i].ipTypeCode + "'>" +
+		                "<td><input type='hidden' readonly='readonly' name='ipTypeCode' value='" + response[i].ipTypeCode + "'></td>" +
 		                "</tr>";
 		            $('#ipListTable tbody').append(addTableRow); // IP 주소 행을 테이블에 추가합니다.
 		        }
@@ -598,9 +599,9 @@ $(document).ready(function () {
             },
             success: function(response) {
                 $('tbody#resInfoTable > tr').remove();
-                if (response.length === 0) {
+                if (response.selectAllResInfo.length === 0) {
                     alert('검색된 결과가 없습니다.');
-                    addTableRow = "<tr>" + "<td colspan='8' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+                    addTableRow = "<tr>" + "<td colspan='10' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
                     $('tbody#resInfoTable').append(addTableRow);
                     return;
                 }
@@ -617,7 +618,7 @@ $(document).ready(function () {
 	                        "<td>"+response.selectAllResInfo[i].mgmtId+"</td>"+
 	                        "<td>"+response.selectAllResInfo[i].monitoringYn+"</td>"+
 	 						"<td><input type='hidden' name ='resSerialId' value='" + response.selectAllResInfo[i].resSerialId
-							+"'>" + "<button type='button' id='resinfo-detail-btn'>보기</button></td>"+
+							+"'>" + "<button type='button' id='resinfo-detail-btn'>상세</button></td>"+
 	                        "</tr>";
 	                $('tbody#resInfoTable').append(resInfoRow);
 	            }
@@ -871,8 +872,6 @@ function updateTable(installPlace) {
             "<td>" + installPlace[i].installPlacePostAddress + "</td>" +
             "</tr>";
         $('table#install-place-list-table tbody').append(addTableRow);
-
-		
 	}
 }
 

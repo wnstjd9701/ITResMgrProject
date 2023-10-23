@@ -41,6 +41,7 @@
 	        <option value="" ></option>
 	        <option th:each="search:${search}" th:if="${search.level}==3" th:value="${search.resClassId}" th:text="${search.resClassName}" th:data-upper-res-class-id="${search.upperResClassId}"></option>
 	    </select>
+	    
 		<span>자원명</span>
 			<input type="text" name="resName"></input>
 		<span>설치장소명</span>
@@ -85,7 +86,7 @@
 					<input type="hidden" th:value="${resinfo.resClassId}">
 					<td>
 					<input type="hidden" name ="resSerialId" th:value="${resinfo.resSerialId}">
-					<button type="button" id="resinfo-detail-btn">보기</button>
+					<button type="button" id="resinfo-detail-btn">상세</button>
 					</td>
 				</tr>
 			</tbody>
