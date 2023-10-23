@@ -1,0 +1,230 @@
+.title{
+	font-size: 24px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #012970;
+}
+
+.sub-title{
+	font-size: 24px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #012970;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+/* 스크롤 가능한 영역의 스타일 */
+.container {
+	 background-color: rgba(255, 255, 255, 0.5);
+	height: 770px;
+}
+
+.commoncode-container {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	margin-right:20px;
+	width:50%;
+}
+
+.commoncodedetail-container {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	width:50%;
+}
+
+.common-search {
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	font-size: 14px;
+	color: white;
+	margin-right: 5px;
+}
+
+.search-detail-common {
+	display: flex;
+	align-items: center; /* 수직 가운데 정렬 */
+	justify-content: center;
+	background-color: #7289AB;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	width: 390px;
+	height: 40px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
+}
+
+.search-detail-commondetail {
+	display: flex;
+	align-items: center; /* 수직 가운데 정렬 */
+	background-color: #7289AB;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	width: 420px;
+	height: 40px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
+}
+
+#commonCodeUseYn, #commonCodeDetailUseYn {
+	margin-right: 10px;
+	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+.commonCodeKeyword {
+	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+.commonCodeDetailKeyword {
+	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+.commonCodeKeyword::placeholder {
+	text-align: center;
+}
+
+.commonCodeDetailKeyword::placeholder {
+	text-align: center;
+}
+
+.commoncode-table-container {
+	max-height: 600px; /* 원하는 높이로 조절 */
+	overflow-y: auto; /* 세로 스크롤 표시 */
+}
+
+/*테이블 스타일 */
+.commoncode-table {
+	width: 100%;
+	/* margin: 5px 0; */
+	border-collapse: collapse;
+	text-align: center;
+}
+
+.common-thead {
+	white-space: nowrap;
+	text-align: center;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	/* background-color: white; */
+}
+
+.commoncode-table tr th, .commoncodedetail-table tr th {
+	padding: 10px;
+	background-color: #7289AB;
+	color: white;
+	background-color: #7289AB;
+}
+
+.commoncode-table tr td, .commoncodedetail-table tr td {
+	padding: 10px;
+	background-color: #FCFCFC;
+}
+
+.commoncode-table tr, .commoncodedetail-table tr {
+	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
+}
+
+.commoncode-table tbody tr:hover td, .commoncodedetail-table tbody tr:hover td {
+    background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
+
+.commoncodedetail-table-container{
+	max-height: 600px; /* 원하는 높이로 조절 */
+	overflow-y: auto; /* 세로 스크롤 표시 */
+}
+
+.commoncodedetail-table{
+	width: 100%;
+	/* margin: 5px 0; */
+	border-collapse: collapse;
+	text-align: center;
+}
+
+.common-detail-btn{
+	display: inline-block;
+    font-weight: 400;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+#commonCode {
+	display: flex;
+}
+
+.common-btn-container {
+	margin-left: auto;
+	text-align: right;
+	margin-top:-35px;
+}
+
+.row-btn {
+	text-align: right;
+}
+
+.code-group-id-input {
+	width: 40%;
+}
+
+/* 입력란 스타일 */
+/* input[type="text"] {
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 12px;
+	outline: none;
+} 
+
+/* 선택 상자 스타일 */
+/* select {
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 12px;
+	outline: none;
+} */
+
+/* 버튼 스타일 */
+/* input[type="button"] {
+	padding: 5px 5px;
+	background-color: #007BFF;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	font-size: 14px;
+	cursor: pointer;
+} */

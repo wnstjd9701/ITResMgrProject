@@ -21,7 +21,7 @@ public class UserController {
 	private final IUserService userService;
 
 	@GetMapping("/signin")
-	public String userLogin() {
+	public String userLogin(Model model) {
 		return "signin";
 	}
 
@@ -35,9 +35,8 @@ public class UserController {
 			//아이디가 있는 경우
 			String userPwd = user.getEmployeePwd();
 			String userUseYN = user.getUseYN();
-			System.out.println("-----------userUseYN" +userUseYN);
 			String userStatusCode = user.getEmployeeStatusCode();
-			System.out.println("-----------userStatusCode" +userStatusCode);
+
 			if("N".equals(userUseYN)) {
 				model.addAttribute("message", "삭제된 사원은 로그인 할 수 없습니다.");
 			} else if("EMS003".equals(userStatusCode)) {
@@ -51,7 +50,7 @@ public class UserController {
 					session.setAttribute("employeeId", employeeId);
 					session.setAttribute("employeeName", user.getEmployeeName());
 					session.setAttribute("employeeTypeCode", user.getEmployeeTypeCode());
-					return "/index";
+					return "index";
 				} else {
 					model.addAttribute("message", " 비밀번호를 잘못 입력했습니다.\r\n" + "다시 입력해 주세요.");
 				}
@@ -65,10 +64,10 @@ public class UserController {
 		return "signin";
 	}
 
-	@RequestMapping(value = "/user/logout", method = RequestMethod.GET)
-	public String logout(HttpSession session) {
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpSession session) {	
 		session.invalidate();
-		return "/signin";
+		return "redirect:/signin";
 	}
 
 
