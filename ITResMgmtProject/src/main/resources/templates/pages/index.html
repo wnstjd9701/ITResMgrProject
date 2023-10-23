@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<link rel="stylesheet" type="text/css"
+	th:href="@{../css/home/index.css}">
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
+</head>
+<body>
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<main id="main" class="main">
+		<div class="title-container">
+			<div class="pagetitle">
+				<h1>모니터링</h1>
+				<nav>
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+						<li class="breadcrumb-item active">모니터링</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="btn-container">
+				<input type="button" class="btn btn-primary" id="searchBtn" value="조회">
+			</div>
+		</div>
+		<div class="search-container">
+			<div class="search-info">
+				<span>대 분 류</span> <select id="resClassLevel1" disabled>
+					<option value="HW">하드웨어</option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>중 분 류</span> <select id="resClassLevel2" name="resClassLevel2">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel2:${resClassLevel2}"
+						th:value="${resClassLevel2.resClassId}"
+						th:text="${resClassLevel2.resClassName}"></option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>소 분 류</span> <select disabled id="resClassLevel3"
+					name="resClassLevel3">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel3:${resClassLevel3}"
+						th:value="${resClassLevel3.resClassId}"
+						th:data-upper-res-class-id="${resClassLevel3.upperResClassId}"
+						th:text="${resClassLevel3.resClassName}"></option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>사용 여부</span> <select id="monitoringYn">
+					<option value="Y">전체</option>
+					<option value="A">미사용 포함</option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span>자원명 <input type="text" name="resName" placeholder="자원명을 검색하세요."> </span>
+			</div>
+		</div>
+		<!-- <div class="refresh-btn-container">
+				<input type="button" class="refresh-all-status-btn"
+					value="모든 상태 최신화">
+			</div> -->
+		<div class="table-container">
+			<form>
+				<table id="resInfoTable" class="table table-striped">
+					<thead>
+						<tr>
+							<th>상태</th>
+							<th>상태 최신화</th>
+							<th>IP 주소</th>
+							<th>자원 분류</th>
+							<th>자원명</th>
+							<th>설치 장소명</th>
+							<th>설치 장소</th>
+							<th>도입일자</th>
+							<th>자원 관리 ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="resourceInfo:${resourceInfo}">
+							<td class="resInfoTd status"
+								th:if="${resourceInfo.ipStatus == true}">🟢</td>
+							<td class="resInfoTd status"
+								th:if="${resourceInfo.ipStatus == false}">🔴</td>
+							<td class="refresh"><input type="button" class="refresh"
+								value="새로고침" th:data-ip="${resourceInfo.ip}"></td>
+							<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}">[[${resourceInfo.ip}]]</td>
+							<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}">-</td>
+							<td class="resInfoTd resClassPath"
+								th:text="${resourceInfo.resClassPath}"></td>
+							<td class="resInfoTd resName" th:text="${resourceInfo.resName}"></td>
+							<td class="resInfoTd installPlaceName"
+								th:text="${resourceInfo.installPlaceName}"></td>
+							<td class="resInfoTd installPlaceFullName"
+								th:text="${resourceInfo.installPlaceFullAddress}"></td>
+							<td class="resInfoTd introductionDate"
+								th:text="${resourceInfo.introductionDate}"></td>
+							<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<input type="hidden" class="search-keyword" value=""> <input
+				type="hidden" class="mid-res-class" value="A"> <input
+				type="hidden" class="bottom-res-class" value="A"> <input
+				type="hidden" class="monitoring-yn" value="Y">
+			<nav aria-label="Page navigation example" class="paging-nav">
+				<ul class="pagination monitoring-pagination justify-content-center">
+					<li class="page-item">
+						<button class="page-link prev-page-link" aria-label="Previous"
+							th:value="${paging.startPage - 1}" disabled>
+							<span aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
+						</button>
+					</li>
+					<li class="page-item"
+						th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+						<button class="page-link page-link-val" th:value="${pageNum}"
+							th:text="${pageNum}"></button>
+					</li>
+					<li class="page-item">
+						<button class="page-link next-page-link" aria-label="Next"
+							th:value="${paging.endPage + 1}" th:if="${paging.endPage > 5}">
+							<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
+						</button>
+						<button class="page-link next-page-link" aria-label="Next"
+							disabled th:unless="${paging.endPage > 5}"
+							th:value="${paging.endPage + 1}">
+							<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
+						</button>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		<!-- <div th:replace="~{../common/fragments/footer.html :: fragment-footer}"></div>  -->
+	</main>
+	<script th:src="@{/assets/js/main.js}"></script>
+	<script>
+	$(document).ready(function () {
+	    $('#resClassLevel2').on("change", function () {
+	        var selectedValue = $(this).val();
+	        var resClassLevel3 = $('#resClassLevel3');
+
+	        if (selectedValue !== 'all') {
+	            resClassLevel3.removeAttr("disabled");
+	        } else {
+	            resClassLevel3.attr("disabled", "disabled");
+	            resClassLevel3.val('all');
+	        }
+
+	        var selectedOption = $("option:selected", this);
+	        var selectedResClassId = selectedOption.val();
+
+	        resClassLevel3.find("option").hide();
+	        resClassLevel3.find("option[data-upper-res-class-id='" + selectedResClassId + "']").show();
+	        resClassLevel3.find("option[data-all='all']").show();
+
+	        resClassLevel3.find("option[value='all']").text('전체');
+
+	        resClassLevel3.val('A');
+
+	        $('#resClassLevel2 option[value="all"]').prop('disabled', false);
+	    });
+
+	    $('#resClassLevel2 option[value="all"]').on('click', function () {
+	        $('#resClassLevel3').val('all');
+	        resClassLevel3.find("option[value='all']").text('전체');
+	    });
+
+	    $('#searchBtn').on('click', function () {
+	        var midResClass = $("#resClassLevel2").val();
+	        var bottomResClass = $("#resClassLevel3").val();
+	        var resName = $("input[name='resName']").val();
+	        var monitoringYn = $("#monitoringYn").val();
+	        $.ajax({
+	            type: 'POST',
+	            url: '/search',
+	            data: {
+	                midResClass: midResClass,
+	                bottomResClass: bottomResClass,
+	                monitoringYn: monitoringYn,
+	                resName: resName
+	            },
+	            success: function (response) {
+	            	console.log(response);
+	            	alert(`조회 ${response.message}`);
+	            	updateResInfo(response.data.resInfo);
+	            	monitoringPaging(response.data.paging);
+	            	
+	            	$(".mid-res-class").val(midResClass);
+	    	        $(".bottom-res-class").val(bottomResClass);
+	    	        $(".monitoring-yn").val(monitoringYn);
+	            	$(".search-keyword").val(resName);
+	                return;
+	            },
+	            error: function (response) {
+	                console.log('에러:', response);
+	            }
+	        });
+	    });
+	    
+	    // ip 상태 변경
+	    $(".table-container").on("click", ".refresh", function(){
+	    	var ip = $(this).data("ip");
+	    	console.log(ip);
+	    	if(ip === undefined){
+	    		return;
+	    	}
+	    	var row = $(this).closest("tr"); // 클릭한 버튼이 속한 테이블 행(row)을 선택합니다.
+	        var statusElement = row.find(".status");
+	    	statusElement.text("🟡")	;
+	    	
+	    	$.ajax({
+	    		method: "GET",
+	    		url: "/ping/check",
+	    		data: {
+	    			ip: ip
+	    		},
+	    		contentType: "application/json",
+	    		success: function(response){
+	    			console.log(response)
+	    			if(response.code === 2001){
+	    				// 빨강
+	    				alert(response.message);
+	    				statusElement.text("🔴"); 
+	    				return;
+	    			}
+	    			// 초록
+	    			alert(response.message);
+	    			statusElement.text("🟢");
+	    		},
+	    		error: function(xhr, status, err){
+	    			console.log(err);
+	    		}
+	    	})
+	    });
+	});
+	
+	$(".table-container").on("click", ".page-link-val", function(){
+		var midResClass = $(".mid-res-class").val();
+        var bottomResClass = $(".bottom-res-class").val();
+        var monitoringYn = $(".monitoring-yn").val();
+    	var resName = $(".search-keyword").val();
+    	
+    	var page = $(".page-link-val").val();
+		const url = "/monitoring/" + page
+    	$.ajax({
+    		method: "GET",
+    		url: url,
+    		data: {
+    			midResClass : midResClass,
+    			bottomResClass : bottomResClass,
+    			monitoringYn : monitoringYn,
+    			resName : resName,
+    			page : page
+    		},
+    		success: function(response){
+    			console.log(response.data.resInfo);
+    			updateResInfo(response.data.resInfo);
+            	monitoringPaging(response.data.paging);
+    			
+    		},
+    		error: function(xhr, status, err){
+    			console.log(xhr);
+    		}
+    	})
+		
+	})
+	
+	function monitoringPaging(paging) {
+	    var pagination = $(".monitoring-pagination");
+	    pagination.empty();
+		if(paging.endPage === 0){
+			return;
+		}
+	    
+	    pagination.append(`<li class='page-item'><button class='page-link prev-page-link' value="${paging.startPage - 1}" aria-label='Previous'>&laquo;</button></li>`);
+	    
+	    for (var pageNum = paging.startPage; pageNum <= paging.endPage; pageNum++) {
+	        pagination.append("<li class='page-item'><button class='page-link page-link-val'>" + pageNum + "</button></li>");
+	    }
+	    
+	    pagination.append(`<li class='page-item'><button class='page-link next-page-link' value="${paging.endPage + 1}" aria-label='Next'>&raquo;</button></li>`);
+
+	    // 이전 페이지가 없는 경우 이전 버튼 비활성화
+	    if (paging.startPage === 1 || $(".prev-page-link").val() === 0) {
+	        pagination.find(".prev-page-link").prop("disabled", true);
+	    }
+	    
+	    // 다음 페이지가 없는 경우 다음 버튼 비활성화
+	    if (paging.endPage === paging.totalPageCount) {
+	        pagination.find(".next-page-link").prop("disabled", true);
+	    }
+	}
+	
+	function updateResInfo(response){
+		$('#resInfoTable > tbody tr').remove();
+
+        if (response.length === 0) {
+            alert('검색된 결과가 없습니다.');
+            addTableRow = "<tr>" + "<td colspan='9' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+            $('#resInfoTable > tbody').append(addTableRow);
+            return;
+        }
+
+        for (var i = 0; i < response.length; i++) {
+            const newRow = $("<tr>");
+            var status;
+            if(response[i].ipStatus === true){
+                status = $("<td>").addClass("resInfoTd status").text("🟢");
+            }else{
+            	status = $("<td>").addClass("resInfoTd status").text("🔴");
+            }
+            const refreshButton = $("<input>").attr({
+                type: "button",
+                class: "refresh-btn",
+                value: "새로고침",
+                "data-ip": response[i].ip
+            });
+            const refresh = $("<td>").addClass("refresh").append(refreshButton);
+
+            var ip;
+            if (response[i].ip !== null) {
+                ip = $("<td>").addClass("resInfoTd ip").text(response[i].ip);
+            } else {
+                ip = $("<td>").addClass("resInfoTd ip").text("-");
+            }
+
+            const resClassPath = $("<td>").addClass("resInfoTd resClassPath").text(response[i].resClassPath);
+            const resName = $("<td>").addClass("resInfoTd resName").text(response[i].resName);
+            const installPlaceName = $("<td>").addClass("resInfoTd installPlaceName").text(response[i].installPlaceName);
+            const installPlaceFullAddress = $("<td>").addClass("resInfoTd installPlaceFullAddress").text(response[i].installPlaceFullAddress);
+            const introductionDate = $("<td>").addClass("resInfoTd introductionDate").text(response[i].introductionDate);
+            const mgmtId = $("<td>").addClass("resInfoTd mgmtId").text(response[i].mgmtId);
+
+            newRow.append(status);
+            newRow.append(refresh);
+            newRow.append(ip);
+            newRow.append(resClassPath);
+            newRow.append(resName);
+            newRow.append(installPlaceName);
+            newRow.append(installPlaceFullAddress);
+            newRow.append(introductionDate);
+            newRow.append(mgmtId);
+
+            $('#resInfoTable > tbody').append(newRow);
+        }
+	}
+</script>
+</body>
+</html>

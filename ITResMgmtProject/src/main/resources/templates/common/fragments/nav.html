@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+	<!-- Sidebar Start -->
+	<div th:fragment="fragment-nav" class="left-sidebar"
+		style="clear: both;">
+		<div class="page-wrapper" id="main-wrapper" data-layout="vertical"
+			data-navbarbg="skin6" data-sidebartype="full"
+			data-sidebar-position="fixed" data-header-position="fixed"
+			style="clear: both;">
+			<!-- Sidebar scroll-->
+			<div>
+				<div
+					class="brand-logo d-flex align-items-center justify-content-between"
+					style="clear: both;">
+					<a href="./index.html" class="text-nowrap logo-img"> <img
+						src="/images/dark-logo.svg" width="180" alt="" />
+					</a>
+					<div
+						class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
+						id="sidebarCollapse">
+						<i class="ti ti-x fs-8"></i>
+					</div>
+				</div>
+				<!-- Sidebar navigation-->
+				<nav class="sidebar-nav scroll-sidebar" data-simplebar=""
+					style="clear: both;">
+					<ul id="sidebarnav">
+						<li class="nav-small-cap"><i
+							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
+							class="hide-menu">Home</span></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/}" aria-expanded="false"> <span> <i
+									class="ti ti-layout-dashboard"></i>
+							</span> <span class="hide-menu">Monitoring</span>
+						</a></li>
+
+						<li class="nav-small-cap"><i
+							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
+							class="hide-menu">IT자원</span></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/resclass}" aria-expanded="false"> <span> <i
+									class="ti ti-article"></i>
+							</span> <span class="hide-menu">IT자원분류</span>
+						</a></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/resinfo}" aria-expanded="false"> <span> <i
+									class="ti ti-alert-circle"></i>
+							</span> <span class="hide-menu">IT자원</span>
+						</a></li>
+						<li class="nav-small-cap"><i
+							class="ti ti-dots nav-small-cap-icon fs-4"></i> <span
+							class="hide-menu">ETC</span></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/ipinfo}" aria-expanded="false"> <span> <i
+									class="ti ti-mood-happy"></i>
+							</span> <span class="hide-menu">IP정보</span>
+						</a></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/additem}" aria-expanded="false"> <span> <i
+									class="ti ti-mood-happy"></i>
+							</span> <span class="hide-menu">부가정보항목</span>
+						</a></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/installplace}" aria-expanded="false"> <span> <i
+									class="ti ti-mood-happy"></i>
+							</span> <span class="hide-menu">설치장소</span>
+						</a></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/place/map}" aria-expanded="false"> <span> <i
+									class="ti ti-mood-happy"></i>
+							</span> <span class="hide-menu">지역별 설치 장소 현황</span>
+						</a></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/commoncode}" aria-expanded="false"> <span> <i
+									class="ti ti-mood-happy"></i>
+							</span> <span class="hide-menu">공통코드</span>
+						</a></li>
+						<li class="sidebar-item"><a class="sidebar-link"
+							th:href="@{/employeeview}" aria-expanded="false"> <span> <i
+									class="ti ti-mood-happy"></i>
+							</span> <span class="hide-menu">사원정보</span>
+						</a></li>
+					</ul>
+				</nav>
+				<!-- End Sidebar navigation -->
+			</div>
+			<!-- End Sidebar scroll-->
+		</div>
+	</div>
+	<!--  Sidebar End -->
+</body>
+</html>

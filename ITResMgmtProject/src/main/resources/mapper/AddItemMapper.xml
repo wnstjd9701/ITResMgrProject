@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kcc.itmgr.domain.additem.dao.IAddItemRepository">
+
+<select id="selectUseYAddItem" resultType ="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+	<![CDATA[
+		SELECT add_item_sn AS addItemSn, 
+				add_item_name AS addItemName, 
+				NVL(add_item_desc, '-') AS addItemDesc, 
+				use_yn AS useYN
+		FROM additem
+		WHERE use_yn = 'Y'
+		ORDER BY add_item_sn
+	]]>
+</select>
+
+<select id="selectAllAddItem" resultType ="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+	<![CDATA[
+		SELECT add_item_sn AS addItemSn, 
+				add_item_name AS addItemName, 
+				NVL(add_item_desc, '-') AS addItemDesc, 
+				use_yn AS useYN
+		FROM additem
+	]]>
+</select>
+
+<select id="selectSearchAddItem" resultType ="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+		SELECT add_item_sn AS addItemSn, 
+				add_item_name AS addItemName, 
+				NVL(add_item_desc, '-') AS addItemDesc, 
+				use_yn AS useYN
+		FROM additem
+		<where>
+        	<if test="useYN != null and useYN != ''">
+            	use_yn = #{useYN}
+        	</if>
+        	<if test="searchText != null and searchText != ''">
+            	AND (add_item_name LIKE '%${searchText}%')
+        	</if>
+    	</where>
+		ORDER BY add_item_sn
+</select>
+
+<insert id="insertAddItemExcel" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+    INSERT INTO additem(add_item_sn, add_item_name, add_item_desc, use_yn, creater_id, create_date)
+    VALUES (add_item_sn_seq.NEXTVAL, #{addItemName}, #{addItemDesc}, 'Y', '임시ID', SYSDATE)
+</insert>
+
+<insert id="insertAddItem" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+  <foreach collection="list" item="addItem" separator=" " open="BEGIN" close="END;">
+    INSERT INTO additem(add_item_sn, add_item_name, add_item_desc, use_yn, creater_id, create_date)
+    VALUES (add_item_sn_seq.NEXTVAL, #{addItem.addItemName}, #{addItem.addItemDesc}, 'Y', '임시ID', SYSDATE);
+  </foreach>
+</insert>
+
+<update id="deleteAddItemByUseYN" parameterType="int">
+	<![CDATA[
+		UPDATE additem
+		SET use_yn = 'N'
+		WHERE add_item_sn = #{addItemSn}
+	]]>
+</update>
+
+<update id="updateAddItemDesc" parameterType="kr.co.kcc.itmgr.domain.additem.model.AddItem">
+	<foreach collection="list" item="addItem" separator=";" open="DECLARE BEGIN" close="; END;">
+		UPDATE additem
+		SET add_item_desc = #{addItem.addItemDesc}
+		WHERE add_item_sn=#{addItem.addItemSn}
+	</foreach>
+</update>
+</mapper>

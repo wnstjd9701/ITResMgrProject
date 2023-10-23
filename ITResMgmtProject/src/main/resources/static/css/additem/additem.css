@@ -1,0 +1,101 @@
+.btn {
+	float: right;
+	margin-left: 10px;
+}
+
+.addItem-serachBar {
+	display: flex;
+	align-items: center; /* 수직 가운데 정렬 */
+	flex-direction: row;
+	white-space: nowrap;
+	background-color: #7289AB; /* 배경 색상 */
+	padding: 10px; /* 내부 여백 */
+	border: 1px solid #ccc; /* 테두리 스타일 및 색상 */
+	border-radius: 3px; /* 둥근 모서리 */
+	width: 405px;
+	height: 40px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
+}
+
+#search-useYN, #search-addItemName {
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	font-size: 14px;
+	color: white;
+	margin-right: 5px;
+}
+
+#searchUseYN {
+	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+.search-useYN-select {
+	margin-right: 10px;
+}
+
+.additem-table-container {
+	max-height: 700px;
+	overflow-y: auto;
+}
+
+.additem-table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+}
+
+.additem-thead {
+	text-align: center;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+.additem-table tr th {
+	padding: 10px;
+	background-color: #7289AB;
+	color: white;
+}
+
+.additem-table tr td {
+	padding: 10px;
+	background-color: #FCFCFC;
+}
+
+.additem-table tr {
+	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
+}
+
+.additem-table tbody tr:hover td {
+	background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
+.col-checkbox {
+	width: 5%;
+}
+
+.col-status {
+	width: 5%;
+}
+
+.col-sn {
+	width: 7%;
+}
+
+.col-name {
+	width: 20%;
+}
+
+.col-desc {
+	width: 40%;
+}
+
+.col-useYN {
+	width: 15%;
+}

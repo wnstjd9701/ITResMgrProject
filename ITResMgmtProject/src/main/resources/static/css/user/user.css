@@ -1,0 +1,136 @@
+@charset "UTF-8";
+
+.gradient-custom-2 {
+	/* fallback for old browsers */
+	background: #87CEEB; /* 하늘색 */
+	/* Chrome 10-25, Safari 5.1-6 */
+	background: -webkit-linear-gradient(to right, #87CEEB, #5CACEE, #87CEEB);
+	/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	background: linear-gradient(to right, #87CEEB, #5CACEE, #87CEEB);
+}
+
+@media ( min-width : 768px) {
+	.gradient-form {
+		height: 85vh !important;
+	}
+}
+
+@media ( min-width : 769px) {
+	.gradient-custom-2 {
+		border-top-right-radius: .3rem;
+		border-bottom-right-radius: .3rem;
+	}
+}
+
+.bg {
+	height: 840px;
+	width: 1000px;
+}
+
+.card-size {
+	width: 500px;
+	height: 500px;
+}
+
+.card-body {
+	height: 350px; /* 디자인 요구에 맞게 높이 조절 */
+}
+
+#employeeId::placeholder {
+	color: gray;
+	font-size: 12px;
+}
+
+#employeePwd::placeholder {
+	color: gray;
+	font-size: 12px;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.icon-input {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom : 10px;
+}
+
+.login-icon-wrap {
+	border: 1px solid gray; /* 테두리 스타일 및 색상 설정 */
+	border-right: none; /* 오른쪽 테두리를 제거합니다 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px; /* 원하는 너비 설정 */
+	height: 40px; /* 원하는 높이 설정 */
+	border-collapse: collapse; /* 테두리 겹침 문제 해결 */
+	box-sizing: border-box; /* 박스 크기를 보더와 패딩을 포함한 크기로 설정 */
+	background-color: hsl(0, 0%, 96%);
+}
+
+.login-img {
+	width: 25px;
+	height: 25px;
+}
+
+.id-input-box {
+	border: 1px solid gray;
+	border-radius: 0;
+	width: 300px; /* 원하는 너비 설정 */
+	height: 40px; /* 원하는 높이 설정 */
+}
+
+.id-input-box:focus {
+	border-color: gray; /* 포커스 상태에서 테두리 색상을 gray로 변경 */
+	outline: none; /* 포커스 테두리 숨기기 */
+	cursor: text; /* 커서 설정 */
+}
+
+.btn-size {
+	width: 340px;
+}
+
+#login {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 250px;
+}
+
+/* 메시지가 보일 때 스타일 설정 */
+.text-danger.active {
+	display: block;
+}
+
+/* 카드 요소를 고정 위치로 설정 */
+.card-size {
+	position: relative; /* 부모 요소로부터 상대적 위치 설정 */
+	margin: 0 auto; /* 수평 가운데 정렬 */
+	/* max-width: 500px; 카드 요소 최대 너비 설정 */
+}
+
+.massage-text {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* height: 15px; */
+}
+
+.login-container {
+	height: 500px;
+	width: 500px;
+	background-color: white;
+	justify-content: center;
+	text-align: center;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	border-radius: 5px;
+}
+
+.login-container-content{
+	display: flex;
+	align-items: center;
+}

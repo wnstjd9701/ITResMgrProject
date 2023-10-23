@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<link th:href="@{/css/user/user2.css}" rel="stylesheet" />
+<link href="../assets/css/style.css" rel="stylesheet">
+
+
+<th:block
+	th:replace="~{../common/fragments/head2.html :: fragment-head2}"></th:block>
+<!-- Template Main JS File -->
+</head>
+<body>
+   <header class="sys-name">
+		<span class="kcc-name">KCC정보통신</span> <br> <span class="IT-name">IT자원관리시스템</span>
+	</header>
+	<main id="main" class="main">
+		<div class="login-container">
+			<div class="login-content">
+				<div class="login-content-wrap">
+					<div>
+						<p style="font-size: 30px; font-weight: bold;  text-align: center; margin-top: -100px; margin-bottom:50px;">Login</p>
+					</div>
+
+					<span th:if="${message != null}" th:text="${message}"
+						style="font-size:15px; color: red; margin-bottom: 20px;" id="message-paragraph"></span>
+					<form th:action="@{/signin}" method="post" id="login">
+						<div>
+							<div class="icon-input">
+								<span class="login-icon-wrap"><img
+									src="assets/img/id.png" class="login-img"></span> <input
+									type="text" id="employeeId" name="employeeId"
+									class="id-input-box" placeholder="아이디를 입력해 주세요." required />
+							</div>
+							<div class="icon-input">
+								<span class="login-icon-wrap"><img
+									src="assets/img/pwd.png" class="login-img"></span> <input
+									type="password" id="employeePwd" name="employeePwd"
+									class="id-input-box" placeholder="비밀번호를 입력해 주세요." required />
+							</div>
+							<div class="icon-input">
+							<button type="submit" class="btn btn-primary btn-size">
+								Sign in</button>
+								</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+	<script src="js/user/user.js"></script>
+</body>
+</html>

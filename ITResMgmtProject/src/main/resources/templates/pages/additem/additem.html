@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css"
+	th:href="@{../css/additem/additem.css}">
+<link href="../assets/css/style.css" rel="stylesheet">
+<div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
+<title>부가정보</title>
+</head>
+<body>
+	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
+	<main id="main" class="main">
+		<div class="pagetitle">
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}" id="addItemSaveBtn" type="button" onclick="addItemSaveAll()"
+				class="btn btn-primary"
+				style="background-color: navy; border: navy;">저장</button>
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}" id="addItemHideRowBtn" type="button"
+				onclick="addItemHideRow()" class="btn btn-primary">행삭제</button>
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}" id="addItemAddRowBtn" type="button" onclick="addItemAddRow()"
+				class="btn btn-primary">행추가</button>
+
+			<form th:if="${session.user.employeeTypeCode == 'EMT001'}" id="uploadForm" enctype="multipart/form-data">
+				<input type="file" id="fileInput" name="file" accept=".xlsx, .xls"
+					style="display: none;">
+				<button type="button" id="ExcelUploadBtn" onclick="uploadFile()"
+					class="btn btn-primary"
+					style="background-color: green; border: green;">엑셀업로드</button>
+			</form>
+
+			<form th:if="${session.user.employeeTypeCode == 'EMT001'}" action="/excel/download" method="get">
+				<button type="submit" id="ExcelDownBtn" class="btn btn-primary"
+					style="background-color: green; border: green;">엑셀다운로드</button>
+			</form>
+
+			<button id="addItemsearchBtn" type="button" onclick="addItemsearch()"
+				class="btn btn-primary"
+				style="background-color: gray; border: gray;">조회</button>
+
+			<h1>부가정보</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+					<li class="breadcrumb-item active">부가정보</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="addItem-serachBar">
+			<p id="search-useYN">사용여부</p>
+			<select name="searchUseYN" id="searchUseYN"
+				class="search-useYN-select">
+				<option value="">전체</option>
+				<option value="Y">Y</option>
+			</select>
+
+			<p id="search-addItemName">부가항목</p>
+			<input id="addItemSearchText" type="text" placeholder="명 입력"
+				style="text-align: center;">
+		</div>
+		<div class="additem-table-container">
+			<table class="additem-table" id="addItemTable">
+				<thead class="additem-thead">
+					<tr>
+						<th class="col-checkbox">선택</th>
+						<th class="col-status">상태</th>
+						<th class="col-sn">일련번호</th>
+						<th class="col-name">부가항목명</th>
+						<th class="col-desc">부가항목설명</th>
+						<th class="col-useYN">사용여부</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="addItemList : ${addItemList}">
+						<td><input type="checkbox" name="checkBox"></td>
+						<td name="addItemStatus"><span name="status">S</span></td>
+						<td name="addItemSn" th:text="${addItemList.addItemSn}"></td>
+						<td name="addItemName" th:text="${addItemList.addItemName}"></td>
+						<td onclick="handleClick(this)" name="addItemDesc"
+							th:text="${addItemList.addItemDesc}" style="width: 180px;"></td>
+						<td name="useYN" th:text="${addItemList.useYN}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</main>
+	<script src="js/additem/additem.js"></script>
+	<script th:src="@{/assets/js/main.js}"></script>
+</body>
+</html>
