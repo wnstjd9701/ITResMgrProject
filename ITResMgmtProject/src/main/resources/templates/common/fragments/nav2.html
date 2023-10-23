@@ -19,13 +19,13 @@
 			
 			<div class="login-info ml-auto d-flex align-items-center">
 				<span th:if="${session.employeeTypeCode == 'EMT001'}"
-					style="font-size: 14px; font-family: 'Open Sans', sans-serif;">시스템관리자</span> <span
+					style="font-size: 14px; ">시스템관리자</span> <span
 					th:if="${session.employeeTypeCode == 'EMT002'}"
-					style="font-size: 14px; font-family: 'Open Sans', sans-serif;">IT자원관리자</span> <span>|</span> <span
+					style="font-size: 14px; ">IT자원관리자</span> <span>|</span> <span
 					th:text="${session.employeeId + '님'}"
 					style="color: black; margin-right: 20px; font-size: 14px;"></span>
 				<a th:href="@{/logout}"> <span class="logout-span"
-					style="color: black;">Logout</span> <img
+					style="color: black; font-size:14px;">Logout</span> <img
 					src="assets/img/logout.png"
 					style="width: 30px; height: 30px; margin-right: 15px;">
 				</a>

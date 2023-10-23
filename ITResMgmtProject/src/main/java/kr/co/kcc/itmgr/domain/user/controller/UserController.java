@@ -50,7 +50,7 @@ public class UserController {
 					session.setAttribute("employeeId", employeeId);
 					session.setAttribute("employeeName", user.getEmployeeName());
 					session.setAttribute("employeeTypeCode", user.getEmployeeTypeCode());
-					return "index";
+					return "redirect:/";
 				} else {
 					model.addAttribute("message", " 비밀번호를 잘못 입력했습니다.\r\n" + "다시 입력해 주세요.");
 				}
