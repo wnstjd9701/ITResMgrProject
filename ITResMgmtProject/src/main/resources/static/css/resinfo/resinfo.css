@@ -1,30 +1,28 @@
-
-.installPlaceModal{
-    position:absolute;
-    display:none;
-    
-    background-color:#f5f5f5;
-    background-color: rgba( 255, 255, 255, 0.5 );
-    justify-content: center;
-    top:40;
-    left:40;
-
-    width:30%;
-    height:80%;
+.installPlaceModal {
+	position: absolute;
+	display: none;
+	background-color: #f5f5f5;
+	background-color: rgba(255, 255, 255, 0.5);
+	justify-content: center;
+	top: 40;
+	left: 40;
+	width: 30%;
+	height: 80%;
 }
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
 }
 
 .container {
-    margin-top: 10px;
-    margin-left: 270px;
-    max-width: 85%;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-top: 10px;
+	margin-left: 270px;
+	max-width: 85%;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn {
@@ -32,205 +30,194 @@ body {
 	margin-left: 10px;
 }
 
-/* .btn-primary {
-    background-color: navy;
-    border-color: navy;
-    color: white;
-    margin-left: 10px;
-} */
-
 .btn-primary:hover {
-    background-color: navy;
-    border-color: white;
+	background-color: navy;
+	border-color: white;
 }
 
 select, input[type="text"] {
-    padding: 3px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    margin-bottom: 10px;
+	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-bottom: 10px;
 }
 
 .btn-group span {
-    margin-right: 20px;
+	margin-right: 20px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .radio-label {
-    margin-right: 20px;
+	margin-right: 20px;
 }
 
 .addTable table {
-    display: none; /* Initially hide all tables */
+	display: none; /* Initially hide all tables */
 }
 
 .nav-link .active {
-    background-color: #f8f9fa; /* Change the background color when active */
-    border-top: 2px solid navy; /* Add a border at the bottom when active */
-    color: navy; /* Change the text color when active */
+	background-color: #f8f9fa; /* Change the background color when active */
+	border-top: 2px solid navy;
+	/* Add a border at the bottom when active */
+	color: navy; /* Change the text color when active */
 }
 
 #closeModal {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+	position: absolute;
+	top: 5px;
+	right: 5px;
 }
+
 #closeModal2 {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+	position: absolute;
+	top: 5px;
+	right: 5px;
 }
 
 #save_btn {
-    display: block;
-    margin: 0 auto;
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+	display: block;
+	margin: 0 auto;
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 /* 테이블 스타일 */
-.res-info-list-table  {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-  table-layout: fixed;
+.res-info-list-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+	table-layout: fixed;
 }
 
 .res-info-list-table tr th, .res-info-list-table tr td {
-  padding: 10px;
-  text-align: center;
+	padding: 10px;
+	text-align: center;
 }
 
 .res-info-list-table tr th {
-  background-color: #7289AB;
-  color:white;
-}
-.res-info-list-table tr td {
-  background-color: #FCFCFC;
+	background-color: #7289AB;
+	color: white;
 }
 
-.table{
-	font-size:12px;
+.res-info-list-table tr td {
+	background-color: #FCFCFC;
+}
+
+.table {
+	font-size: 12px;
 }
 
 .table tr th {
-  background-color: #7289AB;
-  color:white;
+	background-color: #7289AB;
+	color: white;
 }
 
 #installPlaceSearchBtn, #res-class-search-btn {
-  font-size: 12px; /* 원하는 크기로 조정하세요 */
-padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
-  background-color:navy;
-  border : navy;
+	font-size: 12px; /* 원하는 크기로 조정하세요 */
+	padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
+	background-color: navy;
+	border: navy;
 }
 
 .btn-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
 }
 
 .btn-container button {
-  margin: 0 5px;
+	margin: 0 5px;
 }
 
 /* CSS for the Save button */
 #res-info-save-btn {
-  color: white;
-  padding: 6px 12px; /* Adjust padding as needed */
-  border: none;
-  border-radius: 5px;
-  background-color: navy;
+	color: white;
+	padding: 6px 12px; /* Adjust padding as needed */
+	border: none;
+	border-radius: 5px;
+	background-color: navy;
 }
 
 /* CSS for the Close button */
 #res-info-close-btn {
-  color: white;
-  padding: 6px 12px; /* Adjust padding as needed */
-  border: none;
-  border-radius: 5px;
-  background-color: navy;
+	color: white;
+	padding: 6px 12px; /* Adjust padding as needed */
+	border: none;
+	border-radius: 5px;
+	background-color: navy;
 }
 
 /* Optional: Add hover effect */
 #res-info-save-btn:hover {
-  background-color: darkblue;
+	background-color: darkblue;
 }
 
-
-
 .nav-tabs .nav-item .nav-link {
-  color: gray;
-  font-weight: bold;
+	color: gray;
+	font-weight: bold;
 }
 
 .nav-tabs .nav-item .nav-link.active {
-  font-weight: bold;
-  
+	font-weight: bold;
 }
 
 /* CSS for styling the content tables */
 .table-content {
-  margin-top: 20px;
+	margin-top: 20px;
 }
 
 .table-content table {
-  width: 100%;
-  border: 1px solid navy;
+	width: 100%;
+	border: 1px solid navy;
 }
 
 .table-content table tbody tr td {
-  padding: 10px;
+	padding: 10px;
 }
 
-
- #resInfoDetailTable th, #resInfoDetailTable td {
-     padding-top: 10px; /* 상단 간격 조정 */
-     padding-bottom: 10px; /* 하단 간격 조정 */
- }
-
-#resInfoDetailTable th{
-    text-align: center; /* 테이블 가운데 정렬 */
-     vertical-align: middle;
+#resInfoDetailTable th, #resInfoDetailTable td {
+	padding-top: 10px; /* 상단 간격 조정 */
+	padding-bottom: 10px; /* 하단 간격 조정 */
 }
+
+#resInfoDetailTable th {
+	text-align: center; /* 테이블 가운데 정렬 */
+	vertical-align: middle;
+}
+
 #resInfoDetailTable td {
-  width: 20%; /* 100%를 6개의 열에 나눈 값 (1/6) */
-  box-sizing: border-box; /* 요소의 너비에 border와 padding을 포함시킴 */
-  
-  
+	width: 20%; /* 100%를 6개의 열에 나눈 값 (1/6) */
+	box-sizing: border-box; /* 요소의 너비에 border와 padding을 포함시킴 */
 }
-#resInfoDetailTable td input,
-#resInfoDetailTable td select, 
+
+#resInfoDetailTable td input, #resInfoDetailTable td select,
+	#resInfoDetailTable td label {
+	padding: 0px;
+	margin: 0px;
+}
+
+#resInfoDetailTable td input, #resInfoDetailTable td select,
+	#resInfoDetailTable td label {
+	height: 28px; /* 원하는 너비로 조정할 수 있습니다 */
+}
+
 #resInfoDetailTable td label {
-  padding: 0px;
-  margin: 0px;
+	align-items: center;
 }
 
-#resInfoDetailTable td input, 
-#resInfoDetailTable td select, 
-#resInfoDetailTable td label {
-  height: 28px; /* 원하는 너비로 조정할 수 있습니다 */
-}
-
-#resInfoDetailTable td label{
-  	align-items: center;
-}
-
-
-.essential-resinfo{
-	color:rgb(4, 13, 123); 
-	font-weight: bold; 
+.essential-resinfo {
+	color: rgb(4, 13, 123);
+	font-weight: bold;
 	font-size: medium;
 }
 
-.addTable table tr th{
-	border :2px solid #7289AB;
+.addTable table tr th {
+	border: 2px solid #7289AB;
 }
 
 .addTable table tr td {
@@ -238,41 +225,22 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 }
 
 .search-bar {
-/*     display: flex;
-    align-items: center;
-    flex-wrap: wrap; 텍스트 길이에 맞게 자동으로 줄 바꿈
-    background-color: #7289AB;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-    color:white; */
-    
-    /* display: block; */
-	align-items: center; /* 수직 가운데 정렬 */
-	/* flex-direction: row;
-	white-space: nowrap; */
 	background-color: #7289AB; /* 배경 색상 */
 	padding: 10px; /* 내부 여백 */
 	border: 1px solid #ccc; /* 테두리 스타일 및 색상 */
 	border-radius: 3px; /* 둥근 모서리 */
-	/* width: 91%; */
-	width:1220px;
+	/* width: 1220px; */
+	width:100%;
 	height: 90px;
 	margin-top: 20px;
 	margin-bottom: 20px;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
 }
 
-
 /* 스팬 요소 스타일 */
 .search-bar span {
-   /*  margin-right: 10px; */ /* 스팬 요소 간의 간격 조정 */
-    
-    margin: 0;
+	/*  margin-right: 10px; */ /* 스팬 요소 간의 간격 조정 */
+	margin: 0;
 	padding: 0;
 	font-weight: bold;
 	font-size: 14px;
@@ -282,57 +250,59 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 
 /* 선택 상자 스타일 */
 .search-bar select {
-    margin-right: 10px; /* 선택 상자 간의 간격 조정 */
+	margin-right: 10px; /* 선택 상자 간의 간격 조정 */
 }
 
 /* 입력 상자 스타일 */
 .search-bar input[type="text"] {
-    margin-right: 10px; /* 입력 상자 간의 간격 조정 */
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+	margin-right: 10px; /* 입력 상자 간의 간격 조정 */
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
 }
 
 /* 라디오 버튼 스타일 */
 .search-bar input[type="radio"] {
-    margin-right: 5px; /* 라디오 버튼 간의 간격 조정 */
-    
+	margin-right: 5px; /* 라디오 버튼 간의 간격 조정 */
 }
 
 .search-bar span {
-    display: flex; /* SPAN 요소도 flex로 변경 */
-    align-items: center; /* 수직 중앙 정렬 */
-    margin-right: 10px;
-    font-weight: bold;
+	display: flex; /* SPAN 요소도 flex로 변경 */
+	align-items: center; /* 수직 중앙 정렬 */
+	margin-right: 10px;
+	font-weight: bold;
 }
 
-.search-bar select,
-.search-bar input[type="text"] {
-    width: 13%; /* 원하는 크기로 조절 */
-    height: 30px; /* 원하는 크기로 조절 */
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-.search-bar input[type="radio"]{
+.search-bar select, .search-bar input[type="text"] {
+	width: 13%; /* 원하는 크기로 조절 */
+	height: 30px; /* 원하는 크기로 조절 */
 	padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+
+.search-bar input[type="radio"] {
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
 }
 
 .search-bar label {
-    display: flex; /* 라디오 버튼 요소도 flex로 변경 */
-    align-items: center; /* 수직 중앙 정렬 */
-    margin-bottom: 0px;
-    margin-right : 10px;
-    }
-    
-    
-#ipListTable table{
+	display: flex; /* 라디오 버튼 요소도 flex로 변경 */
+	align-items: center; /* 수직 중앙 정렬 */
+	margin-bottom: 0px;
+	margin-right: 10px;
+}
+
+#ipListTable table {
 	display: table;
 	table-layout: fixed;
 }
-#ipListTable tr td{
+
+#ipListTable tr td {
 	display: table-cell;
+}
+
+.res-info-list-table tbody tr:hover td {
+	background-color: #ECECEC; /* 호버 시 배경색 변경 */
 }

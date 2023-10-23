@@ -81,8 +81,8 @@
 								th:if="${resourceInfo.ipStatus == true}" style="text-align: center; vertical-align: middle;">🟢</td>
 							<td class="resInfoTd status"
 								th:if="${resourceInfo.ipStatus == false}" style="text-align: center; vertical-align: middle;">🔴</td>
-							<td class="refresh" style="text-align: center;"><input type="button" class="refresh"
-								value="새로고침" th:data-ip="${resourceInfo.ip}"></td>
+							<td class="refresh" style="text-align: center;"><input type="button" class="refresh refresh-btn"
+								value="↻" th:data-ip="${resourceInfo.ip}"></td>
 							<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}" style="text-align: center;">[[${resourceInfo.ip}]]</td>
 							<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}" style="text-align: center;">-</td>
 							<td class="resInfoTd resClassPath"
@@ -309,7 +309,7 @@
             const refreshButton = $("<input>").attr({
                 type: "button",
                 class: "refresh-btn",
-                value: "새로고침",
+                value: "↻",
                 "data-ip": response[i].ip
             });
             const refresh = $("<td>").addClass("refresh").append(refreshButton);

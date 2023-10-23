@@ -94,8 +94,9 @@
 							<td th:text="${resinfo.monitoringYn}"></td>
 							<input type="hidden" th:value="${resinfo.resClassId}">
 							<td><input type="hidden" name="resSerialId"
-								th:value="${resinfo.resSerialId}">
-								<button type="button" id="resinfo-detail-btn">상세</button></td>
+								th:value="${resinfo.resSerialId}" >
+								<button type="button" id="resinfo-detail-btn" style="border:none; background-color:transparent;"><img
+					src="assets/img/detail2.png" style="width:25px; height:25px;"></button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -251,9 +252,9 @@
 										<th>✔️</th>
 										<th>ip</th>
 										<th>ipType</th>
-										<th style="width: 5.5%;"><button id="search-ip-list-btn"
-												style="float: right;">추가</button></th>
-										<th style="width: 5.5%;"><button style="float: right;">삭제</button></th>
+										<th style=" text-align: center;"><button id="search-ip-list-btn" class="btn btn-primary"
+												style="float: right; background-color: #003F5E; border: #003F5E; font-size:13px;">추가</button></th>
+										<th style="width: 5.5%; text-align: center;"><button class="btn btn-primary" style="float: left; background-color: #003F5E; border: #003F5E; font-size:13px; margin-left:-10px;">삭제</button></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -263,9 +264,9 @@
 					</div>
 					<!-- 매핑된 부가정보 및 ip목록 끝 -->
 					<div class="btn-container d-flex justify-content-center">
-						<button id="res-info-save-btn" type="submit">확인</button>
+						<button id="res-info-save-btn" type="submit" >저장</button>
 						<button id="res-info-close-btn" type="button"
-							data-bs-dismiss="modal">취소</button>
+							data-bs-dismiss="modal" style="background-color: gray; border: gray;">닫기</button>
 					</div>
 				</div>
 			</div>
@@ -324,8 +325,8 @@
 						</table>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">취소</button>
-							<button type="button" id="choose-res-class-btn">확인</button>
+								data-bs-dismiss="modal" style="font-size:13px;">취소</button>
+							<button type="button" id="choose-res-class-btn" class="btn btn-primary" style="background-color: navy; border: navy; font-size:13px;" >확인</button>
 						</div>
 					</div>
 				</div>
@@ -361,8 +362,8 @@
 						<ul id="pagination"></ul>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">취소</button>
-							<button type="button" id="choose-install-place-btn">확인</button>
+								data-bs-dismiss="modal" style="font-size:13px;">취소</button>
+							<button type="button" id="choose-install-place-btn" class="btn btn-primary" style="background-color: navy; border: navy; font-size:13px;">확인</button>
 						</div>
 					</div>
 				</div>
