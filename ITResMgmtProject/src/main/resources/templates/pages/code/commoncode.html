@@ -65,7 +65,7 @@
 								th:data-code-group-id="${commonCode.codeGroupId}"></td>
 							<td><input id="commonCode-group-name"
 								class="code-group-name" name="codeGroupName" type="text"
-								th:value="${commonCode.codeGroupName}" style="width:150px; text-align: center;"></td>
+								th:value="${commonCode.codeGroupName}" style="width:150px; text-align: center; border:none;"></td>
 							<td th:text="${commonCode.codeDetailCount}"></td>
 							<td><select>
 									<option th:value="Y" th:text="Y"
@@ -73,7 +73,8 @@
 									<option th:value="N" th:text="N"
 										th:selected="${commonCode.useYn == 'N'}"></option>
 							</select></td>
-							<td><input type="button" value="상세" th:data-code-group-id="${commonCode.codeGroupId}" class=""></td>
+							<td><input type="button" value="상세" th:data-code-group-id="${commonCode.codeGroupId}" class=""><img
+					src="assets/img/detail2.png" style="width:25px; height:25px;"></td>
 						</tr>
 					</tbody>
 				</table>

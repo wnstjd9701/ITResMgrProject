@@ -39,33 +39,22 @@ table th {
 }
 
 .second-container {
-/* 	padding: 20px;
-	background-color: white;
-	width: 65%;
-	padding-bottom: 20px;
-	box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1); */
 	padding: 15px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 	background-color: rgba(255, 255, 255, 0.5);
-	/* margin-right:20px; */
-	width:65%;
+	width: 65%;
 }
 
-.first-container{
-	/* padding: 20px;
-	background-color: white;
-	width: 35%;
-	padding-bottom: 20px;
-	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1); */
+.first-container {
 	padding: 20px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 	background-color: rgba(255, 255, 255, 0.5);
-	margin-right:20px;
-	width:35%;
+	margin-right: 20px;
+	width: 35%;
 }
 /* 자원분류 테이블 */
 #resClassDetailTable {
@@ -114,4 +103,3 @@ table th {
 	border-radius: 5px;
 	background-color: navy;
 }
-

@@ -55,22 +55,11 @@
 						</a></li>
 						<li><a th:href="@{/resinfo}"> <i class="bi bi-circle"></i><span>IT자원</span>
 						</a></li>
-					</ul></li>
-				<!-- End Components Nav -->
-
+					</ul></li>			
 				<li class="nav-item"><a class="nav-link collapsed"
-					data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-						<i class="bi bi-journal-text"></i><span>공통코드</span><i
-						class="bi bi-chevron-down ms-auto"></i>
-				</a>
-					<ul id="forms-nav" class="nav-content collapse "
-						data-bs-parent="#sidebar-nav">
-						<li><a th:href="@{/commoncode}"> <i class="bi bi-circle"></i><span>공통코드</span>
-						</a></li>
-					</ul></li>
-				<!-- End Forms Nav -->
-
-
+					th:href="@{/commoncode}"> <i
+						class="bi bi-journal-text"></i> <span>공통코드</span>
+				</a></li>
 				<li class="nav-item"><a class="nav-link collapsed"
 					th:href="@{/additem}"> <i
 						class="bi bi-layout-text-window-reverse"></i> <span>부가정보</span>
@@ -82,10 +71,6 @@
 						class="bi bi-layout-text-window-reverse"></i> <span>사원정보</span>
 				</a></li>
 				<!-- End Dashboard Nav -->
-
-
-
-
 
 				<li class="nav-item"><a class="nav-link collapsed"
 					data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
