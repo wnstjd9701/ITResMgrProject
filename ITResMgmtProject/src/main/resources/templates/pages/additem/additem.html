@@ -13,23 +13,26 @@
 	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
 	<main id="main" class="main">
 		<div class="additem-btn-first">
-			<button id="addItemsearchBtn" type="button" onclick="addItemsearch()"
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}"
+				id="addItemSaveBtn" type="button" onclick="addItemSaveAll()"
 				class="btn btn-primary"
-				style="background-color: gray; border: gray;">조회</button>
-			<form action="/excel/download" method="get">
-				<button type="submit" id="ExcelDownBtn" class="btn btn-primary"
-					style="background-color: green; border: green;">엑셀다운로드</button>
-			</form>
-			<form id="uploadForm" enctype="multipart/form-data">
+				style="background-color: navy; border: navy;">저장</button>
+			<form th:if="${session.user.employeeTypeCode == 'EMT001'}"
+				id="uploadForm" enctype="multipart/form-data">
 				<input type="file" id="fileInput" name="file" accept=".xlsx, .xls"
 					style="display: none;">
 				<button type="button" id="ExcelUploadBtn" onclick="uploadFile()"
 					class="btn btn-primary"
 					style="background-color: green; border: green;">엑셀업로드</button>
 			</form>
-			<button id="addItemSaveBtn" type="button" onclick="addItemSaveAll()"
+			<form th:if="${session.user.employeeTypeCode == 'EMT001'}"
+				action="/excel/download" method="get">
+				<button type="submit" id="ExcelDownBtn" class="btn btn-primary"
+					style="background-color: green; border: green;">엑셀다운로드</button>
+			</form>
+			<button id="addItemsearchBtn" type="button" onclick="addItemsearch()"
 				class="btn btn-primary"
-				style="background-color: navy; border: navy;">저장</button>
+				style="background-color: gray; border: gray;">조회</button>
 		</div>
 		<div class="pagetitle">
 			<h1>부가정보</h1>
@@ -40,24 +43,31 @@
 				</ol>
 			</nav>
 		</div>
+		<!-- </div> -->
 		<div class="addItem-serachBar">
 			<p id="search-useYN">사용여부</p>
 			<select name="searchUseYN" id="searchUseYN"
 				class="search-useYN-select">
+				<option value="">전체</option>
 				<option value="Y">Y</option>
-				<option value="">미사용포함</option>
 			</select>
+
 			<p id="search-addItemName">부가항목</p>
 			<input id="addItemSearchText" type="text" placeholder="명 입력"
 				style="text-align: center;">
 		</div>
+
+
 		<div class="additem-btn-second">
-			<button id="addItemHideRowBtn" type="button"
-				onclick="addItemHideRow()" class="btn btn-primary"
-				style="background-color: #003F5E; border: #003F5E; font-size: 13px;">행삭제</button>
-			<button id="addItemAddRowBtn" type="button" onclick="addItemAddRow()"
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}"
+				id="addItemAddRowBtn" type="button" onclick="addItemAddRow()"
 				class="btn btn-primary"
-				style="background-color: #003F5E; border: #003F5E; font-size: 13px; margin-left: 10px;">행추가</button>
+				style="background-color: #003F5E; border: #003F5E; font-size: 13px;">행추가</button>
+			<button th:if="${session.user.employeeTypeCode == 'EMT001'}"
+				id="addItemHideRowBtn" type="button" onclick="addItemHideRow()"
+				class="btn btn-primary"
+				style="background-color: #003F5E; border: #003F5E; font-size: 13px;  margin-left: 10px;">행삭제</button>
+
 		</div>
 		<div class="additem-table-container">
 			<table class="additem-table" id="addItemTable">

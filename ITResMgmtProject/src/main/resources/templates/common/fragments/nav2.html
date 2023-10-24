@@ -15,21 +15,18 @@
 					class="d-none d-lg-block">KCC정보통신</span>
 				</a> <i class="bi bi-list toggle-sidebar-btn"></i>
 			</div>
-			
+
 			<div class="login-info ml-auto d-flex align-items-center">
-				<span th:if="${session.employeeTypeCode == 'EMT001'}"
-					style="font-size: 14px; ">시스템관리자</span> <span
-					th:if="${session.employeeTypeCode == 'EMT002'}"
-					style="font-size: 14px; ">IT자원관리자</span> <span>|</span> <span
-					th:text="${session.employeeId + '님'}"
-					style="color: black; margin-right: 20px; font-size: 14px;"></span>
+				<span th:if="${session.user.employeeTypeCode == 'EMT001'}" style="font-size: 14px;">시스템관리자</span> 
+				<span th:if="${session.user.employeeTypeCode == 'EMT002'}" style="font-size: 14px;">IT자원관리자</span> 
+				<span>|</span> <span th:text="${session.user.employeeId + '님'}" style="color: black; margin-right: 20px; font-size: 14px;"></span>
 				<a th:href="@{/logout}"> <span class="logout-span"
-					style="color: black; font-size:14px;">Logout</span> <img
+					style="color: black; font-size: 14px;">Logout</span> <img
 					src="assets/img/logout.png"
 					style="width: 30px; height: 30px; margin-right: 15px;">
 				</a>
 			</div>
-			
+
 			<!-- End Logo -->
 		</header>
 		<!-- End Header -->
@@ -39,7 +36,7 @@
 
 			<ul class="sidebar-nav" id="sidebar-nav">
 
-				<li class="nav-item"><a class="nav-link collapsed"
+				<li th:if="${session.user.employeeTypeCode == 'EMT001'}" class="nav-item"><a class="nav-link collapsed"
 					th:href="@{/}"> <i class="bi bi-grid"></i> <span>모니터링</span>
 				</a></li>
 				<!-- End Dashboard Nav -->
@@ -82,11 +79,9 @@
 						<li><a th:href="@{/installplace}"> <i
 								class="bi bi-circle"></i><span>설치 장소</span>
 						</a></li>
-						<li><a th:href="@{/place/map}"> <i class="bi bi-circle"></i><span>지역별
-									자원 설치 현황</span>
-						</a></li>
 					</ul></li>
 				<!-- End Tables Nav -->
+
 
 				<li class="nav-item"><a class="nav-link collapsed"
 					data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -99,6 +94,12 @@
 									관리</span>
 						</a></li>
 					</ul></li>
+
+				<li class="nav-heading">지역별 자원 현황</li>
+				<li class="nav-item"><a class="nav-link collapsed"
+					th:href="@{/place/map}"> <i class="bi bi-person"></i> <span>지역별 자원 현황</span>
+				</a></li>
+				<!-- End Profile Page Nav -->
 			</ul>
 
 		</aside>

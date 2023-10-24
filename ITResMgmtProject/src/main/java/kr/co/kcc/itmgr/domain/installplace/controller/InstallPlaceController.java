@@ -58,7 +58,7 @@ public class InstallPlaceController {
 	 * @API No.3-7. 설치 장소 페이징 처리 [비동기]
 	 * @Info: 설치 장소 특정 페이지 검색
 	 */
-	@GetMapping("/installPlace/{page}") 
+	@GetMapping("/installplace/{page}") 
 	public ResponseEntity<List<InstallPlace>> installPlacePaging(@PathVariable("page") int page, @RequestParam("searchType") String searchType){
 		logger.info("page: " + page + " searchType: " + searchType);
 		

@@ -46,11 +46,8 @@ public class UserController {
 				model.addAttribute("message", "휴직중인 사원은 로그인 할 수 없습니다.");
 			} else {
 				//삭제,퇴직,휴직중인 사원이 아닐 경우
-
 				if(userPwd.equals(employeePwd)) {	//비밀번호 일치 시
-					session.setAttribute("employeeId", employeeId);
-					session.setAttribute("employeeName", user.getEmployeeName());
-					session.setAttribute("employeeTypeCode", user.getEmployeeTypeCode());
+					session.setAttribute("user", user);
 					return "redirect:/";
 				} else {
 					model.addAttribute("message", " 비밀번호를 잘못 입력했습니다.\r\n" + "다시 입력해 주세요.");

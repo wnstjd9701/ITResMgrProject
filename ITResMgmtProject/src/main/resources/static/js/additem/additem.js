@@ -5,10 +5,10 @@ function addItemAddRow() {
 	var table = document.getElementById("addItemTable");
 	var newRow = table.insertRow();
 	newRow.setAttribute("data-row-id", rowCount);
-
+	
 	var newCellStatus = newRow.insertCell(0);
 	newCellStatus.innerHTML = "<span name='status'>I</span>";
-
+	
 	var newCellCheckBox = newRow.insertCell(1);
 	newCellCheckBox.innerHTML = "<input type='checkbox' name='insertCheckBox'>";
 
