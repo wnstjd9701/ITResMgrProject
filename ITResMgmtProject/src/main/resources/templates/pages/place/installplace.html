@@ -32,9 +32,7 @@
 								class="btn btn-primary"> <input type="button"
 								id="new-address" value="신규" class="btn btn-primary"
 								style="background-color: navy; border: navy;"> <input
-								type="button" id="delete-address" value="행삭제"
-								class="btn btn-primary" style="background-color: #003F5E; border: #003F5E;"> <input id="search-btn"
-								type="button" value="조회"
+								id="search-btn" type="button" value="조회"
 								style="background-color: gray; border: gray;"
 								class="btn btn-primary">
 						</div>
@@ -48,24 +46,31 @@
 						<input type="button" id="delete-address" value="행삭제" class="btn btn-primary">
 					</div>
 				</div> -->
+
+					<div class="search-container-second">
+						<input type="button" id="delete-address" value="행삭제"
+							class="btn btn-primary"
+							style="background-color: #003F5E; border: #003F5E; font-size: 13px;">
+					</div>
+
 					<div class="place-table-container">
 						<table class="installplace-table">
 							<thead class="fixed-header">
-								<tr>	
-									<th scope="col" style="width:5%;">번호</th>
-									<th scope="col" style="width:5%;">선택</th>
-									<th scope="col" style="width:15%;">설치 장소명</th>
-									<th scope="col" style="width:30%;">주소</th>
-									<th scope="col" style="width:15%;">상세 주소</th>
-									<th scope="col" style="width:12%;">자원 수</th>
-									<th scope="col" style="width:7%;">상세</th>
+								<tr>
+									<th scope="col" style="width: 5%;">번호</th>
+									<th scope="col" style="width: 5%;">선택</th>
+									<th scope="col" style="width: 15%;">설치 장소명</th>
+									<th scope="col" style="width: 30%;">주소</th>
+									<th scope="col" style="width: 15%;">상세 주소</th>
+									<th scope="col" style="width: 12%;">자원 수</th>
+									<th scope="col" style="width: 7%;">상세</th>
 								</tr>
 							</thead>
 							<tbody class="place-table-body">
 								<tr th:each="installPlace, i : ${installPlace}">
-								<td class="place-count" th:text="${i.count}"></td>
-								<td><input type="checkbox" name="installPlaceSn"
-										class="place-sn" th:value="${installPlace.installPlaceSn}"></td>				
+									<td class="place-count" th:text="${i.count}"></td>
+									<td><input type="checkbox" name="installPlaceSn"
+										class="place-sn" th:value="${installPlace.installPlaceSn}"></td>
 									<td class="place-name"
 										th:text="${installPlace.installPlaceName}"></td>
 									<td class="place-address text-left"
@@ -77,13 +82,15 @@
 										th:text="${installPlace.installPlaceDetailAddress}"></td>
 									<td class="place-res-count" th:text="${installPlace.resCount}"></td>
 									<td><input type="button" class="resinfo-btn" value="상세"
-										th:data-place-name="${installPlace.installPlaceName}"></td>
+										th:data-place-name="${installPlace.installPlaceName}"> <img
+					src="assets/img/detail2.png" style="width:25px; height:25px;"></td>
 								</tr>
 							</tbody>
 						</table>
 						<input type="hidden" class="search-type" value="">
 						<nav aria-label="Page navigation example" class="paging-nav">
-							<ul class="pagination place-pagination justify-content-center" style="margin-top:12px; margin-bottom:3px;">
+							<ul class="pagination place-pagination justify-content-center"
+								style="margin-top: 12px; margin-bottom: 3px;">
 								<li class="page-item">
 									<button class="page-link prev-page-link" aria-label="Previous"
 										value="0">
@@ -109,11 +116,10 @@
 					<div class="address-container">
 						<form id="place-address-form">
 							<div>
-								<span class="address-span">설치 장소명</span>
-								<input type="hidden" name="flag" id="flag" value=""> <input
-									type="hidden" name="installPlaceSn" id="install-place-sn"
-									value=""> <input type="text" name="installPlaceName"
-									id="detail-place-name"
+								<span class="address-span">설치 장소명</span> <input type="hidden"
+									name="flag" id="flag" value=""> <input type="hidden"
+									name="installPlaceSn" id="install-place-sn" value=""> <input
+									type="text" name="installPlaceName" id="detail-place-name"
 									class="address-input-box input-box detail-place-name"
 									placeholder="설치 장소명">
 							</div>
@@ -150,14 +156,14 @@
 								</thead>
 								<tbody class="resinfo-table-body">
 									<tr>
-										<td colspan="7">장소명을 클릭하세요.
-										</td>
+										<td colspan="7">장소명을 클릭하세요.</td>
 									</tr>
 								</tbody>
 							</table>
 							<input type="hidden" class="res-search-type" value="">
 							<nav aria-label="Page navigation example" class="paging-nav">
-								<ul class="pagination res-pagination justify-content-center" style="margin-top:12px; margin-bottom:3px;">
+								<ul class="pagination res-pagination justify-content-center"
+									style="margin-top: 12px; margin-bottom: 3px;">
 									<!-- <li class="page-item">
 =======
 						<input type="hidden" class="res-search-type" value="">
