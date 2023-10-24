@@ -24,7 +24,7 @@
 		    ipinfo       ip
 		    LEFT JOIN resipmapping rim ON ip.ip_sn = rim.ip_sn
 		    LEFT JOIN resinfo      r ON r.res_serial_id = rim.res_serial_id
-		    LEFT JOIN ipcode       c ON c."detailCode" = rim.ip_type_code
+		    LEFT JOIN ipcode       c ON c."detailCode" = ip.ip_type_code
 	</sql>
 	
 	<sql id="ipCode">
@@ -231,7 +231,7 @@
 		            ipinfo       ip
 		            LEFT JOIN resipmapping rim ON ip.ip_sn = rim.ip_sn
 		            LEFT JOIN resinfo      r ON r.res_serial_id = rim.res_serial_id
-		            LEFT JOIN ipcode       c ON c."detailCode" = rim.ip_type_code
+		            LEFT JOIN ipcode       c ON c."detailCode" = ip.ip_type_code
 				<where>
 					<include refid="ipSearchKeyword">
 						<property name="keyword" value="#{keyword}"></property>
