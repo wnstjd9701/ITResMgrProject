@@ -24,7 +24,7 @@ public class ResInfoService implements IResInfoService {
 	@Override
 	public List<ResInfo> selectAllResInfo(int page,ResInfo resInfo) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		int start = (page-1)*5+1;
+		int start = (page-1)*10+1;
 		map.put("start", start);
 		map.put("end", start+9);
 		map.put("resInfo", resInfo);
