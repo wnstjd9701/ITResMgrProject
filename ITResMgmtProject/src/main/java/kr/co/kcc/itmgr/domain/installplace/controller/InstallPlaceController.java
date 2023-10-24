@@ -65,7 +65,6 @@ public class InstallPlaceController {
 		int startPage = (page - 1) * 5 + 1;
 		if(searchType.equals("ALL")) {
 			List<InstallPlace> installPlace = installPlaceService.selectAllPlace(startPage);
-			
 			int count = 0;
 			for(InstallPlace place : installPlace) {
 				place.setRn(startPage + count);

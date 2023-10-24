@@ -103,11 +103,13 @@ $(document).ready(function () {
 			success: function(response){
 				console.log(response);
 				if(response.code === 4001){
+					alert(response.message);
 					noResultIpInfo();
 					//noMappingResInfo();
 					//ipInfopaging
 					return ;
 				}
+				alert(response.message);
 				updateIpInfo(response.data.ipInfo);
 				$(".ip-search-type").val(keyword);
 				ipPaging(response.data.ipPaging);
@@ -463,6 +465,7 @@ $(document).ready(function () {
 					alert(response.message);
 					return;
 				}
+				alert(response.message);
 				updateIpInfo(response.data.ipInfo);
 				ipPaging(response.data.ipPaging);
 				$("#select-file-name").text("선택한 파일");

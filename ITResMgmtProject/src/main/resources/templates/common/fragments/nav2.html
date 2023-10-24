@@ -12,25 +12,12 @@
 		<header id="header" class="header fixed-top d-flex align-items-center">
 			<div class="d-flex align-items-center justify-content-between">
 				<a th:href="@{/}" class="logo d-flex align-items-center"> <img
-					src="assets/img/KCC.png" alt=""> <span
+					th:src="@{/assets/img/KCC.png}" alt=""> <span
 					class="d-none d-lg-block">KCC정보통신</span>
 				</a> <i class="bi bi-list toggle-sidebar-btn"></i>
 			</div>
 
 			<div class="login-info ml-auto d-flex align-items-center">
-				<!-- <span th:if="${session.user.employeeTypeCode == 'EMT001'}"
-					style="font-size: 14px; margin-right:5px;" class="system-admin">시스템관리자</span> <span
-					th:if="${session.user.employeeTypeCode == 'EMT002'}"
-					style="font-size: 14px;">IT자원관리자</span> <span>|</span> <span
-					th:text="${session.user.employeeId + '님'}"
-					style="color: black; margin-left:5px; margin-right: 20px; font-size: 14px;"></span>
-				<a th:href="@{/logout}"> <span class="logout-span"
-					style="color: black; font-size: 15px;">Logout</span> <img
-					src="assets/img/logout.png"
-					style="width: 30px; height: 30px; margin-right: 15px;">
-				</a> -->
-				
-				
 				 <span
 					th:if="${session.user.employeeTypeCode == 'EMT002'}"
 					style="font-size: 14px;">IT자원관리자</span> <span

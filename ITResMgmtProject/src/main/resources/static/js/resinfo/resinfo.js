@@ -131,12 +131,10 @@ $(document).ready(function () {
             var monitoringYn = 'Y';
             var purchaseCompanyName = $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val();
             var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
-			var addItemSn = $('#additionalInfoTable input[name="addItemSn"]').val();
-			var resDetailValue = $('#additionalInfoTable input[name="resDetailValue"]').val();
-			
-			
 			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
 			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
+			var ipSn = $('#ipListTable input[name="ipSn"]');
+			var ipTypeCode = $('#ipListTable input[name="ipTypeCode"]');
 			
 			var resSerialList=[];
 			var addItemSnList = [];
@@ -145,6 +143,15 @@ $(document).ready(function () {
 				resSerialList.push(resSerialId)
 			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
 				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
+			}
+			var ipSnList=[];
+			var ipTypeCodeList=[];
+			var resSerialList2=[];
+			for(var i=0; i < ipSn.length; i++){
+				resSerialList2.push(resSerialId);
+				ipSnList.push(ipSn.eq(i).val());
+				ipTypeCodeList.push(ipTypeCode.eq(i).val());
+				console.log(ipTypeCodeList);
 			}
 
             $.ajax({
@@ -172,7 +179,9 @@ $(document).ready(function () {
                     'addInfo': addInfo,
 					'resSerialIdList' : resSerialList,
 					'addItemSnList' : addItemSnList,
-					'resDetailValueList' : resDetailValueList
+					'resDetailValueList' : resDetailValueList,
+					'ipSnList' : ipSnList,
+					'ipTypeCodeList' : ipTypeCodeList
                 }),
                 contentType: "application/json",
                 success: function (response) {
@@ -340,8 +349,7 @@ $(document).ready(function () {
 					'addItemSnList' : addItemSnList,
 					'resDetailValueList' : resDetailValueList,
 					'resSerialIdList' : resSerialList2,
-					'ipSnList' : ipSnList,
-					'ipTypeCodeList' : ipTypeCodeList
+c
 				}),
                 contentType: "application/json",
                 success: function (response) {
