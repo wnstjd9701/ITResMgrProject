@@ -186,6 +186,7 @@ function pagingLine(data) {
 
     pagingLine += "</ul>";
 
+
     // Add custom CSS styles
     var customStyles = `
         <style>
@@ -256,7 +257,7 @@ function updateTable(addItem) {
             "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'" + (isAlreadySelected ? 'disabled' : '') + "></td>" +
             "<td>" + addItem[i].addItemName + "</td>" +
             "<td>" + addItem[i].addItemDesc + "</td>" +
-            "<td><input type='hidden' name='useYN' value='" + addItem[i].useYN + "'></td>" +
+            "<input type='hidden' name='useYN' value='" + addItem[i].useYN + "'>" +
             "</tr>";
         $('table#add-item-table tbody').append(addTableRow);
     }
