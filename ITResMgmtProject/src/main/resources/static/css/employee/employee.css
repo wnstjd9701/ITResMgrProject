@@ -14,6 +14,14 @@
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
 }
 
+.employee-btn-second {
+	display: flex;
+	justify-content: flex-end; /* 수평으로 오른쪽 정렬 */
+	align-items: center;
+	margin-top: 10px; /* 원하는 여백 설정 */
+	margin-bottom: 5px;
+}
+
 #searchEmpType, #searchEmpStatus, #searchEmpText {
 	margin: 0;
 	padding: 0;
@@ -30,7 +38,7 @@
 
 #searchEmpTypeList, #searchEmpStatusList, #searchText {
 	padding: 3px;
-	border: 1px solid #ccc; 
+	border: 1px solid #ccc;
 	border-radius: 3px;
 	font-size: 14px;
 }
@@ -63,7 +71,7 @@
 }
 
 .employee-table-container {
-	max-height: 700px;
+	max-height: 670px;
 	overflow-y: auto;
 }
 
@@ -97,34 +105,32 @@
 }
 
 .employee-table tbody tr:hover td {
-    background-color: #ECECEC; /* 호버 시 배경색 변경 */
+	background-color: #ECECEC; /* 호버 시 배경색 변경 */
 }
 
-
 .employee-table tbody tr:hover input.employee-input {
-    background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
+	background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
 }
 
 .employee-table tbody tr td input.employee-input:focus {
-    background-color: white; /* 입력란이 활성화 상태일 때 <input> 요소의 배경색 변경 */
+	background-color: white; /* 입력란이 활성화 상태일 때 <input> 요소의 배경색 변경 */
 	padding: 0px;
 }
 
-.employee-pwd{
+.employee-pwd {
 	text-align: center;
-	border: none; 
-	width: 190px; 
-	height: 25px; 
+	border: none;
+	width: 190px;
+	height: 25px;
 	padding: 1px;
 }
 
-.employee-name{
+.employee-name {
 	text-align: center;
-	border: none; 
-	width: 100px; 
+	border: none;
+	width: 100px;
 	padding: 1px;
 }
-
 
 .col-empCheckBox {
 	width: 5%;
@@ -153,5 +159,3 @@
 .col-empStatus {
 	width: 15%;
 }
-
-

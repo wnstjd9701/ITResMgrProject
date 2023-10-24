@@ -147,7 +147,6 @@
     background-color: #ECECEC; /* 호버 시 배경색 변경 */
 }
 
-
 .commoncodedetail-table-container{
 	max-height: 600px; /* 원하는 높이로 조절 */
 	overflow-y: auto; /* 세로 스크롤 표시 */
@@ -185,7 +184,7 @@
 }
 
 .common-btn-container {
-	margin-left: auto;
+	/* margin-left: auto; */
 	text-align: right;
 	margin-top:-35px;
 }
@@ -194,37 +193,54 @@
 	text-align: right;
 }
 
+/* .btn {
+	float: right;
+	margin-left: 10px;
+} */
+
 .code-group-id-input {
 	width: 40%;
 }
 
-/* 입력란 스타일 */
-/* input[type="text"] {
-	margin: 2px;
-	padding: 2px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	font-size: 12px;
-	outline: none;
-} 
+.commoncode-table tbody tr:hover input.code-group-name {
+    background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
+}
 
-/* 선택 상자 스타일 */
-/* select {
-	margin: 2px;
-	padding: 2px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	font-size: 12px;
-	outline: none;
+.commoncode-table tbody tr td input.code-group-name:focus {
+    background-color: white; /* 입력란이 활성화 상태일 때 <input> 요소의 배경색 변경 */
+	padding: 0px;
+}
+
+/* .detailCodeName{
+	border:none;
+	text-align: center;
 } */
 
-/* 버튼 스타일 */
-/* input[type="button"] {
-	padding: 5px 5px;
-	background-color: #007BFF;
-	color: #fff;
-	border: none;
-	border-radius: 5px;
-	font-size: 14px;
-	cursor: pointer;
-} */
+.commoncodedetail-table tbody tr:hover input.detailCodeName {
+    background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
+}
+
+.commoncodedetail-table tbody tr td input.detailCodeName:focus {
+    background-color: white; /* 입력란이 활성화 상태일 때 <input> 요소의 배경색 변경 */
+	padding: 0px;
+}
+
+/* 행추가시 코드그룹ID INPUT */
+.codeGroupId{
+	width:70px;
+	text-align: center;
+}
+
+.detailCodeGroupId{
+	width:70px;
+	text-align: center;
+}
+
+.detailCode{
+	width:70px;
+	text-align: center;
+}
+
+.detailCodeGroupId-input{
+	border: 1px solid black;
+}

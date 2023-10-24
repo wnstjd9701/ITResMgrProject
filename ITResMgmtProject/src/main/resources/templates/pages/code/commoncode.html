@@ -9,113 +9,151 @@
 <link th:href="@{/css/resclass/menutree.css}" rel="stylesheet" />
 </head>
 <th:block layout:fragment="content">
-<main id="main" class="main">
-	<h1 class="title">공통 코드</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
-          <li class="breadcrumb-item active">공통 코드</li>
-        </ol>
-      </nav>
-	<div id="commonCode">
-		<div class="container commoncode-container">
-			<!-- <div>
+	<main id="main" class="main">
+	
+		<h1 class="title">공통 코드</h1>
+		<nav>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+				<li class="breadcrumb-item active">공통 코드</li>
+			</ol>
+		</nav>
+		<div id="commonCode">
+			<div class="container commoncode-container">
+				<!-- <div>
 					🟢 기존 코드
 					🟡 수정 
 					🔵 생성
 					🔴 삭제
 				</div> -->
-			<h1 class="sub-title">공통 코드</h1>
-			<div class="common-btn-container">
-				<input id="searchCommonCodeBtn" type="button" value="조회" class="btn btn-primary" style="background-color: gray; border: gray; "> 
-				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
-			</div>
-			<div class="search-info-container">
-				<div class="search-detail-common">
-					<span class="common-search">사용 여부</span> <select id="commonCodeUseYn">
-						<option value="A">전체</option>
-						<option value="Y">Y</option>
-						<option value="N">N</option>
-					</select> <span class="common-search">코드 그룹</span> <input name="commonCodeKeyword"
-						type="text" placeholder="ID 및 그룹명" class="commonCodeKeyword">
+				
+					<div class="pagetitle">
+				<h1 class="sub-title">공통 코드</h1>
+				<div class="common-btn-container">
+					<input id="searchCommonCodeBtn" type="button" value="조회"
+						class="btn btn-primary"
+						style="background-color: gray; border: gray;"> <input
+						th:if="${session.user.employeeTypeCode == 'EMT001'}"
+						id="commonCodeSaveBtn" type="button" value="저장"
+						class="btn btn-primary"
+						style="background-color: navy; border: navy;">
+				</div>
+				</div>
+				
+				
+				
+				<div class="search-info-container">
+					<div class="search-detail-common">
+						<span class="common-search">사용 여부</span> <select
+							id="commonCodeUseYn">
+							<option value="A">전체</option>
+							<option value="Y">Y</option>
+							<option value="N">N</option>
+						</select> <span class="common-search">코드 그룹</span> <input
+							name="commonCodeKeyword" type="text" placeholder="ID 및 그룹명"
+							class="commonCodeKeyword">
+					</div>
+				</div>
+				<div class="row-btn" style="margin-bottom: 5px;">
+					<input th:if="${session.user.employeeTypeCode == 'EMT001'}"
+						id="commonCodeAddRowBtn" type="button" value="행추가"
+						class="btn btn-primary"
+						style="background-color: #003F5E; border: #003F5E; font-size: 13px;">
+					<input th:if="${session.user.employeeTypeCode == 'EMT001'}"
+						id="commonCodeDeleteRowBtn" type="button" value="행삭제"
+						class="btn btn-primary"
+						style="background-color: #003F5E; border: #003F5E; font-size: 13px;">
+				</div>
+				<div class="commoncode-table-container">
+					<table class="commoncode-table">
+						<thead class="common-thead">
+							<tr>
+								<th class="col-comnStatus">상태</th>
+								<th class="col-comnCodeGroup">코드 그룹 ID</th>
+								<th class="col-comnCodeGroupName">코드 그룹명</th>
+								<th class="col-comnDetalCodeNum">상세 코드 개수</th>
+								<th class="col-comnUseYN">사용 여부</th>
+								<th class="col-comnSpe">상세</th>
+							</tr>
+						</thead>
+						<tbody id="commonCode-table-body">
+							<tr th:each="commonCode, i : ${commonCode}">
+								<td th:text="${commonCode.flag}"></td>
+								<td id="commonCode-group-id"
+									class="code-group-td code-group-id-text"
+									th:text="${commonCode.codeGroupId}"
+									th:data-code-group-id="${commonCode.codeGroupId}"></td>
+								<td><input id="commonCode-group-name"
+									class="code-group-name" name="codeGroupName" type="text"
+									th:value="${commonCode.codeGroupName}"
+									style="width: 150px; text-align: center; border: none;"></td>
+								<td th:text="${commonCode.codeDetailCount}"></td>
+								<td><select>
+										<option th:value="Y" th:text="Y"
+											th:selected="${commonCode.useYn == 'Y'}"></option>
+										<option th:value="N" th:text="N"
+											th:selected="${commonCode.useYn == 'N'}"></option>
+								</select></td>
+								<td><input type="button" value="상세"
+									th:data-code-group-id="${commonCode.codeGroupId}" class=""><img
+									src="assets/img/detail2.png" style="width: 25px; height: 25px;"></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
-			<div class="row-btn" style="margin-bottom:5px;">
-				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeAddRowBtn" type="button" value="행추가" class="btn btn-primary"> <input
-					th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
-			</div>
-			<div class="commoncode-table-container">
-				<table class="commoncode-table">
-					<thead class="common-thead">
-						<tr>
-							<th class="col-comnStatus">상태</th>
-							<th class="col-comnCodeGroup">코드 그룹 ID</th>
-							<th class="col-comnCodeGroupName">코드 그룹명</th>
-							<th class="col-comnDetalCodeNum">상세 코드 개수</th>
-							<th class="col-comnUseYN">사용 여부</th>
-							<th class="col-comnSpe">상세</th>
-						</tr>
-					</thead>
-					<tbody id="commonCode-table-body">
-						<tr th:each="commonCode, i : ${commonCode}">
-							<td th:text="${commonCode.flag}"></td>
-							<td id="commonCode-group-id"
-								class="code-group-td code-group-id-text"
-								th:text="${commonCode.codeGroupId}"
-								th:data-code-group-id="${commonCode.codeGroupId}"></td>
-							<td><input id="commonCode-group-name"
-								class="code-group-name" name="codeGroupName" type="text"
-								th:value="${commonCode.codeGroupName}" style="width:150px; text-align: center;"></td>
-							<td th:text="${commonCode.codeDetailCount}"></td>
-							<td><select>
-									<option th:value="Y" th:text="Y"
-										th:selected="${commonCode.useYn == 'Y'}"></option>
-									<option th:value="N" th:text="N"
-										th:selected="${commonCode.useYn == 'N'}"></option>
-							</select></td>
-							<td><input type="button" value="상세" th:data-code-group-id="${commonCode.codeGroupId}" class=""></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="container commoncodedetail-container">
-			<h1 class="sub-title">상세 코드</h1>
-			<div class="common-btn-container">
-				<input id="searchCommonCodeDetailBtn" type="button" value="조회" class="btn btn-primary" style="background-color: gray; border: gray;">
-				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDetailSaveBtn" type="button" value="저장" class="btn btn-primary" style="background-color: navy; border: navy;">
-			</div>
-			<div class="search-info-container">
-				<div class="search-detail-commondetail">
-					<span class="common-search">사용 여부</span> <select id="commonCodeDetailUseYn">
-						<option value="A" selected>전체</option>
-						<option value="Y">Y</option>
-						<option value="N">N</option>
-					</select> <span class="common-search">상세 코드 그룹</span> <input name="commonCodeDetailKeyword"
-						type="text" placeholder="ID 및 그룹명" class="commonCodeDetailKeyword">
+			<div class="container commoncodedetail-container">
+				<h1 class="sub-title">상세 코드</h1>
+				<div class="common-btn-container">
+					<input id="searchCommonCodeDetailBtn" type="button" value="조회"
+						class="btn btn-primary"
+						style="background-color: gray; border: gray;"> <input
+						th:if="${session.user.employeeTypeCode == 'EMT001'}"
+						id="commonCodeDetailSaveBtn" type="button" value="저장"
+						class="btn btn-primary"
+						style="background-color: navy; border: navy;">
 				</div>
-			</div>
-			<div class="row-btn" style="margin-bottom:5px;">
-				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDetailAddRowBtn" type="button" value="행추가" class="btn btn-primary">
-				<input th:if="${session.user.employeeTypeCode == 'EMT001'}" id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제" class="btn btn-primary">
-			</div>
-			<div class="commoncodedetail-table-container">
-				<table class="commoncodedetail-table">
-					<thead class="common-thead">
-						<tr>
-							<th>상태</th>
-							<th>선택</th>
-							<th>코드 그룹 ID</th>
-							<th>상세 코드 ID</th>
-							<th>상세 코드명</th>
-							<th>사용 여부</th>
-						</tr>
-					</thead>
-					<tbody id="commonCodeDetail-table-body">
-						<tr>
-							<td colspan="6" style="text-align:center; font-weight: bold;">공통 코드를 조회하세요.</td>
-						</tr>
-						<!-- <tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
+				<div class="search-info-container">
+					<div class="search-detail-commondetail">
+						<span class="common-search">사용 여부</span> <select
+							id="commonCodeDetailUseYn">
+							<option value="A" selected>전체</option>
+							<option value="Y">Y</option>
+							<option value="N">N</option>
+						</select> <span class="common-search">상세 코드 그룹</span> <input
+							name="commonCodeDetailKeyword" type="text" placeholder="ID 및 그룹명"
+							class="commonCodeDetailKeyword">
+					</div>
+				</div>
+				<div class="row-btn" style="margin-bottom: 5px;">
+					<input th:if="${session.user.employeeTypeCode == 'EMT001'}"
+						id="commonCodeDetailAddRowBtn" type="button" value="행추가"
+						class="btn btn-primary"
+						style="background-color: #003F5E; border: #003F5E; font-size: 13px;">
+					<input th:if="${session.user.employeeTypeCode == 'EMT001'}"
+						id="commonCodeDetailDeleteRowBtn" type="button" value="행삭제"
+						class="btn btn-primary"
+						style="background-color: #003F5E; border: #003F5E; font-size: 13px;">
+
+				</div>
+				<div class="commoncodedetail-table-container">
+					<table class="commoncodedetail-table">
+						<thead class="common-thead">
+							<tr>
+								<th>상태</th>
+								<th>선택</th>
+								<th>코드 그룹 ID</th>
+								<th>상세 코드 ID</th>
+								<th>상세 코드명</th>
+								<th>사용 여부</th>
+							</tr>
+						</thead>
+						<tbody id="commonCodeDetail-table-body">
+							<tr>
+								<td colspan="6" style="text-align: center; font-weight: bold;">공통
+									코드를 조회하세요.</td>
+							</tr>
+							<!-- <tr th:each="commonCodeDetail, i : ${commonCodeDetail}">
 									<td th:text="${commonCodeDetail.flag}"></td>
 									<td><input class="detailCheck" type="checkbox" name="detailCheck"></td>
 									<td class="detailCodeGroupId" th:text="${commonCodeDetail.codeGroupId}"></td>
@@ -128,11 +166,11 @@
 									</select>
 									</td>
 								</tr> -->
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
-	</div>
 	</main>
 	<script th:inline="javascript">
 		$(document)
@@ -683,7 +721,7 @@
 										name: "detailCode",
 										class: "detailCode"
 									});
-									var detailCodeName = $("<td>").append($("<input>").attr({
+									var detailCodeName = $("<td>").append($("<input style='width:150px; text-align: center; border:none;'>").attr({
 										type: "text",
 										name: "detailCodeName",
 										value: response[i].detailCodeName,
