@@ -6,11 +6,11 @@ function addItemAddRow() {
 	var newRow = table.insertRow();
 	newRow.setAttribute("data-row-id", rowCount);
 
-	var newCellCheckBox = newRow.insertCell(0);
-	newCellCheckBox.innerHTML = "<input type='checkbox' name='insertCheckBox'>";
-
-	var newCellStatus = newRow.insertCell(1);
+	var newCellStatus = newRow.insertCell(0);
 	newCellStatus.innerHTML = "<span name='status'>I</span>";
+
+	var newCellCheckBox = newRow.insertCell(1);
+	newCellCheckBox.innerHTML = "<input type='checkbox' name='insertCheckBox'>";
 
 	var newCellSn = newRow.insertCell(2);
 	/*	newCellSn.innerHTML = "<input type='text' id='addItemSn" + rowCount + "' size='5'>";*/
@@ -25,7 +25,7 @@ function addItemAddRow() {
 	newCellUseYN.innerHTML = "<span>Y</span>";
 
 	rowCount++;
-	
+
 	const newCells = [newCellCheckBox, newCellStatus, newCellSn, newCellName, newCellDesc, newCellUseYN];
 	newCells.forEach((cell) => {
 		cell.style.padding = '8px'; // Change the padding value as needed
@@ -62,7 +62,7 @@ function handleClick(element) {
 		return;
 	} else {
 		addItemStatus.textContent = 'U';
-		
+
 		const tdElement = element;
 		tdElement.style.padding = '0';
 
@@ -188,8 +188,8 @@ function addItemSaveAll() {
 
 							for (var i = 0; i < response.length; i++) {
 								var addTableRow = "<tr>" +
-									"<td><input type='checkbox' name='checkBox'></td>" +
 									"<td name='addItemStatus'><span name='status'>S</span></td>" +
+									"<td><input type='checkbox' name='checkBox'></td>" +
 									"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 									"<td name='addItemName'>" + response[i].addItemName + "</td>" +
 									"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
@@ -254,8 +254,8 @@ function addItemsearch() {
 				// 검색 결과가 있는 경우
 				for (var i = 0; i < response.length; i++) {
 					var addTableRow = "<tr>" +
-						"<td><input type='checkbox' name='checkBox'></td>" +
 						"<td name='addItemStatus'><span name='status'>S</span></td>" +
+						"<td><input type='checkbox' name='checkBox'></td>" +
 						"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 						"<td name='addItemName'>" + response[i].addItemName + "</td>" +
 						"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
@@ -322,8 +322,8 @@ function handleFileSelect(event) {
 								} else {
 									for (var i = 0; i < response.length; i++) {
 										var addTableRow = "<tr>" +
-											"<td><input type='checkbox' name='checkBox'></td>" +
 											"<td name='addItemStatus'><span name='status'>S</span></td>" +
+											"<td><input type='checkbox' name='checkBox'></td>" +
 											"<td name='addItemSn'>" + response[i].addItemSn + "</td>" +
 											"<td name='addItemName'>" + response[i].addItemName + "</td>" +
 											"<td name='addItemDesc' onclick='handleClick(this)'>" + response[i].addItemDesc + "</td>" +
