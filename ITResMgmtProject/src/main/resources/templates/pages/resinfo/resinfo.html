@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-
 <link th:href="@{/css/resinfo/resinfo.css}" rel="stylesheet" />
 <div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
 </head>
@@ -25,7 +24,7 @@
 		<div class="search-bar">
 			<div style="display: flex;">
 				<span>대 분 류</span> <select id="topUpperResClassName"
-					name="topUpperResClassName" style="width:150px;">
+					name="topUpperResClassName" style="width: 150px;">
 					<!-- "전체" 옵션 추가 -->
 					<option value=""></option>
 					<!-- 다른 대분류 옵션들을 Thymeleaf로 반복해서 추가 -->
@@ -33,7 +32,7 @@
 						th:value="${search.resClassId}" th:text="${search.resClassName}"
 						th:data-upper-res-class-id="${search.upperResClassId}"></option>
 				</select> <span>중 분 류</span> <select id="upperResClassName"
-					name="upperResClassName" style="width:150px;">
+					name="upperResClassName" style="width: 150px;">
 					<!-- 중분류 옵션들을 Thymeleaf로 반복해서 추가 -->
 					<option value=""></option>
 					<option th:each="search:${search}" th:if="${search.level}==2"
@@ -50,16 +49,16 @@
 
 			<div style="display: flex;">
 				<span>자원명</span> <input type="text" name="resName"
-					style="margin-top: 10px; width:155px;"></input> <span>설치장소명</span> <input
-					type="text" name="installPlaceName" style="margin-top: 10px;"></input>
+					style="margin-top: 10px; width: 155px;"></input> <span>설치장소명</span>
+				<input type="text" name="installPlaceName" style="margin-top: 10px;"></input>
 				<span>제조회사명</span> <input type="text" name="manufactureCompanyName"
 					style="margin-top: 10px;"></input> <span>관리ID</span> <input
 					type="text" name="mgmtId" style="margin-top: 10px;"></input> <span>모니터링
 					여부</span> <label style="font-size: 14px; color: white; font-weight: bold;">
 					<input type="radio" name="monitoringYn" value="Y" checked="checked" />
 					모니터링 자원
-				</label> <label style="font-size: 14px; color: white; font-weight: bold;"> <input type="radio" name="monitoringYn" value="A" />
-					전체
+				</label> <label style="font-size: 14px; color: white; font-weight: bold;">
+					<input type="radio" name="monitoringYn" value="A" /> 전체
 				</label>
 			</div>
 		</div>
@@ -71,15 +70,15 @@
 				<table class="res-info-list-table">
 					<thead style="text-align: center;">
 						<tr>
-							<th style="width:9%;">대분류</th>
-							<th style="width:9%;">중분류</th>
+							<th style="width: 9%;">대분류</th>
+							<th style="width: 9%;">중분류</th>
 							<th>소분류</th>
 							<th>자원명</th>
 							<th>설치장소명</th>
 							<th>제조회사명</th>
 							<th>관리ID</th>
-							<th style="width:10%;">모니터링여부</th>
-							<th style="width:7%;">상세</th>
+							<th style="width: 10%;">모니터링여부</th>
+							<th style="width: 7%;">상세</th>
 						</tr>
 					</thead>
 					<tbody style="text-align: center;" id="resInfoTable">
@@ -94,14 +93,18 @@
 							<td th:text="${resinfo.monitoringYn}"></td>
 							<input type="hidden" th:value="${resinfo.resClassId}">
 							<td><input type="hidden" name="resSerialId"
-								th:value="${resinfo.resSerialId}" >
-								<button type="button" id="resinfo-detail-btn" style="border:none; background-color:transparent;"><img
-					src="assets/img/detail2.png" style="width:25px; height:25px;"></button></td>
+								th:value="${resinfo.resSerialId}">
+								<button type="button" id="resinfo-detail-btn"
+									style="border: none; background-color: transparent;">
+									<img src="assets/img/detail2.png"
+										style="width: 25px; height: 25px;">
+								</button></td>
 						</tr>
 					</tbody>
 				</table>
 				<nav aria-label="Page navigation example" class="paging-nav">
-					<ul class="pagination place-pagination justify-content-center">
+					<ul class="pagination place-pagination justify-content-center"
+						style="margin-top: 12px;">
 						<li class="page-item">
 							<button id="previousPage" class="page-link prev-page-link"
 								aria-label="Previous" th:onclick="paging(0)">
@@ -135,7 +138,7 @@
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">IT자원 상세정보</h5>
+					<h5 class="modal-title" id="exampleModalLabel" style="font-weight:bold;">IT자원 상세정보</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -150,80 +153,80 @@
 									name="resClassId">
 									<button type="button" class="btn btn-primary"
 										id="res-class-search-btn">찾기</button></td>
-									<th scope="row">관리ID<span class="essential-resinfo">*</span></th>
-									<td><input type="text" name="mgmtId"></input></td>
-									<th scope="row">관리부서명</th>
-									<td><input type="text" name="mgmtDeptName"></input></td>
-								</tr>
-								<tr>
-									<th scope="row">자원명<span class="essential-resinfo">*</span></th>
-									<td><input type="text" name="resName"></input></td>
-									<th scope="row">자원상태</th>
-									<td><select name="resStatusCode">
-											<option th:each="selectResStatusCode:${selectResStatusCode}"
-												th:value="${selectResStatusCode.resStatusCode}"
-												th:text="${selectResStatusCode.detailCodeName}"></option>
-									</select></td>
-									<th scope="row">담당자명</th>
-									<td><input type="text" name="managerName"></input></td>
-								</tr>
-								<tr>
-									<th scope="row">자원시리얼번호<span class="essential-resinfo">*</span></th>
-									<td><input type="text" name="resSn"></input></td>
-									<th scope="row">제조회사명<span class="essential-resinfo">*</span></th>
-									<td><input type="text" name="manufactureCompanyName"></input>
-									</td>
-									<th scope="row">모델명<span class="essential-resinfo">*</span></th>
-									<td><input type="text" name="modelName"></input></td>
-								</tr>
-								<tr>
-									<th scope="row">설치장소<span class="essential-resinfo">*</span></th>
-									<td><input type="text" id="install-place-input"
-										name="installPlaceName"> <input type="hidden"
-										id="install-place-sn-input" name="installPlaceSn">
-										<button type="button" class="btn btn-primary"
-											id="installPlaceSearchBtn">찾기</button></td>
-									<th scope="row">랙정보</th>
-									<td><input type="text" name="rackInfo"></input></td>
-									<th scope="row">자원시리얼아이디<span class="essential-resinfo">*</span></th>
-									<td><input type="text" name="resSerialId"></input></td>
-								</tr>
-								<tr>
-									<th scope="row">도입일자</th>
-									<td><input type="text" name="introductionDate"
-										placeholder="YYYYMMDD"></input></td>
-									<th scope="row">폐기일자</th>
-									<td><input type="text" name="expirationDate"
-										placeholder="YYYYMMDD"></input></td>
-									<th scope="row">도입가격</th>
-									<td><input type="text" name="introdutionPrice"></input></td>
-								</tr>
-								<tr>
-									<th scope="row">사용여부</th>
-									<td><label> 
-									<input type="radio" name="useYn"
-											value="Y" checked="checked" />Y
-									</label> <label> <input type="radio" name="useYn" value="N" />
-											N
-									</label></td>
-									<th scope="row">모니터링여부<span class="essential-resinfo">*</span></th>
-									<td><label> <input type="radio"
-											name="monitoringYn" value="Y" checked="checked" /> Y
-									</label> <label> <input type="radio" name="monitoringYn"
-											value="N" /> N
-									</label></td>
-									<th scope="row">구매처명</th>
-									<td><input type="text" name="purchaseCompanyName"></input>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">추가정보</th>
-									<td colspan="5"><input style="width:100%;" type="text" name="addInfo"></input></td>
-									<input type="hidden" name="createrId"></input>
-									<input type="hidden" name="updaterId"></input>
-								</tr>
-							</tbody>
-						</table>
+								<th scope="row">관리ID<span class="essential-resinfo">*</span></th>
+								<td><input type="text" name="mgmtId"></input></td>
+								<th scope="row">관리부서명</th>
+								<td><input type="text" name="mgmtDeptName"></input></td>
+							</tr>
+							<tr>
+								<th scope="row">자원명<span class="essential-resinfo">*</span></th>
+								<td><input type="text" name="resName"></input></td>
+								<th scope="row">자원상태</th>
+								<td><select name="resStatusCode">
+										<option th:each="selectResStatusCode:${selectResStatusCode}"
+											th:value="${selectResStatusCode.resStatusCode}"
+											th:text="${selectResStatusCode.detailCodeName}"></option>
+								</select></td>
+								<th scope="row">담당자명</th>
+								<td><input type="text" name="managerName"></input></td>
+							</tr>
+							<tr>
+								<th scope="row">자원시리얼번호<span class="essential-resinfo">*</span></th>
+								<td><input type="text" name="resSn"></input></td>
+								<th scope="row">제조회사명<span class="essential-resinfo">*</span></th>
+								<td><input type="text" name="manufactureCompanyName"></input>
+								</td>
+								<th scope="row">모델명<span class="essential-resinfo">*</span></th>
+								<td><input type="text" name="modelName"></input></td>
+							</tr>
+							<tr>
+								<th scope="row">설치장소<span class="essential-resinfo">*</span></th>
+								<td><input type="text" id="install-place-input"
+									name="installPlaceName"> <input type="hidden"
+									id="install-place-sn-input" name="installPlaceSn">
+									<button type="button" class="btn btn-primary"
+										id="installPlaceSearchBtn">찾기</button></td>
+								<th scope="row">랙정보</th>
+								<td><input type="text" name="rackInfo"></input></td>
+								<th scope="row">자원시리얼아이디<span class="essential-resinfo">*</span></th>
+								<td><input type="text" name="resSerialId"></input></td>
+							</tr>
+							<tr>
+								<th scope="row">도입일자</th>
+								<td><input type="text" name="introductionDate"
+									placeholder="YYYYMMDD"></input></td>
+								<th scope="row">폐기일자</th>
+								<td><input type="text" name="expirationDate"
+									placeholder="YYYYMMDD"></input></td>
+								<th scope="row">도입가격</th>
+								<td><input type="text" name="introdutionPrice"></input></td>
+							</tr>
+							<tr>
+								<th scope="row">사용여부</th>
+								<td><label> <input type="radio" name="useYn"
+										value="Y" checked="checked" />Y
+								</label> <label> <input type="radio" name="useYn" value="N" />
+										N
+								</label></td>
+								<th scope="row">모니터링여부<span class="essential-resinfo">*</span></th>
+								<td><label> <input type="radio" name="monitoringYn"
+										value="Y" checked="checked" /> Y
+								</label> <label> <input type="radio" name="monitoringYn"
+										value="N" /> N
+								</label></td>
+								<th scope="row">구매처명</th>
+								<td><input type="text" name="purchaseCompanyName"></input>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">추가정보</th>
+								<td colspan="5"><input style="width: 100%;" type="text"
+									name="addInfo"></input></td>
+								<input type="hidden" name="createrId"></input>
+								<input type="hidden" name="updaterId"></input>
+							</tr>
+						</tbody>
+					</table>
 					<!-- 자원정보입력칸 끝 -->
 					<!-- 매핑된 부가정보 및 ip목록 -->
 					<div class="">
@@ -252,9 +255,12 @@
 										<th>✔️</th>
 										<th>ip</th>
 										<th>ipType</th>
-										<th style=" text-align: center;"><button id="search-ip-list-btn" class="btn btn-primary"
-												style="float: right; background-color: #003F5E; border: #003F5E; font-size:13px;">추가</button></th>
-										<th style="width: 5.5%; text-align: center;"><button class="btn btn-primary" style="float: left; background-color: #003F5E; border: #003F5E; font-size:13px; margin-left:-10px;">삭제</button></th>
+										<th style="text-align: center;"><button
+												id="search-ip-list-btn" class="btn btn-primary"
+												style="float: right; background-color: #003F5E; border: #003F5E; font-size: 13px;">추가</button></th>
+										<th style="width: 5.5%; text-align: center;"><button
+												class="btn btn-primary"
+												style="float: left; background-color: #003F5E; border: #003F5E; font-size: 13px; margin-left: -10px;">삭제</button></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -264,9 +270,10 @@
 					</div>
 					<!-- 매핑된 부가정보 및 ip목록 끝 -->
 					<div class="btn-container d-flex justify-content-center">
-						<button id="res-info-save-btn" type="submit" >저장</button>
+						<button id="res-info-save-btn" type="submit">저장</button>
 						<button id="res-info-close-btn" type="button"
-							data-bs-dismiss="modal" style="background-color: gray; border: gray;">닫기</button>
+							data-bs-dismiss="modal"
+							style="background-color: gray; border: gray;">닫기</button>
 					</div>
 				</div>
 			</div>
@@ -325,8 +332,10 @@
 						</table>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal" style="font-size:13px;">취소</button>
-							<button type="button" id="choose-res-class-btn" class="btn btn-primary" style="background-color: navy; border: navy; font-size:13px;" >확인</button>
+								data-bs-dismiss="modal" style="font-size: 13px;">취소</button>
+							<button type="button" id="choose-res-class-btn"
+								class="btn btn-primary"
+								style="background-color: navy; border: navy; font-size: 13px;">확인</button>
 						</div>
 					</div>
 				</div>
@@ -362,8 +371,10 @@
 						<ul id="pagination"></ul>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal" style="font-size:13px;">취소</button>
-							<button type="button" id="choose-install-place-btn" class="btn btn-primary" style="background-color: navy; border: navy; font-size:13px;">확인</button>
+								data-bs-dismiss="modal" style="font-size: 13px;">취소</button>
+							<button type="button" id="choose-install-place-btn"
+								class="btn btn-primary"
+								style="background-color: navy; border: navy; font-size: 13px;">확인</button>
 						</div>
 					</div>
 				</div>

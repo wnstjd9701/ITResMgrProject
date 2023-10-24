@@ -23,3 +23,7 @@
 .table-style tbody tr:hover td {
 	background-color: #ECECEC; /* 호버 시 배경색 변경 */
 }
+
+td {
+	font-size:15px;
+}

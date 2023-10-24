@@ -524,7 +524,7 @@ function searchList() {
 
 			if (response.length === 0) {
 				// 검색 결과가 없는 경우
-				var noResultRow = "<tr><td colspan='7' style='text-align:center;'>검색결과가 없습니다</td></tr>";
+				var noResultRow = "<tr><td colspan='7' style='text-align:center; font-weight:bold;'>검색결과가 없습니다</td></tr>";
 				$('#empTable > tbody').append(noResultRow);
 			} else {
 				// 검색 결과가 있는 경우

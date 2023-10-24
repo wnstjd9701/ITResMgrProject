@@ -610,7 +610,7 @@ c
                 $('tbody#resInfoTable > tr').remove();
                 if (response.selectAllResInfo.length === 0) {
                     alert('검색된 결과가 없습니다.');
-                    addTableRow = "<tr>" + "<td colspan='10' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+                    addTableRow = "<tr>" + "<td colspan='9' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
                     $('tbody#resInfoTable').append(addTableRow);
                     return;
                 }
@@ -627,8 +627,10 @@ c
 	                        "<td>"+response.selectAllResInfo[i].mgmtId+"</td>"+
 	                        "<td>"+response.selectAllResInfo[i].monitoringYn+"</td>"+
 	 						"<td><input type='hidden' name ='resSerialId' value='" + response.selectAllResInfo[i].resSerialId
-							+"'>" + "<button type='button' id='resinfo-detail-btn'>상세</button></td>"+
-	                        "</tr>";
+							+ "'>" 
+							+ "<button type='button' id='resinfo-detail-btn' style='border:none; background-color:transparent;'>"
+							+ "<img src='assets/img/detail2.png' style='width:25px; height:25px;'></button></td>" +	"</tr>";                   
+
 	                $('tbody#resInfoTable').append(resInfoRow);
 	            }
 				$("#totalPageCount").val(response.page.totalPageCount);

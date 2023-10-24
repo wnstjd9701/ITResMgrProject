@@ -30,10 +30,10 @@ body {
 
 .btn {
 	float: right;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
-.btn-primary {
+/* .btn-primary {
     background-color: navy;
     border-color: navy;
     color: white;
@@ -43,7 +43,7 @@ body {
 .btn-primary:hover {
     background-color: navy;
     border-color: white;
-}
+} */
 
 select, input[type="text"] {
     padding: 3px;
@@ -98,7 +98,7 @@ select, input[type="text"] {
 .res-info-list-table  {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  table-layout:fixed;
 }
 
 .res-info-list-table tr th, .res-info-list-table tr td {
@@ -121,7 +121,7 @@ select, input[type="text"] {
 .table tr th {
   background-color: #7289AB;
   color:white;
-}
+} 
 
 #installPlaceSearchBtn, #res-class-search-btn {
   font-size: 12px; /* 원하는 크기로 조정하세요 */
@@ -188,6 +188,16 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 .table-content table tbody tr td {
   padding: 10px;
 }
+
+.res-info-list-table tr {
+	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
+}
+
+.res-info-list-table tbody tr:hover td {
+	background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
+
 
  #resInfoDetailTable th, #resInfoDetailTable td {
      padding-top: 10px; /* 상단 간격 조정 */
