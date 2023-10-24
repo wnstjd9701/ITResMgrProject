@@ -10,16 +10,16 @@
 <body>
 	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
 	<main id="main" class="main">
-		<div class="pagetitle">
+		<div class="employee-btn-first">
 			<button type="button" id="i_submit" onclick="saveList()"
 				class="btn btn-primary"
 				style="background-color: navy; border: navy;">저장</button>
-			<button type="button" onclick="hideRow()" class="btn btn-primary" style="background-color: #003F5E; border: #003F5E;">행삭제</button>
-			<button type="button" onclick="addRow()" class="btn btn-primary" style="background-color: #003F5E; border: #003F5E;">행추가</button>
+
 			<button type="button" id="searchButton" onclick="searchList()"
 				class="btn btn-primary"
 				style="background-color: gray; border: gray;">조회</button>
-
+		</div>
+		<div class="pagetitle">
 			<h1>사원정보</h1>
 			<nav>
 				<ol class="breadcrumb">
@@ -53,13 +53,20 @@
 			<input id="searchText" type="text" placeholder="ID 및 명 입력">
 		</div>
 
+		<div class="employee-btn-second">
+			<button type="button" onclick="hideRow()" class="btn btn-primary"
+				style="background-color: #003F5E; border: #003F5E; font-size: 13px;">행삭제</button>
+			<button type="button" onclick="addRow()" class="btn btn-primary"
+				style="background-color: #003F5E; border: #003F5E; font-size: 13px;">행추가</button>
+		</div>
+
 		<div class="employee-table-container">
 			<table class="employee-table" id="empTable">
 				<!-- <table id="empTable" class="table"> -->
 				<thead class="employee-thead">
 					<tr>
+					<th class="col-Status">상태</th>
 						<th class="col-empCheckBox">선택</th>
-						<th class="col-Status">상태</th>
 						<th class="col-empId">사원ID</th>
 						<th class="col-empPwd">사원비밀번호</th>
 						<th class="col-empName">사원명</th>
@@ -69,8 +76,8 @@
 				</thead>
 				<tbody>
 					<tr th:each="employeeList : ${employeeList}" id="empList">
-						<td><input type="checkbox" name="empCheckbox"></input></td>
 						<td><span name="empStatus">S</span></td>
+						<td><input type="checkbox" name="empCheckbox"></input></td>
 						<td th:text="${employeeList.employeeId}" name="employeeId"></td>
 						<td><input type="text" value="**********" name="employeePwd"
 							onclick="showPasswordField(this)"

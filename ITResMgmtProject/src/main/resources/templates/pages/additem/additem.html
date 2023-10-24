@@ -12,7 +12,7 @@
 <body>
 	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
 	<main id="main" class="main">
-		<div class="additem-btn">
+		<div class="additem-btn-first">
 			<button id="addItemsearchBtn" type="button" onclick="addItemsearch()"
 				class="btn btn-primary"
 				style="background-color: gray; border: gray;">조회</button>
@@ -51,7 +51,7 @@
 			<input id="addItemSearchText" type="text" placeholder="명 입력"
 				style="text-align: center;">
 		</div>
-		<div class="additem-button-container">
+		<div class="additem-btn-second">
 			<button id="addItemHideRowBtn" type="button"
 				onclick="addItemHideRow()" class="btn btn-primary"
 				style="background-color: #003F5E; border: #003F5E; font-size: 13px;">행삭제</button>

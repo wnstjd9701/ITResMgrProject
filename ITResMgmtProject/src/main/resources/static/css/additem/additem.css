@@ -1,9 +1,9 @@
-.additem-btn {
+.additem-btn-first {
 	display: flex;
 	float: right;
 }
 
-.additem-button-container {
+.additem-btn-second {
 	display: flex;
 	justify-content: flex-end; /* 수평으로 오른쪽 정렬 */
 	align-items: center;
