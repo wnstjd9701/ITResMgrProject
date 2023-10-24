@@ -35,11 +35,11 @@ function loadResourceDetails(resClassName) {
 			            "<td id='resClassFlagCell'>" + data.flag + "</td>" +
 			        "</tr>" +
 			        "<tr>" +
-			            "<th scope='row'>대분류</th>" +
+			            "<th scope='row'>대 분 류</th>" +
 			            "<td id='topUpperResClassNameCell'>" + data.topUpperResClassName + "</td>" +
 			        "</tr>" +
 			        "<tr>" +
-			            "<th scope='row'>중분류</th>" +
+			            "<th scope='row'>중 분 류</th>" +
 			            "<td id='upperResClassNameCell'>" + data.upperResClassName + "</td>" +
 			        "</tr>" +
 			        "<tr>" +
@@ -64,7 +64,7 @@ function loadResourceDetails(resClassName) {
 			        "<tr>" +
 			            "<th scope='row'>자원명</th>" +
 			            "<td id='resClassNameCell'>" +
-			                "<input type='text' name='resClassName' value='" + data.resClassName + "'>" +
+			                "<input type='text' style='text-align: center;' name='resClassName' value='" + data.resClassName + "'>" +
 			            "</td>" +
 			        "</tr>" +
 			        "<input type='hidden' name='resClassId' value='" + data.resClassId + "'>";
