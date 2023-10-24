@@ -68,12 +68,12 @@
 					<table class="commoncode-table">
 						<thead class="common-thead">
 							<tr>
-								<th class="col-comnStatus">상태</th>
-								<th class="col-comnCodeGroup">코드 그룹 ID</th>
-								<th class="col-comnCodeGroupName">코드 그룹명</th>
-								<th class="col-comnDetalCodeNum">상세 코드 개수</th>
-								<th class="col-comnUseYN">사용 여부</th>
-								<th class="col-comnSpe">상세</th>
+								<th style="width:10%;">상태</th>
+								<th style="width:18%;">코드 그룹 ID</th>
+								<th>코드 그룹명</th>
+								<th style="width:20%;">상세 코드 개수</th>
+								<th style="width:12%;">사용 여부</th>
+								<th style="width:10%;">상세</th>
 							</tr>
 						</thead>
 						<tbody id="commonCode-table-body">
@@ -86,7 +86,7 @@
 								<td><input id="commonCode-group-name"
 									class="code-group-name" name="codeGroupName" type="text"
 									th:value="${commonCode.codeGroupName}"
-									style="width: 150px; text-align: center; border: none;"></td>
+									style="width: 130px; text-align: center; border: none;"></td>
 								<td th:text="${commonCode.codeDetailCount}"></td>
 								<td><select>
 										<option th:value="Y" th:text="Y"
@@ -95,8 +95,13 @@
 											th:selected="${commonCode.useYn == 'N'}"></option>
 								</select></td>
 								<td><input type="button" value="상세"
-									th:data-code-group-id="${commonCode.codeGroupId}" class=""><img
-									src="assets/img/detail2.png" style="width: 25px; height: 25px;"></td>
+									th:data-code-group-id="${commonCode.codeGroupId}" class=""><!-- <img
+									src="assets/img/detail2.png" style="width: 25px; height: 25px;"> --></td>
+									
+								<!-- 	<td><input type="hidden" class="commoncode-btn" value="상세" th:data-code-group-id="${commonCode.codeGroupId}">
+										<img class="" src="assets/img/detail2.png" style="width:25px; height:25px;">
+									</td>
+									 -->
 							</tr>
 						</tbody>
 					</table>
@@ -140,12 +145,12 @@
 					<table class="commoncodedetail-table">
 						<thead class="common-thead">
 							<tr>
-								<th>상태</th>
-								<th>선택</th>
-								<th>코드 그룹 ID</th>
-								<th>상세 코드 ID</th>
-								<th>상세 코드명</th>
-								<th>사용 여부</th>
+								<th style="width:9%;">상태</th>
+								<th style="width:9%;">선택</th>
+								<th style="width:15%;">코드 그룹 ID</th>
+								<th style="width:15%;">상세 코드 ID</th>
+								<th style="width:23%;">상세 코드명</th>
+								<th style="width:12%;">사용 여부</th>
 							</tr>
 						</thead>
 						<tbody id="commonCodeDetail-table-body">
@@ -203,6 +208,8 @@
 										type: "text",
 										name: "codeGroupName",
 										class: "codeGroupName code-group-name"
+								}).css({
+								    width: "150px"  // 원하는 폭 설정
 								}));
 								var codeDetailCount = $("<td>").text("-");
 								var useYn = $("<td>").append("<select><option>Y</option><option>N</option></select>");
@@ -310,25 +317,52 @@
 										.attr("data-code-group-id", response[i].codeGroupId)
 										.attr("id", "commonCode-group-id");
 									
+									/* var codeGroupName = $("<td>").append($("<input>").attr({
+										type: "text",
+										name: "codeGroupName",
+										value: response[i].codeGroupName,
+										class: "codeGroupName code-group-name"
+									})); */
+									
 									var codeGroupName = $("<td>").append($("<input>").attr({
 										type: "text",
 										name: "codeGroupName",
 										value: response[i].codeGroupName,
 										class: "codeGroupName code-group-name"
+									}).css({
+									    width: "150px",  // 원하는 폭 설정
+									    textAlign: "center",  // 텍스트 정렬 설정
+									    border: "none",  // 테두리 없애기
+									    // 다른 스타일 속성들 추가
 									}));
+									
+									
 									var codeDetailCount = $("<td>").addClass("codeDetailCount").text(response[i].codeDetailCount);
 
 									var selectElement = $("<select><option>Y</option><option>N</option></select>");
 									selectElement.val(response[i].useYn);
 									
 									var useYn = $("<td>").append(selectElement);
-									var searchDetailCode = $("<td>").append($("<input>").attr({
+ 									var searchDetailCode = $("<td>").append($("<input>").attr({
 										type: "button",
 										name: "codeGroupId",
 										"data-code-group-id": response[i].codeGroupId,
 										value: "조회",
 										class: "code-group-id"
-									}))
+									})) 
+									/* var commoncodeTd = $("<td>");
+							         const commoncodeBtn = $("<input>").attr({
+							                type: "hidden",
+							                class: "commoncode-btn",
+							            	"data-code-group-id": response[i].codeGroupId
+							            });
+							            const commoncodeImgBtn = $("<img>").attr({
+							                src: "assets/img/detail2.png",
+							                style: "width:25px; height:25px;",
+							            });
+							            
+							            commoncodeTd.append(commoncodeBtn);
+							            commoncodeTd.append(commoncodeImgBtn); */
 									
 									newRow.append(status);
 									newRow.append(codeGroupId);
@@ -336,7 +370,7 @@
 									newRow.append(codeDetailCount);
 									newRow.append(useYn);
 									newRow.append(searchDetailCode);
-
+									//newRow.append(commoncodeTd);
 									$(".commoncode-table tbody").append(newRow);
 								}
 							}
@@ -487,6 +521,8 @@
 									type : "text",
 									name : "detailCodeName",
 									class : "detailCodeName"
+								}).css({
+								    width: "150px"  // 원하는 폭 설정
 								}));
 								var useYn = $("<td>").append("<select><option>Y</option><option>N</option></select>");
 								

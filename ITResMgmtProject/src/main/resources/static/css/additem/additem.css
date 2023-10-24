@@ -12,7 +12,7 @@
 }
 
 #addItemsearchBtn, #ExcelDownBtn, #ExcelUploadBtn, #addItemSaveBtn {
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 .addItem-serachBar {
@@ -86,6 +86,10 @@
 
 .additem-table tbody tr:hover td {
 	background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
+td{
+	font-size:15px;
 }
 
 .col-checkbox {
