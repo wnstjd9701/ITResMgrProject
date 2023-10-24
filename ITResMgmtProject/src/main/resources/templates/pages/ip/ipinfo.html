@@ -12,11 +12,14 @@
 			<div class="pagetitle">
 				<button class="btn btn-primary ip-btn ip-save-btn" style="background-color: navy; border: navy;">저장</button>
 				<button class="btn btn-primary ip-btn ip-new-btn" style="background-color: navy; border: navy;">신규</button>
-				<button class="btn btn-primary ip-btn ip-delete-btn" style="background-color: #003F5E; border: #003F5E;">삭제</button>
-				<button class="btn btn-primary excel-btn excel-upload-btn" style="background-color: green; border: green;">엑셀
-					업로드</button>
-				<button class="btn btn-primary excel-btn excel-download-btn" style="background-color: green; border: green;">엑셀
-					다운로드</button>
+				<button class="btn btn-primary ip-btn ip-delete-btn">삭제</button>
+				<div class="excel-btn-container">
+					<button type="button" class="btn btn-primary" style="background-color: green; border: green;" id="open-excel-modal-btn">엑셀 업로드</button>
+					<form action="/ip/excel/download" method="get">
+						<button type="submit" id="ExcelDownBtn" class="btn btn-primary"
+							style="background-color: green; border: green;">엑셀 다운로드</button>
+					</form>
+				</div>
 				<button class="btn btn-primary ip-btn search-btn" style="background-color: gray; border: gray;">조회</button>
 				<h1>IP 관리</h1>
 				<nav>
@@ -97,16 +100,17 @@
 				</div>
 				<div class="ip-res-container">
 					<div class="ip-detail-container">
-						<form>
+						<form id="ip-info-form">
+							<input type="hidden" name="ipSn" class="detail-origin-ip-sn" value="0">
 							<div class="form-group">
 								<label for="ip-address-input-label" class="ip-span">IP
 									주소</label> <input type="text" class="form-control detail-ip"
-									id="ip-address-input-label" placeholder="IP"
+									id="ip-address-input-label" placeholder="IP" name="ip"
 									style="font-size: 15px;">
 							</div>
 							<div class="form-group">
 								<label for="ip-type-label" class="ip-span">유형</label> <select
-									class="form-control detail-ip-type" id="ip-type-label">
+									class="form-control detail-ip-type" id="ip-type-label" name="detailCode">
 									<option th:each="ipCode : ${ipCode}"
 										th:value="${ipCode.detailCode}"
 										th:text="${ipCode.detailCodeName}">
@@ -114,7 +118,7 @@
 							</div>
 							<div class="form-group">
 								<label for="ip-desc-label" class="ip-span">설명</label>
-								<textarea class="form-control detail-ip-desc" id="ip-desc-label"
+								<textarea class="form-control detail-ip-desc" id="ip-desc-label" name="ipDesc"
 									rows="3"></textarea>
 							</div>
 						</form>
@@ -166,6 +170,26 @@
 						</nav>
 					</div>
 				</div>
+				<div class="modal fade" id="excel-upload-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">파일 선택</h5>
+								<button type="button" class="close close-excel-modal-btn" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body">
+								<form id="uploadForm" enctype="multipart/form-data">
+									<div id="select-file-name">선택한 파일</div>
+									<input type="file" id="fileInput" name="file" accept=".xlsx, .xls" style="display: none;">
+									<button type="button" id="ExcelUploadBtn" class="btn btn-primary" style="background-color: green; border: green;">파일 선택</button>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary save-excel-btn">저장</button>
+								<button type="button" class="btn btn-secondary close-excel-modal-btn" data-dismiss="modal">닫기</button>
+							</div>
+						</div>
+					</div>
 			</div>
 		</main>
 		<script type="text/javascript" th:src="@{/js/ip/ip.js}"></script>
