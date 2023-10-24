@@ -179,8 +179,6 @@
 			            ON urc.res_class_id = rc.upper_res_class_id
 			        LEFT OUTER JOIN resclass urc_name
 			            ON urc_name.res_class_id = urc.upper_res_class_id
-			    )
-			)	
 			  		<where>
 				    <if test='topUpperResClassName != null &amp;&amp; !topUpperResClassName.equals("") '>
 				        AND urc_name.res_class_name = #{topUpperResClassName} 
@@ -207,6 +205,8 @@
 				        AND r.monitoring_yn = #{monitoringYn}
 				    </if>
 			  		</where>
+			    )
+			)	
 			  WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 	

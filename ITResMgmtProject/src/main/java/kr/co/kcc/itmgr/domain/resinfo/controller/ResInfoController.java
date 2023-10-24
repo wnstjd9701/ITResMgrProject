@@ -43,7 +43,7 @@ public class ResInfoController {
 		if(countOfResList > 0) {
 			totalPage= (int)Math.ceil(countOfResList/10.0);
 		}
-		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
+		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
 		int nowPageBlock = (int) Math.ceil(page/5.0);
 		int startPage = (nowPageBlock-1)*5 + 1;
 		int endPage = 0;
@@ -83,7 +83,7 @@ public class ResInfoController {
 		for (ResClass r : resClassList) {
 			if (r.getUpperResClassName() == null) {
 				resClassMap.put(r.getResClassName(), null);
-			}
+			}	
 		}
 		for (String key: resClassMap.keySet()) {
 			Map<String, Map<String, String>> map2 = new HashMap<String, Map<String,String>>();
@@ -300,6 +300,7 @@ public class ResInfoController {
 	public void insertResInfo(@RequestBody ResInfo resInfo) {
 		resInfoService.insertResInfo(resInfo);
 		resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+		resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
 	}
 
 	@GetMapping("/resinfo/detail")
