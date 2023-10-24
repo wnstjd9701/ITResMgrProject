@@ -9,8 +9,10 @@
 <body>
 	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
 	<main id="main" class="main">
-		<div class="title-container">
 			<div class="pagetitle">
+			<div class="btn-container">
+			<input type="button" id="searchBtn" class="btn btn-primary" value="조회" style="background-color: gray; border: gray;">
+			</div>
 				<h1>모니터링</h1>
 				<nav>
 					<ol class="breadcrumb">
@@ -18,19 +20,15 @@
 						<li class="breadcrumb-item active">모니터링</li>
 					</ol>
 				</nav>
-			</div>
-			<div class="btn-container">
-				<input type="button" class="btn btn-primary" id="searchBtn" value="조회">
-			</div>
 		</div>
 		<div class="search-container">
 			<div class="search-info">
-				<span>대 분 류</span> <select id="resClassLevel1" disabled>
+				<span class="index-search-text">대 분 류</span> <select id="resClassLevel1" class="index-search-select" style=" opacity: 0.5;" disabled>
 					<option value="HW">하드웨어</option>
 				</select>
 			</div>
 			<div class="search-info">
-				<span>중 분 류</span> <select id="resClassLevel2" name="resClassLevel2">
+				<span class="index-search-text">중 분 류</span> <select id="resClassLevel2" name="resClassLevel2" class="index-search-select">
 					<option value="A" th:text="전체" th:data-all="all"></option>
 					<option th:each="resClassLevel2:${resClassLevel2}"
 						th:value="${resClassLevel2.resClassId}"
@@ -38,8 +36,8 @@
 				</select>
 			</div>
 			<div class="search-info">
-				<span>소 분 류</span> <select disabled id="resClassLevel3"
-					name="resClassLevel3">
+				<span class="index-search-text">소 분 류</span> <select disabled id="resClassLevel3"
+					name="resClassLevel3" class="index-search-select" style=" opacity: 0.5;">
 					<option value="A" th:text="전체" th:data-all="all"></option>
 					<option th:each="resClassLevel3:${resClassLevel3}"
 						th:value="${resClassLevel3.resClassId}"
@@ -48,13 +46,13 @@
 				</select>
 			</div>
 			<div class="search-info">
-				<span>사용 여부</span> <select id="monitoringYn">
+				<span class="index-search-text">사용 여부</span> <select id="monitoringYn" class="index-search-select">
 					<option value="Y">전체</option>
 					<option value="A">미사용 포함</option>
 				</select>
 			</div>
 			<div class="search-info">
-				<span>자원명 <input type="text" name="resName" placeholder="자원명을 검색하세요."> </span>
+				<span class="index-search-text">자원명 <input type="text" name="resName" placeholder="자원명을 검색하세요." class="index-searct-resname"> </span>
 			</div>
 		</div>
 		<!-- <div class="refresh-btn-container">
@@ -63,40 +61,40 @@
 			</div> -->
 		<div class="table-container">
 			<form>
-				<table id="resInfoTable" class="table table-striped">
+				<table id="resInfoTable">
 					<thead>
 						<tr>
-							<th>상태</th>
-							<th>상태 최신화</th>
+							<th style="width:4%;">상태</th>
+							<th style="width:8%;">상태 최신화</th>
 							<th>IP 주소</th>
 							<th>자원 분류</th>
 							<th>자원명</th>
 							<th>설치 장소명</th>
 							<th>설치 장소</th>
-							<th>도입일자</th>
+							<th >도입일자</th>
 							<th>자원 관리 ID</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="resourceInfo:${resourceInfo}">
 							<td class="resInfoTd status"
-								th:if="${resourceInfo.ipStatus == true}">🟢</td>
+								th:if="${resourceInfo.ipStatus == true}" style="text-align: center; vertical-align: middle;">🟢</td>
 							<td class="resInfoTd status"
-								th:if="${resourceInfo.ipStatus == false}">🔴</td>
-							<td class="refresh"><input type="button" class="refresh"
-								value="새로고침" th:data-ip="${resourceInfo.ip}"></td>
-							<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}">[[${resourceInfo.ip}]]</td>
-							<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}">-</td>
+								th:if="${resourceInfo.ipStatus == false}" style="text-align: center; vertical-align: middle;">🔴</td>
+							<td class="refresh" style="text-align: center;"><input type="button" class="refresh refresh-btn"
+								value="↻" th:data-ip="${resourceInfo.ip}"></td>
+							<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}" style="text-align: center;">[[${resourceInfo.ip}]]</td>
+							<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}" style="text-align: center;">-</td>
 							<td class="resInfoTd resClassPath"
 								th:text="${resourceInfo.resClassPath}"></td>
-							<td class="resInfoTd resName" th:text="${resourceInfo.resName}"></td>
+							<td class="resInfoTd resName" th:text="${resourceInfo.resName}" style="text-align: center;"></td>
 							<td class="resInfoTd installPlaceName"
-								th:text="${resourceInfo.installPlaceName}"></td>
+								th:text="${resourceInfo.installPlaceName}" style="text-align: center;"></td>
 							<td class="resInfoTd installPlaceFullName"
 								th:text="${resourceInfo.installPlaceFullAddress}"></td>
 							<td class="resInfoTd introductionDate"
-								th:text="${resourceInfo.introductionDate}"></td>
-							<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}"></td>
+								th:text="${resourceInfo.introductionDate}" style="text-align: center;"></td>
+							<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}" style="text-align: center;"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -106,7 +104,7 @@
 				type="hidden" class="bottom-res-class" value="A"> <input
 				type="hidden" class="monitoring-yn" value="Y">
 			<nav aria-label="Page navigation example" class="paging-nav">
-				<ul class="pagination monitoring-pagination justify-content-center">
+				<ul class="pagination monitoring-pagination justify-content-center" style="margin-top:12px;">
 					<li class="page-item">
 						<button class="page-link prev-page-link" aria-label="Previous"
 							th:value="${paging.startPage - 1}" disabled>
@@ -314,7 +312,7 @@
             const refreshButton = $("<input>").attr({
                 type: "button",
                 class: "refresh-btn",
-                value: "새로고침",
+                value: "↻",
                 "data-ip": response[i].ip
             });
             const refresh = $("<td>").addClass("refresh").append(refreshButton);

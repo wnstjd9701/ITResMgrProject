@@ -1,0 +1,72 @@
+#map {
+	height: 50vh;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.placemap-table, .placemap-detail-table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+	table-layout: fixed;
+}
+
+.placemap-table tr th, .placemap-detail-table tr th {
+	padding: 10px;
+	background-color: #7289AB;
+	color: white;
+	background-color: #7289AB;
+}
+
+.placemap-table tr td, .placemap-detail-table tr td {
+	padding: 10px;
+	background-color: #FCFCFC;
+}
+
+.placemap-table tr, .placemap-detail-table tr {
+	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
+}
+
+.placemap-table tbody tr:hover td, .placemap-detail-table tbody tr:hover td
+	{
+	background-color: #ECECEC; /* 호버 시 배경색 변경 */
+}
+
+.place-map-container{
+	/* display : block; */
+	/* width:100%; */
+}
+.view-container {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	background-color: rgba(255, 255, 255, 0.5);
+	 width: 40%;
+	height:840px;
+      float: left; 
+     box-sizing: border-box; 
+}
+
+.place-list-container {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	background-color: rgba(255, 255, 255, 0.5);
+ 	width: 60%;
+	height:100%;
+      float: left;
+    box-sizing: border-box;
+    float:right;
+   /*  margin-left:5px; */
+    
+    
+}
+
+
+/* .toastui-chart-wrapper{
+	border : 1px solid black;
+	border-radius: 5px;
+} */

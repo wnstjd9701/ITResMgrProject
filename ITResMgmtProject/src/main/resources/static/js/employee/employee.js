@@ -6,11 +6,11 @@ function addRow() {
 	const newRow = table.insertRow();
 	newRow.setAttribute("data-row-id", rowCount);
 
-	const newCellCheckBox = newRow.insertCell(0);
-	newCellCheckBox.innerHTML = "<input type='checkbox' name='addCheckbox'>";
-
-	const newCellStatus = newRow.insertCell(1);
+	const newCellStatus = newRow.insertCell(0);
 	newCellStatus.innerHTML = "<span name='empStatus'>I</span>";
+
+	const newCellCheckBox = newRow.insertCell(1);
+	newCellCheckBox.innerHTML = "<input type='checkbox' name='addCheckbox'>";
 
 	const newCellEmpId = newRow.insertCell(2);
 	newCellEmpId.innerHTML = "<input type='text' style='text-align:center;' id='empId" + rowCount + "'>";
@@ -321,14 +321,13 @@ function saveAjax(requestData) {
 
 				for (var i = 0; i < response.length; i++) {
 					var addTableRow = "<tr>" +
-						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td><span name='empStatus'>S</span></td>" +
+						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
 						"<td><input type='text' value='**********' name='employeePwd' onclick='showPasswordField(this)'" +
 						"class='employee-input employee-pwd'></input></td>" +
 						"<td><input type='text' name='employeeName'" + "value='" + response[i].employeeName + "''" +
-						 "onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
-
+						"onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
 
 					//사원유형 <td>
 					var employeeTypeCell = "<td name='employeeType' onclick='handleClick(this)'>" +
@@ -512,7 +511,7 @@ function searchList() {
 		employeeStatusCode: employeeStatusCode,
 		searchText: searchText
 	};
-	
+
 
 	$.ajax({
 		url: '/search/employee?' + $.param(searchData),
@@ -530,14 +529,14 @@ function searchList() {
 			} else {
 				// 검색 결과가 있는 경우
 				for (var i = 0; i < response.length; i++) {
-				var addTableRow = "<tr>" +
-						"<td><input type='checkbox' name='empCheckbox'></td>" +
+					var addTableRow = "<tr>" +
 						"<td><span name='empStatus'>S</span></td>" +
+						"<td><input type='checkbox' name='empCheckbox'></td>" +
 						"<td name='employeeId'>" + response[i].employeeId + "</td>" +
 						"<td><input type='text' value='**********' name='employeePwd' onclick='showPasswordField(this)'" +
 						"class='employee-input employee-pwd'></input></td>" +
 						"<td><input type='text' name='employeeName'" + "value='" + response[i].employeeName + "''" +
-						 "onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
+						"onclick='handleClick(this)' class='employee-input employee-name'></input></td>";
 
 
 					//사원유형 <td>
