@@ -206,10 +206,10 @@
 	padding: 0px;
 }
 
-.detailCodeName{
+/* .detailCodeName{
 	border:none;
 	text-align: center;
-}
+} */
 
 .commoncodedetail-table tbody tr:hover input.detailCodeName {
     background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
@@ -224,4 +224,18 @@
 .codeGroupId{
 	width:70px;
 	text-align: center;
+}
+
+.detailCodeGroupId{
+	width:70px;
+	text-align: center;
+}
+
+.detailCode{
+	width:70px;
+	text-align: center;
+}
+
+.detailCodeGroupId-input{
+	border: 1px solid black;
 }
