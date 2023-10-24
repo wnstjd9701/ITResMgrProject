@@ -45,11 +45,14 @@ body {
     border-color: white;
 } */
 
-select, input[type="text"] {
+ select, input[type="text"] {
     padding: 3px;
     border: 1px solid #ccc;
     border-radius: 3px;
     margin-bottom: 10px;
+}
+.addTable input[type="text"]{
+	margin-bottom: 0px;
 }
 
 .btn-group span {
@@ -332,6 +335,7 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 
 #additionalInfoTable tr td,
 #additionalInfoTable tr th{
+	vertical-align: middle;
 	display: table-cell;
 	text-align: center;
 }
