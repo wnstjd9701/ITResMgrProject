@@ -79,7 +79,7 @@ public class IpInfoController {
 		model.addAttribute("paging",ipPaging);
 		model.addAttribute("ipCode", ipCode);
 
-		return "/ip/ipinfo";
+		return "ip/ipinfo";
 	}
 
 	/*
