@@ -27,6 +27,12 @@ public class LoginInterceptor implements HandlerInterceptor{
 		log.info("URI: " + request.getRequestURI());
 		log.info("user: " + user); 
 		if(user != null) {
+			String userTypeCode = user.getEmployeeTypeCode();
+			if(userTypeCode.equals("EMT001")) { // 시스템 관리자
+				return true;
+			}else if(userTypeCode.equals("EMT002")) {
+				return true;
+			}
 			return true;
 		}else {
 			response.sendRedirect("/signin");

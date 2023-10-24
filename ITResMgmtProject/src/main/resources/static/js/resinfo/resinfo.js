@@ -59,7 +59,8 @@ function paging(page) {
                         "<td>"+response.selectAllResInfo[i].mgmtId+"</td>"+
                         "<td>"+response.selectAllResInfo[i].monitoringYn+"</td>"+
  						"<td><input type='hidden' name ='resSerialId' value='" + response.selectAllResInfo[i].resSerialId
-						+"'>" + "<button type='button' id='resinfo-detail-btn'>보기</button></td>"+
+						+"'>" +"<button type='button' id='resinfo-detail-btn' style='border:none; background-color:transparent;'>" +
+						"<img src='assets/img/detail2.png' style='width:25px; height:25px;'></button></td>"+
                         "</tr>";
                 $('tbody#resInfoTable').append(resInfoRow);
             }

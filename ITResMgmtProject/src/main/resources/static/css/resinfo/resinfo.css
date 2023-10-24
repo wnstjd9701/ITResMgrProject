@@ -27,6 +27,12 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
+.btn {
+	float: right;
+	margin-left: 10px;
+}
+
 .btn-primary {
     background-color: navy;
     border-color: navy;
@@ -109,7 +115,7 @@ select, input[type="text"] {
 }
 
 .table{
-	font-size:12px;
+   font-size:12px;
 }
 
 .table tr th {
@@ -212,43 +218,48 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 }
 
 #resInfoDetailTable td label{
-  	align-items: center;
+     align-items: center;
 }
 
 
 .essential-resinfo{
-	color:rgb(4, 13, 123); 
-	font-weight: bold; 
-	font-size: medium;
+   color:rgb(4, 13, 123); 
+   font-weight: bold; 
+   font-size: medium;
 }
 
 .addTable table tr th{
-	border :2px solid #7289AB;
+   border :2px solid #7289AB;
 }
 
 .addTable table tr td {
-	table-layout: fixed;
+   table-layout: fixed;
 }
 
 .search-bar {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap; /* 텍스트 길이에 맞게 자동으로 줄 바꿈 */
-    background-color: #7289AB;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-    color:white;
+	background-color: #7289AB; /* 배경 색상 */
+	padding: 10px; /* 내부 여백 */
+	border: 1px solid #ccc; /* 테두리 스타일 및 색상 */
+	border-radius: 3px; /* 둥근 모서리 */
+	/* width: 1220px; */
+	width: 100%;
+	height: 90px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+	height: 90px; /* 그림자 설정 */
 }
 
 
 /* 스팬 요소 스타일 */
 .search-bar span {
-    margin-right: 10px; /* 스팬 요소 간의 간격 조정 */
+	/*  margin-right: 10px; */ /* 스팬 요소 간의 간격 조정 */
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	font-size: 14px;
+	color: white;
+	margin-right: 5px;
 }
 
 /* 선택 상자 스타일 */
@@ -286,7 +297,7 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 }
 
 .search-bar input[type="radio"]{
-	padding: 5px;
+   padding: 5px;
     border: 1px solid #ccc;
     border-radius: 3px;
 }
@@ -300,9 +311,9 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
     
     
 #ipListTable table{
-	display: table;
-	table-layout: fixed;
+   display: table;
+   table-layout: fixed;
 }
 #ipListTable tr td{
-	display: table-cell;
+   display: table-cell;
 }

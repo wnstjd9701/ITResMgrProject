@@ -182,23 +182,29 @@
 		            ROW_NUMBER()
 		            OVER(
 		                ORDER BY
-		                    insp.install_place_name
+		                    r.install_place_name
 		            )                              AS rn
 		        FROM
-		            installplace insp
-		            LEFT JOIN resinfo      r ON insp.install_place_sn = r.install_place_sn
+		            (
+		                SELECT
+		                    *
+		                FROM
+		                    resinfo      r
+		                    LEFT JOIN installplace insp ON insp.install_place_sn = r.install_place_sn
+		                ORDER BY
+		                    insp.install_place_sn
+		            )            r
 		            LEFT JOIN commoncodes  cd_res_status ON r.res_status_code = cd_res_status.detail_code
 		            LEFT JOIN resipmapping rim ON r.res_serial_id = rim.res_serial_id
 		            LEFT JOIN ipinfo       i ON rim.ip_sn = i.ip_sn
 		            LEFT JOIN commoncodes  cd_ip_type ON rim.ip_type_code = cd_ip_type.detail_code
 		            LEFT JOIN resclass     rc ON r.res_class_id = rc.res_class_id
-				<where>
-				    insp.install_place_name = #{placeName}
+		        <where>
+					r.install_place_name = #{placeName} AND r.res_serial_id IS NOT NULL
 				</where>			
-				    AND r.res_serial_id IS NOT NULL
-					) i
-				WHERE
-				    rn BETWEEN #{start} AND #{end}
+		    ) i
+		WHERE
+		    rn BETWEEN #{start} AND #{end}
 	</select>
 	
 	<select id="selectInstallPlaceDetail" parameterType="String" resultType="kr.co.kcc.itmgr.domain.installplace.model.InstallPlace">

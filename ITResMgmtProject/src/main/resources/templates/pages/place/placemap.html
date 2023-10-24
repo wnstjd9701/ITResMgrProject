@@ -3,44 +3,26 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="../common/layout/default">
 <head>
+<link rel="stylesheet" type="text/css"
+	th:href="@{../css/place/placemap.css}">
 <meta charset="UTF-8">
-<style>
-#map {
-	height: 50vh;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-}
-
-.place-table{
-	font-size: 12px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-}
-.map-container{
-	width: 50%;
-}
-.view-container{
-	display:flex;
-}
-
-</style>
 <link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
 <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
+<link href="../assets/css/style.css" rel="stylesheet">
 </head>
 <th:block layout:fragment="content">
 	<main id="main" class="main">
 			<div class="place-map-container">
 				<div class="view-container">
 					<div class="map-container">
-						<input type="button" class="group-do" value="💢">
+						<input type="button" class="btn btn-primary group-do" value="↻" style="background-color : white; border : 1px solid black; margin-bottom:5px; color: black;">
 						<div id="map"></div>
-					</div>
-					<div class="chart-container">
+						<div class="chart-container">
 						<div id="chart-area"></div>
 					</div>
+					</div>
 				</div>
+				
 				<div class="place-list-container">
 					<select id="doNameSelect" class="form-select">
 						<option value="-">선택</option>
@@ -48,16 +30,16 @@
 						<option th:each="doName : ${doNames}" th:value="${doName.key}">[[${doName.key}]] [ [[${doName.value}]] ]</option>
 					</select>
 					<div class="place-table-container">
-						<table class="table table-striped place-table">
+						<table class="placemap-table">
 							<thead class="fixed-header">
 								<tr>
-									<th>번호</th>
-									<th>설치 장소명</th>
-									<th>우편번호</th>
+									<th style="width:7%;">번호</th>
+									<th style="width:14%;">설치 장소명</th>
+									<th style="width:11%;">우편번호</th>
 									<th>주소</th>
-									<th>상세 주소</th>
-									<th>장비 개수</th>
-									<th>상세</th>
+									<th style="width:9%;">상세 주소</th>
+									<th style="width:9%;">장비 개수</th>
+									<th style="width:8%;">상세</th>
 								</tr>
 							</thead>
 							<tbody class="place-table-body">
@@ -84,7 +66,7 @@
 							</tbody>
 						</table>
 						<input type="hidden" class="search-type" value="">
-						<nav aria-label="Page navigation example" class="paging-nav">
+						<nav aria-label="Page navigation example" class="paging-nav" style="margin-top:12px;">
 							<ul class="pagination place-pagination justify-content-center">
 								<li class="page-item">
 									<button class="page-link prev-page-link" aria-label="Previous"
@@ -106,13 +88,13 @@
 						</nav>
 					</div>
 					<div class="resinfo-table-container">
-						<table class="table table-striped place-table">
+						<table class="placemap-detail-table">
 							<thead class="fixed-header">
 								<tr>
-									<th>자원명</th>
-									<th>IP</th>
-									<th>IP 종류</th>
-									<th>자원 상태</th>
+									<th style="width: 20%;">자원명</th>
+									<th style="width: 15%;">IP</th>
+									<th style="width: 8%;">유형</th>
+									<th style="width: 12%;">자원 상태</th>
 									<th>자원 분류</th>
 									<th>랙 정보</th>
 									<th>관리 부서</th>
@@ -120,12 +102,12 @@
 							</thead>
 							<tbody class="resinfo-table-body">
 								<tr>
-									<th colspan="7" style="text-align:center;">장소명을 클릭하세요.</th>
+									<td colspan="7" style="text-align:center;">장소명을 클릭하세요.</td>
 								</tr>
 							</tbody>
 						</table>
 						<input type="hidden" class="res-search-type" value="">
-						<nav aria-label="Page navigation example" class="paging-nav">
+						<nav aria-label="Page navigation example" class="paging-nav" style="margin-top:12px;">
 							<ul class="pagination res-pagination justify-content-center">
 								<!-- <li class="page-item">
 									<button class="page-link res-prev-page-link" aria-label="Previous" value="0"> 
@@ -685,8 +667,8 @@ $(document).ready(function(){
     const options = {
 	  chart: { 
 	  	title: '지역별 자원 현황',
-	   	width: 670,
-	   	height: 400,
+	   	width: 500,
+	   	height: 300,
 	  },
       series: {
         dataLabels: {

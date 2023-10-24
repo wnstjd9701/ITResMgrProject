@@ -35,11 +35,11 @@ function loadResourceDetails(resClassName) {
 			            "<td id='resClassFlagCell'>" + data.flag + "</td>" +
 			        "</tr>" +
 			        "<tr>" +
-			            "<th scope='row'>대분류</th>" +
+			            "<th scope='row'>대 분 류</th>" +
 			            "<td id='topUpperResClassNameCell'>" + data.topUpperResClassName + "</td>" +
 			        "</tr>" +
 			        "<tr>" +
-			            "<th scope='row'>중분류</th>" +
+			            "<th scope='row'>중 분 류</th>" +
 			            "<td id='upperResClassNameCell'>" + data.upperResClassName + "</td>" +
 			        "</tr>" +
 			        "<tr>" +
@@ -64,7 +64,7 @@ function loadResourceDetails(resClassName) {
 			        "<tr>" +
 			            "<th scope='row'>자원명</th>" +
 			            "<td id='resClassNameCell'>" +
-			                "<input type='text' name='resClassName' value='" + data.resClassName + "'>" +
+			                "<input type='text' style='text-align: center;' name='resClassName' value='" + data.resClassName + "'>" +
 			            "</td>" +
 			        "</tr>" +
 			        "<input type='hidden' name='resClassId' value='" + data.resClassId + "'>";
@@ -186,6 +186,7 @@ function pagingLine(data) {
 
     pagingLine += "</ul>";
 
+
     // Add custom CSS styles
     var customStyles = `
         <style>
@@ -256,7 +257,7 @@ function updateTable(addItem) {
             "<td><input type='checkbox' name='addItemSn' value='" + addItemSn + "'" + (isAlreadySelected ? 'disabled' : '') + "></td>" +
             "<td>" + addItem[i].addItemName + "</td>" +
             "<td>" + addItem[i].addItemDesc + "</td>" +
-            "<td><input type='hidden' name='useYN' value='" + addItem[i].useYN + "'></td>" +
+            "<input type='hidden' name='useYN' value='" + addItem[i].useYN + "'>" +
             "</tr>";
         $('table#add-item-table tbody').append(addTableRow);
     }

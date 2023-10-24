@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
 import kr.co.kcc.itmgr.domain.home.model.Monitoring;
 import kr.co.kcc.itmgr.domain.home.model.SearchCondition;
 import kr.co.kcc.itmgr.domain.home.model.ServerStatusResponse;
 import kr.co.kcc.itmgr.domain.home.service.IMoniteringService;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
+import kr.co.kcc.itmgr.domain.user.model.User;
 import kr.co.kcc.itmgr.global.common.ApiResponse;
 import kr.co.kcc.itmgr.global.common.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +43,11 @@ public class MonitoringController {
 	 * Info : 모든 모니터링 자원 정보 보여주는 API (N인 경우도 보여줌)
 	 */
 	@GetMapping("/")
-	public String selectAllResourceInformation(Model model) throws IOException {
+	public String selectAllResourceInformation(Model model, HttpSession session) throws IOException {
+		User user = (User) session.getAttribute("user");
+		if(user.getEmployeeTypeCode().equals("EMT002")) {
+			return "redirect:/resinfo";
+		}
 		int page = 1;
 		int start = 1;
 		int end = start + 9;
