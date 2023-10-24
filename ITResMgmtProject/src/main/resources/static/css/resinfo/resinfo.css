@@ -314,6 +314,26 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
    display: table;
    table-layout: fixed;
 }
-#ipListTable tr td{
-   display: table-cell;
+
+#additionalInfoTable table{
+   display: table;
+   table-layout: fixed;
+}
+
+#additionalInfoTable tr td,
+#additionalInfoTable tr th{
+	display: table-cell;
+	text-align: center;
+}
+
+#ipListTable tr th{
+	padding : 0;
+	height: 36px;
+}
+
+#ipListTable tr td,
+#ipListTable tr th{
+	vertical-align: middle;
+	display: table-cell;
+	text-align: center;
 }

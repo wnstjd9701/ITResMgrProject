@@ -432,7 +432,7 @@
 	        ip_type_code, 
 	        create_date, 
 	        creater_id
-	    ) values (#{resSerialId}, #{ipSn}, #{ipTypeCode}, SYSDATE, 'wh467925')
+	    ) values (#{resSerialId,jdbcType=VARCHAR}, #{ipSn,jdbcType=INTEGER}, #{ipTypeCode,jdbcType=VARCHAR}, SYSDATE, 'wh467925')
 	</insert>
 	
 	<delete id="deleteAddItemValueInResInfo" parameterType="String">

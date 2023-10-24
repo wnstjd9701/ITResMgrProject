@@ -274,7 +274,6 @@ function updateTable(addItem) {
 	            var row = $(this).closest('tr');  // 가장 가까운 행을 가져옴
 	            var addItemSn = $(this).val();
 	            var addItemName = row.find('td:eq(1)').text();  // addItemName에 해당하는 두 번째 td
-	            var useYn = row.find('input[name="useYN"]').val();
 	            var statusC = 'C';
 	
 	            // 새로운 행을 생성하고 각 정보를 삽입
