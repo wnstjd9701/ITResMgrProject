@@ -205,7 +205,7 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
   margin: 0px;
 }
 
-#resInfoDetailTable td input, 
+#resInfoDetailTable td input[type="text"] , 
 #resInfoDetailTable td select, 
 #resInfoDetailTable td label {
   height: 28px; /* 원하는 너비로 조정할 수 있습니다 */
