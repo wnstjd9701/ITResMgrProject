@@ -10,7 +10,7 @@
 </head>
 <th:block layout:fragment="content">
 	<main id="main" class="main">
-	
+
 		<h1 class="title">공통 코드</h1>
 		<nav>
 			<ol class="breadcrumb">
@@ -26,22 +26,22 @@
 					🔵 생성
 					🔴 삭제
 				</div> -->
-				
-					<div class="pagetitle">
-				<h1 class="sub-title">공통 코드</h1>
-				<div class="common-btn-container">
-					<input id="searchCommonCodeBtn" type="button" value="조회"
-						class="btn btn-primary"
-						style="background-color: gray; border: gray;"> <input
-						th:if="${session.user.employeeTypeCode == 'EMT001'}"
-						id="commonCodeSaveBtn" type="button" value="저장"
-						class="btn btn-primary"
-						style="background-color: navy; border: navy;">
+
+				<div class="pagetitle">
+					<h1 class="sub-title">공통 코드</h1>
+					<div class="common-btn-container">
+						<input id="searchCommonCodeBtn" type="button" value="조회"
+							class="btn btn-primary"
+							style="background-color: gray; border: gray;"> <input
+							th:if="${session.user.employeeTypeCode == 'EMT001'}"
+							id="commonCodeSaveBtn" type="button" value="저장"
+							class="btn btn-primary"
+							style="background-color: navy; border: navy;">
+					</div>
 				</div>
-				</div>
-				
-				
-				
+
+
+
 				<div class="search-info-container">
 					<div class="search-detail-common">
 						<span class="common-search">사용 여부</span> <select
