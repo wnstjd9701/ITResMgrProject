@@ -9,6 +9,13 @@ h1{
 	text-align: left;
 }
 
+.search-container-second{
+		display: flex;
+	justify-content: flex-end; /* 수평으로 오른쪽 정렬 */
+	align-items: center;
+	margin-top: 10px; /* 원하는 여백 설정 */
+	margin-bottom: 5px;
+}
 .place {
 	text-align: center;
 	height: 110vh;
