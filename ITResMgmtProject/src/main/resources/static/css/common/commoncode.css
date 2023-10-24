@@ -184,7 +184,7 @@
 }
 
 .common-btn-container {
-	margin-left: auto;
+	/* margin-left: auto; */
 	text-align: right;
 	margin-top:-35px;
 }
@@ -192,6 +192,11 @@
 .row-btn {
 	text-align: right;
 }
+
+/* .btn {
+	float: right;
+	margin-left: 10px;
+} */
 
 .code-group-id-input {
 	width: 40%;
