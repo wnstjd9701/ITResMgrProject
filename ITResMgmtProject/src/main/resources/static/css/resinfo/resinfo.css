@@ -351,3 +351,10 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 	display: table-cell;
 	text-align: center;
 }
+#search-ip-list-btn{
+	float: right; 
+	background-color: #003F5E; 
+	border: #003F5E; 
+	font-size:13px; 
+	margin-right:5%;
+}
