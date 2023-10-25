@@ -179,8 +179,8 @@ public class ResInfoController {
 	
 	@PostMapping("/resinfo/ipdelete")
 	@ResponseBody
-	public void deleteIpMapping(String resSerialId) {
-		resInfoService.deleteIpInResInfo(resSerialId);
+	public void deleteIpMapping(int ipSn) {
+		resInfoService.deleteIpInResInfo(ipSn);
 	}
 	
 	
@@ -269,6 +269,14 @@ public class ResInfoController {
 		List<ResInfo> selectAddItemValueInResInfo = resInfoService.selectAddItemValueInResInfo(resSerialId);
 		return selectAddItemValueInResInfo;
 	}
+	
+	@GetMapping("/resinfo/ipmapping")
+	@ResponseBody
+	public List<ResInfo> selectIpMappingInResInfo(String resSerialId){
+		List<ResInfo> selectIpMappingInResInfo = resInfoService.selectIpMappingInResInfo(resSerialId);
+		return selectIpMappingInResInfo;
+	}
+
 
 	@GetMapping("/resinfo/search")
 	@ResponseBody

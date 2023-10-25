@@ -62,9 +62,9 @@
 									<td class="ip-desc" th:text="${ip.ipDesc}"></td>
 									<td class="ip-detail-code-name" th:text="${ip.detailCodeName}">
 									</td>
-									<td class="ip-detail"><input type="button"
+									<td class="ip-detail"><input type="hidden"
 										class="btn btn-primary ip-detail-btn"
-										th:data-ip-sn="${ip.ipSn}" value="상세"></td>
+										th:data-ip-sn="${ip.ipSn}" value="상세"><img alt="detail-img-btn" class="ip-detail-btn-img" src="assets/img/detail2.png" style="width:25px; height:25px;"></td>
 								</tr>
 							</tbody>
 						</table>
