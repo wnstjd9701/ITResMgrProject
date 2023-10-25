@@ -7,6 +7,7 @@ import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
+import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDTO;
 
 public interface IResInfoService {
 	List<ResInfo> selectAllResInfo(int page,ResInfo resInfo);
@@ -34,8 +35,12 @@ public interface IResInfoService {
 	
 	List<ResInfo> selectIpInResInfo(String resSerialId);
 	void insertIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList);
+	void deleteIpInResInfo(String resSerialId);
 	List<IpInfo> selectAllIpInfoList(int page);
 	
 	int CountOfAddItemValueInResInfo(String resSerialId);
 	int CountOfIpList();
+	
+	List<ResInfo> setFlagResInfoList(List<ResInfo> resInfo); //자원분류 flag설정
+	<T extends ResInfoDTO> List<T> setFlag(List<T> code);
 }

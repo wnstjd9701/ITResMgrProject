@@ -5,6 +5,10 @@ h1{
     color: #012970;
 }
 
+td{
+	font-size:15px;
+}
+
 .search-container {
 	text-align: left;
 }
@@ -170,7 +174,7 @@ h1{
 
 .btn {
 	float: right;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 .install-searchBar{
@@ -240,6 +244,11 @@ h1{
 	 display: inline-block;
 /* 	 color:white;
 	 background-color: #7289AB;
-	 padding:3px; */
-	
+	 padding:3px; */	
+}
+
+.detail-img-btn:hover {
+    /* 원하는 스타일 추가 */
+    /* 예: 배경색을 변경하거나 테두리를 추가할 수 있습니다 */
+    cursor: pointer; /* 커서 모양 변경 (선택사항) */
 }

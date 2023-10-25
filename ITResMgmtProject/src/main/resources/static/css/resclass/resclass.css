@@ -35,7 +35,7 @@ table th {
 
 .btn {
 	float: right;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 .second-container {
@@ -102,4 +102,19 @@ table th {
 	border: none;
 	border-radius: 5px;
 	background-color: navy;
+}
+
+#subCategoryRow label.form-label, .form-label, .form-select {
+	color: black;
+	font-size: 15px; /* 원하는 글꼴 크기로 조절 */
+	font-weight: bold;
+}
+
+#resClassLevel, #resClassByLevel, #resClassId, #resClassName {
+	font-size: 15px;
+}
+
+#subCategoryRow label {
+	font-size: 15px; /* 여기에 원하는 글씨체 크기를 설정하세요 */
+	color: black;
 }

@@ -54,7 +54,7 @@
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
-	width: 390px;
+	width: 385px;
 	height: 40px;
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -68,7 +68,7 @@
 	padding: 10px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
-	width: 420px;
+	width: 417px;
 	height: 40px;
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -108,14 +108,20 @@
 .commoncode-table-container {
 	max-height: 600px; /* 원하는 높이로 조절 */
 	overflow-y: auto; /* 세로 스크롤 표시 */
+	/* width:100%; */
 }
 
 /*테이블 스타일 */
+td {
+	font-size:15px;
+}
+
 .commoncode-table {
-	width: 100%;
+	/* width: 100%; */
 	/* margin: 5px 0; */
 	border-collapse: collapse;
 	text-align: center;
+	table-layout:fixed;
 }
 
 .common-thead {
@@ -157,6 +163,7 @@
 	/* margin: 5px 0; */
 	border-collapse: collapse;
 	text-align: center;
+	table-layout:fixed;
 }
 
 .common-detail-btn{
