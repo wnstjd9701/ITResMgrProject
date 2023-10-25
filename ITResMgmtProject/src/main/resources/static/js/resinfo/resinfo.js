@@ -517,11 +517,9 @@ c
 					$('table#ip-list-table input[type=checkbox]').prop('checked', false);
 					return;
 				}
-				var statusC = 'C';
 		 		// 선택한 IP 목록을 테이블에 추가
 		        for (var i = 0; i < selectedIPs.length; i++) {
 		            var addTableRow = "<tr>" +
-						"<td>" + statusC + "</td>" +
 		                "<td><input type='checkbox' name='ipSn' value='" + selectedIPs[i].ipSn + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='ip' value='" + selectedIPs[i].ip + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='detailCodeName' value='" + selectedIPs[i].detailCodeName + "'></td>" +

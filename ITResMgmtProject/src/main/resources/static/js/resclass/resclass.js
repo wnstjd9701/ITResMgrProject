@@ -325,7 +325,7 @@ $("#resclass-save").click(() => {
     if (flag === 'C' || flag==='D') {
 		resClassId = $(this).closest('.second-container').find("input[name='resClassId']").val();
 		addItemSn = $(this).closest('tr').find("input[name='addItemSn']").val();
-    }else if(flag === 'E'){
+    }else if(flag === 'S'){
 		return	
 	}
 

@@ -435,6 +435,13 @@
 	    ) values (#{resSerialId,jdbcType=VARCHAR}, #{ipSn,jdbcType=INTEGER}, #{ipTypeCode,jdbcType=VARCHAR}, SYSDATE, 'wh467925')
 	</insert>
 	
+	<delete id="deleteIpInResInfo" parameterType="String">
+		DELETE
+			FROM resipmapping
+		WHERE
+			res_serial_id = #{resSerialId}
+	</delete>
+	
 	<delete id="deleteAddItemValueInResInfo" parameterType="String">
 			DELETE 
 				FROM resinfodetail

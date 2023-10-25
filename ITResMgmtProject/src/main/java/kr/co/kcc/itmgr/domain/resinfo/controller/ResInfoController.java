@@ -7,7 +7,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -150,7 +149,6 @@ public class ResInfoController {
 		try {
 			resInfoService.updateResInfo(resInfo);
 			try {
-				resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
 				String resSerialId = resInfo.getResSerialId();
 				int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
 				try {
@@ -171,6 +169,18 @@ public class ResInfoController {
 		}catch(Exception e) {
 			e.getMessage();
 		}
+	}
+	
+	@PostMapping("/resinfo/ipupdate")
+	@ResponseBody
+	public void updateIpMapping(@RequestBody ResInfo resInfo) {
+		resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(),resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
+	}
+	
+	@PostMapping("/resinfo/ipdelete")
+	@ResponseBody
+	public void deleteIpMapping(String resSerialId) {
+		resInfoService.deleteIpInResInfo(resSerialId);
 	}
 	
 	

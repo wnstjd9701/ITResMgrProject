@@ -3,6 +3,7 @@ package kr.co.kcc.itmgr.domain.resinfo.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +12,10 @@ import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo;
 import kr.co.kcc.itmgr.domain.resclass.model.ResClass;
+import kr.co.kcc.itmgr.domain.resclass.model.ResClassDTO;
 import kr.co.kcc.itmgr.domain.resinfo.dao.IResInfoRepository;
 import kr.co.kcc.itmgr.domain.resinfo.model.ResInfo;
+import kr.co.kcc.itmgr.domain.resinfo.model.ResInfoDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -139,6 +142,36 @@ public class ResInfoService implements IResInfoService {
 	@Override
 	public int CountOfIpList() {
 		return resInfoRepository.CountOfIpList();
+	}
+
+	@Override
+	public List<ResInfo> setFlagResInfoList(List<ResInfo> resInfoList) {
+		return resInfoList.stream()
+				.map(r -> {
+					r.setFlag("S");
+					return r;
+				})
+				.collect(Collectors.toList());
+	}
+
+	/*
+	 *  부가항목, 자원분류 Flag 생성
+	 *  제너릭 타입으로 ResClassDTO 인터페이스를 상속 / setFlag를 사용하기 위해
+	 */
+	@Override
+	public <T extends ResInfoDTO> List<T> setFlag(List<T> code) {
+		return code.stream()
+				.map(r -> {
+					r.setFlag("S");
+					return r;
+				})
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public void deleteIpInResInfo(String resSerialId) {
+		resInfoRepository.deleteIpInResInfo(resSerialId);
+		
 	}
 	
 
