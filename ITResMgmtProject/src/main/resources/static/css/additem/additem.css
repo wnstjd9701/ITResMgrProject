@@ -24,7 +24,7 @@
 	padding: 10px; /* 내부 여백 */
 	border: 1px solid #ccc; /* 테두리 스타일 및 색상 */
 	border-radius: 3px; /* 둥근 모서리 */
-	width: 449px;
+	width: 420px;
 	height: 40px;
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -42,6 +42,13 @@
 
 #searchUseYN {
 	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	font-size: 14px;
+}
+
+#addItemSearchText{
+		padding: 3px;
 	border: 1px solid #ccc;
 	border-radius: 3px;
 	font-size: 14px;

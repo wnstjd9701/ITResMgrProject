@@ -1,0 +1,51 @@
+.ip-list-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    margin-right: 20px; /* Add a margin to create space */
+}
+
+.ip-res-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.ip-container {
+    display: flex;
+    /* justify-content: space-between; */
+}
+
+.ip-list-container,
+.ip-res-container {
+    width: 50%; /* Adjust the width as needed */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+
+.ip-search-container {
+	display: flex;
+	align-items: center; /* 수직 가운데 정렬 */
+	flex-direction: row;
+	white-space: nowrap;
+	background-color: #7289AB; /* 배경 색상 */
+	padding: 10px; /* 내부 여백 */
+	border: 1px solid #ccc; /* 테두리 스타일 및 색상 */
+	border-radius: 3px; /* 둥근 모서리 */
+	width: 240px;
+	height: 40px;
+	margin-bottom: 20px;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* 그림자 설정 */
+}
+
+.btn {
+	float: right;
+	margin-left: 5px;
+}
+
+.table-style{
+	table-layout:fixed;
+}

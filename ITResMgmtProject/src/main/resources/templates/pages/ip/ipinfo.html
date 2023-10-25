@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <link th:href="@{/css/ip/ip.css}" rel="stylesheet" />
+<link th:href="@{/css/commoncss.css}" rel="stylesheet" />
 </head>
 <body>
 	<th:block layout:fragment="content">
@@ -12,7 +13,7 @@
 			<div class="pagetitle">
 				<button class="btn btn-primary ip-btn ip-save-btn" style="background-color: navy; border: navy;">저장</button>
 				<button class="btn btn-primary ip-btn ip-new-btn" style="background-color: navy; border: navy;">신규</button>
-				<button class="btn btn-primary ip-btn ip-delete-btn">삭제</button>
+				<button class="btn btn-primary ip-btn ip-delete-btn" style="background-color: #003F5E; border: #003F5E;">삭제</button>
 				<div class="excel-btn-container">
 					<button type="button" class="btn btn-primary" style="background-color: green; border: green;" id="open-excel-modal-btn">엑셀 업로드</button>
 					<form action="/ip/excel/download" method="get">
@@ -34,22 +35,22 @@
 			<div class="ip-container">
 				<div class="ip-list-container">
 					<div class="ip-search-container">
-						<div class="ip-search">IP 검색</div>
+						<div class="ip-search common-search">IP 검색</div>
 						<div class="ip-search ip-search-input">
-							<input class="ip-address-search-input" type="text"
+							<input class="ip-address-search-input commonText" type="text"
 								placeholder="IP 주소">
 						</div>
 
 					</div>
 
 					<div class="ip-list-table-container">
-						<table class="ip-table ip-list-table">
+						<table class="ip-table ip-list-table table-style">
 							<thead class="ip-list-thead">
 								<tr>
 									<th style="width: 9%;">선택</th>
 									<th style="width: 15%;">IP 주소</th>
 									<th>설명</th>
-									<th style="width: 12%;">유형</th>
+									<th style="width: 14%;">유형</th>
 									<th style="width: 9%;">상세</th>
 								</tr>
 							</thead>
@@ -103,13 +104,13 @@
 						<form id="ip-info-form">
 							<input type="hidden" name="ipSn" class="detail-origin-ip-sn" value="0">
 							<div class="form-group">
-								<label for="ip-address-input-label" class="ip-span">IP
+								<label for="ip-address-input-label" class="ip-span" style="font-size:14px; font-weight:bold;">IP
 									주소</label> <input type="text" class="form-control detail-ip"
 									id="ip-address-input-label" placeholder="IP" name="ip"
 									style="font-size: 15px;">
 							</div>
 							<div class="form-group">
-								<label for="ip-type-label" class="ip-span">유형</label> <select
+								<label for="ip-type-label" class="ip-span" style="font-size:14px; font-weight:bold;">유형</label> <select
 									class="form-control detail-ip-type" id="ip-type-label" name="detailCode">
 									<option th:each="ipCode : ${ipCode}"
 										th:value="${ipCode.detailCode}"
@@ -117,7 +118,7 @@
 								</select>
 							</div>
 							<div class="form-group">
-								<label for="ip-desc-label" class="ip-span">설명</label>
+								<label for="ip-desc-label" class="ip-span" style="font-size:14px; font-weight:bold;">설명</label>
 								<textarea class="form-control detail-ip-desc" id="ip-desc-label" name="ipDesc"
 									rows="3"></textarea>
 							</div>
@@ -125,7 +126,7 @@
 					</div>
 					<div class="res-info-container">
 						<input type="hidden" class="detail-ip-sn" value="">
-						<table class="res-info-table">
+						<table class="res-info-table table-style">
 							<thead>
 								<tr>
 									<th>자원 이름</th>
