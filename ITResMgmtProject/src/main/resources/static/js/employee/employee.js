@@ -500,6 +500,9 @@ function showPasswordField(element) {
 	});
 }
 
+var empTypeSelect = document.querySelector("select[name='empTypeList']");
+var empStatusSelect = document.querySelector("select[name='empStatusList']");	
+
 //조회
 function searchList() {
 	const employeeTypeCode = document.getElementById('searchEmpTypeList').value;
@@ -512,14 +515,10 @@ function searchList() {
 		searchText: searchText
 	};
 
-
 	$.ajax({
 		url: '/search/employee?' + $.param(searchData),
 		type: 'GET',
 		success: function(response) {
-			var empTypeSelect = document.querySelector("select[name='empTypeList']");
-			var empStatusSelect = document.querySelector("select[name='empStatusList']");
-
 			$('#empTable > tbody').empty();
 
 			if (response.length === 0) {
