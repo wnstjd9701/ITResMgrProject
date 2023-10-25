@@ -169,10 +169,13 @@ public class ResInfoService implements IResInfoService {
 	}
 
 	@Override
-	public void deleteIpInResInfo(String resSerialId) {
-		resInfoRepository.deleteIpInResInfo(resSerialId);
-		
+	public void deleteIpInResInfo(int ipSn) {
+		resInfoRepository.deleteIpInResInfo(ipSn);
 	}
-	
+
+	@Override
+	public List<ResInfo> selectIpMappingInResInfo(String resSerialId) {
+		return resInfoRepository.selectIpMappingInResInfo(resSerialId);
+	}
 
 }

@@ -35,8 +35,9 @@ public interface IResInfoService {
 	
 	List<ResInfo> selectIpInResInfo(String resSerialId);
 	void insertIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList);
-	void deleteIpInResInfo(String resSerialId);
+	void deleteIpInResInfo(int ipSn);
 	List<IpInfo> selectAllIpInfoList(int page);
+	List<ResInfo> selectIpMappingInResInfo(String resSerialId);
 	
 	int CountOfAddItemValueInResInfo(String resSerialId);
 	int CountOfIpList();

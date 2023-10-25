@@ -215,8 +215,8 @@ $(document).ready(function () {
 	});
 	
 	// IP 상세 조회 시 상세와 자원 테이블 업데이트
-	$(".ip-table-body").on("click", ".ip-detail-btn", function(){
-    	var ipSn = $(this).data("ip-sn");
+	$(".ip-table-body").on("click", ".ip-detail-btn-img", function(){
+    	var ipSn = $(".ip-detail-btn").data("ip-sn");
 		/*var checkbox = $(this).closest("tr").find(".ip-checkbox");
 
 	    if (checkbox) {
@@ -296,18 +296,25 @@ $(document).ready(function () {
 			}else{
 				ipDetailCodeName = $("<td>").addClass("ip-detail-code-name").text(ip[i].detailCodeName);
 			}
-			var ipDetail = $("<td>").addClass("ip-detail").append($("<input>").attr({
-				type: "button",
-				"data-ip-sn": ip[i].ipSn,
+			var ipDetailContainer = $("<td>");
+			var ipDetail = $("<input>").attr({
+				type: "hidden",
 				class: "btn btn-primary ip-detail-btn",
-				value: "상세"
-			}));
+				"data-ip-sn": ip[i].ipSn
+			})
+			var ipDetailImg = $("<img>").attr({
+				class: "ip-detail-btn-img",
+				src: "assets/img/detail2.png",
+				style: "width: 25px; height:25px;"
+			})
+			ipDetailContainer.append(ipDetail);
+			ipDetailContainer.append(ipDetailImg);
 			
 			newRow.append(ipCheckBox);
 			newRow.append(ipText);
 			newRow.append(ipDesc);
 			newRow.append(ipDetailCodeName);
-			newRow.append(ipDetail);
+			newRow.append(ipDetailContainer);
 			$(".ip-table-body").append(newRow);
 		}
 	}

@@ -40,10 +40,11 @@ public interface IResInfoRepository {
 	void insertAddItemValueInResInfo(@Param("resSerialId") String resSerialId, @Param("addItemSn") String addItemSn, @Param("resDetailValue") String resDetailValue); //매핑된 부가항목 값 넣기
 	void deleteAddItemValueInResInfo(String resSerialId);
 	List<ResInfo> selectAddItemValueInResInfo(String resSerialId);
+	List<ResInfo> selectIpMappingInResInfo(String resSerialId);
 	
 	List<ResInfo> selectIpInResInfo(String resSerialId);
 	void insertIpInResInfo(@Param("resSerialId") String resSerialId,@Param("ipSn") int ipSn,@Param("ipTypeCode")String ipTypeCode);
-	void deleteIpInResInfo(String resSerialId);
+	void deleteIpInResInfo(int ipSn);
 	List<IpInfo> selectAllIpInfoList(@Param("start")int start , @Param("end")int end);
 	
 	int CountOfAddItemValueInResInfo(String resSerialId);
