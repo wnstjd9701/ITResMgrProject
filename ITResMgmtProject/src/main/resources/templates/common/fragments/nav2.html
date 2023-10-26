@@ -18,14 +18,19 @@
 			</div>
 
 			<div class="login-info ml-auto d-flex align-items-center">
+			<img
+					src="assets/img/user.png"
+					style="width: 20px; height: 20px; margin-left:3px;">
 			<span
-					th:text="${session.user.employeeId}"
-					style="color: black; margin-left:5px; font-size: 14px; "></span>
+					th:text="${session.user.employeeId + '님'}"
+					style="color: black; margin-left:5px; margin-right:3px; font-size: 15px;"></span>
+					<!-- <span style="margin-right:3px;">님</span> -->
+					<span style="margin-right:3px;">|</span>
 				 <span
 					th:if="${session.user.employeeTypeCode == 'EMT002'}"
-					style="font-size: 14px; margin-right:30px;">(IT자원관리자)</span> 
+					style="font-size: 15px; margin-right:30px;">IT자원관리자</span> 
 					<span th:if="${session.user.employeeTypeCode == 'EMT001'}"
-					style="font-size: 14px; margin-right:30px; " class="system-admin">(시스템관리자)</span>
+					style="font-size: 15px; margin-right:30px; " class="system-admin">시스템관리자</span>
 				<a th:href="@{/logout}"> <span class="logout-span"
 					style="color: black; font-size: 15px;">Logout</span> <img
 					src="assets/img/logout.png"
