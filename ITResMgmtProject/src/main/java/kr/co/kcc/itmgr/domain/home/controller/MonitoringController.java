@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,7 +44,7 @@ public class MonitoringController {
 	public String selectAllResourceInformation(Model model) throws IOException {
 		int page = 1;
 		int start = 1;
-		int end = start + 4;
+		int end = start + 9;
 		List<Monitoring> resourceInfo = monitoringService.selectAllResourceInformation(start, end);
 		
 		int totalCount = monitoringService.selectResCount();
@@ -73,15 +75,30 @@ public class MonitoringController {
 	@ResponseBody
 	public ResponseEntity<ApiResponse<?>> selectResourceInformationByCategory(Model model, SearchCondition searchCondition) {
 		log.info("searchCondition: " + searchCondition);
+		int page = 1;
+		int start = 1;
+		int end = start + 9;
+		
+		searchCondition.setStart(start);
+		searchCondition.setEnd(end);
+		
 		List<Monitoring> searchResult = monitoringService.selectResInformationBySearchCondition(searchCondition);
+		int totalCount = monitoringService.selectResCountBySearch(searchCondition);
+		
+		Map<String,Object> paging = monitoringService.monitoringPaging(page, totalCount);
+		
+		Map<String,Object> data = new HashedMap<String, Object>();
+		data.put("resInfo", searchResult);
+		data.put("paging", paging);
 		
 		for(Monitoring resInfo : searchResult) {
 			String ip = resInfo.getIp();
 			boolean isAlive = monitoringService.serverPingCheck(ip);
 			resInfo.setIpStatus(isAlive);
 		}
+		
 		log.info("SearchResult: " + searchResult);
-		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(searchResult));
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(data));
 	}
 
 	/*
@@ -89,16 +106,48 @@ public class MonitoringController {
 	 * @API No1-3: 서버 Ping 확인
 	 * @Info: 해당 IP 상태 체크
 	 */
-	@GetMapping("/ip/check")
+	@GetMapping("/ping/check")
 	public ResponseEntity<ApiResponse<?>> getServerStatus(@RequestParam("ip") String ip) throws IOException {
-		ServerStatusResponse response = new ServerStatusResponse();
-		
 		boolean isAlive = monitoringService.serverPingCheck(ip);
 		if (isAlive) {
 			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.successDetailMessage(ApiResponseStatus.SERVER_PING_ALIVE.getCode(), ApiResponseStatus.SERVER_PING_ALIVE.getMessage()));
 		} else {
 			return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.successDetailMessage(ApiResponseStatus.SERVER_PING_DIE.getCode(), ApiResponseStatus.SERVER_PING_DIE.getMessage()));
 		}
+	}
+	
+	/*
+	 * @Author: [윤준성]
+	 * @API No1-4: 자원 페이징
+	 * @Info: 해당 페이징 처리 
+	 */
+	@GetMapping("/monitoring/{page}")
+	public ResponseEntity<ApiResponse<?>> selectResInfoByPage(@PathVariable("page") int page, SearchCondition searchCondition){
+		log.info("Page / searchCondition: " + searchCondition);
+		
+		searchCondition.setPage(page);
+		int start = (page-1) * 10 + 1;
+		int end = start + 9;
+		searchCondition.setStart(start);
+		searchCondition.setEnd(end);
+		
+		List<Monitoring> searchResult = monitoringService.selectResInformationBySearchCondition(searchCondition);
+		int totalCount = monitoringService.selectResCountBySearch(searchCondition);
+		
+		Map<String,Object> paging = monitoringService.monitoringPaging(page, totalCount);
+		
+		Map<String,Object> data = new HashedMap<String, Object>();
+		data.put("resInfo", searchResult);
+		data.put("paging", paging);
+		
+		for(Monitoring resInfo : searchResult) {
+			String ip = resInfo.getIp();
+			boolean isAlive = monitoringService.serverPingCheck(ip);
+			resInfo.setIpStatus(isAlive);
+		}
+		
+		log.info("SearchResult: " + searchResult);
+		return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(data));
 	}
 
 }

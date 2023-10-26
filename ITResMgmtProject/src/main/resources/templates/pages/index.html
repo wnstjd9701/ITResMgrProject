@@ -1,150 +1,156 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<title>Bootstrap Example</title>
 <head>
-<meta charset="utf-8">
+<link rel="stylesheet" type="text/css"
+	th:href="@{../css/home/index.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{../css/commoncss.css}">
 <div th:replace="~{../common/fragments/head2 :: fragment-head2}"></div>
-<style>
-.title-container {
-	margin: 15px;
-	text-align: center;
-}
-
-.search-container {
-	display: flex;
-}
-
-.search-info {
-	margin: 10px 5px 0 0;
-	padding: 0 5px 0 0;
-}
-
-.refresh-btn-container {
-	margin: 10px 0 0 0;
-	padding: 5px 5px 5px 0;
-}
-</style>
 </head>
 <body>
 	<div th:replace="~{../common/fragments/nav2.html :: fragment-nav2}"></div>
 	<main id="main" class="main">
-		<div class="container">
-			<div class="title-container">
-				<h2>모니터링</h2>
+		<div class="pagetitle">
+			<div class="btn-container">
+				<input type="button" id="searchBtn" class="btn btn-primary"
+					value="조회" style="background-color: gray; border: gray;">
 			</div>
-			<div class="search-container">
-				<div class="search-info">
-					<span>대 분 류</span> <select id="resClassLevel1" disabled>
-						<option value="HW">하드웨어</option>
-					</select>
-				</div>
-				<div class="search-info">
-					<span>중 분 류</span> <select id="resClassLevel2"
-						name="resClassLevel2">
-						<option value="A" th:text="전체" th:data-all="all"></option>
-						<option th:each="resClassLevel2:${resClassLevel2}"
-							th:value="${resClassLevel2.resClassId}"
-							th:text="${resClassLevel2.resClassName}"></option>
-					</select>
-				</div>
-				<div class="search-info">
-					<span>소 분 류</span> <select disabled id="resClassLevel3"
-						name="resClassLevel3">
-						<option value="A" th:text="전체" th:data-all="all"></option>
-						<option th:each="resClassLevel3:${resClassLevel3}"
-							th:value="${resClassLevel3.resClassId}"
-							th:data-upper-res-class-id="${resClassLevel3.upperResClassId}"
-							th:text="${resClassLevel3.resClassName}"></option>
-					</select>
-				</div>
-				<div class="search-info">
-					<span>사용 여부</span> <select id="monitoringYn">
-						<option value="Y">전체</option>
-						<option value="A">미사용 포함</option>
-					</select>
-				</div>
-				<div class="search-info">
-					<span>자원명 <input type="text" name="resName"
-						placeholder="자원명을 검색하세요."> <input type="button"
-						id="searchBtn" value="조회">
-					</span>
-				</div>
+			<h1>모니터링</h1>
+			<nav>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
+					<li class="breadcrumb-item active">모니터링</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="search-container">
+			<div class="search-info">
+				<span class="index-search-text">대 분 류</span> <select
+					id="resClassLevel1" class="index-search-select"
+					style="opacity: 0.5;" disabled>
+					<option value="HW">하드웨어</option>
+				</select>
 			</div>
-			<!-- <div class="refresh-btn-container">
+			<div class="search-info">
+				<span class="index-search-text">중 분 류</span> <select
+					id="resClassLevel2" name="resClassLevel2"
+					class="index-search-select">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel2:${resClassLevel2}"
+						th:value="${resClassLevel2.resClassId}"
+						th:text="${resClassLevel2.resClassName}"></option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span class="index-search-text">소 분 류</span> <select disabled
+					id="resClassLevel3" name="resClassLevel3"
+					class="index-search-select" style="opacity: 0.5;">
+					<option value="A" th:text="전체" th:data-all="all"></option>
+					<option th:each="resClassLevel3:${resClassLevel3}"
+						th:value="${resClassLevel3.resClassId}"
+						th:data-upper-res-class-id="${resClassLevel3.upperResClassId}"
+						th:text="${resClassLevel3.resClassName}"></option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span class="index-search-text">사용 여부</span> <select
+					id="monitoringYn" class="index-search-select">
+					<option value="Y">전체</option>
+					<option value="A">미사용 포함</option>
+				</select>
+			</div>
+			<div class="search-info">
+				<span class="index-search-text">자원명 <input type="text"
+					name="resName" placeholder="자원명을 검색하세요."
+					class="index-searct-resname">
+				</span>
+			</div>
+		</div>
+		<!-- <div class="refresh-btn-container">
 				<input type="button" class="refresh-all-status-btn"
 					value="모든 상태 최신화">
 			</div> -->
-			<div class="table-container">
-				<form>
-					<table id="resInfoTable" class="table table-striped">
-						<thead>
-							<tr>
-								<th>상태</th>
-								<th>상태 최신화</th>
-								<th>IP 주소</th>
-								<th>자원 분류</th>
-								<th>자원명</th>
-								<th>설치 장소명</th>
-								<th>설치 주소</th>
-								<th>도입일자</th>
-								<th>자원 관리 ID</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="resourceInfo:${resourceInfo}">
-								<td class="resInfoTd status"
-									th:if="${resourceInfo.ipStatus == true}">🟢</td>
-								<td class="resInfoTd status"
-									th:if="${resourceInfo.ipStatus == false}">🔴</td>
-								<td class="refresh"><input type="button" class="refresh"
-									value="새로고침" th:data-ip="${resourceInfo.ip}"></td>
-								<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}">[[${resourceInfo.ip}]]</td>
-								<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}">-</td>
-								<td class="resInfoTd resClassPath"
-									th:text="${resourceInfo.resClassPath}"></td>
-								<td class="resInfoTd resName" th:text="${resourceInfo.resName}"></td>
-								<td class="resInfoTd installPlaceName"
-									th:text="${resourceInfo.installPlaceName}"></td>
-								<td class="resInfoTd installPlaceFullName"
-									th:text="${resourceInfo.installPlaceFullAddress}"></td>
-								<td class="resInfoTd introductionDate"
-									th:text="${resourceInfo.introductionDate}"></td>
-								<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}"></td>
-							</tr>
-						</tbody>
-					</table>
-					<input type="hidden" class="search-type" value="">
-					<nav aria-label="Page navigation example" class="paging-nav">
-							<ul class="pagination monitoring-pagination justify-content-center">
-								<li class="page-item">
-									<button class="page-link prev-page-link"
-										aria-label="Previous" th:value="${paging.startPage - 1}"
-										disabled>
-										<span aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
-									</button>
-								</li>
-								<li class="page-item"
-									th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
-									<button class="page-link page-link-val"
-										th:value="${pageNum}" th:text="${pageNum}"></button>
-								</li>
-								<li class="page-item">
-									<button class="page-link next-page-link" aria-label="Next"
-										th:value="${paging.endPage + 1}" th:if="${paging.endPage > 5}">
-										<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
-									</button>
-									<button class="page-link next-page-link" aria-label="Next"
-										disabled th:unless="${paging.endPage > 5}"
-										th:value="${paging.endPage + 1}">
-										<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
-									</button>
-								</li>
-							</ul>
-						</nav>
-				</form>
-				<input type="hidden" class="search-keyword" value=""> 
-			</div>
+		<div class="table-container">
+			<form>
+				<table id="resInfoTable" class="table-style">
+					<thead>
+						<tr>
+							<th style="width: 4%;">상태</th>
+							<th style="width: 8%;">상태 최신화</th>
+							<th>IP 주소</th>
+							<th>자원 분류</th>
+							<th>자원명</th>
+							<th>설치 장소명</th>
+							<th>설치 장소</th>
+							<th>도입일자</th>
+							<th>자원 관리 ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="resourceInfo:${resourceInfo}">
+							<td class="resInfoTd status"
+								th:if="${resourceInfo.ipStatus == true}"
+								style="text-align: center; vertical-align: middle;">🟢</td>
+							<td class="resInfoTd status"
+								th:if="${resourceInfo.ipStatus == false}"
+								style="text-align: center; vertical-align: middle;">🔴</td>
+							<td class="refresh" style="text-align: center;"><input
+								type="button" class="refresh refresh-btn" value="↻"
+								th:data-ip="${resourceInfo.ip}"></td>
+							<td class="resInfoTd ip" th:if="${resourceInfo.ip != null}"
+								style="text-align: center;">[[${resourceInfo.ip}]]</td>
+							<td class="resInfoTd ip" th:if="${resourceInfo.ip == null}"
+								style="text-align: center;">-</td>
+							<td class="resInfoTd resClassPath"
+								th:text="${resourceInfo.resClassPath}"></td>
+							<td class="resInfoTd resName" th:text="${resourceInfo.resName}"
+								style="text-align: center;"></td>
+							<td class="resInfoTd installPlaceName"
+								th:text="${resourceInfo.installPlaceName}"
+								style="text-align: center;"></td>
+							<td class="resInfoTd installPlaceFullName"
+								th:text="${resourceInfo.installPlaceFullAddress}"></td>
+							<td class="resInfoTd introductionDate"
+								th:text="${resourceInfo.introductionDate}"
+								style="text-align: center;"></td>
+							<td class="resInfoTd mgmtId" th:text="${resourceInfo.mgmtId}"
+								style="text-align: center;"></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+			<input type="hidden" class="search-keyword" value=""> <input
+				type="hidden" class="mid-res-class" value="A"> <input
+				type="hidden" class="bottom-res-class" value="A"> <input
+				type="hidden" class="monitoring-yn" value="Y">
+			<nav aria-label="Page navigation example" class="paging-nav">
+				<ul class="pagination monitoring-pagination justify-content-center"
+					style="margin-top: 12px;">
+					<li class="page-item">
+						<button class="page-link prev-page-link" aria-label="Previous"
+							th:value="${paging.startPage - 1}" disabled>
+							<span aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
+						</button>
+					</li>
+					<li class="page-item"
+						th:each="pageNum : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+						<button class="page-link page-link-val" th:value="${pageNum}"
+							th:text="${pageNum}"></button>
+					</li>
+					<li class="page-item">
+						<button class="page-link next-page-link" aria-label="Next"
+							th:value="${paging.endPage + 1}" th:if="${paging.endPage > 5}">
+							<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
+						</button>
+						<button class="page-link next-page-link" aria-label="Next"
+							disabled th:unless="${paging.endPage > 5}"
+							th:value="${paging.endPage + 1}">
+							<span aria-hidden="true">&raquo;</span> <span class="sr-only">Next</span>
+						</button>
+					</li>
+				</ul>
+			</nav>
 		</div>
 		<!-- <div th:replace="~{../common/fragments/footer.html :: fragment-footer}"></div>  -->
 	</main>
@@ -186,7 +192,6 @@
 	        var bottomResClass = $("#resClassLevel3").val();
 	        var resName = $("input[name='resName']").val();
 	        var monitoringYn = $("#monitoringYn").val();
-
 	        $.ajax({
 	            type: 'POST',
 	            url: '/search',
@@ -199,7 +204,12 @@
 	            success: function (response) {
 	            	console.log(response);
 	            	alert(`조회 ${response.message}`);
-	            	updateResInfo(response.data);
+	            	updateResInfo(response.data.resInfo);
+	            	monitoringPaging(response.data.paging);
+	            	
+	            	$(".mid-res-class").val(midResClass);
+	    	        $(".bottom-res-class").val(bottomResClass);
+	    	        $(".monitoring-yn").val(monitoringYn);
 	            	$(".search-keyword").val(resName);
 	                return;
 	            },
@@ -210,19 +220,19 @@
 	    });
 	    
 	    // ip 상태 변경
-	    $(".table-container").on("click", "input[type='button']", function(){
+	    $(".table-container").on("click", ".refresh", function(){
 	    	var ip = $(this).data("ip");
 	    	console.log(ip);
 	    	if(ip === undefined){
-	    		console.log("err");
 	    		return;
 	    	}
-			
 	    	var row = $(this).closest("tr"); // 클릭한 버튼이 속한 테이블 행(row)을 선택합니다.
 	        var statusElement = row.find(".status");
+	    	statusElement.text("🟡")	;
+	    	
 	    	$.ajax({
 	    		method: "GET",
-	    		url: "/ip/check",
+	    		url: "/ping/check",
 	    		data: {
 	    			ip: ip
 	    		},
@@ -246,9 +256,43 @@
 	    });
 	});
 	
+	$(".table-container").on("click", ".page-link-val", function(){
+		var midResClass = $(".mid-res-class").val();
+        var bottomResClass = $(".bottom-res-class").val();
+        var monitoringYn = $(".monitoring-yn").val();
+    	var resName = $(".search-keyword").val();
+    	
+    	var page = $(".page-link-val").val();
+		const url = "/monitoring/" + page
+    	$.ajax({
+    		method: "GET",
+    		url: url,
+    		data: {
+    			midResClass : midResClass,
+    			bottomResClass : bottomResClass,
+    			monitoringYn : monitoringYn,
+    			resName : resName,
+    			page : page
+    		},
+    		success: function(response){
+    			console.log(response.data.resInfo);
+    			updateResInfo(response.data.resInfo);
+            	monitoringPaging(response.data.paging);
+    			
+    		},
+    		error: function(xhr, status, err){
+    			console.log(xhr);
+    		}
+    	})
+		
+	})
+	
 	function monitoringPaging(paging) {
 	    var pagination = $(".monitoring-pagination");
 	    pagination.empty();
+		if(paging.endPage === 0){
+			return;
+		}
 	    
 	    pagination.append(`<li class='page-item'><button class='page-link prev-page-link' value="${paging.startPage - 1}" aria-label='Previous'>&laquo;</button></li>`);
 	    
@@ -290,7 +334,7 @@
             const refreshButton = $("<input>").attr({
                 type: "button",
                 class: "refresh-btn",
-                value: "새로고침",
+                value: "↻",
                 "data-ip": response[i].ip
             });
             const refresh = $("<td>").addClass("refresh").append(refreshButton);

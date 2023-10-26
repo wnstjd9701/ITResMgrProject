@@ -8,4 +8,7 @@ public class SearchCondition {
 	private String bottomResClass;
 	private String monitoringYn;
 	private String resName;
+	private int start;
+	private int end;
+	private int page;
 }

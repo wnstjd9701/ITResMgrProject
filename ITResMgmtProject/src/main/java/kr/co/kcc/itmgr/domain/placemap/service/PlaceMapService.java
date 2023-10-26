@@ -1,9 +1,12 @@
 package kr.co.kcc.itmgr.domain.placemap.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -17,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 public class PlaceMapService implements IPlaceMapService {
-	
+
 	private final IInstallPlaceRepository installPlaceRepository;
-	
+
 	public InstallPlace getDoName(InstallPlace place) {
 		String address = place.getInstallPlaceAddress();
 
@@ -58,7 +61,17 @@ public class PlaceMapService implements IPlaceMapService {
 				doNamesCount.put(parts[0], resCount);
 			}
 		}
-		return doNamesCount;
+		// Map을 값에 따라 내림차순으로 정렬하고, 값이 같으면 키(이름)로 내림차순으로 정렬
+	    Map<String, Integer> sortedDoNamesCount = doNamesCount.entrySet()
+	        .stream()
+	        .sorted(Map.Entry.<String, Integer>comparingByValue(Collections.reverseOrder())
+	            .thenComparing(Map.Entry.<String, Integer>comparingByKey(Collections.reverseOrder())))
+	        .collect(Collectors.toMap(
+	            Map.Entry::getKey,
+	            Map.Entry::getValue,
+	            (e1, e2) -> e1, LinkedHashMap::new));
+
+	    return sortedDoNamesCount;
 	}
 
 	public DoName getDoValuesByDoName(String doName) {
@@ -66,14 +79,14 @@ public class PlaceMapService implements IPlaceMapService {
 		for (DoName enumValue : DoName.values()) {
 			String firstDoName = enumValue.getDoName().split(",")[0];
 			String secondDoName = enumValue.getDoName().split(",")[1];
-			
+
 			if(doName.startsWith(firstDoName) || doName.startsWith(secondDoName)) {
 				return enumValue;
 			}
 		}
 		return selectedDoName;
 	}
-	
+
 	// 모든 설치 장소 조회
 	@Override
 	public List<InstallPlace> selectInstallPlaceList() {
@@ -96,7 +109,7 @@ public class PlaceMapService implements IPlaceMapService {
 		}else {
 			endPage = totalPage;
 		}
-		
+
 		Map<String,Object> paging = new HashMap<String, Object>();
 		paging.put("totalPageCount", totalPage);
 		paging.put("nowPage", page);

@@ -1,103 +1,120 @@
-table th{
-	width:200px;
+table th {
+	width: 200px;
 }
 
-.add-res-class-modal{
-    position:absolute;
-    display:none;
-    
-    background-color:#f5f5f5;
-    background-color: rgba( 255, 255, 255, 0.5 );
-    justify-content: center;
-    top:20;
-    left:50;
-
-    width:50%;
-    height:50%;
+.add-res-class-modal {
+	position: absolute;
+	display: none;
+	background-color: #f5f5f5;
+	background-color: rgba(255, 255, 255, 0.5);
+	justify-content: center;
+	top: 20;
+	left: 50;
+	width: 50%;
+	height: 50%;
 }
 
 .modal.modal-center {
-  text-align: center;
+	text-align: center;
 }
 
-@media screen and (min-width: 768px) { 
-  .modal.modal-center:before {
-    display: inline-block;
-    vertical-align: middle;
-    content: " ";
-    height: 100%;
-  }
+@media screen and (min-width: 768px) {
+	.modal.modal-center:before {
+		display: inline-block;
+		vertical-align: middle;
+		content: " ";
+		height: 100%;
+	}
 }
 
 .modal-dialog.modal-center {
-  display: inline-block;
-  text-align: left;
-  vertical-align: middle; 
+	display: inline-block;
+	text-align: left;
+	vertical-align: middle;
 }
 
 .btn {
-	float: right; 
-	margin-left: 10px;
+	float: right;
+	margin-left: 5px;
 }
 
-.second-container{
-    padding: 20px;
-    background-color: white;
-    width: 65%; 
-    padding-bottom: 20px; 
-    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1);
+.second-container {
+	padding: 15px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	background-color: rgba(255, 255, 255, 0.5);
+	width: 65%;
 }
-.first-container{
-    padding: 20px;
-    background-color: white;
-    width: 35%; 
-    padding-bottom: 20px; 
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+
+.first-container {
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+	background-color: rgba(255, 255, 255, 0.5);
+	margin-right: 20px;
+	width: 35%;
 }
 /* 자원분류 테이블 */
 #resClassDetailTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
 }
 
 #resClassDetailTable th, #resClassDetailTable td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: center;
 }
 
 #resClassDetailTable th {
-  background-color: #7289AB;
-  color:white;
+	background-color: #7289AB;
+	color: white;
 }
 /* 부가항목 테이블 스타일 */
 #addInfoTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
 }
 
 #addInfoTable th, #addInfoTable td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: center;
 }
 
 #addInfoTable th {
-  background-color: #7289AB;
-  color:white;
+	background-color: #7289AB;
+	color: white;
 }
 
 .addInfoTableHead th {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 /* CSS for the Close button */
 #res-class-save-btn {
-  color: white;
-  padding: 6px 12px; /* Adjust padding as needed */
-  border: none;
-  border-radius: 5px;
-  background-color: navy;
+	color: white;
+	padding: 6px 12px; /* Adjust padding as needed */
+	border: none;
+	border-radius: 5px;
+	background-color: navy;
+}
+
+#subCategoryRow label.form-label, .form-label, .form-select {
+	color: black;
+	font-size: 15px; /* 원하는 글꼴 크기로 조절 */
+	font-weight: bold;
+}
+
+#resClassLevel, #resClassByLevel, #resClassId, #resClassName {
+	font-size: 15px;
+}
+
+#subCategoryRow label {
+	font-size: 15px; /* 여기에 원하는 글씨체 크기를 설정하세요 */
+	color: black;
 }

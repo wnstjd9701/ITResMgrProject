@@ -7,7 +7,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +42,7 @@ public class ResInfoController {
 		if(countOfResList > 0) {
 			totalPage= (int)Math.ceil(countOfResList/10.0);
 		}
-		int totalPageBlock = (int)(Math.ceil(totalPage/5.0));
+		int totalPageBlock = (int)(Math.ceil(totalPage/10.0));
 		int nowPageBlock = (int) Math.ceil(page/5.0);
 		int startPage = (nowPageBlock-1)*5 + 1;
 		int endPage = 0;
@@ -83,7 +82,7 @@ public class ResInfoController {
 		for (ResClass r : resClassList) {
 			if (r.getUpperResClassName() == null) {
 				resClassMap.put(r.getResClassName(), null);
-			}
+			}	
 		}
 		for (String key: resClassMap.keySet()) {
 			Map<String, Map<String, String>> map2 = new HashMap<String, Map<String,String>>();
@@ -150,7 +149,6 @@ public class ResInfoController {
 		try {
 			resInfoService.updateResInfo(resInfo);
 			try {
-				resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
 				String resSerialId = resInfo.getResSerialId();
 				int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
 				try {
@@ -171,6 +169,18 @@ public class ResInfoController {
 		}catch(Exception e) {
 			e.getMessage();
 		}
+	}
+	
+	@PostMapping("/resinfo/ipupdate")
+	@ResponseBody
+	public void updateIpMapping(@RequestBody ResInfo resInfo) {
+		resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(),resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
+	}
+	
+	@PostMapping("/resinfo/ipdelete")
+	@ResponseBody
+	public void deleteIpMapping(int ipSn) {
+		resInfoService.deleteIpInResInfo(ipSn);
 	}
 	
 	
@@ -259,6 +269,14 @@ public class ResInfoController {
 		List<ResInfo> selectAddItemValueInResInfo = resInfoService.selectAddItemValueInResInfo(resSerialId);
 		return selectAddItemValueInResInfo;
 	}
+	
+	@GetMapping("/resinfo/ipmapping")
+	@ResponseBody
+	public List<ResInfo> selectIpMappingInResInfo(String resSerialId){
+		List<ResInfo> selectIpMappingInResInfo = resInfoService.selectIpMappingInResInfo(resSerialId);
+		return selectIpMappingInResInfo;
+	}
+
 
 	@GetMapping("/resinfo/search")
 	@ResponseBody
@@ -300,6 +318,7 @@ public class ResInfoController {
 	public void insertResInfo(@RequestBody ResInfo resInfo) {
 		resInfoService.insertResInfo(resInfo);
 		resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+		resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
 	}
 
 	@GetMapping("/resinfo/detail")

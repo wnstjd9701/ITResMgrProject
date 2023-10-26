@@ -67,5 +67,7 @@ public class ResInfo {
 	private int startPage;
 	private int endPage;
 	
+	private String flag;
+	
 	
 }

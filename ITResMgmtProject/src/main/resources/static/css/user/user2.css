@@ -1,0 +1,86 @@
+.sys-name {
+	text-align: center;
+	margin-top: 100px;
+}
+
+.kcc-name {
+	margin-left: -270px;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.IT-name {
+	font-size: 50px;
+	font-weight: bold;
+	color: #0275d8;
+	/* 	text-shadow: 1px 1px 4px black; */
+}
+
+.login-container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border: 1px solid gray;
+	border-radius: 5px;
+	width: 450px;
+	height: 400px;
+	box-shadow: 0 0 5px rgba(0, 0, 128, 0.5);
+	background-color: white;
+}
+
+.login-content {
+	height: 400px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	margin-top: 20px;
+}
+
+.icon-input {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+	margin-top: 5px;
+}
+
+.login-icon-wrap {
+	border: 1px solid gray; /* 테두리 스타일 및 색상 설정 */
+	border-right: none; /* 오른쪽 테두리를 제거합니다 */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px; /* 원하는 너비 설정 */
+	height: 40px; /* 원하는 높이 설정 */
+	border-collapse: collapse; /* 테두리 겹침 문제 해결 */
+	box-sizing: border-box; /* 박스 크기를 보더와 패딩을 포함한 크기로 설정 */
+	background-color: hsl(0, 0%, 96%);
+}
+
+.login-img {
+	width: 22px;
+	height: 22px;
+}
+
+.id-input-box {
+	border: 1px solid gray;
+	border-radius: 0;
+	width: 300px;
+	height: 40px;
+}
+
+#employeeId::placeholder {
+	color: gray;
+	font-size: 12px;
+}
+
+#employeePwd::placeholder {
+	color: gray;
+	font-size: 12px;
+}
+
+.btn-size {
+	width: 340px;
+}

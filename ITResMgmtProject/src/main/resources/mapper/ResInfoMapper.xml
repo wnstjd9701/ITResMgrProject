@@ -179,8 +179,6 @@
 			            ON urc.res_class_id = rc.upper_res_class_id
 			        LEFT OUTER JOIN resclass urc_name
 			            ON urc_name.res_class_id = urc.upper_res_class_id
-			    )
-			)	
 			  		<where>
 				    <if test='topUpperResClassName != null &amp;&amp; !topUpperResClassName.equals("") '>
 				        AND urc_name.res_class_name = #{topUpperResClassName} 
@@ -207,6 +205,8 @@
 				        AND r.monitoring_yn = #{monitoringYn}
 				    </if>
 			  		</where>
+			    )
+			)	
 			  WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 	
@@ -432,8 +432,15 @@
 	        ip_type_code, 
 	        create_date, 
 	        creater_id
-	    ) values (#{resSerialId}, #{ipSn}, #{ipTypeCode}, SYSDATE, 'wh467925')
+	    ) values (#{resSerialId,jdbcType=VARCHAR}, #{ipSn,jdbcType=INTEGER}, #{ipTypeCode,jdbcType=VARCHAR}, SYSDATE, 'wh467925')
 	</insert>
+	
+	<delete id="deleteIpInResInfo" parameterType="Integer">
+		DELETE
+			FROM resipmapping
+		WHERE
+			ip_sn = #{ipSn}
+	</delete>
 	
 	<delete id="deleteAddItemValueInResInfo" parameterType="String">
 			DELETE 
@@ -448,9 +455,23 @@
 				rid.res_detail_value	"resDetailValue",
 				ai.add_item_name	"addItemName"
 			FROM resinfo r
-			INNER JOIN resinfodetail rid ON r.res_seriaL_id=rid.res_serial_id
+			INNER JOIN resinfodetail rid ON r.res_serial_id=rid.res_serial_id
 			INNER JOIN additem ai ON ai.add_item_sn=rid.add_item_sn
 			INNER JOIN resclassasideinfomapping ra ON ai.add_item_sn = ra.add_item_sn AND r.res_class_id=ra.res_class_id
+			WHERE r.res_serial_id = #{resSerialId}
+		]]>
+	</select>
+	
+	<select id="selectIpMappingInResInfo" parameterType="String" resultType="kr.co.kcc.itmgr.domain.resinfo.model.ResInfo">
+		<![CDATA[
+			SELECT 
+                i.ip_sn "ipSn",
+				i.ip    "ip",
+				c.detail_code_name	"detailCodeName"
+			FROM resinfo r
+			INNER JOIN resipmapping rm ON r.res_serial_id=rm.res_serial_id
+			INNER JOIN ipinfo i ON i.ip_sn = rm.ip_sn
+			INNER JOIN commoncodedetail c ON c.detail_code = i.ip_type_code
 			WHERE r.res_serial_id = #{resSerialId}
 		]]>
 	</select>
