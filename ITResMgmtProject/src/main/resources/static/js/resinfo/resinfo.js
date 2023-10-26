@@ -262,15 +262,16 @@ $(document).ready(function () {
 		        "resSerialId": resSerialId
 		    },
 		    success: function (response) {
-				$('#ipListTable tbody').empty();
+				$('#ipListTableTbody').empty();
 		        for (var i = 0; i < response.length; i++) {
 		            var addTableRow = "<tr>" +
 		                "<td><input type='checkbox' name='ipSn' value='" + response[i].ipSn + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='ip' value='" + response[i].ip + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='detailCodeName' value='" + response[i].detailCodeName + "'></td>" +
 		                "<td><input type='hidden' readonly='readonly' name='ipTypeCode' value='" + response[i].ipTypeCode + "'></td>" +
+		                "<td></td>" +
 		                "</tr>";
-		            $('#ipListTable tbody').append(addTableRow); // IP 주소 행을 테이블에 추가합니다.
+		            $('#ipListTableTbody').append(addTableRow); // IP 주소 행을 테이블에 추가합니다.
 		        }
 		        showTable('ipList');
 		    },
@@ -342,8 +343,16 @@ $(document).ready(function () {
 						}),
 		                contentType: "application/json",
 		                success: function (response) {
-							alert("수정완료했습니다.")
 							showResourceDetail(response.resName);
+						    // 모달 내용을 변경할 때, 모달 요소와 그 내부 요소들을 선택합니다.
+						    var modal = $('#check-modal');
+						    var span = modal.find('#content');
+						
+						    // 원하는 내용으로 span 요소의 텍스트를 변경합니다.
+						    span.text('수정 완료하였습니다.');
+						
+						    // 모달을 표시합니다.
+						    modal.modal('show');
 		                },
 		                error: function (error) {
 		                    console.log('에러:', error);
@@ -451,15 +460,19 @@ $(document).ready(function () {
 		                "<td><input type='checkbox' name='ipSn' value='" + response[i].ipSn + "'></td>" +
                         "<td>" + response[i].ip + "</td>" +
                        	"<td><input type='text' name='detailCodeName' value='"+response[i].detailCodeName+"'></td>" +
+                       	"<td></td>" +
+                       	"<td></td>" +
+                       	"<td></td>" +
+                       	"<td></td>" +
                         "</tr>";
-                    $('#ipListTable tbody').append(addTableRow);
+                    $('#ipListTableTbody').append(addTableRow);
                 }
                 showTable('ipListTable');
             },
             error: function (error) {
                 console.log('에러:', error);
             }
-        });6
+        });
     }
 
     // 대분류 선택 시
@@ -598,9 +611,6 @@ $(document).ready(function () {
 		            });
 		        $('#resinfo-detail-modal').modal('show');
 	    }
-		$('#res-info-save-btn').on('click', function () {
-				alert("수정되었습니다.")
-			});
 	});
 	
 
@@ -682,7 +692,7 @@ $(document).ready(function () {
                 $('tbody#resInfoTable > tr').remove();
                 if (response.selectAllResInfo.length === 0) {
                     alert('검색된 결과가 없습니다.');
-                    addTableRow = "<tr>" + "<td colspan='9' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+                    addTableRow = "<tr>" + "<td colspan='10' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
                     $('tbody#resInfoTable').append(addTableRow);
 					$('nav.paging-nav').hide();
                     return;
@@ -964,7 +974,6 @@ function ipListTable(ipList){
 	for (var i = 0; i < ipList.length; i++) {
         var ipSn = ipList[i].ipSn;
 		var ipTypeCode = ipList[i].ipTypeCode;
-		console.log(ipTypeCode)
         var addTableRow = "<tr>" +
             "<td><input type='checkbox' name='ipSn' value='" + ipSn + "'"+ "></td>" +
             "<td>" + ipList[i].ip + "</td>" +

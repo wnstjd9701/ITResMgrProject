@@ -249,6 +249,16 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
    table-layout: fixed;
 }
 
+.res-info-list-table table tbody tr {
+    table-layout: fixed;
+    width: 100px; /* 원하는 너비로 설정 */
+}
+.res-info-list-table table thead tr  {
+    table-layout: fixed;
+    width: 100px; /* 원하는 너비로 설정 */
+}
+
+
 .search-bar {
 	background-color: #7289AB; /* 배경 색상 */
 	padding: 10px; /* 내부 여백 */
@@ -350,4 +360,11 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 	vertical-align: middle;
 	display: table-cell;
 	text-align: center;
+}
+#search-ip-list-btn{
+	float: right; 
+	background-color: #003F5E; 
+	border: #003F5E; 
+	font-size:13px; 
+	margin-right:5%;
 }
