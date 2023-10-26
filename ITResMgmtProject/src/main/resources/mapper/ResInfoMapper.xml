@@ -231,6 +231,7 @@
 			    res_class_id = #{resClassId},
 			    res_name = #{resName},
 			    res_sn = #{resSn},
+			    install_place_sn = #{installPlaceSn},
 			    mgmt_id = #{mgmtId},
 			    res_status_code = #{resStatusCode},
 			    manufacture_company_name = #{manufactureCompanyName},
