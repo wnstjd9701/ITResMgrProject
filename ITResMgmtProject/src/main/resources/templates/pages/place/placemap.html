@@ -440,10 +440,7 @@ $(document).ready(function(){
 	
 	function pagingClick(startPage){
 		var searchType =  $("#doNameSelect").val();
-		if(searchType === "-"){
-			return;
-		}
-		if(searchType === "" || searchType === "undefined"){
+		if(searchType === "" || searchType === "undefined" || searchType === "-"){
 			searchType = "ALL"
 		}
 		$.ajax({
@@ -484,17 +481,18 @@ $(document).ready(function(){
 		})
 	}
 	// 페이지 클릭
-	$(".pagination").on("click", ".page-link-val", function(){
+	$(".place-pagination").on("click", ".page-link-val", function(){
 		var page = $(this).text();
+		console.log(page);
 		pagingClick(page);
 	});
 	// 이전 페이지 클릭
-	$(".pagination").on("click", ".prev-page-link", function(){
+	$(".place-pagination").on("click", ".prev-page-link", function(){
 		var prevStartPage = $(this).val() - 4;
 		pagingClick(prevStartPage);
 	})
 	// 다음 페이지 클릭
-	$(".pagination").on("click", ".next-page-link", function () {
+	$(".place-pagination").on("click", ".next-page-link", function () {
 		var nextStartPage = $(this).val();
 		pagingClick(nextStartPage);
 	}); 
