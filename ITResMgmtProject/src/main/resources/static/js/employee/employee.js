@@ -500,6 +500,9 @@ function showPasswordField(element) {
 	});
 }
 
+var empTypeSelect = document.querySelector("select[name='empTypeList']");
+var empStatusSelect = document.querySelector("select[name='empStatusList']");	
+
 //조회
 function searchList() {
 	const employeeTypeCode = document.getElementById('searchEmpTypeList').value;
@@ -512,19 +515,15 @@ function searchList() {
 		searchText: searchText
 	};
 
-
 	$.ajax({
 		url: '/search/employee?' + $.param(searchData),
 		type: 'GET',
 		success: function(response) {
-			var empTypeSelect = document.querySelector("select[name='empTypeList']");
-			var empStatusSelect = document.querySelector("select[name='empStatusList']");
-
 			$('#empTable > tbody').empty();
 
 			if (response.length === 0) {
 				// 검색 결과가 없는 경우
-				var noResultRow = "<tr><td colspan='7' style='text-align:center;'>검색결과가 없습니다</td></tr>";
+				var noResultRow = "<tr><td colspan='7' style='text-align:center; font-weight:bold;'>검색결과가 없습니다</td></tr>";
 				$('#empTable > tbody').append(noResultRow);
 			} else {
 				// 검색 결과가 있는 경우

@@ -39,7 +39,7 @@
 	text-align: center;
 }
 
-#resInfoTable {
+/* #resInfoTable {
 	width: 100%;
 }
 
@@ -57,13 +57,13 @@
 }
 
 #resInfoTable tr {
-	border-bottom: 1px solid #dee2e6; /* 아래쪽 테두리 추가 */
+	border-bottom: 1px solid #dee2e6; 아래쪽 테두리 추가
 }
 
 #resInfoTable tbody tr:hover td {
-	background-color: #ECECEC; /* 호버 시 배경색 변경 */
+	background-color: #ECECEC; 호버 시 배경색 변경
 }
-
+ */
 .refresh-btn {
 	background-color: white;
 	font-size: 16px;

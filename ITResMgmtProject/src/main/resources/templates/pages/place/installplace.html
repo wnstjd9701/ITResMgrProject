@@ -81,9 +81,9 @@
 										class="place-detail-address"
 										th:text="${installPlace.installPlaceDetailAddress}"></td>
 									<td class="place-res-count" th:text="${installPlace.resCount}"></td>
-									<td><input type="button" class="resinfo-btn" value="상세"
-										th:data-place-name="${installPlace.installPlaceName}"> <img
-					src="assets/img/detail2.png" style="width:25px; height:25px;"></td>
+									<td><input type="hidden" class="resinfo-btn" value="상세" th:data-place-name="${installPlace.installPlaceName}">
+										<img class="detail-img-btn" src="assets/img/detail2.png" style="width:25px; height:25px;">
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -156,7 +156,7 @@
 								</thead>
 								<tbody class="resinfo-table-body">
 									<tr>
-										<td colspan="7">장소명을 클릭하세요.</td>
+										<td colspan="7" style="font-weight:bold;">장소명을 클릭하세요.</td>
 									</tr>
 								</tbody>
 							</table>
@@ -410,7 +410,7 @@ $(document).ready(function(){
 	    removePlaceTable();
 	    if (place.length < 1) {
 	        alert("조회된 장소 결과가 없습니다.");
-	        const result = "<tr>" + "<td colspan='6' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+	        const result = "<tr>" + "<td colspan='7' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
 	        $(".place-table-body").append(result);
 	    } else {
 	        for (var i = 0; i < place.length; i++) {
@@ -428,20 +428,28 @@ $(document).ready(function(){
 	            const placeDetailAddress = $("<td>").addClass("place-detail-address").text(installPlaceDetailAddress);
 	            
 	            const placeResCount = $("<td>").addClass("place-res-count").text(place[i].resCount);
-				const resInfoBtn = $("<td>").append($("<input>").attr({
-					type: "button",
-					class: "resinfo-btn",
-					value: "상세",
-					"data-place-name": place[i].installPlaceName
-				}))
-				
+	            var resInfoTd = $("<td>");
+	            const resInfoBtn = $("<input>").attr({
+	                type: "hidden",
+	                class: "resinfo-btn",
+	                "data-place-name": place[i].installPlaceName
+	            });
+	            const resInfoImgBtn = $("<img>").attr({
+	                src: "assets/img/detail2.png",
+	                style: "width:25px; height:25px;",
+	            });
+	            
+				resInfoTd.append(resInfoBtn);
+				resInfoTd.append(resInfoImgBtn);
+	            
 	            newRow.append(placeCount);
 	            newRow.append(checkbox);
 	            newRow.append(placeName);
 	            newRow.append(placeAddress);
 	            newRow.append(placeDetailAddress);
 	            newRow.append(placeResCount);
-	            newRow.append(resInfoBtn);
+	            newRow.append(resInfoTd);
+	            
 	            $(".place-table-body").append(newRow);
 	        }
 	    }
