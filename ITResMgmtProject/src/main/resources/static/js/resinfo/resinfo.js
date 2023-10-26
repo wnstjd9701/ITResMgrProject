@@ -256,7 +256,8 @@ $(document).ready(function () {
 		                "<td><input type='checkbox' name='ipSn' value='" + response[i].ipSn + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='ip' value='" + response[i].ip + "'></td>" +
 		                "<td><input type='text' readonly='readonly' name='detailCodeName' value='" + response[i].detailCodeName + "'></td>" +
-		                "<input type='hidden' readonly='readonly' name='ipTypeCode' value='" + response[i].ipTypeCode + "'>" +
+		                "<td><input type='hidden' readonly='readonly' name='ipTypeCode' value='" + response[i].ipTypeCode + "'></td>" +
+		                "<td></td>" +
 		                "</tr>";
 		            $('#ipListTable tbody').append(addTableRow); // IP 주소 행을 테이블에 추가합니다.
 		        }
@@ -598,9 +599,9 @@ $(document).ready(function () {
             },
             success: function(response) {
                 $('tbody#resInfoTable > tr').remove();
-                if (response.length === 0) {
+                if (response.selectAllResInfo.length === 0) {
                     alert('검색된 결과가 없습니다.');
-                    addTableRow = "<tr>" + "<td colspan='8' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+                    addTableRow = "<tr>" + "<td colspan='10' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
                     $('tbody#resInfoTable').append(addTableRow);
                     return;
                 }

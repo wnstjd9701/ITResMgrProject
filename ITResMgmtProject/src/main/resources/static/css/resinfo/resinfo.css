@@ -230,6 +230,16 @@ padding: 5px 10px; /* 원하는 여백 크기로 조정하세요 */
 	table-layout: fixed;
 }
 
+.res-info-list-table table tbody tr {
+    table-layout: fixed;
+    width: 100px; /* 원하는 너비로 설정 */
+}
+.res-info-list-table table thead tr  {
+    table-layout: fixed;
+    width: 100px; /* 원하는 너비로 설정 */
+}
+
+
 .search-bar {
     display: flex;
     align-items: center;
