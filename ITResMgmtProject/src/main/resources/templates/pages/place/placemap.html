@@ -650,7 +650,7 @@ $(document).ready(function(){
     const options = {
 	  chart: { 
 	  	title: '지역별 자원 현황',
-	   	width: 0,
+	   	width: 850,
 	   	height: 350,
 	  },
       series: {
@@ -663,26 +663,36 @@ $(document).ready(function(){
         }
       },
       theme: {
+    	    title: {
+    	        fontFamily: 'Comic Sans MS',
+    	        fontSize: 20,
+    	        fontWeight: 700,
+    	        color: '#7289AB'
+    	      },
+    	  chart: {
+    	      fontFamily: 'Verdana',
+    	      backgroundColor: '#FBFCFF',
+    	    },
     	  	series: {
-    	      colors: ['#F94144', '#F3722C', '#F8961E', '#F9C74F', '#90BE6D', '#43AA8B', '#577590'],
-    	      lineWidth: 2,
+    	      colors: ['#FFB6C1', '#B19CD9','#8A2BE2','#87CEEB', '#D8BFD8', '#FFFACD', '#AFEEEE'],
+    	      lineWidth: 0,
     	      strokeStyle: '#000000',
     	    },
     	    tooltip: {
-    	      background: '#80CEE1',
-    	      borderColor: '#3065AC',
+    	      background: '#FBFCFF',
+    	      borderColor: '#FBFCFF',
     	      borderWidth: 10,
     	      borderRadius: 20,
     	      borderStyle: 'double',
     	      header: {
     	        fontSize: 15,
-    	        fontWeight: 700,
-    	        color: '#333333',
+    	        fontWeight: 1000,
+    	        color: 'black;',
     	        fontFamily: 'monospace',
     	      },
     	      body: {
     	        fontSize: 11,
-    	        fontWeight: 700,
+    	        fontWeight: 900,
     	        color: '#a66033',
     	        fontFamily: 'monospace',
     	      }
