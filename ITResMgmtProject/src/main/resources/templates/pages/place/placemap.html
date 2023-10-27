@@ -54,8 +54,8 @@
 									<td th:if="${place.installPlaceDetailAddress == null}"
 										class="place-detail-address">-</td>
 									<td class="place-res-count" th:text="${place.resCount}"></td>
-									<td><input name="search" type="button" value="상세"
-										class="place-detail-btn"> <input name="placesn"
+									<td><input name="search" type="hidden" value="상세"
+										class="place-detail-btn"> <img alt="detail-img-btn" class="ip-detail-btn-img" th:src="@{/assets/img/detail2.png}" style="width:25px; height:25px;"><input name="placesn"
 										class="place-sn" type="hidden"
 										th:value="${place.installPlaceSn}"> <input
 										type="hidden" class="latitude" th:value="${place.latitude}">
@@ -649,7 +649,7 @@ $(document).ready(function(){
 	  chart: { 
 	  	title: '지역별 자원 현황',
 	   	width: 850,
-	   	height: 350,
+	   	height: 300,
 	  },
       series: {
         dataLabels: {
@@ -665,7 +665,8 @@ $(document).ready(function(){
     	        fontFamily: 'Comic Sans MS',
     	        fontSize: 20,
     	        fontWeight: 700,
-    	        color: '#7289AB'
+    	        color: '#7289AB',
+    	        width:600
     	      },
     	  chart: {
     	      fontFamily: 'Verdana',
