@@ -81,7 +81,8 @@
 							<th style="width: 7%;">상세</th>
 						</tr>
 					</thead>
-					<tbody style="text-align: center;" id="resInfoTable">
+					<tbody style="text-align: center; font-size: 15px;"
+						id="resInfoTable">
 						<tr th:each="resinfo:${selectAllResInfo}">
 							<td th:text="${resinfo.topUpperResClassName}"></td>
 							<td th:text="${resinfo.upperResClassName}"></td>
@@ -112,10 +113,15 @@
 							</button>
 						</li>
 						<div style="display: flex;" class="page-btn">
-							<li
+							<!-- 							<li
 								th:each="pageNum, iterStat : ${#numbers.sequence(page2.startPage, page2.endPage)}">
 								<button class="page-link page-link-val" th:text="${pageNum}"
 									th:style="${iterStat.index == 0} ? 'font-weight:bolder;' : ''"
+									th:onclick="paging([[${pageNum}]])"></button>
+							</li> -->
+							<li
+								th:each="pageNum, iterStat : ${#numbers.sequence(page2.startPage, page2.endPage)}">
+								<button class="page-link page-link-val" th:text="${pageNum}"
 									th:onclick="paging([[${pageNum}]])"></button>
 							</li>
 						</div>
@@ -138,7 +144,8 @@
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel" style="font-weight:bold;">IT자원 상세정보</h5>
+					<h5 class="modal-title" id="exampleModalLabel"
+						style="font-weight: bold;">IT자원 상세정보</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -201,18 +208,17 @@
 								<th scope="row">도입가격</th>
 								<td><input type="text" name="introdutionPrice"></input></td>
 							</tr>
-							<tr>
+							<tr style="vertical-align: middle;">
 								<th scope="row">사용여부</th>
 								<td><label> <input type="radio" name="useYn"
 										value="Y" checked="checked" />Y
-								</label> <label> <input type="radio" name="useYn" value="N" />
-										N
+								</label> <label> <input type="radio" name="useYn" value="N" />N
 								</label></td>
 								<th scope="row">모니터링여부<span class="essential-resinfo">*</span></th>
 								<td><label> <input type="radio" name="monitoringYn"
-										value="Y" checked="checked" /> Y
+										value="Y" checked="checked" />Y
 								</label> <label> <input type="radio" name="monitoringYn"
-										value="N" /> N
+										value="N" />N
 								</label></td>
 								<th scope="row">구매처명</th>
 								<td><input type="text" name="purchaseCompanyName"></input>
@@ -255,9 +261,12 @@
 										<th>선택</th>
 										<th>ip</th>
 										<th>ipType</th>
-										<th style=" text-align: center;"><button id="search-ip-list-btn" class="btn btn-primary"
-												style="float: right; background-color: #003F5E; border: #003F5E; font-size:13px; margin-right:5%;">추가</button></th>
-										<th style="width: 5.5%;"><button id="ip-delete-btn" class="btn btn-primary" style="float: left; background-color: #003F5E; border: #003F5E; font-size:13px; margin-left:-10px;">삭제</button></th>
+										<th style="text-align: center;"><button
+												id="search-ip-list-btn" class="btn btn-primary"
+												style="float: right; background-color: #003F5E; border: #003F5E; font-size: 13px; margin-right: 5px;">추가</button></th>
+										<th style="width: 5.5%;"><button id="ip-delete-btn"
+												class="btn btn-primary"
+												style="float: left; background-color: #003F5E; border: #003F5E; font-size: 13px; margin-left: -2px;">삭제</button></th>
 									</tr>
 								</thead>
 								<tbody id="ipListTableTbody">
@@ -283,7 +292,8 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="resclass-list">자원분류</h5>
+					<h5 class="modal-title" id="resclass-list"
+						style="font-weight: bold;">자원분류</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
@@ -331,8 +341,7 @@
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal" style="font-size: 13px;">취소</button>
 							<button type="button" id="choose-res-class-btn"
-								class="btn btn-primary"
-								style="background-color: navy; border: navy; font-size: 13px;">확인</button>
+								class="btn btn-primary" style="font-size: 13px;">확인</button>
 						</div>
 					</div>
 				</div>
@@ -346,7 +355,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="addItemList">설치장소</h5>
+					<h5 class="modal-title" id="addItemList" style="font-weight: bold;">설치장소</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
@@ -370,8 +379,7 @@
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal" style="font-size: 13px;">취소</button>
 							<button type="button" id="choose-install-place-btn"
-								class="btn btn-primary"
-								style="background-color: navy; border: navy; font-size: 13px;">확인</button>
+								class="btn btn-primary" style="font-size: 13px;">확인</button>
 						</div>
 					</div>
 				</div>
@@ -386,7 +394,8 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="ipList">IP List</h5>
+					<h5 class="modal-title" id="ipList" style="font-weight: bold;">IP
+						List</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">
@@ -408,7 +417,8 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">취소</button>
-							<button type="button" id="choose-ip-list-btn">확인</button>
+							<button type="button" id="choose-ip-list-btn"
+								class="btn btn-primary">확인</button>
 						</div>
 					</div>
 				</div>

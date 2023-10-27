@@ -241,14 +241,9 @@ td{
 .address-span{
 	font-size: 14px; 
 	font-weight: bold;  
-	 display: inline-block;
-/* 	 color:white;
-	 background-color: #7289AB;
-	 padding:3px; */	
+	 display: inline-block;	
 }
 
 .detail-img-btn:hover {
-    /* 원하는 스타일 추가 */
-    /* 예: 배경색을 변경하거나 테두리를 추가할 수 있습니다 */
-    cursor: pointer; /* 커서 모양 변경 (선택사항) */
+    cursor: pointer; 
 }

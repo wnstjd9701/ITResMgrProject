@@ -200,11 +200,6 @@ td {
 	text-align: right;
 }
 
-/* .btn {
-	float: right;
-	margin-left: 10px;
-} */
-
 .code-group-id-input {
 	width: 40%;
 }
@@ -217,11 +212,6 @@ td {
     background-color: white; /* 입력란이 활성화 상태일 때 <input> 요소의 배경색 변경 */
 	padding: 0px;
 }
-
-/* .detailCodeName{
-	border:none;
-	text-align: center;
-} */
 
 .commoncodedetail-table tbody tr:hover input.detailCodeName {
     background-color: #ECECEC; /* 호버 시 <input> 요소의 배경색 변경 */
