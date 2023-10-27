@@ -25,7 +25,7 @@
 					</div>
 					<select id="doNameSelect" class="form-select">
 						<option value="-">선택</option>
-						<option value="ALL">전체 [ [[${totalResCount}]] ]</option>
+						<option value="ALL" selected>전체 [ [[${totalResCount}]] ]</option>
 						<option th:each="doName : ${doNames}" th:value="${doName.key}">[[${doName.key}]] [ [[${doName.value}]] ]</option>
 					</select>
 					<div class="place-table-container">
@@ -54,13 +54,13 @@
 									<td th:if="${place.installPlaceDetailAddress == null}"
 										class="place-detail-address">-</td>
 									<td class="place-res-count" th:text="${place.resCount}"></td>
-									<td><input name="search" type="hidden" value="상세"
-										class="place-detail-btn"> <img alt="detail-img-btn" class="ip-detail-btn-img" th:src="@{/assets/img/detail2.png}" style="width:25px; height:25px;"><input name="placesn"
-										class="place-sn" type="hidden"
-										th:value="${place.installPlaceSn}"> <input
-										type="hidden" class="latitude" th:value="${place.latitude}">
-										<input type="hidden" class="longitude"
-										th:value="${place.longitude}"></td>
+									<td>
+										<input name="search" type="hidden" value="상세" class="place-detail-btn"> 
+										<img alt="detail-img-btn" class="ip-detail-btn-img" th:src="@{/assets/img/detail2.png}" style="width:25px; height:25px;">
+										<input name="placesn" class="place-sn" type="hidden" th:value="${place.installPlaceSn}"> 
+										<input type="hidden" class="latitude" th:value="${place.latitude}">
+										<input type="hidden" class="longitude" th:value="${place.longitude}">
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -262,7 +262,8 @@ $(document).ready(function(){
 	            '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
 	            '<td class="place-res-count">' + resCount + '</td>' +
 	            '<td>' +
-	            '<input name="search" type="button" value="상세" class="place-detail-btn">' +
+	            '<input name="search" type="hidden" class="place-detail-btn">' +
+	            '<img alt="detail-img-btn" class="ip-detail-btn-img" src="/assets/img/detail2.png" style="width:25px; height:25px;">' +
 	            '<input name="placesn" class="place-sn" type="hidden" value="' + installPlaceSn + '">' +
 	            '<input type="hidden" class="latitude" value="' + latitude + '">' +
 	            '<input type="hidden" class="longitude" value="' + longitude + '">' +
@@ -297,7 +298,8 @@ $(document).ready(function(){
 	        '<td class="place-detail-address">' + installPlaceDetailAddress + '</td>' +
 	        '<td class="place-res-count">' + resCount + '</td>' +
 	        '<td>' +
-	        '<input name="search" type="button" value="상세" class="place-detail-btn">' +
+	        '<input name="search" type="hidden" class="place-detail-btn">' +
+	        '<img alt="detail-img-btn" class="ip-detail-btn-img" src="/assets/img/detail2.png" style="width:25px; height:25px;">' +
 	        '<input name="placesn" class="place-sn" type="hidden" value="' + installPlaceSn + '">' +
 	        '<input type="hidden" class="latitude" value="' + latitude + '">' +
 	        '<input type="hidden" class="longitude" value="' + longitude + '">' +
@@ -569,7 +571,7 @@ $(document).ready(function(){
 	}
 	
 	
-    $(".place-list-container").on("click", ".place-detail-btn", function(){
+    $(".place-list-container").on("click", ".ip-detail-btn-img", function(){
     	var clickedRow = $(this).closest("tr");
         var placeName = clickedRow.find(".place-name").text();
         var placeAddress = clickedRow.find(".place-address").text();
