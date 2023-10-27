@@ -49,3 +49,7 @@
 .table-style{
 	table-layout:fixed;
 }
+
+.ip-detail-btn-img:hover{
+	cursor: pointer;
+}
