@@ -327,6 +327,7 @@
 			    r.res_serial_id   "resSerialId",
 			    r.res_class_id	"resClassId",
 			    rc.res_class_name   "resClassName",
+			    r.install_place_sn	"installPlaceSn",
 			    r.res_name  "resName",
 			    r.res_sn    "resSn",
 			    r.mgmt_id   "mgmtId",
@@ -436,6 +437,16 @@
 	    ) values (#{resSerialId,jdbcType=VARCHAR}, #{ipSn,jdbcType=INTEGER}, #{ipTypeCode,jdbcType=VARCHAR}, SYSDATE, 'wh467925')
 	</insert>
 	
+	<insert id="updateIpInResInfo" parameterType="java.util.HashMap">
+	    INSERT INTO resipmapping(
+	        res_serial_id, 
+	        ip_sn, 
+	        ip_type_code, 
+	        create_date, 
+	        creater_id
+	    ) values (#{resSerialId,jdbcType=VARCHAR}, #{ipSn,jdbcType=INTEGER}, #{ipTypeCode,jdbcType=VARCHAR}, SYSDATE, 'wh467925')
+	</insert>
+	
 	<delete id="deleteIpInResInfo" parameterType="Integer">
 		DELETE
 			FROM resipmapping
@@ -488,6 +499,14 @@
 		<![CDATA[
 			SELECT COUNT(*) AS "installPlaceSn"
 			FROM installplace
+		]]>
+	</select>
+	
+	<select id="existingIpSnList" parameterType="String" resultType="Integer">
+		<![CDATA[
+			SELECT ip_sn "ipSn"
+			FROM resipmapping
+			WHERE res_serial_id = #{resSerialId}
 		]]>
 	</select>
 </mapper>

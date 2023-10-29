@@ -1,8 +1,10 @@
 package kr.co.kcc.itmgr.domain.resinfo.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,16 +148,42 @@ public class ResInfoController {
 	@PostMapping("/resinfo/update")
 	@ResponseBody
 	public void updateResInfo(@RequestBody ResInfo resInfo) {
+		String resClass = resInfo.getResClassId();
 		try {
 			resInfoService.updateResInfo(resInfo);
+			System.out.println("아아악1"+resClass);
+			String resSerialId = resInfo.getResSerialId();
+			int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
 			try {
-				String resSerialId = resInfo.getResSerialId();
-				int count = resInfoService.CountOfAddItemValueInResInfo(resSerialId);
+				// 새로운 IP 주소 목록
+				List<Integer> newIpSnList = resInfo.getIpSnList();
+				List<String> ipTypeCodeList = resInfo.getIpTypeCodeList(); // IP 유형 목록
+				List<String> resSerialList = resInfo.getResSerialIdList();
+
+				// 기존 IP 주소 목록을 데이터베이스에서 가져오는 코드
+				List<Integer> existingIpSnList = resInfoService.existingIpSnList(resSerialId);
+
+				// 중복되지 않는 IP 주소 필터링
+				List<Integer> uniqueIpSnList = newIpSnList.stream()
+				    .filter(ip -> !existingIpSnList.contains(ip))
+				    .collect(Collectors.toList());
+
+				logger.info("유니크키:" + uniqueIpSnList);
+
+				// 중복되지 않는 IP 주소 업데이트 또는 필요한 작업 수행
+				for (int i = 0; i < uniqueIpSnList.size(); i++) {
+				    int ipSn = uniqueIpSnList.get(i);
+				    String ipTypeCode = ipTypeCodeList.get(i); // 해당 IP의 유형
+				    String resSerialId2 = resSerialList.get(i);
+				    resInfoService.updateIpInResInfo(Collections.singletonList(resSerialId2), Collections.singletonList(ipSn), Collections.singletonList(ipTypeCode));
+				}
+
 				try {
-					if(count >1) {
+					if(uniqueIpSnList.size()==0 && !resInfo.getResClassId().equals(resClass) && count >1) {
+						System.out.println("아아악2"+resInfo.getResClassId());
 						resInfoService.deleteAddItemValueInResInfo(resSerialId);
 						resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
-					}else{
+					}else if(uniqueIpSnList.size()==0){
 						resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
 					}
 				}catch(Exception e){
@@ -235,6 +263,7 @@ public class ResInfoController {
 	public Map<String, Object> selectResInstallPlace(int page){
 		Map<String, Object> installPlaceMap = new HashMap<String, Object>();
 		List<InstallPlace> selectResInstallPlace = resInfoService.selectResInstallPlace(page);
+	logger.info("durl"+selectResInstallPlace);
 		int installPalceCount = resInfoService.countOfInstallPlace();
 		int totalPage=0;
 		if(installPalceCount>0) {
@@ -316,10 +345,11 @@ public class ResInfoController {
 	@PostMapping("/resinfo/insert")
 	@ResponseBody
 	public void insertResInfo(@RequestBody ResInfo resInfo) {
-		resInfoService.insertResInfo(resInfo);
-		resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
-		resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
+        resInfoService.insertResInfo(resInfo);
+        resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+        resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
 	}
+
 
 	@GetMapping("/resinfo/detail")
 	@ResponseBody

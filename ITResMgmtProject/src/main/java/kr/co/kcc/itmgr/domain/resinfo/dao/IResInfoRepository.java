@@ -44,10 +44,13 @@ public interface IResInfoRepository {
 	
 	List<ResInfo> selectIpInResInfo(String resSerialId);
 	void insertIpInResInfo(@Param("resSerialId") String resSerialId,@Param("ipSn") int ipSn,@Param("ipTypeCode")String ipTypeCode);
+	void updateIpInResInfo(@Param("resSerialId") String resSerialId,@Param("ipSn") int ipSn,@Param("ipTypeCode")String ipTypeCode);
 	void deleteIpInResInfo(int ipSn);
 	List<IpInfo> selectAllIpInfoList(@Param("start")int start , @Param("end")int end);
 	
 	int CountOfAddItemValueInResInfo(String resSerialId);
 	int CountOfIpList();
+	
+	List<Integer> existingIpSnList(String resSerialId);
 	
 }
