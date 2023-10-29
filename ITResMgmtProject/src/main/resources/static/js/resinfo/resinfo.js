@@ -109,6 +109,7 @@ function paging(page) {
 	
 $(document).ready(function(){
 	    $('#resInfoTable').on('click', '#resinfo-detail-btn', function () {
+		$('.error-message').text('');
         var resName = $(this).closest('tr').find('td:nth-child(4)').text();
 		var resSerialId = $(this).closest('tr').find('input[name="resSerialId"]').val();
         console.log(resSerialId);
@@ -218,7 +219,7 @@ $(document).ready(function(){
 			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
 			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
 			var resDetailValue = $('#additionalInfoTable input[name="resDetailValue"]').val();
-			
+			console.log(resSerialId);
 			var resSerialList=[];
 			var addItemSnList = [];
 			var resDetailValueList = [];
@@ -227,6 +228,8 @@ $(document).ready(function(){
 			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
 				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
 			}
+			console.log("resSerialIdList: "+resSerialList)
+			console.log(addItemSnList);
 			var ipSn = $('#ipListTable input[name="ipSn"]');
 			var ipTypeCode = $('#ipListTable input[name="ipTypeCode"]');
 
@@ -266,7 +269,7 @@ $(document).ready(function(){
 							'resSerialIdList' : resSerialList,
 							'addItemSnList' : addItemSnList,
 							'resDetailValueList' : resDetailValueList,
-							'resSerialIdList' : resSerialList2,
+							'resSerialIdList2' : resSerialList2,
 							'ipSnList' : ipSnList,
 							'ipTypeCodeList' : ipTypeCodeList
 						}),
@@ -292,6 +295,88 @@ $(document).ready(function(){
 			});
 
     });
+
+    function showResourceDetail(resName) {
+	var resName = $('#resinfo-detail-modal input[name="resName"]').val();
+	var resSerialId = $('#resinfo-detail-modal input[name="resSerialId"]').val();
+        $.ajax({
+            type: 'GET',
+            url: '/resinfo/detail',
+            data: {
+                "resName": resName
+            },
+            success: function (response) {
+                $('#resinfo-detail-modal input[name="resClassName"]').val(response.resClassName);
+                $('#resinfo-detail-modal input[name="resName"]').val(response.resName);
+                $('#resinfo-detail-modal input[name="mgmtId"]').val(response.mgmtId);
+                $('#resinfo-detail-modal input[name="mgmtDeptName"]').val(response.mgmtDeptName);
+                $('#resinfo-detail-modal input[name="resSerialId"]').val(response.resSerialId);
+                $('#resinfo-detail-modal input[name="resStatusCode"]').val(response.resStatusCode);
+                $('#resinfo-detail-modal input[name="managerName"]').val(response.managerName);
+                $('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+                $('#resinfo-detail-modal input[name="manufactureCompanyName"]').val(response.manufactureCompanyName);
+                $('#resinfo-detail-modal input[name="modelName"]').val(response.modelName);
+                $('#resinfo-detail-modal input[name="installPlaceName"]').val(response.installPlaceName);
+                $('#resinfo-detail-modal input[name="rackInfo"]').val(response.rackInfo);
+                $('#resinfo-detail-modal input[name="introductionDate"]').val(response.introductionDate);
+                $('#resinfo-detail-modal input[name="introdutionPrice"]').val(response.introductionPrice);
+                $('#resinfo-detail-modal input[name="expirationDate"]').val(response.expirationDate);
+                $('#resinfo-detail-modal input[name="addInfo"]').val(response.addInfo);
+                $('#resinfo-detail-modal input[name="useYn"]').val(response.useYn);
+                $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val(response.purchaseCompanyName);
+                $('#resinfo-detail-modal input[name="monitoringYn"]').val(response.monitoringYn);
+                $('#resinfo-detail-modal').modal('show');
+            },
+            error: function (error) {
+                console.log('에러:', error);
+            }
+        });
+        $.ajax({
+            type: 'GET',
+            url: '/resinfo/additemvalue',
+            data: {
+                "resSerialId": resSerialId
+            },
+            success: function (response) {
+                $('#additionalInfoTable tbody').empty();
+                for (var i = 0; i < response.length; i++) {
+                    addTableRow = "<tr>" +
+                        "<td>" + response[i].addItemName + "</td>" +
+                       	"<td><input type='text' name='resDetailValue' value='"+response[i].resDetailValue+"'></td>" +
+                        "</tr>";
+                    $('#additionalInfoTable tbody').append(addTableRow);
+                }
+                showTable('additionalInfo');
+            },
+            error: function (error) {
+                console.log('에러:', error);
+            }
+        });
+        $.ajax({
+            type: 'GET',
+            url: '/resinfo/ipmapping',
+            data: {
+                "resSerialId": resSerialId
+            },
+            success: function (response) {
+                $('#ipListTable tbody').empty();
+                for (var i = 0; i < response.length; i++) {
+                    addTableRow = "<tr>" +
+		                "<td><input type='checkbox' name='ipSn' value='" + response[i].ipSn + "'></td>" +
+                        "<td>" + response[i].ip + "</td>" +
+                       	"<td><input type='text' name='detailCodeName' value='"+response[i].detailCodeName+"'></td>" +
+                       	"<td></td>" +
+                       	"<td></td>" +
+                        "</tr>";
+                    $('#ipListTableTbody').append(addTableRow);
+                }
+                showTable('ipListTable');
+            },
+            error: function (error) {
+                console.log('에러:', error);
+            }
+        });
+    }
 });
 $(document).ready(function () {
     $('#newResInfoBtn').on('click', function () {
@@ -400,7 +485,7 @@ $(document).ready(function () {
 						'resSerialIdList' : resSerialList,
 						'addItemSnList' : addItemSnList,
 						'resDetailValueList' : resDetailValueList,
-						'resSerialIdList' : resSerialList2,
+						'resSerialIdList2' : resSerialList2,
 						'ipSnList' : ipSnList,
 						'ipTypeCodeList' : ipTypeCodeList
 	                }),

@@ -36,8 +36,8 @@ public interface IResInfoService {
 	void deleteAddItemValueInResInfo(String resSerialId);
 	
 	List<ResInfo> selectIpInResInfo(String resSerialId);
-	void insertIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList);
-	void updateIpInResInfo(List<String> resSerialIdList,List<Integer> ipSnList,List<String> ipTypeCodeList);
+	void insertIpInResInfo(List<String> resSerialIdList2, List<Integer> ipSnList, List<String> ipTypeCodeList);
+	void updateIpInResInfo(List<String> resSerialIdList2,List<Integer> ipSnList,List<String> ipTypeCodeList);
 	void deleteIpInResInfo(int ipSn);
 	List<IpInfo> selectAllIpInfoList(int page);
 	List<ResInfo> selectIpMappingInResInfo(String resSerialId);

@@ -59,6 +59,7 @@ public class ResInfo {
 	private List<String> ipTypeCodeList;
 	
 	private List<String> resSerialIdList;
+	private List<String> resSerialIdList2;
 	private List<String> addItemSnList;
 	private List<String> resDetailValueList;
 	

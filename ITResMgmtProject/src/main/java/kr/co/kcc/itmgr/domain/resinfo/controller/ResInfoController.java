@@ -157,8 +157,7 @@ public class ResInfoController {
 			try {
 				// 새로운 IP 주소 목록
 				List<Integer> newIpSnList = resInfo.getIpSnList();
-				List<String> ipTypeCodeList = resInfo.getIpTypeCodeList(); // IP 유형 목록
-				List<String> resSerialList = resInfo.getResSerialIdList();
+				List<String> ipTypeCodeList = resInfo.getIpTypeCodeList(); // IP 유형 목록\
 
 				// 기존 IP 주소 목록을 데이터베이스에서 가져오는 코드
 				List<Integer> existingIpSnList = resInfoService.existingIpSnList(resSerialId);
@@ -171,24 +170,30 @@ public class ResInfoController {
 				logger.info("유니크키:" + uniqueIpSnList);
 
 				// 중복되지 않는 IP 주소 업데이트 또는 필요한 작업 수행
+				if(!(existingIpSnList.size()==0)) {
+					List<String> resSerials = resInfo.getResSerialIdList2();
 				for (int i = 0; i < uniqueIpSnList.size(); i++) {
 				    int ipSn = uniqueIpSnList.get(i);
 				    String ipTypeCode = ipTypeCodeList.get(i); // 해당 IP의 유형
-				    String resSerialId2 = resSerialList.get(i);
+				    String resSerialId2 = resSerials.get(i);
 				    resInfoService.updateIpInResInfo(Collections.singletonList(resSerialId2), Collections.singletonList(ipSn), Collections.singletonList(ipTypeCode));
 				}
-
+				}else if(existingIpSnList.size()==0){
+					resInfoService.insertIpInResInfo(resInfo.getResSerialIdList2(), resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
+				}
 				try {
-					if(uniqueIpSnList.size()==0 && !resInfo.getResClassId().equals(resClass) && count >1) {
-						System.out.println("아아악2"+resInfo.getResClassId());
+					if(!(existingIpSnList.size()==0)&& !resInfo.getResClassId().equals(resClass) && count >1) {
 						resInfoService.deleteAddItemValueInResInfo(resSerialId);
 						resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
-					}else if(uniqueIpSnList.size()==0){
+					}if(!(existingIpSnList.size()==0)){
 						resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());
+					}if(existingIpSnList.size()==0) {
+						System.out.println(resInfo.getResSerialIdList().size());
+						resInfoService.insertAddItemValueInResInfo(resInfo.getResSerialIdList(), resInfo.getAddItemSnList(), resInfo.getResDetailValueList());						
 					}
 				}catch(Exception e){
-					e.getMessage();
 					System.out.println("예외가 발생했습니다: " + e.toString());
+					e.getMessage();
 				}
 			}catch(Exception e) {
 				e.getMessage();
@@ -197,12 +202,6 @@ public class ResInfoController {
 		}catch(Exception e) {
 			e.getMessage();
 		}
-	}
-	
-	@PostMapping("/resinfo/ipupdate")
-	@ResponseBody
-	public void updateIpMapping(@RequestBody ResInfo resInfo) {
-		resInfoService.insertIpInResInfo(resInfo.getResSerialIdList(),resInfo.getIpSnList(), resInfo.getIpTypeCodeList());
 	}
 	
 	@PostMapping("/resinfo/ipdelete")

@@ -88,7 +88,7 @@ public class ResInfoService implements IResInfoService {
 	@Override
 	@Transactional
 	public void insertAddItemValueInResInfo(List<String> resSerialIdList, List<String> addItemSnList, List<String> resDetailValueList) {
-		for(int i=0; i<resSerialIdList.size(); i++) {
+		for(int i=0; i<addItemSnList.size(); i++) {
 			resInfoRepository.insertAddItemValueInResInfo(resSerialIdList.get(i), addItemSnList.get(i), resDetailValueList.get(i));
 		}
 	}
@@ -126,9 +126,9 @@ public class ResInfoService implements IResInfoService {
 
 	@Override
 	@Transactional
-	public void insertIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList) {
-		for(int i=0; i<resSerialIdList.size(); i++) {
-			resInfoRepository.insertIpInResInfo(resSerialIdList.get(i), ipSnList.get(i), ipTypeCodeList.get(i));
+	public void insertIpInResInfo(List<String> resSerialIdList2, List<Integer> ipSnList, List<String> ipTypeCodeList) {
+		for(int i=0; i<resSerialIdList2.size(); i++) {
+			resInfoRepository.insertIpInResInfo(resSerialIdList2.get(i), ipSnList.get(i), ipTypeCodeList.get(i));
 		}
 	}
 
@@ -183,9 +183,9 @@ public class ResInfoService implements IResInfoService {
 	}
 	@Override
 	@Transactional
-	public void updateIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList) {
-		for(int i=0; i<resSerialIdList.size(); i++) {
-			resInfoRepository.updateIpInResInfo(resSerialIdList.get(i), ipSnList.get(i), ipTypeCodeList.get(i));
+	public void updateIpInResInfo(List<String> resSerialIdList2, List<Integer> ipSnList, List<String> ipTypeCodeList) {
+		for(int i=0; i<resSerialIdList2.size(); i++) {
+			resInfoRepository.updateIpInResInfo(resSerialIdList2.get(i), ipSnList.get(i), ipTypeCodeList.get(i));
 		}
 	}
 
