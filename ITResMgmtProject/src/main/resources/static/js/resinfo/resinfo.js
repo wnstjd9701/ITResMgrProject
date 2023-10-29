@@ -312,7 +312,7 @@ $(document).ready(function () {
 			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
 				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
 			}
-
+			console.log(resName)
 					 $.ajax({
 		                type: 'POST',
 		                url: '/resinfo/update',
@@ -961,8 +961,8 @@ function updateTable(installPlace) {
         var addTableRow = "<tr>" +
             "<td><input type='checkbox' name='installPlaceSn' value='" + installPlaceSn + "'"+ "></td>" +
             "<td>" + installPlace[i].installPlaceName + "</td>" +
-            "<td>" + installPlace[i].installPlacePostNo + "</td>" +
-            "<td>" + installPlace[i].installPlacePostAddress + "</td>" +
+            "<td>" + installPlace[i].installPlacePostno + "</td>" +
+            "<td>" + installPlace[i].installPlaceAddress + "</td>" +
             "</tr>";
         $('table#install-place-list-table tbody').append(addTableRow);
 	}

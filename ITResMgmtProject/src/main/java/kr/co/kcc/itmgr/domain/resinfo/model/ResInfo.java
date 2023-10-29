@@ -43,6 +43,9 @@ public class ResInfo {
 	private int level;
 	private String upperResClassId;
 	
+	private String installPlacePostno;
+	private String installPlaceAddress;
+	
 	private String addItemSn;
 	private String addItemName;
 	private String resDetailValue;
