@@ -2,7 +2,8 @@ function changePageBtn(data,page){
 	var str=""
 	for(var i=data.page.startPage;i<=data.page.endPage;i++){
 		if(page==i){
-			str+='<button class="page-link page-link-val" onclick="paging('+i+')" style="font-weight:bolder;text-align:center;">'+i+'</button>'
+			//str+='<button class="page-link page-link-val" onclick="paging('+i+')" style="font-weight:bolder;text-align:center;">'+i+'</button>'
+			str+='<button class="page-link page-link-val" onclick="paging('+i+')" style="text-align:center;">'+i+'</button>'
 		}else{
 			str+='<button class="page-link page-link-val" onclick="paging('+i+')">'+i+'</button>'
 		}
@@ -692,7 +693,7 @@ $(document).ready(function () {
                 $('tbody#resInfoTable > tr').remove();
                 if (response.selectAllResInfo.length === 0) {
                     alert('검색된 결과가 없습니다.');
-                    addTableRow = "<tr>" + "<td colspan='10' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
+                    addTableRow = "<tr>" + "<td colspan='9' style='text-align:center; font-weight: bold;'>" + "검색된 결과가 없습니다." + "</td>" + "</tr>";
                     $('tbody#resInfoTable').append(addTableRow);
 					$('nav.paging-nav').hide();
                     return;

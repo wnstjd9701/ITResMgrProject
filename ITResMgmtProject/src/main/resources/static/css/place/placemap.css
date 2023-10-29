@@ -34,8 +34,6 @@
 }
 
 .place-map-container{
-	/* display : block; */
-	/* width:100%; */
 	  display: flex;
 }
 .view-container {
@@ -59,16 +57,5 @@
 	background-color: rgba(255, 255, 255, 0.5);
  	width: 60%;
 	height:100%;
-  /*     float: left; */
-    box-sizing: border-box;
-  /*   float:right; */
-   /*  margin-left:5px; */
-    
-    
+    box-sizing: border-box; 
 }
-
-
-/* .toastui-chart-wrapper{
-	border : 1px solid black;
-	border-radius: 5px;
-} */

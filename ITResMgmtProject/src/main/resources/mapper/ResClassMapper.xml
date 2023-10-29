@@ -132,7 +132,7 @@
 			SELECT
 				add_item_sn		"addItemSn",
 				add_item_name	"addItemName",
-				add_item_desc	"addItemDesc",
+				NVL(add_item_desc, '-')	"addItemDesc",
 				use_yn	"addItemUseYn"
 			FROM (
 				SELECT add_item_sn, add_item_name, add_item_desc, use_yn, rownum AS rnum
