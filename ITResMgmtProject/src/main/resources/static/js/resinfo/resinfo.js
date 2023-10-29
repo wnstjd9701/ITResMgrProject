@@ -295,10 +295,12 @@ $(document).ready(function(){
 });
 $(document).ready(function () {
     $('#newResInfoBtn').on('click', function () {
+		$('.error-message').text('');
         clearModalContent()
         $('#resinfo-detail-modal').modal('show');
         $('#res-info-save-btn').on('click', function () {
             var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
+            var resClassName = $('#resinfo-detail-modal input[name=resClassName]').val();
             var mgmtId = $('#resinfo-detail-modal input[name=mgmtId]').val();
             var mgmtDeptName = $('#resinfo-detail-modal input[name="mgmtDeptName"]').val();
             var resName = $('#resinfo-detail-modal input[name="resName"]').val();
@@ -339,6 +341,39 @@ $(document).ready(function () {
 				ipTypeCodeList.push(ipTypeCode.eq(i).val());
 				console.log(ipTypeCodeList);
 			}
+		$('.error-message').text('');
+ 			if (!resClassName.trim()) {
+                $('#errormessage1').text('필수입력값을 입력하세요.');
+            }
+            if (!mgmtId.trim()) {
+	 			$('#errormessage2').text('필수입력값을 입력하세요.');
+            }
+            if (!resName.trim()) {
+		 		$('#errormessage3').text('필수입력값을 입력하세요.');
+            }
+            if (!resStatusCode.trim()) {
+		 		$('#errormessage4').text('필수입력값을 입력하세요.');
+            }
+            if (!resSn.trim()) {
+		 		$('#errormessage5').text('필수입력값을 입력하세요.');
+            }
+			if(!manufactureCompanyName.trim()){
+				$('#errormessage6').text('필수입력값을 입력하세요.');
+			}
+            if (!modelName.trim()) {
+		 		$('#errormessage7').text('필수입력값을 입력하세요.');
+            }
+            if (!installPlaceSn.trim()) {
+		 		$('#errormessage8').text('필수입력값을 입력하세요.');
+            }
+            if (!resSerialId.trim()) {
+		 		$('#errormessage9').text('필수입력값을 입력하세요.');
+            }
+
+            // 나머지 필드에 대한 유효성 검사 및 에러 메시지 추가
+
+            // 에러 메시지가 없을 경우 서버로 데이터를 전송
+            if ($('.error-message').length === 0){
 	            $.ajax({
 	                type: 'POST',
 	                url: '/resinfo/insert',
@@ -392,6 +427,7 @@ $(document).ready(function () {
 	                    console.log('에러:', error);
 	                }
 	            });
+}
         });
     });
 
