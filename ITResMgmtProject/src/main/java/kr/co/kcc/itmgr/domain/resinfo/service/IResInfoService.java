@@ -2,6 +2,8 @@ package kr.co.kcc.itmgr.domain.resinfo.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import kr.co.kcc.itmgr.domain.commoncode.model.CommonCodeDetail;
 import kr.co.kcc.itmgr.domain.installplace.model.InstallPlace;
 import kr.co.kcc.itmgr.domain.ipinfo.model.IpInfo;
@@ -34,7 +36,8 @@ public interface IResInfoService {
 	void deleteAddItemValueInResInfo(String resSerialId);
 	
 	List<ResInfo> selectIpInResInfo(String resSerialId);
-	void insertIpInResInfo(List<String> resSerialIdList, List<Integer> ipSnList, List<String> ipTypeCodeList);
+	void insertIpInResInfo(List<String> resSerialIdList2, List<Integer> ipSnList, List<String> ipTypeCodeList);
+	void updateIpInResInfo(List<String> resSerialIdList2,List<Integer> ipSnList,List<String> ipTypeCodeList);
 	void deleteIpInResInfo(int ipSn);
 	List<IpInfo> selectAllIpInfoList(int page);
 	List<ResInfo> selectIpMappingInResInfo(String resSerialId);
@@ -44,4 +47,6 @@ public interface IResInfoService {
 	
 	List<ResInfo> setFlagResInfoList(List<ResInfo> resInfo); //자원분류 flag설정
 	<T extends ResInfoDTO> List<T> setFlag(List<T> code);
+	
+	List<Integer> existingIpSnList(String resSerialId);
 }

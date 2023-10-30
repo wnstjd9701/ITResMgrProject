@@ -156,35 +156,49 @@
 							<tr>
 								<th scope="row">자원분류명 <span class="essential-resinfo">*</span></th>
 								<td><input type="text" id="resClassName"
-									name="resClassName"> <input type="hidden"
+									name="resClassName"> <input id="resClassId" type="hidden"
 									name="resClassId">
 									<button type="button" class="btn btn-primary"
-										id="res-class-search-btn">찾기</button></td>
+										id="res-class-search-btn">찾기</button>
+									<span class="error-message" id="errormessage1"></span>
+										</td>
 								<th scope="row">관리ID<span class="essential-resinfo">*</span></th>
-								<td><input type="text" name="mgmtId"></input></td>
+								<td><input type="text" name="mgmtId"></input>
+								<br>
+								<span class="error-message" id="errormessage2"></span></td>
 								<th scope="row">관리부서명</th>
 								<td><input type="text" name="mgmtDeptName"></input></td>
 							</tr>
 							<tr>
 								<th scope="row">자원명<span class="essential-resinfo">*</span></th>
-								<td><input type="text" name="resName"></input></td>
-								<th scope="row">자원상태</th>
+								<td><input type="text" name="resName"></input>
+								<br>
+								<span class="error-message" id="errormessage3"></span></td>
+								<th scope="row">자원상태<span class="essential-resinfo">*</span></th>
 								<td><select name="resStatusCode">
 										<option th:each="selectResStatusCode:${selectResStatusCode}"
 											th:value="${selectResStatusCode.resStatusCode}"
 											th:text="${selectResStatusCode.detailCodeName}"></option>
-								</select></td>
+								</select>
+								<br>
+								<span class="error-message" id="errormessage4"></span></td>
 								<th scope="row">담당자명</th>
 								<td><input type="text" name="managerName"></input></td>
 							</tr>
 							<tr>
 								<th scope="row">자원시리얼번호<span class="essential-resinfo">*</span></th>
-								<td><input type="text" name="resSn"></input></td>
+								<td><input type="text" name="resSn"></input>
+								<br>
+								<span class="error-message" id="errormessage5"></span></td>
 								<th scope="row">제조회사명<span class="essential-resinfo">*</span></th>
 								<td><input type="text" name="manufactureCompanyName"></input>
+								<br>
+								<span class="error-message" id="errormessage6"></span>
 								</td>
 								<th scope="row">모델명<span class="essential-resinfo">*</span></th>
-								<td><input type="text" name="modelName"></input></td>
+								<td><input type="text" name="modelName"></input>
+								<br>
+								<span class="error-message" id="errormessage7"></span></td>
 							</tr>
 							<tr>
 								<th scope="row">설치장소<span class="essential-resinfo">*</span></th>
@@ -192,11 +206,14 @@
 									name="installPlaceName"> <input type="hidden"
 									id="install-place-sn-input" name="installPlaceSn">
 									<button type="button" class="btn btn-primary"
-										id="installPlaceSearchBtn">찾기</button></td>
+										id="installPlaceSearchBtn">찾기</button>
+										<span class="error-message" id="errormessage8"></span></td>
 								<th scope="row">랙정보</th>
 								<td><input type="text" name="rackInfo"></input></td>
 								<th scope="row">자원시리얼아이디<span class="essential-resinfo">*</span></th>
-								<td><input type="text" name="resSerialId"></input></td>
+								<td><input type="text" name="resSerialId"></input>
+								<br>
+								<span class="error-message" id="errormessage9"></span></td>
 							</tr>
 							<tr>
 								<th scope="row">도입일자</th>
@@ -215,11 +232,13 @@
 								</label> <label> <input type="radio" name="useYn" value="N" />N
 								</label></td>
 								<th scope="row">모니터링여부<span class="essential-resinfo">*</span></th>
-								<td><label> <input type="radio" name="monitoringYn"
+								<td>
+								<label> <input type="radio" name="monitoringYn"
 										value="Y" checked="checked" />Y
 								</label> <label> <input type="radio" name="monitoringYn"
 										value="N" />N
-								</label></td>
+								</label>
+								<span class="error-message" id="errormessage"></span></td>
 								<th scope="row">구매처명</th>
 								<td><input type="text" name="purchaseCompanyName"></input>
 								</td>
@@ -425,7 +444,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- 설치장소 리스트 선택 모달 끝 -->
+	<!-- IP 리스트 선택 모달 끝 -->
 	<!-- 확인모달 -->
 	<div class="modal fade" id="check-modal" tabindex="-1"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">

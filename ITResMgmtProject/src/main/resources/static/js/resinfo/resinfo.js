@@ -106,97 +106,10 @@ function paging(page) {
 	        return $(this).text().trim() === tableName;
 	    }).addClass('active');
 	}
-$(document).ready(function () {
-	const checkedAddItems = [];
-    $('#newResInfoBtn').on('click', function () {
-		var resInfoaddItemList = [];
-        clearModalContent()
-        $('#resinfo-detail-modal').modal('show');
-        $('#res-info-save-btn').on('click', function () {
-            var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
-            var mgmtId = $('#resinfo-detail-modal input[name=mgmtId]').val();
-            var mgmtDeptName = $('#resinfo-detail-modal input[name="mgmtDeptName"]').val();
-            var resName = $('#resinfo-detail-modal input[name="resName"]').val();
-            var resStatusCode = $('#resinfo-detail-modal select[name="resStatusCode"]').val();
-            var managerName = $('#resinfo-detail-modal input[name="managerName"]').val();
-            var resSn = $('#resinfo-detail-modal input[name="resSn"]').val();
-            var manufactureCompanyName = $('#resinfo-detail-modal input[name="manufactureCompanyName"]').val();
-            var modelName = $('#resinfo-detail-modal input[name="modelName"]').val();
-            var installPlaceSn = $('#resinfo-detail-modal #install-place-sn-input').val();
-            var rackInfo = $('#resinfo-detail-modal input[name="rackInfo"]').val();
-            var resSerialId = $('#resinfo-detail-modal input[name="resSerialId"]').val();
-            var introductionDate = $('#resinfo-detail-modal input[name="introductionDate"]').val();
-            var expirationDate = $('#resinfo-detail-modal input[name="expirationDate"]').val();
-            var introdutionPrice = $('#resinfo-detail-modal input[name="introdutionPrice"]').val();
-            var useYn = 'Y';
-            var monitoringYn = 'Y';
-            var purchaseCompanyName = $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val();
-            var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
-			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
-			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
-			var ipSn = $('#ipListTable input[name="ipSn"]');
-			var ipTypeCode = $('#ipListTable input[name="ipTypeCode"]');
-			
-			var resSerialList=[];
-			var addItemSnList = [];
-			var resDetailValueList = [];
-			for (var i = 0; i < addItemSnElements.length; i++) {
-				resSerialList.push(resSerialId)
-			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
-				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
-			}
-			var ipSnList=[];
-			var ipTypeCodeList=[];
-			var resSerialList2=[];
-			if(ipSnList.length > 0){
-				for(var i=0; i < ipSn.length; i++){
-					resSerialList2.push(resSerialId);
-					ipSnList.push(ipSn.eq(i).val());
-					ipTypeCodeList.push(ipTypeCode.eq(i).val());
-					console.log(ipTypeCodeList);
-				}
-			} 
-	            $.ajax({
-	                type: 'POST',
-	                url: '/resinfo/insert',
-	                data: JSON.stringify({
-	                    'resClassId': resClassId,
-	                    'mgmtId': mgmtId,
-	                    'mgmtDeptName': mgmtDeptName,
-	                    'resName': resName,
-	                    'resStatusCode': resStatusCode,
-	                    'managerName': managerName,
-	                    'resSerialId': resSerialId,
-	                    'manufactureCompanyName': manufactureCompanyName,
-	                    'modelName': modelName,
-	                    'installPlaceSn': installPlaceSn,
-	                    'rackInfo': rackInfo,
-	                    'resSn': resSn,
-	                    'introductionDate': introductionDate,
-	                    'expirationDate': expirationDate,
-	                    'introdutionPrice': introdutionPrice,
-	                    'useYn': useYn,
-	                    'monitoringYn': monitoringYn,
-	                    'purchaseCompanyName': purchaseCompanyName,
-	                    'addInfo': addInfo,
-						'resSerialIdList' : resSerialList,
-						'addItemSnList' : addItemSnList,
-						'resDetailValueList' : resDetailValueList,
-						'ipSnList' : ipSnList,
-						'ipTypeCodeList' : ipTypeCodeList
-	                }),
-	                contentType: "application/json",
-	                success: function (response) {
-	                    showResourceDetail(response.resName);
-	                    alert("저장되었습니다.");
-	                },
-	                error: function (error) {
-	                    console.log('에러:', error);
-	                }
-	            });
-        });
-    });
-    $('#resInfoTable').on('click', '#resinfo-detail-btn', function () {
+	
+$(document).ready(function(){
+	    $('#resInfoTable').on('click', '#resinfo-detail-btn', function () {
+		$('.error-message').text('');
         var resName = $(this).closest('tr').find('td:nth-child(4)').text();
 		var resSerialId = $(this).closest('tr').find('input[name="resSerialId"]').val();
         console.log(resSerialId);
@@ -219,6 +132,7 @@ $(document).ready(function () {
                 $('#resinfo-detail-modal input[name="manufactureCompanyName"]').val(response.manufactureCompanyName);
                 $('#resinfo-detail-modal input[name="modelName"]').val(response.modelName);
                 $('#resinfo-detail-modal input[name="installPlaceName"]').val(response.installPlaceName);
+                $('#resinfo-detail-modal input[name="installPlaceSn"]').val(response.installPlaceSn);
                 $('#resinfo-detail-modal input[name="rackInfo"]').val(response.rackInfo);
                 $('#resinfo-detail-modal input[name="introductionDate"]').val(response.introductionDate);
                 $('#resinfo-detail-modal input[name="introdutionPrice"]').val(response.introductionPrice);
@@ -305,6 +219,7 @@ $(document).ready(function () {
 			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
 			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
 			var resDetailValue = $('#additionalInfoTable input[name="resDetailValue"]').val();
+			console.log(resSerialId);
 			var resSerialList=[];
 			var addItemSnList = [];
 			var resDetailValueList = [];
@@ -313,7 +228,20 @@ $(document).ready(function () {
 			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
 				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
 			}
+			console.log("resSerialIdList: "+resSerialList)
+			console.log(addItemSnList);
+			var ipSn = $('#ipListTable input[name="ipSn"]');
+			var ipTypeCode = $('#ipListTable input[name="ipTypeCode"]');
 
+			var ipSnList = [];
+			var ipTypeCodeList = [];
+			var resSerialList2 = [];
+			
+			for (var i = 0; i < ipSn.length; i++) {
+			    resSerialList2.push(resSerialId);
+			    ipSnList.push(ipSn.eq(i).val());
+			    ipTypeCodeList.push(ipTypeCode.eq(i).val());
+			}
 					 $.ajax({
 		                type: 'POST',
 		                url: '/resinfo/update',
@@ -340,11 +268,14 @@ $(document).ready(function () {
 							'resDetailValue' : resDetailValue,
 							'resSerialIdList' : resSerialList,
 							'addItemSnList' : addItemSnList,
-							'resDetailValueList' : resDetailValueList
+							'resDetailValueList' : resDetailValueList,
+							'resSerialIdList2' : resSerialList2,
+							'ipSnList' : ipSnList,
+							'ipTypeCodeList' : ipTypeCodeList
 						}),
 		                contentType: "application/json",
 		                success: function (response) {
-							showResourceDetail(response.resName);
+
 						    // 모달 내용을 변경할 때, 모달 요소와 그 내부 요소들을 선택합니다.
 						    var modal = $('#check-modal');
 						    var span = modal.find('#content');
@@ -354,6 +285,7 @@ $(document).ready(function () {
 						
 						    // 모달을 표시합니다.
 						    modal.modal('show');
+							showResourceDetail(response.resName);
 		                },
 		                error: function (error) {
 		                    console.log('에러:', error);
@@ -361,36 +293,8 @@ $(document).ready(function () {
 		            });
 
 			});
-				$('#ip-delete-btn').on('click', function () {
-				    var ipSnList2 = $('#ipListTable input[type=checkbox]:checked');
-				    if (ipSnList2.length === 0) {
-				        alert('ip를 선택해주세요.');
-				    } else {
-				        // Iterate through selected checkboxes
-				        ipSnList2.each(function () {
-				            var ipSn = $(this).closest('tr').find('input[name=ipSn]').val();
-				            console.log(ipSn);
-				
-				            $.ajax({
-				                type: 'POST',
-				                url: '/resinfo/ipdelete',
-				                data: {
-				                    'ipSn': ipSn
-				                },
-				                success: function () {
-									showResourceDetail(resName)
-									console.log(resName)
-				                },
-				                error: function (error) {
-				                    console.log('에러:', error);
-				                }
-				            });
-				        });
-				    }
-				});
 
     });
-
 
     function showResourceDetail(resName) {
 	var resName = $('#resinfo-detail-modal input[name="resName"]').val();
@@ -463,6 +367,224 @@ $(document).ready(function () {
                        	"<td><input type='text' name='detailCodeName' value='"+response[i].detailCodeName+"'></td>" +
                        	"<td></td>" +
                        	"<td></td>" +
+                        "</tr>";
+                    $('#ipListTableTbody').append(addTableRow);
+                }
+                showTable('ipListTable');
+            },
+            error: function (error) {
+                console.log('에러:', error);
+            }
+        });
+    }
+});
+$(document).ready(function () {
+    $('#newResInfoBtn').on('click', function () {
+		$('.error-message').text('');
+        clearModalContent()
+        $('#resinfo-detail-modal').modal('show');
+        $('#res-info-save-btn').on('click', function () {
+            var resClassId = $('#resinfo-detail-modal input[name=resClassId]').val();
+            var resClassName = $('#resinfo-detail-modal input[name=resClassName]').val();
+            var mgmtId = $('#resinfo-detail-modal input[name=mgmtId]').val();
+            var mgmtDeptName = $('#resinfo-detail-modal input[name="mgmtDeptName"]').val();
+            var resName = $('#resinfo-detail-modal input[name="resName"]').val();
+            var resStatusCode = $('#resinfo-detail-modal select[name="resStatusCode"]').val();
+            var managerName = $('#resinfo-detail-modal input[name="managerName"]').val();
+            var resSn = $('#resinfo-detail-modal input[name="resSn"]').val();
+            var manufactureCompanyName = $('#resinfo-detail-modal input[name="manufactureCompanyName"]').val();
+            var modelName = $('#resinfo-detail-modal input[name="modelName"]').val();
+            var installPlaceSn = $('#resinfo-detail-modal #install-place-sn-input').val();
+            var rackInfo = $('#resinfo-detail-modal input[name="rackInfo"]').val();
+            var resSerialId = $('#resinfo-detail-modal input[name="resSerialId"]').val();
+            var introductionDate = $('#resinfo-detail-modal input[name="introductionDate"]').val();
+            var expirationDate = $('#resinfo-detail-modal input[name="expirationDate"]').val();
+            var introdutionPrice = $('#resinfo-detail-modal input[name="introdutionPrice"]').val();
+            var useYn = 'Y';
+            var monitoringYn = 'Y';
+            var purchaseCompanyName = $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val();
+            var addInfo = $('#resinfo-detail-modal input[name="addInfo"]').val();
+			var addItemSnElements = $('#additionalInfoTable input[name="addItemSn"]');
+			var resDetailValueElements = $('#additionalInfoTable input[name="resDetailValue"]');
+			var ipSn = $('#ipListTable input[name="ipSn"]');
+			var ipTypeCode = $('#ipListTable input[name="ipTypeCode"]');
+			
+			var resSerialList=[];
+			var addItemSnList = [];
+			var resDetailValueList = [];
+			for (var i = 0; i < addItemSnElements.length; i++) {
+				resSerialList.push(resSerialId)
+			    addItemSnList.push(addItemSnElements.eq(i).val()); // 현재 순서의 addItemSn 값 가져오기
+				resDetailValueList.push(resDetailValueElements.eq(i).val()); // 현재 순서의 resDetailValue 값 가져오기
+			}
+			var ipSnList=[];
+			var ipTypeCodeList=[];
+			var resSerialList2=[];
+			for(var i=0; i < ipSn.length; i++){
+				resSerialList2.push(resSerialId);
+				ipSnList.push(ipSn.eq(i).val());
+				ipTypeCodeList.push(ipTypeCode.eq(i).val());
+				console.log(ipTypeCodeList);
+			}
+		$('.error-message').text('');
+ 			if (!resClassName.trim()) {
+                $('#errormessage1').text('필수입력값을 입력하세요.');
+            }
+            if (!mgmtId.trim()) {
+	 			$('#errormessage2').text('필수입력값을 입력하세요.');
+            }
+            if (!resName.trim()) {
+		 		$('#errormessage3').text('필수입력값을 입력하세요.');
+            }
+            if (!resStatusCode.trim()) {
+		 		$('#errormessage4').text('필수입력값을 입력하세요.');
+            }
+            if (!resSn.trim()) {
+		 		$('#errormessage5').text('필수입력값을 입력하세요.');
+            }
+			if(!manufactureCompanyName.trim()){
+				$('#errormessage6').text('필수입력값을 입력하세요.');
+			}
+            if (!modelName.trim()) {
+		 		$('#errormessage7').text('필수입력값을 입력하세요.');
+            }
+            if (!installPlaceSn.trim()) {
+		 		$('#errormessage8').text('필수입력값을 입력하세요.');
+            }
+            if (!resSerialId.trim()) {
+		 		$('#errormessage9').text('필수입력값을 입력하세요.');
+            }
+
+            // 나머지 필드에 대한 유효성 검사 및 에러 메시지 추가
+
+            // 에러 메시지가 없을 경우 서버로 데이터를 전송
+            if ($('.error-message').length === 0){
+	            $.ajax({
+	                type: 'POST',
+	                url: '/resinfo/insert',
+	                data: JSON.stringify({
+	                    'resClassId': resClassId,
+	                    'mgmtId': mgmtId,
+	                    'mgmtDeptName': mgmtDeptName,
+	                    'resName': resName,
+	                    'resStatusCode': resStatusCode,
+	                    'managerName': managerName,
+	                    'resSerialId': resSerialId,
+	                    'manufactureCompanyName': manufactureCompanyName,
+	                    'modelName': modelName,
+	                    'installPlaceSn': installPlaceSn,
+	                    'rackInfo': rackInfo,
+	                    'resSn': resSn,
+	                    'introductionDate': introductionDate,
+	                    'expirationDate': expirationDate,
+	                    'introdutionPrice': introdutionPrice,
+	                    'useYn': useYn,
+	                    'monitoringYn': monitoringYn,
+	                    'purchaseCompanyName': purchaseCompanyName,
+	                    'addInfo': addInfo,
+						'resSerialIdList' : resSerialList,
+						'addItemSnList' : addItemSnList,
+						'resDetailValueList' : resDetailValueList,
+						'resSerialIdList2' : resSerialList2,
+						'ipSnList' : ipSnList,
+						'ipTypeCodeList' : ipTypeCodeList
+	                }),
+	                contentType: "application/json",
+	                success: function (response) {
+						if(resDetailValueList.length===0){
+							alert("부가항목값을 입력해주세요.")
+							return;
+						}
+						if(ipSnList.length===0){
+							alert("IP를 선택해주세요.")
+							return;
+						}
+					    // 모달 내용을 변경할 때, 모달 요소와 그 내부 요소들을 선택합니다.
+					    var modal = $('#check-modal');
+					    var span = modal.find('#content');
+					    // 원하는 내용으로 span 요소의 텍스트를 변경합니다.
+					    span.text('저장 완료하였습니다.');
+					    // 모달을 표시합니다.
+					    modal.modal('show');
+		                showResourceDetail(response.resName);
+	                },
+	                error: function (error) {
+	                    console.log('에러:', error);
+	                }
+	            });
+}
+        });
+    });
+
+    function showResourceDetail(resName) {
+	var resName = $('#resinfo-detail-modal input[name="resName"]').val();
+	var resSerialId = $('#resinfo-detail-modal input[name="resSerialId"]').val();
+        $.ajax({
+            type: 'GET',
+            url: '/resinfo/detail',
+            data: {
+                "resName": resName
+            },
+            success: function (response) {
+                $('#resinfo-detail-modal input[name="resClassName"]').val(response.resClassName);
+                $('#resinfo-detail-modal input[name="resName"]').val(response.resName);
+                $('#resinfo-detail-modal input[name="mgmtId"]').val(response.mgmtId);
+                $('#resinfo-detail-modal input[name="mgmtDeptName"]').val(response.mgmtDeptName);
+                $('#resinfo-detail-modal input[name="resSerialId"]').val(response.resSerialId);
+                $('#resinfo-detail-modal input[name="resStatusCode"]').val(response.resStatusCode);
+                $('#resinfo-detail-modal input[name="managerName"]').val(response.managerName);
+                $('#resinfo-detail-modal input[name="resSn"]').val(response.resSn);
+                $('#resinfo-detail-modal input[name="manufactureCompanyName"]').val(response.manufactureCompanyName);
+                $('#resinfo-detail-modal input[name="modelName"]').val(response.modelName);
+                $('#resinfo-detail-modal input[name="installPlaceName"]').val(response.installPlaceName);
+                $('#resinfo-detail-modal input[name="rackInfo"]').val(response.rackInfo);
+                $('#resinfo-detail-modal input[name="introductionDate"]').val(response.introductionDate);
+                $('#resinfo-detail-modal input[name="introdutionPrice"]').val(response.introductionPrice);
+                $('#resinfo-detail-modal input[name="expirationDate"]').val(response.expirationDate);
+                $('#resinfo-detail-modal input[name="addInfo"]').val(response.addInfo);
+                $('#resinfo-detail-modal input[name="useYn"]').val(response.useYn);
+                $('#resinfo-detail-modal input[name="purchaseCompanyName"]').val(response.purchaseCompanyName);
+                $('#resinfo-detail-modal input[name="monitoringYn"]').val(response.monitoringYn);
+                $('#resinfo-detail-modal').modal('show');
+            },
+            error: function (error) {
+                console.log('에러:', error);
+            }
+        });
+        $.ajax({
+            type: 'GET',
+            url: '/resinfo/additemvalue',
+            data: {
+                "resSerialId": resSerialId
+            },
+            success: function (response) {
+                $('#additionalInfoTable tbody').empty();
+                for (var i = 0; i < response.length; i++) {
+                    addTableRow = "<tr>" +
+                        "<td>" + response[i].addItemName + "</td>" +
+                       	"<td><input type='text' name='resDetailValue' value='"+response[i].resDetailValue+"'></td>" +
+                        "</tr>";
+                    $('#additionalInfoTable tbody').append(addTableRow);
+                }
+                showTable('additionalInfo');
+            },
+            error: function (error) {
+                console.log('에러:', error);
+            }
+        });
+        $.ajax({
+            type: 'GET',
+            url: '/resinfo/ipmapping',
+            data: {
+                "resSerialId": resSerialId
+            },
+            success: function (response) {
+                $('#ipListTable tbody').empty();
+                for (var i = 0; i < response.length; i++) {
+                    addTableRow = "<tr>" +
+		                "<td><input type='checkbox' name='ipSn' value='" + response[i].ipSn + "'></td>" +
+                        "<td>" + response[i].ip + "</td>" +
+                       	"<td><input type='text' name='detailCodeName' value='"+response[i].detailCodeName+"'></td>" +
                        	"<td></td>" +
                        	"<td></td>" +
                         "</tr>";
@@ -593,23 +715,7 @@ $(document).ready(function () {
 						ipTypeCodeList.push(ipTypeCode.eq(i).val());
 						console.log(ipTypeCodeList);
 					}
-					$.ajax({
-		                type: 'POST',
-		                url: '/resinfo/ipupdate',
-		                data: JSON.stringify({
-							'resSerialIdList' : resSerialList2,
-							'ipSnList' : ipSnList,
-							'ipTypeCodeList' : ipTypeCodeList
-						}),
-		                contentType: "application/json",
-		                success: function (response) {
-							console.log(response.resName)
-							showResourceDetail(response.resName);
-		                },
-		                error: function (error) {
-		                    console.log('에러:', error);
-		                }
-		            });
+
 		        $('#resinfo-detail-modal').modal('show');
 	    }
 	});
@@ -621,7 +727,6 @@ $(document).ready(function () {
 	    $('#install-place-choose-modal').modal('show');
 		paging(1)
 	});
-	
 	
 	// 체크박스 클릭 시
 	$('table#install-place-list-table input[type=checkbox]').on('click', function () {
@@ -651,6 +756,7 @@ $(document).ready(function () {
 	        var td = tr.children();
 	        var installPlaceSn = td.eq(0).children().eq(0).val();
 	        var installPlaceName = td.eq(1).text();
+	        console.log(installPlaceSn + ',' + installPlaceName);
 	        $('input[id=install-place-input]').val(installPlaceName);
 	        $('input[name=installPlaceSn]').val(installPlaceSn);
 	
@@ -962,10 +1068,10 @@ function updateTable(installPlace) {
         var addTableRow = "<tr>" +
             "<td><input type='checkbox' name='installPlaceSn' value='" + installPlaceSn + "'"+ "></td>" +
             "<td>" + installPlace[i].installPlaceName + "</td>" +
-            "<td>" + installPlace[i].installPlacePostNo + "</td>" +
-            "<td>" + installPlace[i].installPlacePostAddress + "</td>" +
+            "<td>" + installPlace[i].installPlacePostno + "</td>" +
+            "<td>" + installPlace[i].installPlaceAddress + "</td>" +
             "</tr>";
-        $('table#install-place-list-table tbody').append(addTableRow);
+        $('#install-place-list-table tbody').append(addTableRow);
 	}
 }
 
