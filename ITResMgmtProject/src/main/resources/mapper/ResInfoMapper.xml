@@ -85,7 +85,7 @@
 			LEFT OUTER JOIN installplace i
 	            ON i.install_place_sn = r.install_place_sn
 	        LEFT OUTER JOIN resclass rc
-	            ON rc.res_class_id = r.res_class_id
+	            ON rc.res_class_id = r.res_class_id 
 	        LEFT OUTER JOIN resclass urc
 	            ON urc.res_class_id = rc.upper_res_class_id
 	        LEFT OUTER JOIN resclass urc_name
